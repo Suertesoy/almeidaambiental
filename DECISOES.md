@@ -80,6 +80,12 @@
 **Impacto:** O fechamento de cada jornada passa a seguir `FECHAR_DIA.md`. O diário diário guarda a história detalhada. `HISTORICO.md` guarda apenas data e resumo curto. Decisões estruturais continuam em `DECISOES.md`. Pendências continuam em `DEPOIS.md`. Acessos continuam em `ACESSOS.md`.
 **Status:** Adotado.
 
+**Data:** 06/08/2026
+**Decisão:** 14. Fundação técnica criada na raiz do repositório com Next.js 16.3.0 (App Router), React 19.2.8 e TypeScript 7.0.2, sem diretório `src/`, sem Tailwind e sem ESLint configurados nesta etapa.
+**Motivo:** Não havia versão fixada nos documentos vivos; foram usadas as versões estáveis mais recentes disponíveis no momento da instalação. Tailwind e ESLint não foram adicionados por não estarem explicitamente definidos como parte da stack e para manter a instalação restrita ao mínimo necessário para o primeiro build/deploy válido.
+**Impacto:** `package.json`, `tsconfig.json` (gerado automaticamente pelo Next.js) e a pasta `app/` passam a existir na raiz. Deploy da Vercel poderá ser tentado novamente. Ferramentas de estilo (Tailwind) e lint (ESLint) ficam em aberto para decisão futura quando o design/conteúdo entrar em pauta.
+**Status:** Confirmado.
+
 ## DECISÕES PENDENTES
 
 (Espaço reservado para futuras decisões do projeto sem tentar resolvê-las agora)
