@@ -74,6 +74,12 @@
 **Impacto:** Atividade adicionada ao checklist de go-live futuro.
 **Status:** Confirmado.
 
+**Data:** 06/08/2026
+**Decisão:** 13. Adotar diário de trabalho separado por data, usando `diario/AAAA-MM-DD.md`, e manter `diario/HISTORICO.md` apenas como índice resumido.
+**Motivo:** Evitar que um único arquivo de histórico cresça indefinidamente e preservar contexto suficiente para retomadas, troca de agentes e investigação futura sem sobrecarregar cada nova sessão.
+**Impacto:** O fechamento de cada jornada passa a seguir `FECHAR_DIA.md`. O diário diário guarda a história detalhada. `HISTORICO.md` guarda apenas data e resumo curto. Decisões estruturais continuam em `DECISOES.md`. Pendências continuam em `DEPOIS.md`. Acessos continuam em `ACESSOS.md`.
+**Status:** Adotado.
+
 ## DECISÕES PENDENTES
 
 (Espaço reservado para futuras decisões do projeto sem tentar resolvê-las agora)

@@ -7,7 +7,7 @@ Feche o dia de trabalho deste projeto.
 ## 1. Levante o que aconteceu hoje
 
 - Commits de hoje (`git log --since=midnight --oneline`) e arquivos tocados
-- O que foi para produção
+- O que foi para produção (Se não houver evidência verificável de que algo foi efetivamente publicado em produção, registrar como: "Não confirmado" ou "Nada confirmado em produção hoje". Nunca inferir produção apenas pela existência de commit, push ou alteração no código.)
 - O que quebrou e como foi resolvido
 - O que ficou pela metade
 
@@ -52,6 +52,10 @@ O diário conta a história; esses três guardam o estado atual.
 ## 5. Commit
 
 Mensagem: `Diário: AAAA-MM-DD`
+O commit deve incluir apenas os arquivos de documentação modificados pelo ritual de fechamento.
+Nunca executar `git add .` indiscriminadamente durante esse ritual.
+Não incluir automaticamente código, arquivos funcionais ou alterações ainda não commitadas.
+Se houver mudanças de código pendentes no working tree, deixá-las intactas e informar isso no resumo final.
 
 ## 6. Responda no chat
 

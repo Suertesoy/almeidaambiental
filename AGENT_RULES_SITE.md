@@ -26,7 +26,22 @@ Sugestões futuras vão para DEPOIS.md.
 Toda decisão estrutural nova deve ser registrada em DECISOES.md.
 
 ## REGRA 6
-Ao terminar uma unidade de trabalho, atualizar diario/HISTORICO.md.
+Durante o trabalho:
+- Decisão estrutural ou de rumo do projeto → registrar também em `DECISOES.md`.
+- Pendência, ideia adiada ou problema não resolvido → registrar também em `DEPOIS.md`.
+- Conta criada, serviço ativado ou acesso obtido → registrar também em `ACESSOS.md`.
+
+Esses documentos representam o ESTADO ATUAL do projeto e não devem depender apenas do diário.
+
+No encerramento da jornada:
+Seguir o procedimento definido em `FECHAR_DIA.md`.
+Esse procedimento cria ou complementa `diario/AAAA-MM-DD.md` e atualiza `diario/HISTORICO.md`.
+
+- `diario/AAAA-MM-DD.md` é o registro detalhado do que aconteceu naquele dia.
+- `diario/HISTORICO.md` é apenas um índice cronológico resumido dos dias trabalhados. Não usar `HISTORICO.md` como diário detalhado.
+
+`FECHAR_DIA.md` deve ser lido quando o agente estiver encerrando uma jornada ou executando o ritual de documentação diária.
+Ele NÃO precisa ser relido integralmente antes de toda tarefa comum, para não gastar contexto desnecessariamente.
 
 ## REGRA 7
 Quando existir código, toda alteração funcional deve passar por ambiente de preview antes de produção.
