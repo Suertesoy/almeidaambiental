@@ -86,6 +86,22 @@
 **Impacto:** `package.json`, `tsconfig.json` (gerado automaticamente pelo Next.js) e a pasta `app/` passam a existir na raiz. Deploy da Vercel poderá ser tentado novamente. Ferramentas de estilo (Tailwind) e lint (ESLint) ficam em aberto para decisão futura quando o design/conteúdo entrar em pauta.
 **Status:** Confirmado.
 
+**Data:** 07/08/2026
+**Decisão:** 15. Durante a fase de desenvolvimento, prototipação e validação com a Almeida, o projeto continua publicado na conta Vercel da Sartec/Lucas, funcionando como ambiente de desenvolvimento, preview e homologação, aproveitando o workflow já configurado com GitHub. A provável infraestrutura definitiva de produção do site será criada posteriormente em uma conta Cloudflare pertencente ao próprio Grupo Almeida, com a Almeida mantendo o controle principal da conta e a Sartec Digital recebendo acesso administrativo para manutenção. A decisão final sobre a hospedagem de produção será confirmada antes do go-live; até lá, Cloudflare não será configurado e o deploy atual na Vercel não será alterado.
+**Motivo:** Evitar que domínio, hospedagem e operação do site fiquem dependentes da conta pessoal de um prestador, mantendo ao mesmo tempo o workflow de desenvolvimento já funcional com GitHub + Vercel enquanto o site está em construção e validação com o cliente.
+**Impacto:**
+1. Desenvolvimento e previews continuam normalmente via GitHub + Vercel.
+2. O código deve se manter tão portátil quanto razoavelmente possível.
+3. Quando existir solução web padrão e solução proprietária da Vercel para a mesma necessidade, preferir a solução portável, desde que isso não prejudique qualidade, desempenho ou complexidade do projeto.
+4. Não adicionar dependência de serviços proprietários da Vercel sem necessidade real; caso alguma funcionalidade futura justifique isso, registrar e avaliar a decisão antes da implementação.
+5. Recursos visuais planejados — animações controladas por scroll, vídeo de background, Canvas/WebGL, experiências 3D, sequências de frames e contadores institucionais calculados no navegador — são compatíveis com esta estratégia e não devem ser simplificados por causa da possível migração de hospedagem.
+6. O site continua tratado preferencialmente como aplicação institucional de forte componente estático/client-side. Necessidade futura de backend, função server-side ou outro processamento não está proibida, mas deverá ser avaliada também pela portabilidade para a infraestrutura definitiva.
+7. Próximo ao go-live, haverá etapa específica de validação de compatibilidade com Cloudflare antes da migração.
+8. A infraestrutura definitiva deve ficar sob controle do Grupo Almeida, evitando que domínio, hospedagem e operação do site fiquem dependentes da conta pessoal de um prestador.
+9. A troca do domínio oficial só ocorrerá depois que a versão de produção estiver publicada e testada na infraestrutura definitiva.
+10. Na futura alteração de DNS, os registros relacionados ao serviço de e-mail da Almeida devem ser preservados; a migração do site não implica automaticamente migração dos e-mails.
+**Status:** Confirmado quanto ao papel atual da Vercel (desenvolvimento/preview/homologação). Estratégia de produção na Cloudflare é provável, mas depende de confirmação final antes do go-live.
+
 ## DECISÕES PENDENTES
 
 (Espaço reservado para futuras decisões do projeto sem tentar resolvê-las agora)
