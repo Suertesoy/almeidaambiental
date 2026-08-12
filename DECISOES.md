@@ -102,6 +102,33 @@
 10. Na futura alteração de DNS, os registros relacionados ao serviço de e-mail da Almeida devem ser preservados; a migração do site não implica automaticamente migração dos e-mails.
 **Status:** Confirmado quanto ao papel atual da Vercel (desenvolvimento/preview/homologação). Estratégia de produção na Cloudflare é provável, mas depende de confirmação final antes do go-live.
 
+**Data:** 12/08/2026
+**Decisão:** 16. Nesta fase inicial de implementação do site institucional (primeira versão funcional da Home), a Vercel é usada como ambiente de prototipação e homologação visual com a Helóra/cliente. Como ainda não existe uma versão anterior do site em produção nesse projeto Vercel (`almeidaambiental`) que precise ser preservada, fica autorizado publicar diretamente pela branch `main` durante esta etapa inicial, sem exigir passagem por ambiente de preview antes de cada publicação.
+**Motivo:** O endereço do projeto Vercel ainda não é usado pelo cliente final; usá-lo como homologação evita esforço extra de gestão de branches de preview enquanto o site está em construção e validação de direção visual.
+**Impacto:** Commits com mudanças funcionais da Home podem ir direto para `main` nesta etapa, com deploy automático da Vercel. A Regra 7 de `AGENT_RULES_SITE.md` (nenhuma publicação em produção sem validação humana explícita / sempre passar por preview) fica temporariamente flexibilizada apenas para este cenário específico (Vercel = prototipação, sem produção real do cliente ainda no ar). Assim que existir uma versão em produção real usada pelo cliente, essa flexibilização deixa de valer e a Regra 7 volta a ser seguida integralmente.
+**Status:** Confirmado para esta fase inicial.
+
+**Data:** 12/08/2026
+**Decisão:** 17. Nova arquitetura de informação do site, solicitada pela Helóra: Home / Grupo Almeida, Almeida Ambiental, Almeida Equipamentos, Saturno Ambiental, Contato. Não haverá página independente de Sustentabilidade.
+**Motivo:** Decisão da cliente. Conteúdos de sustentabilidade continuam podendo aparecer dentro da Home, da Almeida Ambiental, da página institucional do Grupo ou de outras partes relevantes do site — apenas deixam de ter uma página própria no menu.
+**Impacto:** Esta arquitetura substitui a arquitetura inicial prevista em `CONTEXTO_PROJETO_SITE.md` (que incluía "Sustentabilidade" como página independente). O menu principal do site (item de navegação do header) passa a conter apenas: Almeida Ambiental, Almeida Equipamentos, Saturno Ambiental, Contato — com o logo do Grupo Almeida cumprindo o papel de link para a Home, sem precisar de um item "Home" redundante no menu.
+**Status:** Confirmado.
+
+**Data:** 12/08/2026
+**Decisão:** 18. Direção visual da Home (primeira versão funcional): paleta background `#F7F6F1`, foreground `#15150F`, primary `#4E6B24`, secondary `#C7D79E`, muted `#ECEBE2`, card `#FBFAF7`, tipografia de destaque Playfair Display (via `next/font/google`). Um tom dourado/amarelo (`#D8A536`, provisório) foi centralizado como token para o destaque de "RESULTADO" na primeira dobra, por ainda não existir um valor oficial confirmado.
+**Motivo:** Direção visual fornecida diretamente para a implementação desta Home, distinta das duas direções ("A — Institucional Técnica" e "B — Ambiental Aberta") registradas em `design/tokens.css` e `design/GUIA_MONTAGEM_FIGMA.md` (que usam Inter Tight/Plus Jakarta Sans e paletas verdes diferentes).
+**Impacto:** Os tokens desta direção foram centralizados em `app/globals.css` (não reaproveitam as variáveis de `design/tokens.css`). Quando a direção visual definitiva do site for consolidada com o Figma/cliente, avaliar se essa nova paleta substitui as direções A/B do design system ou se passa a ser registrada formalmente como "Direção C" nos documentos de design.
+**Status:** Confirmado para a Home desta etapa. Consolidação com o design system do Figma fica pendente.
+
+**Data:** 12/08/2026
+**Decisão:** 19. O vídeo `Video_Almeida_15_seg.mp4`, que já existia em `videos/` na raiz do repositório, foi movido (não duplicado nem re-codificado) para `public/videos/Video_Almeida_15_seg.mp4`.
+**Motivo:** Arquivos servidos como asset estático pelo Next.js (com suporte nativo a range requests, necessário para o seek suave do vídeo controlado por scroll) precisam estar dentro de `public/`. O arquivo continua sendo exatamente o mesmo (mesmo conteúdo, mesmo nome), apenas em outro caminho.
+**Impacto:** Qualquer referência futura ao vídeo original deve usar o novo caminho `public/videos/Video_Almeida_15_seg.mp4` (servido em produção como `/videos/Video_Almeida_15_seg.mp4`).
+**Status:** Confirmado.
+
 ## DECISÕES PENDENTES
 
-(Espaço reservado para futuras decisões do projeto sem tentar resolvê-las agora)
+- Confirmar número/link oficial do WhatsApp do Grupo Almeida para o botão principal da Home (atualmente apenas visual, sem destino configurado).
+- Confirmar arquivo vetorial oficial da logo do Grupo Almeida (a Home está usando um placeholder textual "Grupo Almeida" em Playfair Display até o vetor chegar).
+- Confirmar valor oficial do dourado/amarelo de destaque usado em "RESULTADO" na Home (atualmente token provisório `#D8A536` em `app/globals.css`).
+- Avaliar engasgo real de seek em dispositivos de hardware mais limitado: o vídeo `Video_Almeida_15_seg.mp4` tem keyframes apenas em 0s/5s/10s (GOP de 5s); testes no Chromium desktop/mobile emulado não mostraram problema, mas vale reconfirmar em aparelho físico real antes do go-live.

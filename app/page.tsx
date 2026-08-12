@@ -1,9 +1,11 @@
+import Header from "../components/Header";
+import ScrollVideoExperience from "../components/ScrollVideoExperience";
+
 export default function Home() {
   return (
     <main>
-      <h1>Grupo Almeida</h1>
-      <p>Site institucional em desenvolvimento</p>
-      <p>Sartec Digital</p>
+      <Header />
+      <ScrollVideoExperience />
     </main>
   );
 }

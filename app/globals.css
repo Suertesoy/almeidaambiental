@@ -1,0 +1,341 @@
+/* ==========================================================
+   Grupo Almeida — Home — tokens da direção visual desta etapa
+   ========================================================== */
+:root {
+  --color-background: #f7f6f1;
+  --color-foreground: #15150f;
+  --color-primary: #4e6b24;
+  --color-secondary: #c7d79e;
+  --color-muted: #ecebe2;
+  --color-card: #fbfaf7;
+
+  /* PROVISÓRIO: não há valor oficial confirmado para o dourado de destaque.
+     Ajustar esta variável quando o valor definitivo for informado. */
+  --color-accent-gold: #d8a536;
+
+  /* Overlay obrigatório sobre o vídeo: #4E6B24 a 54% de opacidade. */
+  --overlay-video: rgba(78, 107, 36, 0.54);
+
+  --header-height: 64px;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 80px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------------- Header ---------------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--color-background);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.logo-link {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--color-foreground);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-area {
+  display: flex;
+  gap: 4px;
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.lang-btn[aria-current="true"] {
+  border-color: var(--color-primary);
+  font-weight: 600;
+}
+
+.hamburger-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--color-foreground);
+}
+
+.hamburger-btn:hover,
+.lang-btn:hover {
+  background: var(--color-muted);
+}
+
+.logo-link:focus-visible,
+.lang-btn:focus-visible,
+.hamburger-btn:focus-visible,
+.menu-link:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------------- Menu ---------------- */
+.menu-panel {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  background: var(--color-card);
+  z-index: 45;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  max-height: calc(100svh - var(--header-height));
+  overflow-y: auto;
+}
+
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.menu-item + .menu-item {
+  border-top: 1px solid var(--color-muted);
+}
+
+.menu-link {
+  display: block;
+  padding: 18px 20px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  background: var(--color-muted);
+}
+
+/* ---------------- Experiência de scroll + vídeo ---------------- */
+.scroll-track {
+  position: relative;
+}
+
+.scroll-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-static {
+  position: relative;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-video);
+}
+
+.hero-content-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: calc(var(--header-height) + 24px) 20px 96px;
+  transition: opacity 120ms linear;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 640px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.hero-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-card);
+  font-size: clamp(2.4rem, 10vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-title-gold {
+  color: var(--color-accent-gold);
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (min-width: 640px) {
+  .hero-actions {
+    flex-direction: row;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-card);
+}
+
+.btn-primary:hover {
+  background: #435c1f;
+}
+
+.btn-secondary {
+  background: var(--color-card);
+  color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-muted);
+}
+
+.scroll-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-card);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  transition: opacity 120ms linear;
+}
+
+.scroll-anchor {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  scroll-margin-top: var(--header-height);
+}
+
+.scroll-anchor-static {
+  height: 1px;
+  scroll-margin-top: var(--header-height);
+}
