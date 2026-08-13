@@ -42,6 +42,12 @@ const BACKWARD_DURATION_MIN_MS = 320;
 const BACKWARD_DURATION_MAX_MS = 900;
 const BACKWARD_MS_PER_SECOND = 260;
 
+/** Margem técnica usada ao levar o vídeo até o fim (footer): definir
+ *  currentTime = video.duration pode fazer o navegador tratar o vídeo como
+ *  encerrado sem manter o último frame desenhado, então o alvo real é um
+ *  instante imediatamente anterior à duração. */
+const END_OF_VIDEO_EPSILON_SECONDS = 0.08;
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
@@ -52,7 +58,8 @@ function playForward(
   video: HTMLVideoElement,
   fromTime: number,
   toTime: number,
-  isCancelled: () => boolean
+  isCancelled: () => boolean,
+  onPlaying?: () => void
 ): Promise<void> {
   return new Promise((resolve) => {
     const duration = Math.max(toTime - fromTime, 0);
@@ -91,6 +98,7 @@ function playForward(
       playAttempt
         .then(() => {
           if (isCancelled()) return;
+          onPlaying?.();
           rafId = requestAnimationFrame(watch);
         })
         .catch((error) => {
@@ -154,6 +162,16 @@ export default function ScrollVideoExperience() {
    *  novo destino é aceito (nem por wheel, nem por scroll/touch). */
   const isTransitioningRef = useRef(false);
   const cancelActiveTransitionRef = useRef<(() => void) | null>(null);
+  /** true assim que a reprodução inicial 0.00→1.00s (ou seu fallback) já
+   *  aconteceu — garante que ela rode só uma vez por carregamento da Home. */
+  const initialPlayedRef = useRef(false);
+  /** true assim que um play() real (não um fallback de seek direto) já foi
+   *  confirmado pelo navegador — usado só para decidir se o listener de
+   *  inicialização por interação (mobile) ainda precisa ficar de prontidão. */
+  const decoderPrimedRef = useRef(false);
+  /** true depois que o vídeo já reproduziu até o último frame a caminho do
+   *  footer (dobra 9 → footer); volta a false ao retornar da dobra 9. */
+  const endPlayedRef = useRef(false);
 
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -197,25 +215,87 @@ export default function ScrollVideoExperience() {
     });
   }, []);
 
+  // Dobra 9 → footer: continua a reprodução real (mesmo motor de descida) do
+  // último stop até o último frame disponível do vídeo, usando video.duration
+  // em vez de um tempo fixo — não é um décimo SCROLL_STOP, só a cauda final.
+  const playToEnd = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || isTransitioningRef.current || endPlayedRef.current) return;
+    if (videoStopIndexRef.current !== SCROLL_STOPS.length - 1) return;
+
+    const duration = video.duration;
+    if (!Number.isFinite(duration) || duration <= 0) return;
+
+    isTransitioningRef.current = true;
+    let cancelled = false;
+    const isCancelled = () => cancelled;
+    cancelActiveTransitionRef.current = () => {
+      cancelled = true;
+    };
+
+    const fromTime = SCROLL_STOPS[SCROLL_STOPS.length - 1].time;
+    const target = Math.max(fromTime, duration - END_OF_VIDEO_EPSILON_SECONDS);
+
+    playForward(video, fromTime, target, isCancelled).then(() => {
+      if (!cancelled) {
+        endPlayedRef.current = true;
+      }
+      isTransitioningRef.current = false;
+      cancelActiveTransitionRef.current = null;
+    });
+  }, []);
+
+  // Volta do footer para a dobra 9: traz o vídeo do último frame de volta ao
+  // stop 14.20s com a mesma interpolação por rAF usada na subida entre
+  // dobras, antes de liberar a navegação normal para cima.
+  const returnFromEnd = useCallback(() => {
+    const video = videoRef.current;
+    if (!video || isTransitioningRef.current || !endPlayedRef.current) return;
+
+    isTransitioningRef.current = true;
+    let cancelled = false;
+    const isCancelled = () => cancelled;
+    cancelActiveTransitionRef.current = () => {
+      cancelled = true;
+    };
+
+    const toTime = SCROLL_STOPS[SCROLL_STOPS.length - 1].time;
+    const fromTime = video.currentTime;
+
+    interpolateBackward(video, fromTime, toTime, isCancelled).then(() => {
+      if (!cancelled) {
+        endPlayedRef.current = false;
+      }
+      isTransitioningRef.current = false;
+      cancelActiveTransitionRef.current = null;
+    });
+  }, []);
+
   useEffect(() => {
     return () => {
       cancelActiveTransitionRef.current?.();
     };
   }, []);
 
-  // Inicializa o decoder de vídeo (essencial em mobile): sem um play() real
-  // confirmado, alguns navegadores mobile nunca desenham o primeiro frame
-  // nem os seeks seguintes — só o overlay verde fica visível. `loadeddata`
-  // sozinho não é suficiente: em conexões móveis/Data Saver o navegador pode
-  // nunca carregar dados do vídeo sem uma interação real do usuário, então
-  // também iniciamos a partir do primeiro toque/scroll/tecla genuíno. A
-  // reprodução é pausada assim que confirmada, sem parecer autoplay.
+  // Reprodução inicial única: assim que o vídeo estiver tecnicamente pronto,
+  // toca de verdade 0.00s → 1.00s (mesmo motor de descida, playForward) e
+  // pausa exatamente em 1.00s — a dobra 1 passa a "abrir" com esse pequeno
+  // movimento em vez de ficar parada. Isso também resolve o problema do
+  // decoder no mobile (só o overlay verde aparecia antes da 1ª interação):
+  // sem um play() real confirmado, alguns navegadores mobile nunca desenham
+  // o primeiro frame nem os seeks seguintes. Se o navegador bloquear esse
+  // play() automático, o fallback embutido em playForward salta diretamente
+  // para 1.00s (a dobra 1 continua estável, a Home não quebra) e o listener
+  // de interação abaixo tenta, a partir do primeiro toque/scroll/tecla
+  // genuíno, um play()+pause() real só para inicializar o decoder (sem
+  // repetir a animação de abertura, que já é considerada "concluída").
   useEffect(() => {
+    if (reducedMotion) return;
     const video = videoRef.current;
     if (!video) return;
 
     let cancelled = false;
-    let primed = false;
+    const isCancelled = () => cancelled;
     const interactionEvents: Array<keyof WindowEventMap> = [
       "touchstart",
       "pointerdown",
@@ -225,11 +305,11 @@ export default function ScrollVideoExperience() {
     ];
 
     const removeInteractionListeners = () => {
-      interactionEvents.forEach((type) => window.removeEventListener(type, attemptPrime));
+      interactionEvents.forEach((type) => window.removeEventListener(type, primeOnInteraction));
     };
 
-    function attemptPrime() {
-      if (cancelled || primed || !video) return;
+    function primeOnInteraction() {
+      if (cancelled || decoderPrimedRef.current || !video) return;
       const restoreTime = video.currentTime;
       video.muted = true;
       const playAttempt = video.play();
@@ -237,30 +317,53 @@ export default function ScrollVideoExperience() {
         playAttempt
           .then(() => {
             if (cancelled) return;
-            primed = true;
+            decoderPrimedRef.current = true;
             video.pause();
             video.currentTime = restoreTime;
             removeInteractionListeners();
           })
           .catch((error) => {
             // Não silenciar: precisamos do motivo real da rejeição em desenvolvimento.
-            console.warn("[ScrollVideoExperience] video.play() rejeitado ao inicializar o decoder:", error);
+            console.warn(
+              "[ScrollVideoExperience] video.play() rejeitado ao inicializar o decoder via interação:",
+              error
+            );
           });
       }
     }
 
+    function runInitialSegment() {
+      if (initialPlayedRef.current || cancelled) return;
+      initialPlayedRef.current = true;
+      isTransitioningRef.current = true;
+      cancelActiveTransitionRef.current = () => {
+        cancelled = true;
+      };
+
+      playForward(video, 0, SCROLL_STOPS[0].time, isCancelled, () => {
+        decoderPrimedRef.current = true;
+        removeInteractionListeners();
+      }).then(() => {
+        if (!cancelled) {
+          videoStopIndexRef.current = 0;
+        }
+        isTransitioningRef.current = false;
+        cancelActiveTransitionRef.current = null;
+      });
+    }
+
     if (video.readyState >= 2) {
-      attemptPrime();
+      runInitialSegment();
     } else {
-      video.addEventListener("loadeddata", attemptPrime, { once: true });
+      video.addEventListener("loadeddata", runInitialSegment, { once: true });
     }
     interactionEvents.forEach((type) =>
-      window.addEventListener(type, attemptPrime, { once: true, passive: true })
+      window.addEventListener(type, primeOnInteraction, { once: true, passive: true })
     );
 
     return () => {
       cancelled = true;
-      video.removeEventListener("loadeddata", attemptPrime);
+      video.removeEventListener("loadeddata", runInitialSegment);
       removeInteractionListeners();
     };
   }, [reducedMotion]);
@@ -285,7 +388,29 @@ export default function ScrollVideoExperience() {
       if (direction === 0) return;
 
       const currentIndex = videoStopIndexRef.current;
-      const targetIndex = clamp(currentIndex + direction, 0, SCROLL_STOPS.length - 1);
+      const lastIndex = SCROLL_STOPS.length - 1;
+
+      // Dobra 9 → footer: não é um SCROLL_STOP, então tratada à parte —
+      // o vídeo segue até o último frame enquanto a página desliza até o
+      // footer; a rolagem de volta primeiro reconduz o vídeo ao stop 14.20s.
+      if (currentIndex === lastIndex) {
+        if (direction === 1 && !endPlayedRef.current) {
+          event.preventDefault();
+          document
+            .querySelector<HTMLElement>(".site-footer")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          playToEnd();
+          return;
+        }
+        if (direction === -1 && endPlayedRef.current) {
+          event.preventDefault();
+          sectionRefs.current[lastIndex]?.scrollIntoView({ behavior: "smooth", block: "start" });
+          returnFromEnd();
+          return;
+        }
+      }
+
+      const targetIndex = clamp(currentIndex + direction, 0, lastIndex);
       if (targetIndex === currentIndex) return;
 
       const targetSection = sectionRefs.current[targetIndex];
@@ -298,7 +423,7 @@ export default function ScrollVideoExperience() {
 
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [reducedMotion, transitionTo]);
+  }, [reducedMotion, transitionTo, playToEnd, returnFromEnd]);
 
   // Fade discreto do conteúdo de cada dobra (posição contínua de scroll) +
   // gatilho do vídeo para qualquer navegação não coberta pelo wheel acima
@@ -350,14 +475,29 @@ export default function ScrollVideoExperience() {
       rafId = 0;
       if (sectionHeight <= 0) measureSectionHeight();
 
-      const continuousPosition = clamp(window.scrollY / sectionHeight, 0, SCROLL_STOPS.length - 1);
+      const lastIndex = SCROLL_STOPS.length - 1;
+      const rawContinuousPosition = window.scrollY / sectionHeight;
+      const continuousPosition = clamp(rawContinuousPosition, 0, lastIndex);
 
       applyHeroOpacity(continuousPosition);
       applyContentOpacity(continuousPosition);
 
       if (!isTransitioningRef.current) {
         const current = videoStopIndexRef.current;
-        const rawTarget = clamp(Math.round(continuousPosition), 0, SCROLL_STOPS.length - 1);
+
+        // Dobra 9 → footer (toque/mobile, sem wheel): o Scroll Snap nativo já
+        // deixa a página rolar livremente até o footer, aqui só disparamos o
+        // vídeo até o último frame (ida) ou de volta ao stop 14.20s (volta).
+        if (current === lastIndex) {
+          const pastLast = rawContinuousPosition - lastIndex;
+          if (pastLast > 0.05 && !endPlayedRef.current) {
+            playToEnd();
+          } else if (pastLast <= 0.02 && endPlayedRef.current) {
+            returnFromEnd();
+          }
+        }
+
+        const rawTarget = clamp(Math.round(continuousPosition), 0, lastIndex);
         if (rawTarget !== current) {
           // Nunca mais de uma dobra por vez, mesmo que o scroll bruto sugira
           // um salto maior (ex.: fling muito rápido no touch).
@@ -386,7 +526,7 @@ export default function ScrollVideoExperience() {
       window.removeEventListener("resize", onResize);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [reducedMotion, transitionTo]);
+  }, [reducedMotion, transitionTo, playToEnd, returnFromEnd]);
 
   if (reducedMotion) {
     return (

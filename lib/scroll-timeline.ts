@@ -2,11 +2,12 @@
  * Configuração central da timeline de scroll -> vídeo da Home.
  *
  * Edite APENAS os tempos abaixo para ajustar os pontos das nove dobras.
- * Os valores são segundos decimais do vídeo (ex.: 2.13 = 2,13s, não frame 13).
+ * Os valores são segundos decimais do vídeo (ex.: 3.07 = 3,07s, não frame 7).
  *
- * O trecho entre "section-06" (7.28s) e "section-07" (10.21s) atravessa
- * naturalmente o antigo marcador 7.04s durante a reprodução — ele deixou de
- * ser uma parada de dobra, mas o vídeo não pula esse trecho.
+ * "section-01" (1.00s) não é o início literal do vídeo: ao carregar a Home,
+ * o vídeo reproduz automaticamente de 0.00s até este tempo (ver o efeito de
+ * reprodução inicial em ScrollVideoExperience.tsx) e só então a dobra 1 fica
+ * estável neste stop — a partir daí ele se comporta como qualquer outro.
  */
 export type ScrollStop = {
   id: string;
@@ -14,13 +15,13 @@ export type ScrollStop = {
 };
 
 export const SCROLL_STOPS: ScrollStop[] = [
-  { id: "section-01", time: 0.0 },
-  { id: "section-02", time: 2.13 },
-  { id: "section-03", time: 4.03 },
-  { id: "section-04", time: 5.09 },
-  { id: "section-05", time: 6.13 },
-  { id: "section-06", time: 7.28 },
-  { id: "section-07", time: 10.21 },
-  { id: "section-08", time: 12.1 },
-  { id: "section-09", time: 15.0 },
+  { id: "section-01", time: 1.0 },
+  { id: "section-02", time: 3.07 },
+  { id: "section-03", time: 5.17 },
+  { id: "section-04", time: 6.17 },
+  { id: "section-05", time: 7.28 },
+  { id: "section-06", time: 10.0 },
+  { id: "section-07", time: 11.12 },
+  { id: "section-08", time: 12.17 },
+  { id: "section-09", time: 14.2 },
 ];

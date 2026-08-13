@@ -16,7 +16,14 @@ import Link from "next/link";
 export function Section02Content() {
   return (
     <div className="section-grid dobra-02">
-      <p className="eyebrow">Almeida Ambiental</p>
+      <div className="company-identity">
+        <p className="company-name">Almeida Ambiental</p>
+        <span className="company-divider" aria-hidden="true" />
+        <div className="company-meta">
+          <p className="company-role">Gestão e transformação de resíduos sólidos</p>
+          <p className="company-location">São José · Joinville · Araquari · Chapecó · Santa Catarina</p>
+        </div>
+      </div>
       <h2 className="section-title">
         <span>RESÍDUOS GANHAM</span>
         <span>UM NOVO DESTINO</span>
@@ -25,9 +32,16 @@ export function Section02Content() {
         Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
         responsável de resíduos.
       </p>
-      <p className="section-tags">
-        <strong>Diagnóstico</strong> · <strong>Coleta · Triagem · Trituração</strong> ·{" "}
-        <strong>Descaracterização</strong>
+      <p className="service-list">
+        <span>Diagnóstico</span>
+        <span className="service-sep" aria-hidden="true">·</span>
+        <span>Coleta</span>
+        <span className="service-sep" aria-hidden="true">·</span>
+        <span>Triagem</span>
+        <span className="service-sep" aria-hidden="true">·</span>
+        <span>Trituração</span>
+        <span className="service-sep" aria-hidden="true">·</span>
+        <span>Descaracterização</span>
       </p>
     </div>
   );
@@ -58,7 +72,15 @@ export function Section03Content() {
 export function Section04Content() {
   return (
     <div className="section-grid dobra-04">
-      <p className="eyebrow">Almeida Equipamentos</p>
+      <div className="company-identity">
+        <p className="company-name">Almeida Equipamentos</p>
+        <span className="company-divider" aria-hidden="true" />
+        <div className="company-meta">
+          <p className="company-role">Compactadores, prensas, trituradores e containers</p>
+          <p className="company-role company-role-secondary">Venda · Aluguel · Consignação</p>
+          <p className="company-location">São José · Santa Catarina</p>
+        </div>
+      </div>
       <h2 className="section-title">
         <span>TECNOLOGIA QUE</span>
         <span>NASCEU DA</span>
@@ -99,7 +121,14 @@ export function Section05Content() {
 export function Section06Content() {
   return (
     <div className="section-grid dobra-06">
-      <p className="eyebrow">Saturno Ambiental</p>
+      <div className="company-identity">
+        <p className="company-name">Saturno Ambiental</p>
+        <span className="company-divider" aria-hidden="true" />
+        <div className="company-meta">
+          <p className="company-role">Gestão de resíduos e cartonagem, com consultoria ambiental</p>
+          <p className="company-location">Blumenau · Vale do Itajaí · Santa Catarina</p>
+        </div>
+      </div>
       <h2 className="section-title">
         <span>EXPERIÊNCIA REGIONAL.</span>
         <span>FORÇA DE GRUPO.</span>
