@@ -351,23 +351,124 @@ button {
   scroll-margin-top: var(--header-height);
 }
 
-/* ===== INÍCIO marcadores temporários de homologação (dobras 2 a 10) =====
-   Apenas para esta fase de testes, enquanto as dobras não têm conteúdo
-   definitivo. Remoção futura: apagar este bloco inteiro, o componente
-   components/DevSectionMarker.tsx e os usos dele em ScrollVideoExperience.tsx. */
-.dev-section-marker {
+/* ---------------- Conteúdo das dobras 2 a 9 ---------------- */
+.section-body {
+  margin: 0;
+  max-width: 560px;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--color-card);
+}
+
+.section-tags {
+  margin: 0;
+  max-width: 560px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-card);
+  opacity: 0.92;
+}
+
+.section-tags strong {
+  font-weight: 700;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+  margin: 8px 0 0;
+  max-width: 560px;
+}
+
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--color-card);
+}
+
+.stat-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-card);
+  opacity: 0.88;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------------- Footer ---------------- */
+.site-footer {
   position: relative;
   z-index: 2;
-  opacity: 0;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(21, 21, 15, 0.35);
-  color: var(--color-card);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  padding: 48px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  border-top: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.footer-brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.footer-line {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-foreground);
+  opacity: 0.8;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.footer-nav a {
+  color: var(--color-foreground);
+  text-decoration: underline;
+}
+
+.footer-nav span[aria-hidden="true"] {
+  opacity: 0.5;
+}
+
+.footer-copyright {
+  margin: 8px 0 0;
   font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  pointer-events: none;
+  color: var(--color-foreground);
+  opacity: 0.6;
 }
-/* ===== FIM marcadores temporários de homologação ===== */
