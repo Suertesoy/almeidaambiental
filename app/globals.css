@@ -19,11 +19,54 @@
   --header-height: 64px;
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* ---- Tokens da fidelidade mobile (Figma, referência 393px) ----
+     Usados apenas dentro de @media (max-width: 1023px). Não substituem
+     nem alteram os tokens acima, que continuam servindo o desktop. */
+  --mf-bg: #f7f6f1;
+  --mf-cta-light-bg: #f3f5ec;
+  --mf-primary: #4e6b24;
+  --mf-cta-light-text: #3e5a1c;
+  --mf-inverted-text: #f7f6f1;
+  --mf-label-light: #d3deb4;
+  --mf-yellow: #edc812;
+  --mf-text-dark: #15150f;
+  --mf-header-line: #dad8c9;
+  --mf-overlay: rgba(78, 107, 36, 0.6);
+  --font-display-mf: var(--font-playfair), Georgia, serif;
+  --font-body-mf: var(--font-inter), -apple-system, sans-serif;
 }
 
 @media (min-width: 1024px) {
   :root {
     --header-height: 80px;
+  }
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --header-height: 65px;
+  }
+}
+
+/* ==========================================================
+   Fidelidade mobile (Figma, referência 393px)
+   ==========================================================
+   Estratégia: cada dobra passa a renderizar DOIS blocos de
+   conteúdo — `.desktop-only` (o que já existia, inalterado) e
+   `.mobile-fidelity` (novo, pixel-fiel ao Figma/screenshots).
+   O breakpoint de corte é o mesmo já usado pelo grid desktop
+   (1024px), então nada muda para quem já via a versão desktop.
+   Isso garante, por construção, que o desktop fica intocado. */
+@media (max-width: 1023px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-fidelity {
+    display: none !important;
   }
 }
 
@@ -75,11 +118,15 @@ button {
   height: var(--header-height);
   background: var(--color-background);
   z-index: 50;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.header-inner {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
 }
 
 .logo-link {
@@ -136,6 +183,110 @@ button {
 .hamburger-btn:hover,
 .lang-btn:hover {
   background: var(--color-muted);
+}
+
+/* ---- Header mobile (<1024px): 65px, fundo/linha do Figma ---- */
+@media (max-width: 1023px) {
+  .site-header {
+    border-bottom-color: var(--mf-header-line);
+    background: var(--mf-bg);
+  }
+}
+
+.mf-header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.mf-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--mf-text-dark);
+  font-family: var(--font-display-mf);
+}
+
+.mf-logo-line1 {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+}
+
+.mf-logo-line2 {
+  font-weight: 600;
+  font-size: 7px;
+  letter-spacing: 3.85px;
+  margin-top: 4px;
+}
+
+.mf-header-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 16vw, 65px);
+}
+
+.mf-lang-toggle {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 3px;
+  background: var(--mf-bg);
+  border: 1px solid var(--mf-header-line);
+  border-radius: 999px;
+}
+
+.mf-lang-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--mf-text-dark);
+  cursor: pointer;
+}
+
+.mf-lang-btn[aria-current="true"] {
+  background: var(--mf-cta-light-text);
+  color: var(--mf-inverted-text);
+}
+
+.mf-hamburger {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--mf-text-dark);
+}
+
+.mf-hamburger-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 22px;
+}
+
+.mf-hamburger-bars span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--mf-text-dark);
+  border-radius: 1px;
 }
 
 .logo-link:focus-visible,
@@ -233,6 +384,13 @@ button {
   position: absolute;
   inset: 0;
   background: var(--overlay-video);
+}
+
+/* Overlay mobile do Figma é 60% (versus 54% do desktop, que não muda). */
+@media (max-width: 1023px) {
+  .hero-overlay {
+    background: var(--mf-overlay);
+  }
 }
 
 .hero-content-layer {
@@ -351,6 +509,319 @@ button {
   scroll-margin-top: var(--header-height);
 }
 
+/* ---- Dobra 1 (Hero) mobile: posições absolutas fiéis ao Figma/
+   screenshot, 393px de referência. Bloco de topo (rótulo + número +
+   headline) ancorado em `top` a partir do início da dobra; bloco de
+   baixo (CTAs + indicador) ancorado em `bottom`, para se adaptar bem
+   entre 800px e 932px de altura sem perder a composição. ---- */
+@media (max-width: 1023px) {
+  .mf-hero-frame {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+  }
+
+  .mf-hero-label {
+    position: absolute;
+    left: clamp(56.79px, 15.7761vw, 62px);
+    top: 237px;
+    width: clamp(272.06px, 75.5725vw, 297px);
+    margin: 0;
+    white-space: nowrap;
+    font-family: var(--font-display-mf);
+    font-weight: 600;
+    font-size: clamp(21.98px, 6.1069vw, 24px);
+    line-height: 30px;
+    letter-spacing: 7.2px;
+    color: var(--mf-label-light);
+    text-transform: uppercase;
+  }
+
+  .mf-hero-years {
+    position: absolute;
+    left: 50%;
+    top: 281px;
+    width: clamp(195.11px, 54.1985vw, 213px);
+    transform: translateX(-50%);
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-display-mf);
+    font-weight: 600;
+    font-size: clamp(54.96px, 15.2672vw, 60px);
+    line-height: 1.1;
+    letter-spacing: -2.4px;
+    color: var(--mf-inverted-text);
+  }
+
+  .mf-hero-title {
+    position: absolute;
+    left: clamp(26.56px, 7.3791vw, 29px);
+    top: 388px;
+    width: clamp(306.87px, 85.2417vw, 335px);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display-mf);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--mf-inverted-text);
+    font-size: clamp(34.81px, 9.6692vw, 38px);
+    line-height: 44px;
+    letter-spacing: -0.5px;
+  }
+
+  .mf-hero-title-gold {
+    font-style: normal;
+    color: var(--mf-yellow);
+  }
+
+  .mf-hero-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .mf-hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 29px;
+    margin-bottom: 32px;
+  }
+
+  /* ---- Botões mobile (compartilhados por todas as dobras) ----
+     Mesma altura/raio/padding em todas; a posição (x, largura, gaps
+     entre elas) é decidida por dobra, sem forçar espaçamento único. */
+  .mf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    width: 100%;
+    padding: 0 24px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: var(--font-display-mf);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 16px;
+  }
+
+  .mf-btn-primary {
+    background: var(--mf-primary);
+    color: var(--mf-inverted-text);
+  }
+
+  .mf-btn-primary:hover {
+    background: #435c1f;
+  }
+
+  .mf-btn-primary svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .mf-btn-secondary {
+    background: var(--mf-cta-light-bg);
+    color: var(--mf-cta-light-text);
+  }
+
+  .mf-btn-secondary:hover {
+    background: #e7ebda;
+  }
+
+  .mf-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* ---- Indicador de scroll mobile ----
+     Dobra 1: seta + texto "ROLE PARA BAIXO". Dobras 2 a 8: só a seta,
+     sobre um gradiente discreto. Dobra 9 não tem indicador (é a
+     última antes do footer). */
+  .mf-scroll-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    height: 42px;
+    padding-bottom: 12px;
+    background: linear-gradient(to top, rgba(21, 21, 15, 0.22), rgba(21, 21, 15, 0));
+    color: var(--mf-inverted-text);
+  }
+
+  .mf-scroll-indicator svg {
+    width: 14px;
+    height: 10px;
+  }
+
+  .mf-scroll-indicator-hero {
+    height: 63px;
+    padding-bottom: 20px;
+    gap: 6px;
+    background: none;
+  }
+
+  .mf-scroll-indicator-text {
+    font-family: var(--font-display-mf);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .mf-section-frame {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 130px 0 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mf-section-frame.mf-center {
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .mf-section-frame.mf-tight-top {
+    padding-top: 96px;
+  }
+
+  .mf-d-label {
+    margin: 0 auto;
+    text-align: center;
+    white-space: nowrap;
+    font-family: var(--font-display-mf);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--mf-label-light);
+  }
+
+  .mf-d-subtitle {
+    margin: 6px auto 0;
+    max-width: 340px;
+    text-align: center;
+    font-family: var(--font-body-mf);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--mf-inverted-text);
+    opacity: 0.88;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 10px;
+  }
+
+  .mf-d-subtitle .mf-sep {
+    opacity: 0.5;
+  }
+
+  .mf-d-location {
+    margin: 4px auto 0;
+    text-align: center;
+    font-family: var(--font-body-mf);
+    font-weight: 600;
+    color: var(--mf-inverted-text);
+    opacity: 0.88;
+  }
+
+  .mf-d-title {
+    margin: 24px 0 0;
+    font-family: var(--font-display-mf);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--mf-inverted-text);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  /* Cada <span>/<em> filho representa UMA linha decidida pelo Figma/
+     screenshot — nunca deixar o navegador re-quebrar dentro dela. */
+  .mf-d-title > span,
+  .mf-d-title > em {
+    white-space: nowrap;
+  }
+
+  .mf-d-title-plain {
+    text-transform: none;
+  }
+
+  .mf-d-title-gold {
+    font-style: normal;
+    color: var(--mf-yellow);
+  }
+
+  .mf-d-body {
+    margin: 16px 0 0;
+    font-family: var(--font-body-mf);
+    font-weight: 600;
+    color: var(--mf-inverted-text);
+    box-sizing: border-box;
+  }
+
+  .mf-d-body + .mf-d-body {
+    margin-top: 10px;
+  }
+
+  .mf-d-actions {
+    margin-top: 24px;
+  }
+
+  .mf-d-actions.mf-d-actions-push-bottom {
+    margin-top: auto;
+    margin-bottom: 56px;
+  }
+
+  /* ---- Dobra 9 (Impacto): indicadores empilhados ---- */
+  .mf-stats {
+    margin: 32px 0 0;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    list-style: none;
+  }
+
+  .mf-stat-item {
+    text-align: center;
+  }
+
+  .mf-stat-value {
+    margin: 0;
+    font-family: var(--font-display-mf);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.1;
+    color: var(--mf-inverted-text);
+  }
+
+  .mf-stat-label {
+    margin: 4px 0 0;
+    font-family: var(--font-body-mf);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--mf-inverted-text);
+    opacity: 0.88;
+  }
+}
+
 /* ---------------- Conteúdo institucional das dobras 2 a 9 ----------------
    Sistema de grid próprio, separado do Hero (que continua usando
    .hero-content-layer / .hero-content / .hero-title sem nenhuma alteração).
@@ -370,6 +841,18 @@ button {
   align-items: center;
   padding: calc(var(--header-height) + 32px) 20px 56px;
   transition: opacity 120ms linear;
+}
+
+/* Dobras 2 a 9 no mobile: fluxo normal em vez do flex centralizado do
+   desktop — cada dobra decide sua própria composição/ritmo vertical
+   dentro de .mf-section-frame. Precisa vir depois da definição base
+   acima para vencer a cascata (mesma especificidade). */
+@media (max-width: 1023px) {
+  .section-layer,
+  .hero-content-layer {
+    display: block;
+    padding: 0;
+  }
 }
 
 .section-grid {

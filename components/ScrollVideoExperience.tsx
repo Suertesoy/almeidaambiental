@@ -29,6 +29,24 @@ const SECTION_CONTENT = [
 
 const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
 
+/** Crop horizontal do vídeo por dobra, só no mobile (<1024px) — no desktop
+ *  o object-position continua "center center", sem alteração.
+ *
+ *  Os frames exportados do Figma para cada dobra usam larguras/offsets de
+ *  crop diferentes entre si (ver tarefa de fidelidade mobile). Como a
+ *  proporção real do vídeo não é a mesma dos PNGs exportados, os valores
+ *  abaixo não são copiados literalmente: são a posição horizontal (%)
+ *  equivalente, calculada a partir de (largura do frame, offset x) de cada
+ *  PNG — ex.: para o Hero (largura 912, offset -259), a posição horizontal
+ *  equivalente é offset / (largura - 393) * 100 ≈ 50%. O resultado é bem
+ *  próximo de "center" em todas as dobras, com pequenos desvios pontuais. */
+const MOBILE_CROP_X = [50, 56, 48, 51, 50, 52, 46, 51, 52];
+
+function applyMobileCrop(video: HTMLVideoElement, index: number) {
+  const x = MOBILE_CROP_X[index] ?? 50;
+  video.style.objectPosition = `${x}% center`;
+}
+
 /** Acima deste tempo real de trecho (segundos), a descida usa playbackRate
  *  maior que 1x para não ficar lenta demais — sempre limitado a
  *  MAX_PLAYBACK_RATE, para preservar a sensação de vídeo real em vez de um
@@ -482,6 +500,17 @@ export default function ScrollVideoExperience() {
       applyHeroOpacity(continuousPosition);
       applyContentOpacity(continuousPosition);
 
+      const video = videoRef.current;
+      if (video) {
+        if (window.matchMedia("(max-width: 1023px)").matches) {
+          applyMobileCrop(video, videoStopIndexRef.current);
+        } else if (video.style.objectPosition) {
+          // Volta ao object-position do CSS (center center) — o crop por
+          // dobra é só para <1024px, nunca altera o desktop.
+          video.style.removeProperty("object-position");
+        }
+      }
+
       if (!isTransitioningRef.current) {
         const current = videoStopIndexRef.current;
 
@@ -578,9 +607,15 @@ export default function ScrollVideoExperience() {
           <div ref={heroRef} className="hero-content-layer">
             <HeroContent />
           </div>
-          <div ref={indicatorRef} className="scroll-indicator" aria-hidden="true">
-            <span>ROLE PARA BAIXO</span>
-            <ChevronDownIcon />
+          <div ref={indicatorRef} aria-hidden="true">
+            <div className="scroll-indicator desktop-only">
+              <span>ROLE PARA BAIXO</span>
+              <ChevronDownIcon />
+            </div>
+            <div className="mobile-fidelity mf-scroll-indicator mf-scroll-indicator-hero">
+              <span className="mf-scroll-indicator-text">ROLE PARA BAIXO</span>
+              <ChevronDownIcon />
+            </div>
           </div>
         </section>
 
