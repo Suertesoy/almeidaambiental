@@ -456,7 +456,7 @@ export default function ScrollVideoExperience() {
               }}
             >
               <div
-                className="hero-content-layer"
+                className="section-layer"
                 ref={(el) => {
                   contentRefs.current[i] = el;
                 }}

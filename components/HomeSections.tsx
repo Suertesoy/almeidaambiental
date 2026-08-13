@@ -1,17 +1,23 @@
 import Link from "next/link";
 
 /**
- * Conteúdo real das dobras 2 a 9 da Home (dobra 1 continua em HeroContent.tsx).
- * Cada componente renderiza apenas o miolo ".hero-content": o wrapper
- * ".hero-content-layer" (posicionamento absoluto sobre o vídeo + fade) é
- * aplicado pelo ScrollVideoExperience, no mesmo padrão usado na dobra 1.
+ * Conteúdo real das dobras 2 a 9 da Home (dobra 1 continua em HeroContent.tsx,
+ * com seu próprio ".hero-content"/".hero-title", intocado).
+ *
+ * Cada componente renderiza o miolo ".section-grid" (área útil centralizada,
+ * 12 colunas conceituais): o wrapper ".section-layer" (posicionamento sobre
+ * o vídeo + fade) é aplicado pelo ScrollVideoExperience. A classe "dobra-0X"
+ * identifica a dobra para o posicionamento por grid definido em
+ * app/globals.css (a partir de 1024px) — no mobile tudo empilha em coluna
+ * única por padrão. A copy é exatamente a mesma de antes; só a estrutura
+ * visual (classes de título/wrapper) mudou.
  */
 
 export function Section02Content() {
   return (
-    <div className="hero-content">
+    <div className="section-grid dobra-02">
       <p className="eyebrow">Almeida Ambiental</p>
-      <h2 className="hero-title">
+      <h2 className="section-title">
         <span>RESÍDUOS GANHAM</span>
         <span>UM NOVO DESTINO</span>
       </h2>
@@ -29,8 +35,8 @@ export function Section02Content() {
 
 export function Section03Content() {
   return (
-    <div className="hero-content">
-      <h2 className="hero-title">
+    <div className="section-grid dobra-03">
+      <h2 className="section-title">
         <span>EFICIÊNCIA EM</span>
         <span>CADA ETAPA</span>
         <span>DO PROCESSO</span>
@@ -51,9 +57,9 @@ export function Section03Content() {
 
 export function Section04Content() {
   return (
-    <div className="hero-content">
+    <div className="section-grid dobra-04">
       <p className="eyebrow">Almeida Equipamentos</p>
-      <h2 className="hero-title">
+      <h2 className="section-title">
         <span>TECNOLOGIA QUE</span>
         <span>NASCEU DA</span>
         <span>PRÓPRIA OPERAÇÃO</span>
@@ -68,8 +74,8 @@ export function Section04Content() {
 
 export function Section05Content() {
   return (
-    <div className="hero-content">
-      <h2 className="hero-title">
+    <div className="section-grid dobra-05">
+      <h2 className="section-title">
         <span>ENGENHARIA PARA</span>
         <span>MOVIMENTAR MAIS</span>
         <span>COM MENOS</span>
@@ -92,9 +98,9 @@ export function Section05Content() {
 
 export function Section06Content() {
   return (
-    <div className="hero-content">
+    <div className="section-grid dobra-06">
       <p className="eyebrow">Saturno Ambiental</p>
-      <h2 className="hero-title">
+      <h2 className="section-title">
         <span>EXPERIÊNCIA REGIONAL.</span>
         <span>FORÇA DE GRUPO.</span>
       </h2>
@@ -108,8 +114,8 @@ export function Section06Content() {
 
 export function Section07Content() {
   return (
-    <div className="hero-content">
-      <h2 className="hero-title">
+    <div className="section-grid dobra-07">
+      <h2 className="section-title">
         <span>GESTÃO AMBIENTAL</span>
         <span>QUE VAI ALÉM</span>
         <span>DA COLETA</span>
@@ -129,9 +135,9 @@ export function Section07Content() {
 
 export function Section08Content() {
   return (
-    <div className="hero-content">
+    <div className="section-grid dobra-08">
       <p className="eyebrow">Impacto Positivo · 2025</p>
-      <h2 className="hero-title">
+      <h2 className="section-title">
         <span>SUSTENTABILIDADE</span>
         <span>TRADUZIDA</span>
         <span>EM RESULTADOS</span>
@@ -167,8 +173,8 @@ export function Section08Content() {
 
 export function Section09Content() {
   return (
-    <div className="hero-content">
-      <h2 className="hero-title">
+    <div className="section-grid dobra-09">
+      <h2 className="closing-title">
         <span>O QUE COMEÇOU</span>
         <span>COM PAPEL E PAPELÃO</span>
         <span>HOJE CONECTA</span>
