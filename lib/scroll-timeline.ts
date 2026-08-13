@@ -23,70 +23,18 @@ export const SCROLL_STOPS: ScrollStop[] = [
 ];
 
 /**
- * Quanto de scroll (em unidades "svh") a dobra 1 reserva antes do vídeo
- * começar a avançar. Dá espaço para ler o conteúdo da primeira dobra.
+ * Cada dobra ocupa exatamente uma altura de viewport (100svh) na faixa de
+ * scroll, e o CSS scroll-snap decide onde a página encaixa. O vídeo apenas
+ * interpola entre os tempos das duas dobras adjacentes à posição atual.
  */
-const DWELL_VH = 70;
+export function getVideoTimeForPosition(continuousPosition: number): number {
+  const maxIndex = SCROLL_STOPS.length - 1;
+  const clamped = Math.min(Math.max(continuousPosition, 0), maxIndex);
+  const fromIndex = Math.min(Math.floor(clamped), maxIndex - 1 < 0 ? 0 : maxIndex - 1);
+  const toIndex = Math.min(fromIndex + 1, maxIndex);
+  const progress = clamped - fromIndex;
 
-/** Quantos "svh" de scroll cada segundo de vídeo consome nas transições. */
-const VH_PER_SECOND = 40;
-
-/**
- * Piso mínimo de scroll por transição, para transições muito curtas
- * (ex.: dobra 6 -> 7, de apenas 0,24s) não ficarem impossíveis de controlar.
- */
-const MIN_TRANSITION_VH = 40;
-
-export type TimelineCheckpoint = {
-  vh: number;
-  time: number;
-};
-
-export type Timeline = {
-  /** Checkpoints em ordem crescente de "vh" percorrido. */
-  checkpoints: TimelineCheckpoint[];
-  /** "vh" total de scroll percorrido até o fim da timeline. */
-  totalVh: number;
-  /** "vh" reservado ao repouso da dobra 1. */
-  dwellVh: number;
-  /** Posição em "vh" (a partir do topo da faixa de scroll) de cada uma das dez dobras. */
-  anchorsVh: number[];
-};
-
-export function buildTimeline(): Timeline {
-  const checkpoints: TimelineCheckpoint[] = [
-    { vh: 0, time: SCROLL_STOPS[0].time },
-    { vh: DWELL_VH, time: SCROLL_STOPS[0].time },
-  ];
-
-  let cumulative = DWELL_VH;
-  for (let i = 1; i < SCROLL_STOPS.length; i += 1) {
-    const delta = SCROLL_STOPS[i].time - SCROLL_STOPS[i - 1].time;
-    const vh = Math.max(MIN_TRANSITION_VH, delta * VH_PER_SECOND);
-    cumulative += vh;
-    checkpoints.push({ vh: cumulative, time: SCROLL_STOPS[i].time });
-  }
-
-  const anchorsVh = checkpoints.slice(1).map((checkpoint) => checkpoint.vh);
-
-  return { checkpoints, totalVh: cumulative, dwellVh: DWELL_VH, anchorsVh };
-}
-
-/** Interpola o tempo de vídeo (segundos) para uma posição de scroll (em "vh"). */
-export function getVideoTimeAt(scrolledVh: number, checkpoints: TimelineCheckpoint[]): number {
-  const first = checkpoints[0];
-  const last = checkpoints[checkpoints.length - 1];
-  if (scrolledVh <= first.vh) return first.time;
-  if (scrolledVh >= last.vh) return last.time;
-
-  for (let i = 1; i < checkpoints.length; i += 1) {
-    const prev = checkpoints[i - 1];
-    const curr = checkpoints[i];
-    if (scrolledVh <= curr.vh) {
-      const span = curr.vh - prev.vh;
-      const ratio = span === 0 ? 0 : (scrolledVh - prev.vh) / span;
-      return prev.time + (curr.time - prev.time) * ratio;
-    }
-  }
-  return last.time;
+  const fromTime = SCROLL_STOPS[fromIndex].time;
+  const toTime = SCROLL_STOPS[toIndex].time;
+  return fromTime + (toTime - fromTime) * progress;
 }

@@ -58,6 +58,11 @@ button {
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+    /* Cada dobra ocupa uma tela inteira e o navegador encaixa nela sozinho;
+       scroll-snap-stop: always (definido em .snap-section) impede que uma
+       rolagem forte atravesse mais de uma dobra por vez. */
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: var(--header-height);
   }
 }
 
@@ -182,16 +187,30 @@ button {
 }
 
 /* ---------------- Experiência de scroll + vídeo ---------------- */
-.scroll-track {
-  position: relative;
+
+/* Vídeo + overlay ficam fixos por trás de toda a experiência: as dobras
+   passam por cima em scroll normal, o vídeo nunca se move na tela. */
+.video-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 
-.scroll-stage {
-  position: sticky;
-  top: 0;
+.snap-container {
+  position: relative;
+  z-index: 1;
+}
+
+.snap-section {
+  position: relative;
   height: 100svh;
   width: 100%;
-  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-static {
@@ -327,15 +346,28 @@ button {
   transition: opacity 120ms linear;
 }
 
-.scroll-anchor {
-  position: absolute;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  scroll-margin-top: var(--header-height);
-}
-
 .scroll-anchor-static {
   height: 1px;
   scroll-margin-top: var(--header-height);
 }
+
+/* ===== INÍCIO marcadores temporários de homologação (dobras 2 a 10) =====
+   Apenas para esta fase de testes, enquanto as dobras não têm conteúdo
+   definitivo. Remoção futura: apagar este bloco inteiro, o componente
+   components/DevSectionMarker.tsx e os usos dele em ScrollVideoExperience.tsx. */
+.dev-section-marker {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(21, 21, 15, 0.35);
+  color: var(--color-card);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+/* ===== FIM marcadores temporários de homologação ===== */
