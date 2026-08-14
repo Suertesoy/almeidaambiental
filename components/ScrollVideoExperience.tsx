@@ -13,7 +13,6 @@ import {
   Section08Content,
   Section09Content,
 } from "./HomeSections";
-import { ChevronDownIcon } from "./icons";
 
 /** Conteúdo das dobras 2 a 9, na mesma ordem de SCROLL_STOPS.slice(1). */
 const SECTION_CONTENT = [
@@ -176,7 +175,6 @@ function interpolateBackward(
 export default function ScrollVideoExperience() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Array<HTMLElement | null>>([]);
   const contentRefs = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -549,9 +547,6 @@ export default function ScrollVideoExperience() {
         if (isHidden) heroRef.current.setAttribute("inert", "");
         else heroRef.current.removeAttribute("inert");
       }
-      if (indicatorRef.current) {
-        indicatorRef.current.style.opacity = String(heroOpacity);
-      }
     };
 
     const applyContentOpacity = (continuousPosition: number) => {
@@ -692,16 +687,6 @@ export default function ScrollVideoExperience() {
         >
           <div ref={heroRef} className="hero-content-layer">
             <HeroContent />
-          </div>
-          <div ref={indicatorRef} aria-hidden="true">
-            <div className="scroll-indicator desktop-only">
-              <span>ROLE PARA BAIXO</span>
-              <ChevronDownIcon />
-            </div>
-            <div className="mobile-fidelity mf-scroll-indicator mf-scroll-indicator-hero">
-              <span className="mf-scroll-indicator-text">ROLE PARA BAIXO</span>
-              <ChevronDownIcon />
-            </div>
           </div>
         </section>
 

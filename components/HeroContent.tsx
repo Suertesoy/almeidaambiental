@@ -1,55 +1,39 @@
-import { WhatsAppIcon } from "./icons";
+import { ChevronDownIcon, WhatsAppIcon } from "./icons";
 
 export default function HeroContent() {
   return (
-    <>
-      {/* Desktop (>=1024px): inalterado. */}
-      <div className="hero-content desktop-only">
-        <p className="eyebrow">Há 40 ANOS</p>
-        <h1 className="hero-title">
-          <span>TRANSFORMANDO</span>
-          <span>RESÍDUO EM</span>
-          <span className="hero-title-gold">RESULTADO</span>
-        </h1>
-        <div className="hero-actions">
-          {/* Número/link oficial do WhatsApp ainda não confirmado nesta etapa. */}
-          <button type="button" className="btn btn-primary">
-            <WhatsAppIcon />
-            Falar com o Grupo Almeida
-          </button>
-          <a href="#section-02" className="btn btn-secondary">
-            Conheça nossa história
-          </a>
-        </div>
+    <div className="hero-frame">
+      <div className="dobra-top">
+        <p className="dobra-eyebrow">Grupo Almeida</p>
+        <p className="dobra-hero-years">40 anos</p>
       </div>
 
-      {/* Mobile (<1024px): fiel ao screenshot — "GRUPO ALMEIDA" e "40 anos"
-          são elementos próprios (não um único eyebrow), separados do
-          headline de 3 linhas com apenas "RESULTADO" em amarelo. */}
-      <div className="mobile-fidelity mf-hero-frame">
-        <p className="mf-hero-label">GRUPO ALMEIDA</p>
-        <p className="mf-hero-years">40 anos</p>
-        <h1 className="mf-hero-title">
+      <div className="dobra-center">
+        <h1 className="dobra-title dobra-title-lg">
           <span>TRANSFORMANDO</span>
           <span>RESÍDUO</span>
           <span>
-            EM <em className="mf-hero-title-gold">RESULTADO</em>
+            EM <em className="dobra-title-gold">RESULTADO</em>
           </span>
         </h1>
+      </div>
 
-        <div className="mf-hero-bottom">
-          <div className="mf-hero-actions">
-            {/* Número/link oficial do WhatsApp ainda não confirmado nesta etapa. */}
-            <button type="button" className="mf-btn mf-btn-primary">
-              <WhatsAppIcon />
-              Falar com o Grupo Almeida
-            </button>
-            <a href="#section-02" className="mf-btn mf-btn-secondary">
-              Conheça nossa história
-            </a>
-          </div>
+      <div className="dobra-bottom">
+        <div className="dobra-actions">
+          {/* Número/link oficial do WhatsApp ainda não confirmado nesta etapa. */}
+          <button type="button" className="dobra-btn dobra-btn-primary">
+            <WhatsAppIcon />
+            Falar com o Grupo Almeida
+          </button>
+          <a href="#section-02" className="dobra-btn dobra-btn-secondary">
+            Conheça nossa história
+          </a>
+        </div>
+        <div className="dobra-scroll-indicator" aria-hidden="true">
+          <span>Role para baixo</span>
+          <ChevronDownIcon />
         </div>
       </div>
-    </>
+    </div>
   );
 }

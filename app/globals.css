@@ -5,13 +5,12 @@
   --color-background: #f7f6f1;
   --color-foreground: #15150f;
   --color-primary: #4e6b24;
-  --color-secondary: #c7d79e;
   --color-muted: #ecebe2;
   --color-card: #fbfaf7;
 
   /* PROVISÓRIO: não há valor oficial confirmado para o dourado de destaque.
      Ajustar esta variável quando o valor definitivo for informado. */
-  --color-accent-gold: #d8a536;
+  --color-accent-gold: #e2b024;
 
   /* Overlay obrigatório sobre o vídeo: #4E6B24 a 54% de opacidade. */
   --overlay-video: rgba(78, 107, 36, 0.54);
@@ -20,16 +19,20 @@
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* ---- Tokens da fidelidade mobile (Figma, referência 393px) ----
-     Usados apenas dentro de @media (max-width: 1023px). Não substituem
-     nem alteram os tokens acima, que continuam servindo o desktop. */
+  /* ---- Tokens de tipografia/cor das dobras (Hero + dobras 2 a 9) ----
+     Usados pelo mesmo mecanismo de grid em qualquer largura (ver
+     .hero-frame/.section-frame mais abaixo) — não são mais exclusivos do
+     mobile, apesar do prefixo "mf" (mobile-fidelity) ter ficado como
+     nome histórico. --mf-bg/--mf-header-line/--mf-text-dark continuam
+     exclusivos do header mobile. */
   --mf-bg: #f7f6f1;
   --mf-cta-light-bg: #f3f5ec;
-  --mf-primary: #4e6b24;
+  --mf-primary: #435e28;
   --mf-cta-light-text: #3e5a1c;
-  --mf-inverted-text: #f7f6f1;
-  --mf-label-light: #d3deb4;
-  --mf-yellow: #edc812;
+  /* Tokens dedicados ao botão CTA off-white (não compartilhados com
+     --mf-cta-light-bg/--mf-cta-light-text, usadas no toggle de idioma). */
+  --mf-btn-offwhite-bg: #f3f3ed;
+  --mf-btn-offwhite-text: #1e3a2b;
   --mf-text-dark: #15150f;
   --mf-header-line: #dad8c9;
   --mf-overlay: rgba(78, 107, 36, 0.6);
@@ -45,19 +48,16 @@
 
 @media (max-width: 1023px) {
   :root {
-    --header-height: 65px;
+    --header-height: 64px;
   }
 }
 
 /* ==========================================================
-   Fidelidade mobile (Figma, referência 393px)
+   .desktop-only / .mobile-fidelity
    ==========================================================
-   Estratégia: cada dobra passa a renderizar DOIS blocos de
-   conteúdo — `.desktop-only` (o que já existia, inalterado) e
-   `.mobile-fidelity` (novo, pixel-fiel ao Figma/screenshots).
-   O breakpoint de corte é o mesmo já usado pelo grid desktop
-   (1024px), então nada muda para quem já via a versão desktop.
-   Isso garante, por construção, que o desktop fica intocado. */
+   Só o Header ainda renderiza dois blocos por breakpoint (ver
+   components/Header.tsx) — o conteúdo das dobras (Hero + 2 a 9) usa um
+   único bloco responsivo (.hero-frame/.section-frame), sem essa troca. */
 @media (max-width: 1023px) {
   .desktop-only {
     display: none !important;
@@ -195,11 +195,16 @@ button {
   background: var(--color-muted);
 }
 
-/* ---- Header mobile (<1024px): 65px, fundo/linha do Figma ---- */
+/* ---- Header mobile (<1024px): 65px, fundo/linha do Figma ----
+   Fundo translúcido com blur (em vez de sólido) para o header nunca deixar
+   o conteúdo das dobras vazar atrás dele de forma transparente durante o
+   scroll snap. */
 @media (max-width: 1023px) {
   .site-header {
     border-bottom-color: var(--mf-header-line);
-    background: var(--mf-bg);
+    background: rgba(248, 248, 246, 0.95);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 }
 
@@ -294,7 +299,7 @@ button {
 .lang-btn:focus-visible,
 .hamburger-btn:focus-visible,
 .menu-link:focus-visible,
-.btn:focus-visible {
+.dobra-btn:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
 }
@@ -394,114 +399,13 @@ button {
   }
 }
 
-.hero-content-layer {
+.hero-content-layer,
+.section-layer {
   position: absolute;
   inset: 0;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: calc(var(--header-height) + 24px) 20px 96px;
-  transition: opacity 120ms linear;
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 640px;
-}
-
-.eyebrow {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-secondary);
-}
-
-.hero-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-card);
-  font-size: clamp(2.4rem, 10vw, 4.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.01em;
-  display: flex;
-  flex-direction: column;
-}
-
-.hero-title-gold {
-  color: var(--color-accent-gold);
-}
-
-.hero-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-@media (min-width: 640px) {
-  .hero-actions {
-    flex-direction: row;
-  }
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 52px;
-  padding: 0 24px;
-  border-radius: 8px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-card);
-}
-
-.btn-primary:hover {
-  background: #435c1f;
-}
-
-.btn-secondary {
-  background: var(--color-card);
-  color: var(--color-primary);
-}
-
-.btn-secondary:hover {
-  background: var(--color-muted);
-}
-
-.scroll-indicator {
-  position: absolute;
-  left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-card);
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  display: block;
+  padding: 0;
   transition: opacity 120ms linear;
 }
 
@@ -510,634 +414,364 @@ button {
   scroll-margin-top: var(--header-height);
 }
 
-/* ---- Dobra 1 (Hero) mobile: posições absolutas fiéis ao Figma/
-   screenshot, 393px de referência. Bloco de topo (rótulo + número +
-   headline) ancorado em `top` a partir do início da dobra; bloco de
-   baixo (CTAs + indicador) ancorado em `bottom`, para se adaptar bem
-   entre 800px e 932px de altura sem perder a composição. ---- */
-@media (max-width: 1023px) {
-  .mf-hero-frame {
-    position: absolute;
-    inset: 0;
-    padding: 0;
-  }
-
-  /* Centralizada pelo próprio texto (left:50% + translateX(-50%)), não por
-     uma largura/left fixos que dependiam do tamanho exato do glifo. */
-  .mf-hero-label {
-    position: absolute;
-    left: 50%;
-    top: 237px;
-    transform: translateX(-50%);
-    margin: 0;
-    white-space: nowrap;
-    text-align: center;
-    font-family: var(--font-display-mf);
-    font-weight: 600;
-    font-size: clamp(21.98px, 6.1069vw, 24px);
-    line-height: 30px;
-    letter-spacing: 7.2px;
-    color: var(--mf-label-light);
-    text-transform: uppercase;
-  }
-
-  .mf-hero-years {
-    position: absolute;
-    left: 50%;
-    top: 281px;
-    width: clamp(195.11px, 54.1985vw, 213px);
-    transform: translateX(-50%);
-    margin: 0;
-    text-align: center;
-    font-family: var(--font-display-mf);
-    font-weight: 600;
-    font-size: clamp(54.96px, 15.2672vw, 60px);
-    line-height: 1.1;
-    letter-spacing: -2.4px;
-    color: var(--mf-inverted-text);
-  }
-
-  /* Caixa já centralizada no frame (left/width simétricos); o bug era a
-     ausência de text-align/align-items, que deixava cada linha colada à
-     esquerda dentro da caixa centralizada. */
-  .mf-hero-title {
-    position: absolute;
-    left: clamp(26.56px, 7.3791vw, 29px);
-    top: 388px;
-    width: clamp(306.87px, 85.2417vw, 335px);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    font-family: var(--font-display-mf);
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--mf-inverted-text);
-    font-size: clamp(34.81px, 9.6692vw, 38px);
-    line-height: 44px;
-    letter-spacing: -0.5px;
-  }
-
-  .mf-hero-title-gold {
-    font-style: normal;
-    color: var(--mf-yellow);
-  }
-
-  .mf-hero-bottom {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
-  .mf-hero-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 0 29px;
-    margin-bottom: 32px;
-  }
-
-  /* ---- Botões mobile (compartilhados por todas as dobras) ----
-     Mesma altura/raio/padding em todas; a posição (x, largura, gaps
-     entre elas) é decidida por dobra, sem forçar espaçamento único. */
-  .mf-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    height: 52px;
-    width: 100%;
-    padding: 0 24px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-    font-family: var(--font-display-mf);
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 16px;
-  }
-
-  .mf-btn-primary {
-    background: var(--mf-primary);
-    color: var(--mf-inverted-text);
-  }
-
-  .mf-btn-primary:hover {
-    background: #435c1f;
-  }
-
-  .mf-btn-primary svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .mf-btn-secondary {
-    background: var(--mf-cta-light-bg);
-    color: var(--mf-cta-light-text);
-  }
-
-  .mf-btn-secondary:hover {
-    background: #e7ebda;
-  }
-
-  .mf-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* ---- Indicador de scroll mobile ----
-     Dobra 1: seta + texto "ROLE PARA BAIXO". Dobras 2 a 8: só a seta,
-     sobre um gradiente discreto. Dobra 9 não tem indicador (é a
-     última antes do footer). */
-  .mf-scroll-indicator {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
-    height: 42px;
-    padding-bottom: 12px;
-    background: linear-gradient(to top, rgba(21, 21, 15, 0.22), rgba(21, 21, 15, 0));
-    color: var(--mf-inverted-text);
-  }
-
-  .mf-scroll-indicator svg {
-    width: 14px;
-    height: 10px;
-  }
-
-  .mf-scroll-indicator-hero {
-    height: 63px;
-    padding-bottom: 20px;
-    gap: 6px;
-    background: none;
-  }
-
-  .mf-scroll-indicator-text {
-    font-family: var(--font-display-mf);
-    font-weight: 500;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  /* ---- Prancheta de composição (dobras 2 a 9) ----
-     `.mf-section-frame` deixou de ser um container flex-column com
-     padding-top fixo (mecanismo genérico que gerava toda a divergência de
-     Y relatada). Agora é só o sistema de coordenadas: um retângulo
-     position:relative do tamanho da dobra. Cada bloco gráfico (rótulo,
-     subtítulo/localização, headline, corpo, CTA, indicadores) é
-     position:absolute e recebe `top` (e, quando o centro horizontal da
-     composição não é o padrão, `left`) por INSTÂNCIA, inline, em
-     HomeSections.tsx — porque cada dobra tem sua própria distribuição
-     vertical no Figma, não uma sequência mecânica label→gap→título→gap→
-     corpo→gap→CTA. Não reintroduzir margin-top/gap/justify-content/
-     margin-top:auto como mecanismo de posicionamento aqui. */
-  .mf-section-frame {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .mf-d-label {
-    position: absolute;
-    margin: 0;
-    white-space: nowrap;
-    text-align: center;
-    font-family: var(--font-display-mf);
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--mf-label-light);
-  }
-
-  /* Uma linha só, sempre — quem decide onde quebra é o Figma/screenshot
-     (nunca o navegador). inline-flex + nowrap mantém o espaçamento entre
-     itens/separadores sem permitir o wrap que trocava a composição. */
-  .mf-d-subtitle {
-    position: absolute;
-    margin: 0;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    align-items: baseline;
-    gap: 8px;
-    font-family: var(--font-body-mf);
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 18px;
-    color: var(--mf-inverted-text);
-    opacity: 0.88;
-  }
-
-  .mf-d-subtitle .mf-sep {
-    opacity: 0.5;
-  }
-
-  .mf-d-location {
-    position: absolute;
-    margin: 0;
-    white-space: nowrap;
-    text-align: center;
-    font-family: var(--font-body-mf);
-    font-weight: 600;
-    color: var(--mf-inverted-text);
-    opacity: 0.88;
-  }
-
-  .mf-d-title {
-    position: absolute;
-    margin: 0;
-    font-family: var(--font-display-mf);
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--mf-inverted-text);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
-  }
-
-  /* "O QUE COMEÇOU..." (dobra institucional) usa Playfair Display SemiBold
-     no Figma, não Bold — a essa largura/tracking, o peso 700 alarga os
-     glifos o suficiente para a linha "COM PAPEL E PAPELÃO" ultrapassar os
-     356px do frame. 600 é o peso correto, não uma correção de encaixe. */
-  .mf-d-title-semibold {
-    font-weight: 600;
-  }
-
-  /* Cada <span>/<em> filho representa UMA linha decidida pelo Figma/
-     screenshot — nunca deixar o navegador re-quebrar dentro dela. */
-  .mf-d-title > span,
-  .mf-d-title > em {
-    white-space: nowrap;
-  }
-
-  .mf-d-title-plain {
-    text-transform: none;
-  }
-
-  .mf-d-title-gold {
-    font-style: normal;
-    color: var(--mf-yellow);
-  }
-
-  .mf-d-body {
-    position: absolute;
-    margin: 0;
-    text-align: center;
-    font-family: var(--font-body-mf);
-    font-weight: 600;
-    color: var(--mf-inverted-text);
-    box-sizing: border-box;
-  }
-
-  /* Wrapper do CTA: só posiciona o Y. O botão dentro dele continua
-     centralizando o próprio X via width + left (ver .mf-btn/JSX) — não
-     precisou mudar. */
-  .mf-d-actions {
-    position: absolute;
-    left: 0;
-    width: 100%;
-  }
-
-  /* ---- Dobra 9 (Impacto): cada indicador tem Y próprio, não gap de lista ---- */
-  .mf-stats {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .mf-stat-item {
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-  }
-
-  .mf-stat-value {
-    margin: 0;
-    font-family: var(--font-display-mf);
-    font-weight: 700;
-    font-size: 34px;
-    line-height: 1.1;
-    color: var(--mf-inverted-text);
-  }
-
-  .mf-stat-label {
-    margin: 4px 0 0;
-    font-family: var(--font-body-mf);
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--mf-inverted-text);
-    opacity: 0.88;
-  }
+/* ---- Dobras (hero + 2 a 9): estrutura genérica em CSS Grid ----
+   Mesmo mecanismo em qualquer largura: três linhas (topo/eyebrow, centro
+   — centralizado verticalmente via 1fr, base — CTA + indicador de
+   rolagem). Cada dobra só varia texto/conteúdo, nunca o mecanismo de
+   layout; a partir de 1024px só a escala tipográfica/espaçamento muda
+   (ver bloco @media min-width:1024px mais abaixo). */
+.hero-frame,
+.section-frame {
+  position: relative;
+  /* Não 100% do pai: scroll-padding-top desloca cada dobra
+     var(--header-height) para baixo ao encaixar (para não ficar atrás
+     do header fixo), mas a altura da dobra continua 100svh — sem este
+     ajuste, os últimos pixels da base (CTA/indicador) ficam empurrados
+     para fora da tela visível. */
+  height: calc(100svh - var(--header-height));
+  min-height: calc(100svh - var(--header-height));
+  max-width: 480px;
+  margin-inline: auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 20px;
+  padding: calc(env(safe-area-inset-top, 0px) + 72px) 24px calc(env(safe-area-inset-bottom, 0px) + 28px) 24px;
+  /* Salvaguarda: se o conteúdo de alguma dobra for mais alto que a tela
+     (fontes grandes do sistema, telas muito baixas), rola dentro da
+     própria dobra em vez de vazar por cima da próxima. */
+  overflow-y: auto;
 }
 
-/* 393px é a referência mestre (todas as coordenadas acima foram medidas
-   para ela) e nunca deve ser sacrificada por uma fórmula "universal". Only
-   acima dela: a prancheta de 393px inteira passa a ficar centralizada no
-   viewport (em vez de ancorada à esquerda), sem re-escalar nada dentro
-   dela — mesma composição, só recentralizada. Abaixo de 393px, mf() já
-   encolhe X/largura/fonte proporcionalmente (ver lib/mobile-fit.ts), então
-   a prancheta continua ocupando a viewport inteira normalmente. */
-@media (min-width: 394px) and (max-width: 1023px) {
-  .mf-hero-frame,
-  .mf-section-frame {
-    left: 50%;
-    right: auto;
-    width: 393px;
-    transform: translateX(-50%);
-  }
-}
-
-/* ---------------- Conteúdo institucional das dobras 2 a 9 ----------------
-   Sistema de grid próprio, separado do Hero (que continua usando
-   .hero-content-layer / .hero-content / .hero-title sem nenhuma alteração).
-   .section-layer é a camada de posicionamento (equivalente ao papel que
-   .hero-content-layer cumpre no Hero); .section-grid é a área útil
-   centralizada com 12 colunas conceituais, onde cada dobra (.dobra-0X)
-   distribui título, texto e CTA em regiões diferentes — em vez de repetir
-   o mesmo bloco "rótulo + título empilhado + texto" preso no canto
-   inferior esquerdo em todas as dobras. Mobile-first: por padrão todo
-   filho direto de .section-grid ocupa a largura toda e empilha; os
-   posicionamentos por dobra só entram a partir de 1024px. */
-.section-layer {
+/* Scrim: gradiente escuro na base de cada dobra, por cima do overlay de
+   vídeo e por baixo do conteúdo — garante contraste de botões/indicador. */
+.hero-frame::before,
+.section-frame::before {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  padding: calc(var(--header-height) + 32px) 20px 56px;
-  transition: opacity 120ms linear;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.85) 100%);
 }
 
-/* Dobras 2 a 9 no mobile: fluxo normal em vez do flex centralizado do
-   desktop — cada dobra decide sua própria composição/ritmo vertical
-   dentro de .mf-section-frame. Precisa vir depois da definição base
-   acima para vencer a cascata (mesma especificidade). */
-@media (max-width: 1023px) {
-  .section-layer,
-  .hero-content-layer {
-    display: block;
-    padding: 0;
-  }
+.dobra-top,
+.dobra-center,
+.dobra-bottom {
+  position: relative;
+  z-index: 10;
 }
 
-.section-grid {
-  width: 100%;
-  max-width: 1320px;
-  margin-inline: auto;
+/* grid-row explícito (não depende da ordem no DOM): dobras sem eyebrow
+   podem simplesmente não renderizar .dobra-top sem quebrar o encaixe das
+   outras duas linhas. */
+.dobra-top {
+  grid-row: 1;
+  text-align: center;
+}
+
+.dobra-center {
+  grid-row: 2;
+  align-self: center;
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 20px 24px;
+  row-gap: 14px;
+  justify-items: center;
+  text-align: center;
 }
 
-.section-grid > * {
-  grid-column: 1 / -1;
+.dobra-bottom {
+  grid-row: 3;
+  display: grid;
+  row-gap: 10px;
+  justify-items: center;
 }
 
-@media (min-width: 1024px) {
-  .section-layer {
-    padding-inline: 56px;
-  }
-
-  .section-grid {
-    gap: 24px 32px;
-  }
-
-  /* Dobra 2: título largo à esquerda com o corpo como companheiro à
-     direita (regiões complementares, não uma continuação empilhada do
-     título) e as etapas como uma linha horizontal de fechamento. */
-  .dobra-02 .company-identity { grid-column: 1 / 6; grid-row: 1; }
-  .dobra-02 .section-title { grid-column: 1 / 9; grid-row: 2; }
-  .dobra-02 .section-body { grid-column: 9 / 13; grid-row: 2; align-self: end; }
-  .dobra-02 .service-list { grid-column: 1 / 13; grid-row: 3; margin-top: 8px; }
-
-  /* Dobra 3: divisão editorial quase ao meio, título e o par
-     texto+CTA centralizados verticalmente lado a lado. */
-  .dobra-03 .section-title { grid-column: 1 / 8; grid-row: 1; align-self: center; }
-  .dobra-03 .section-body { grid-column: 8 / 13; grid-row: 1; align-self: center; }
-  .dobra-03 .hero-actions { grid-column: 8 / 13; grid-row: 2; margin-top: 8px; }
-
-  /* Dobra 4: título amplo em linha própria, corpo deslocado (não
-     diretamente abaixo), criando uma leve escada em vez de bloco único. */
-  .dobra-04 .company-identity { grid-column: 1 / 7; grid-row: 1; }
-  .dobra-04 .section-title { grid-column: 1 / 11; grid-row: 2; }
-  .dobra-04 .section-body { grid-column: 5 / 12; grid-row: 3; margin-top: 12px; }
-
-  /* Dobra 5: título à direita, os dois parágrafos + CTA reunidos numa
-     coluna à esquerda (espelha a 3, mas com o peso do lado oposto). */
-  .dobra-05 .section-title { grid-column: 7 / 13; grid-row: 1; }
-  .dobra-05 .section-body:nth-of-type(1) { grid-column: 1 / 7; grid-row: 1; align-self: start; }
-  .dobra-05 .section-body:nth-of-type(2) { grid-column: 1 / 7; grid-row: 2; }
-  .dobra-05 .hero-actions { grid-column: 1 / 7; grid-row: 3; margin-top: 8px; }
-
-  /* Dobra 6: composição aberta e assimétrica — identidade+título ancorados
-     em cima à direita, parágrafo cruzando para baixo à esquerda. */
-  .dobra-06 .company-identity { grid-column: 5 / 11; grid-row: 1; }
-  .dobra-06 .section-title { grid-column: 5 / 13; grid-row: 2; }
-  .dobra-06 .section-body { grid-column: 1 / 7; grid-row: 3; margin-top: 24px; }
-
-  /* Dobra 7: título largo à esquerda, texto+CTA reunidos à direita
-     (progressão em relação à 3/5, não repete a diagonal da 6). */
-  .dobra-07 .section-title { grid-column: 1 / 9; grid-row: 1; }
-  .dobra-07 .section-body { grid-column: 9 / 13; grid-row: 1; align-self: end; }
-  .dobra-07 .hero-actions { grid-column: 9 / 13; grid-row: 2; margin-top: 8px; }
-
-  /* Dobra 8: rótulo+título introduzem à esquerda; os indicadores (grid
-     2x2 em .stats-grid) e o CTA ocupam a largura toda, com protagonismo. */
-  .dobra-08 .eyebrow { grid-column: 1 / 13; grid-row: 1; }
-  .dobra-08 .section-title { grid-column: 1 / 8; grid-row: 2; }
-  .dobra-08 .stats-grid { grid-column: 1 / 13; grid-row: 3; margin-top: 32px; }
-  .dobra-08 .hero-actions { grid-column: 1 / 13; grid-row: 4; margin-top: 24px; }
-
-  /* Dobra 9: encerramento centralizado, recuperando parte do impacto do
-     Hero sem repetir literalmente o mesmo componente. */
-  .dobra-09 { justify-items: center; }
-  .dobra-09 .closing-title,
-  .dobra-09 .section-body { grid-column: 2 / 12; text-align: center; }
-  .dobra-09 .hero-actions { grid-column: 2 / 12; justify-content: center; margin-top: 8px; }
-}
-
-.section-body {
+.dobra-eyebrow {
   margin: 0;
-  max-width: 560px;
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 2.2vw, 1.125rem);
-  line-height: 1.5;
-  color: var(--color-card);
-}
-
-/* ---------------- Identidade institucional (dobras 2, 4, 6) ----------------
-   Padrão visual reutilizado nas primeiras dobras de cada empresa do Grupo
-   Almeida (Almeida Ambiental, Almeida Equipamentos, Saturno Ambiental):
-   nome da empresa com hierarquia própria (maior que .eyebrow, claramente
-   menor que .section-title) + atuação breve + localização, para que o
-   visitante identifique a empresa antes ou junto da headline, sem repetir
-   o mesmo layout pixel a pixel em cada dobra. */
-.company-identity {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.company-name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
+  font-family: var(--font-display-mf);
+  font-weight: 500;
+  font-size: 14px;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: var(--color-secondary);
-  font-size: clamp(1.375rem, 3.4vw, 2.125rem);
-  line-height: 1.08;
+  letter-spacing: 0.12em;
+  color: #ffffff;
 }
 
-.company-divider {
-  display: block;
-  width: 48px;
-  height: 2px;
-  background: var(--color-secondary);
-  opacity: 0.65;
-  margin: 2px 0 2px;
-}
-
-.company-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.company-role {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: clamp(0.9375rem, 1.8vw, 1.0625rem);
-  line-height: 1.4;
-  color: var(--color-card);
-}
-
-.company-role-secondary {
-  opacity: 0.82;
-}
-
-.company-location {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 13px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--color-card);
-  opacity: 0.72;
-}
-
-/* Linha de serviços da Almeida Ambiental (dobra 2): deixou de ser um texto
-   pequeno de rodapé para funcionar quase como um resumo visual editorial da
-   atuação da empresa — mais peso, mais tamanho, separadores discretos. */
-.service-list {
-  margin: 12px 0 0;
-  padding-top: 14px;
-  max-width: 760px;
-  border-top: 1px solid rgba(251, 250, 247, 0.3);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.0625rem, 2.6vw, 1.375rem);
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  color: var(--color-card);
+/* Cidades/serviços de apoio, logo abaixo do eyebrow. */
+.dobra-tags {
+  margin: 4px 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  justify-content: center;
+  gap: 4px 8px;
+  font-family: var(--font-body-mf);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.service-list .service-sep {
+.dobra-tags .dobra-sep {
+  opacity: 0.5;
+}
+
+/* Número de destaque do Hero ("40 anos"): mesma família/coluna do
+   eyebrow, mas com escala própria — não é uma tag genérica. */
+.dobra-hero-years {
+  margin: 0;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  font-size: clamp(44px, 13vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.dobra-title {
+  margin: 0;
+  width: 100%;
+  /* align-items:stretch (não center): cada linha (span/em) precisa ocupar
+     a largura do container para poder quebrar dentro dela — com "center"
+     cada linha vira max-content e ignora a largura disponível, estourando
+     a dobra em telas largas com fonte grande (ex.: título do Hero).
+     overflow-wrap:break-word é a rede de segurança para a palavra isolada
+     mais longa ("TRANSFORMANDO"), que mesmo dentro da largura certa ainda
+     pode ultrapassá-la nos tamanhos maiores do clamp() abaixo. */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  overflow-wrap: break-word;
+  font-family: var(--font-display-mf);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: clamp(28px, 7.5vw, 36px);
+  line-height: 1.1;
+}
+
+/* Hero e dobra de fechamento (8): título maior, protagonista da dobra. */
+.dobra-title-lg {
+  font-size: clamp(32px, 9vw, 44px);
+}
+
+/* "O QUE COMEÇOU..." (dobra de fechamento) usa Playfair Display
+   SemiBold no Figma, não Bold. */
+.dobra-title-semibold {
+  font-weight: 600;
+}
+
+.dobra-title-plain {
+  text-transform: none;
+}
+
+.dobra-title-gold {
+  font-style: normal;
+  color: var(--color-accent-gold);
+}
+
+.dobra-body {
+  margin: 0;
+  max-width: 310px;
+  font-family: var(--font-body-mf);
   font-weight: 400;
-  opacity: 0.45;
-}
-
-/* Headline institucional das dobras 2 a 7: grande, mas claramente menor
-   que o Hero (.hero-title), para não repetir a sensação de capa/banner. */
-.section-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-card);
-  font-size: clamp(1.875rem, 4.5vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Encerramento (dobra 9): volta a se aproximar do impacto do Hero, mas é
-   um token próprio — não o mesmo componente/tamanho do .hero-title. */
-.closing-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-card);
-  font-size: clamp(2.2rem, 9vw, 4.25rem);
-  line-height: 1.03;
-  letter-spacing: -0.01em;
-  display: flex;
-  flex-direction: column;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin: 8px 0 0;
-}
-
-@media (min-width: 1024px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 40px;
-  }
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Indicadores da dobra 8: maior escala tipográfica da Home depois do
-   Hero, porque aqui o dado é o protagonista da composição. */
-.stat-value {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  color: var(--color-card);
-}
-
-.stat-label {
-  margin: 0;
-  font-family: var(--font-body);
   font-size: 13px;
-  color: var(--color-card);
-  opacity: 0.88;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.btn:disabled {
+.dobra-actions {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  row-gap: 12px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---- Botões (compartilhados por todas as dobras) ---- */
+.dobra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Botão WhatsApp (dobra 1): usa --mf-primary só aqui, sem afetar o token
+   de fundo compartilhado com outros elementos. */
+.dobra-btn-primary {
+  background: var(--mf-primary);
+  color: #ffffff;
+}
+
+.dobra-btn-primary:hover {
+  background: #384e21;
+}
+
+.dobra-btn-primary svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Botão off-white (demais CTAs): tokens próprios, para não reaproveitar
+   --mf-cta-light-bg/--mf-cta-light-text — usadas também no fundo do
+   toggle de idioma ativo no header. */
+.dobra-btn-secondary {
+  background: var(--mf-btn-offwhite-bg);
+  color: var(--mf-btn-offwhite-text);
+}
+
+.dobra-btn-secondary:hover {
+  background: #e6e6de;
+}
+
+.dobra-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* ---- Indicador de scroll ----
+   Dobra 1: seta + texto "ROLE PARA BAIXO". Dobras 2 a 8: só a seta.
+   Dobra 9 não tem indicador (é a última antes do footer). */
+.dobra-scroll-indicator {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display-mf);
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dobra-scroll-indicator svg {
+  width: 14px;
+  height: 10px;
+}
+
+/* ---- Dobra 9 (Impacto): métricas em grid, alinhadas e centralizadas ---- */
+.dobra-metrics {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.dobra-metric {
+  text-align: center;
+}
+
+.dobra-metric-value {
+  margin: 0;
+  font-family: var(--font-display-mf);
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.dobra-metric-label {
+  margin: 2px 0 0;
+  font-family: var(--font-body-mf);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---- Escala desktop (>=1024px) ----
+   Mesmo mecanismo (grid de 3 linhas) do restante do arquivo; aqui só a
+   tipografia, espaçamento e largura máxima aumentam para telas maiores. */
+@media (min-width: 1024px) {
+  .hero-frame,
+  .section-frame {
+    max-width: 860px;
+    row-gap: 32px;
+    padding: calc(var(--header-height) + 56px) 56px 64px 56px;
+  }
+
+  .dobra-center {
+    row-gap: 20px;
+  }
+
+  .dobra-bottom {
+    row-gap: 16px;
+  }
+
+  .dobra-eyebrow {
+    font-size: 16px;
+  }
+
+  .dobra-tags {
+    font-size: 15px;
+    gap: 6px 12px;
+  }
+
+  .dobra-hero-years {
+    font-size: clamp(72px, 8vw, 108px);
+  }
+
+  .dobra-title {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  .dobra-title-lg {
+    font-size: clamp(3rem, 5.5vw, 4.75rem);
+  }
+
+  .dobra-body {
+    max-width: 620px;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .dobra-actions {
+    flex-direction: row;
+    row-gap: 16px;
+    column-gap: 16px;
+  }
+
+  .dobra-btn {
+    width: auto;
+    min-width: 220px;
+    max-width: 340px;
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .dobra-scroll-indicator {
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .dobra-metrics {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .dobra-metric-value {
+    font-size: 56px;
+  }
+
+  .dobra-metric-label {
+    font-size: 14px;
+  }
 }
 
 /* ---------------- Footer ---------------- */
