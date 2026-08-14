@@ -1,58 +1,45 @@
-import Link from "next/link";
-import { ChevronDownIcon } from "./icons";
 import { MfBody, MfButton, MfLabel, MfMetric, MfScrollHint, MfSubtitle, MfTitle } from "./MobileDobra";
+import { DBody, DButton, DMetricsGrid, DNameBlock, DScrollHint, DTitle } from "./DesktopDobra";
 
 /**
  * Conteúdo real das dobras 2 a 9 da Home (dobra 1 continua em HeroContent.tsx).
  *
  * Cada dobra renderiza dois blocos independentes:
- * - Desktop (>=1024px, `.desktop-only`): mecanismo genérico em CSS Grid da
- *   Decisão 25 (`.section-frame`/`.dobra-*`), intocado nesta rodada.
+ * - Desktop (>=1024px, `.desktop-only`): composição editorial própria da
+ *   Decisão 27 (`.d-stage`, ver components/DesktopDobra.tsx) — cada dobra
+ *   com sua própria distribuição em 12 colunas conceituais.
  * - Mobile (<1024px, `.mobile-fidelity`): prancheta de coordenadas por
- *   elemento da Decisão 26 (`.mf-section-frame`), referência 393px.
+ *   elemento da Decisão 26 (`.mf-section-frame`), referência 393px — área
+ *   protegida, não tocada nesta rodada.
  */
 
-function ScrollHint() {
-  return (
-    <div className="dobra-scroll-indicator" aria-hidden="true">
-      <ChevronDownIcon />
-    </div>
-  );
-}
+const HEADLINE_FONT = { fontSize: "clamp(48px, 4vw, 64px)", lineHeight: 0.98 };
 
 export function Section02Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Almeida Ambiental</p>
-          <p className="dobra-tags">
-            <span>Diagnóstico</span>
-            <span className="dobra-sep">·</span>
-            <span>Coleta</span>
-            <span className="dobra-sep">·</span>
-            <span>Triagem</span>
-            <span className="dobra-sep">·</span>
-            <span>Trituração</span>
-            <span className="dobra-sep">·</span>
-            <span>Descaracterização</span>
-          </p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <span>RESÍDUOS GANHAM</span>
-            <span>
-              UM NOVO <em className="dobra-title-gold">DESTINO</em>
-            </span>
-          </h2>
-          <p className="dobra-body">
-            Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-            responsável de resíduos.
-          </p>
-        </div>
-        <div className="dobra-bottom">
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock
+          top="18%"
+          colA={1}
+          colB={6}
+          name="Almeida Ambiental"
+          services="Diagnóstico · Coleta · Triagem · Trituração · Descaracterização"
+        />
+        <DTitle
+          top="38%"
+          colA={1}
+          colB={8}
+          maxWidth="760px"
+          align="left"
+          {...HEADLINE_FONT}
+          lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
+        />
+        <DBody top="49%" colA={9} colB={13} maxWidth="420px" align="left">
+          Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
+          responsável de resíduos.
+        </DBody>
+        <DScrollHint />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -84,33 +71,36 @@ export function Section02Content() {
 export function Section03Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Almeida Ambiental</p>
-          <p className="dobra-tags">São José · Joinville · Araquari · Chapecó · SC</p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <span>
-              <em className="dobra-title-gold">EFICIÊNCIA</em> EM
-            </span>
-            <span>CADA ETAPA</span>
-            <span>DO PROCESSO</span>
-          </h2>
-          <p className="dobra-body">
-            Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
-            transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
-            ambiental.
-          </p>
-        </div>
-        <div className="dobra-bottom">
-          <div className="dobra-actions">
-            <Link href="/almeida-ambiental" className="dobra-btn dobra-btn-secondary">
-              Conheça Almeida Ambiental
-            </Link>
-          </div>
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock
+          top="18%"
+          colA={1}
+          colB={6}
+          name="Almeida Ambiental"
+          services="São José · Joinville · Araquari · Chapecó · SC"
+        />
+        <DTitle
+          top="37%"
+          colA={1}
+          colB={8}
+          maxWidth="760px"
+          align="left"
+          {...HEADLINE_FONT}
+          lines={[
+            [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
+            [{ text: "CADA ETAPA" }],
+            [{ text: "DO PROCESSO" }],
+          ]}
+        />
+        <DBody top="42%" colA={8} colB={13} maxWidth="460px" align="left">
+          Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
+          transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
+          ambiental.
+        </DBody>
+        <DButton top="66%" colA={8} colB={13} variant="secondary" href="/almeida-ambiental">
+          Conheça Almeida Ambiental
+        </DButton>
+        <DScrollHint />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -150,35 +140,33 @@ export function Section03Content() {
 export function Section04Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Almeida Equipamentos</p>
-          <p className="dobra-tags">
-            <span>Compactadores</span>
-            <span className="dobra-sep">·</span>
-            <span>Prensas</span>
-            <span className="dobra-sep">·</span>
-            <span>Trituradores</span>
-            <span className="dobra-sep">·</span>
-            <span>Containers</span>
-          </p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <span>
-              <em className="dobra-title-gold">TECNOLOGIA</em> QUE
-            </span>
-            <span>NASCEU DA</span>
-            <span>PRÓPRIA OPERAÇÃO</span>
-          </h2>
-          <p className="dobra-body">
-            Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
-            décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
-          </p>
-        </div>
-        <div className="dobra-bottom">
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock
+          top="18%"
+          colA={7}
+          colB={13}
+          align="right"
+          name="Almeida Equipamentos"
+          services="Compactadores · Prensas · Trituradores · Containers"
+        />
+        <DTitle
+          top="38%"
+          colA={5}
+          colB={13}
+          maxWidth="760px"
+          align="right"
+          {...HEADLINE_FONT}
+          lines={[
+            [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
+            [{ text: "NASCEU DA" }],
+            [{ text: "PRÓPRIA OPERAÇÃO" }],
+          ]}
+        />
+        <DBody top="50%" colA={1} colB={6} maxWidth="480px" align="left">
+          Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
+          décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
+        </DBody>
+        <DScrollHint />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -214,31 +202,28 @@ export function Section04Content() {
 export function Section05Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Almeida Equipamentos</p>
-          <p className="dobra-tags">São José · SC</p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <span>ENGENHARIA PARA</span>
-            <span>MOVIMENTAR</span>
-            <em className="dobra-title-gold">MAIS COM MENOS</em>
-          </h2>
-          <p className="dobra-body">
-            Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
-            realidades operacionais.
-          </p>
-          <p className="dobra-body">Conhecimento de campo conectado a tecnologias internacionais.</p>
-        </div>
-        <div className="dobra-bottom">
-          <div className="dobra-actions">
-            <Link href="/almeida-equipamentos" className="dobra-btn dobra-btn-secondary">
-              Conheça Almeida Equipamentos
-            </Link>
-          </div>
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock top="18%" colA={7} colB={13} align="right" name="Almeida Equipamentos" services="São José · SC" />
+        <DTitle
+          top="35%"
+          colA={6}
+          colB={13}
+          maxWidth="760px"
+          align="right"
+          {...HEADLINE_FONT}
+          lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
+        />
+        <DBody top="43%" colA={1} colB={6} maxWidth="500px" align="left">
+          Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
+          realidades operacionais.
+        </DBody>
+        <DBody top="54%" colA={1} colB={6} maxWidth="500px" align="left">
+          Conhecimento de campo conectado a tecnologias internacionais.
+        </DBody>
+        <DButton top="68%" colA={1} colB={6} variant="secondary" href="/almeida-equipamentos">
+          Conheça Almeida Equipamentos
+        </DButton>
+        <DScrollHint />
       </div>
 
       {/* Composição deliberadamente deslocada à direita: centro em x=204,5px (não 196,5px). */}
@@ -277,31 +262,29 @@ export function Section05Content() {
 export function Section06Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Saturno Ambiental</p>
-          <p className="dobra-tags">
-            <span>Gestão de Resíduos</span>
-            <span className="dobra-sep">·</span>
-            <span>Cartonagem</span>
-            <span className="dobra-sep">·</span>
-            <span>Consultoria</span>
-          </p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <em className="dobra-title-gold">EXPERIÊNCIA</em>
-            <span>REGIONAL.</span>
-            <span>FORÇA DE GRUPO.</span>
-          </h2>
-          <p className="dobra-body">
-            Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
-            conhecimento em gestão de resíduos das operações da região.
-          </p>
-        </div>
-        <div className="dobra-bottom">
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock
+          top="18%"
+          colA={1}
+          colB={6}
+          name="Saturno Ambiental"
+          services="Gestão de Resíduos · Cartonagem · Consultoria"
+        />
+        <DTitle
+          top="37%"
+          colA={1}
+          colB={8}
+          maxWidth="760px"
+          align="left"
+          {...HEADLINE_FONT}
+          lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
+        />
+        {/* Grande espaço proposital entre headline (top 37%) e body (top 58%): não aproximar. */}
+        <DBody top="58%" colA={8} colB={13} maxWidth="440px" align="left">
+          Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
+          conhecimento em gestão de resíduos das operações da região.
+        </DBody>
+        <DScrollHint />
       </div>
 
       {/* Grande espaço proposital entre headline (top 277) e body (top 591): não aproximar. */}
@@ -334,32 +317,36 @@ export function Section06Content() {
 export function Section07Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Saturno Ambiental</p>
-          <p className="dobra-tags">Blumenau · Vale do Itajaí</p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title">
-            <span>GESTÃO AMBIENTAL</span>
-            <span>
-              QUE <em className="dobra-title-gold">VAI ALÉM</em>
-            </span>
-            <span>DA COLETA</span>
-          </h2>
-          <p className="dobra-body">
-            Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-            construída para unir eficiência operacional e responsabilidade ambiental.
-          </p>
-        </div>
-        <div className="dobra-bottom">
-          <div className="dobra-actions">
-            <Link href="/saturno-ambiental" className="dobra-btn dobra-btn-secondary">
-              Conheça Saturno Ambiental
-            </Link>
-          </div>
-          <ScrollHint />
-        </div>
+      <div className="desktop-only d-stage">
+        <DNameBlock
+          top="18%"
+          colA={7}
+          colB={13}
+          align="right"
+          name="Saturno Ambiental"
+          services="Blumenau · Vale do Itajaí"
+        />
+        <DTitle
+          top="36%"
+          colA={1}
+          colB={8}
+          maxWidth="760px"
+          align="left"
+          {...HEADLINE_FONT}
+          lines={[
+            [{ text: "GESTÃO AMBIENTAL" }],
+            [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
+            [{ text: "DA COLETA" }],
+          ]}
+        />
+        <DBody top="45%" colA={8} colB={13} maxWidth="460px" align="left">
+          Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
+          construída para unir eficiência operacional e responsabilidade ambiental.
+        </DBody>
+        <DButton top="68%" colA={8} colB={13} variant="secondary" href="/saturno-ambiental">
+          Conheça Saturno Ambiental
+        </DButton>
+        <DScrollHint />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -406,26 +393,31 @@ export function Section07Content() {
 export function Section08Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top" />
-        <div className="dobra-center">
-          <h2 className="dobra-title dobra-title-semibold">
-            <span>O QUE COMEÇOU</span>
-            <span>COM PAPEL E PAPELÃO</span>
-            <span>HOJE CONECTA</span>
-            <span>OPERAÇÃO, TECNOLOGIA</span>
-            <span>E SUSTENTABILIDADE.</span>
-          </h2>
-          <p className="dobra-body">Há 40 anos transformando o presente, pensando no futuro.</p>
-        </div>
-        <div className="dobra-bottom">
-          <div className="dobra-actions">
-            <Link href="/contato" className="dobra-btn dobra-btn-secondary">
-              Entre em contato com o Grupo Almeida
-            </Link>
-          </div>
-          <ScrollHint />
-        </div>
+      {/* Desktop: 4 linhas explícitas (não 6 como no mobile) — só a quebra
+          muda por causa da largura maior, a copy continua a mesma. */}
+      <div className="desktop-only d-stage">
+        <DTitle
+          top="18%"
+          centerX
+          maxWidth="min(1000px, 80vw)"
+          align="center"
+          fontSize="clamp(54px, 4.8vw, 72px)"
+          lineHeight={1.02}
+          letterSpacing="-2px"
+          lines={[
+            [{ text: "O QUE COMEÇOU" }],
+            [{ text: "COM PAPEL E PAPELÃO" }],
+            [{ text: "HOJE CONECTA OPERAÇÃO," }],
+            [{ text: "TECNOLOGIA E SUSTENTABILIDADE." }],
+          ]}
+        />
+        <DBody top="67%" centerX maxWidth="620px" align="center" fontSize="18px">
+          Há 40 anos transformando o presente, pensando no futuro.
+        </DBody>
+        <DButton top="77%" centerX variant="secondary" href="/contato">
+          Entre em contato com o Grupo Almeida
+        </DButton>
+        <DScrollHint />
       </div>
 
       {/* Seis linhas exatas, nenhuma junta às outras (headline ocupa 6×50px = 300px). */}
@@ -461,45 +453,42 @@ export function Section08Content() {
 export function Section09Content() {
   return (
     <>
-      <div className="desktop-only section-frame">
-        <div className="dobra-top">
-          <p className="dobra-eyebrow">Impacto Positivo · 2025</p>
-        </div>
-        <div className="dobra-center">
-          <h2 className="dobra-title dobra-title-plain">
-            <span>Cada resíduo</span>
-            <span>processado vira um</span>
-            <span>número que a</span>
-            <em className="dobra-title-gold">natureza reconhece.</em>
-          </h2>
-          <ul className="dobra-metrics">
-            <li className="dobra-metric">
-              <p className="dobra-metric-value">818.907</p>
-              <p className="dobra-metric-label">árvores preservadas</p>
-            </li>
-            <li className="dobra-metric">
-              <p className="dobra-metric-value">54.873 t</p>
-              <p className="dobra-metric-label">materiais reciclados</p>
-            </li>
-            <li className="dobra-metric">
-              <p className="dobra-metric-value">153.114 t</p>
-              <p className="dobra-metric-label">CO₂ evitadas</p>
-            </li>
-            <li className="dobra-metric">
-              <p className="dobra-metric-value">1,27 bi</p>
-              <p className="dobra-metric-label">litros de água economizados</p>
-            </li>
-          </ul>
-        </div>
-        <div className="dobra-bottom">
-          <div className="dobra-actions">
-            {/* Relatório de Sustentabilidade 2025 ainda não disponível no projeto:
-                botão fica sem destino definitivo nesta etapa (ver DECISOES.md). */}
-            <button type="button" className="dobra-btn dobra-btn-secondary" disabled>
-              Ver Relatório de Sustentabilidade 2025
-            </button>
-          </div>
-        </div>
+      {/* Desktop: sem "Impacto Positivo · 2025" (igual ao mobile). Métricas em
+          grid 2×2 — adaptação intencional para telas largas (mobile: coluna
+          única). Sem indicador de rolagem: depois dela vem o footer. */}
+      <div className="desktop-only d-stage">
+        <DTitle
+          top="25%"
+          colA={1}
+          colB={6}
+          maxWidth="600px"
+          align="left"
+          plain
+          fontSize="clamp(48px, 4vw, 64px)"
+          lineHeight={0.98}
+          lines={[
+            [{ text: "Cada resíduo" }],
+            [{ text: "processado vira um" }],
+            [{ text: "número que a" }],
+            [{ text: "natureza reconhece.", gold: true }],
+          ]}
+        />
+        <DMetricsGrid
+          top="24%"
+          colA={7}
+          colB={13}
+          metrics={[
+            { value: "818.907", label: "árvores preservadas" },
+            { value: "54.873 t", label: "materiais reciclados" },
+            { value: "153.114 t", label: "CO₂ evitadas" },
+            { value: "1,27 bi", label: "litros de água economizados" },
+          ]}
+        />
+        {/* Relatório de Sustentabilidade 2025 ainda não disponível no projeto:
+            botão fica sem destino definitivo nesta etapa (ver DECISOES.md). */}
+        <DButton top="72%" colA={7} colB={13} variant="secondary" disabled>
+          Ver Relatório de Sustentabilidade 2025
+        </DButton>
       </div>
 
       {/* Sem "Impacto Positivo · 2025" no mobile. Métricas empilhadas em coluna

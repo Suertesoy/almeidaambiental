@@ -41,7 +41,7 @@
 
   /* ---- Tokens exclusivos da composição mobile <1024px (Decisão 26) ----
      Direção de arte por dobra, independente da paleta/tipografia acima
-     (que continua sendo a fonte de verdade do desktop, Decisão 25). */
+     (protegida — não alterar; ver Decisão 27 sobre o desktop). */
   --m393-bg: #f7f6f1;
   --m393-offwhite: #f7f6f1;
   --m393-green: #4e6b24;
@@ -51,6 +51,21 @@
   --m393-header-line: #dad8c9;
   --m393-cta-light-bg: #f3f5ec;
   --m393-overlay: rgba(78, 107, 36, 0.6);
+
+  /* ---- Tokens exclusivos da composição editorial desktop >=1024px (Decisão 27) ----
+     Mesma paleta de direção de arte da Decisão 26 (mesmos valores hex),
+     tokens próprios para não acoplar CSS de desktop a nomes "m393-"
+     (mobile, área protegida) nem aos tokens antigos da Decisão 25
+     (--color-accent-gold/--mf-primary, que deixam de ser usados no
+     desktop mas permanecem definidos, sem efeito). */
+  --d-offwhite: #f7f6f1;
+  --d-gold: #edc812;
+  --d-name-green: #d3deb4;
+  --d-green: #4e6b24;
+  --d-cta-light-bg: #f3f5ec;
+  --d-cta-light-text: #3e5a1c;
+  --d-gutter: 40px;
+  --d-stage-max: 1280px;
 }
 
 @media (min-width: 1024px) {
@@ -156,7 +171,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  max-width: var(--d-stage-max);
+  margin-inline: auto;
+  padding-inline: clamp(40px, 5vw, 80px);
 }
 
 .logo-link {
@@ -327,7 +344,7 @@ button {
 .lang-btn:focus-visible,
 .hamburger-btn:focus-visible,
 .menu-link:focus-visible,
-.dobra-btn:focus-visible {
+.d-btn:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
 }
@@ -442,364 +459,228 @@ button {
   scroll-margin-top: var(--header-height);
 }
 
-/* ---- Dobras (hero + 2 a 9): estrutura genérica em CSS Grid ----
-   Mesmo mecanismo em qualquer largura: três linhas (topo/eyebrow, centro
-   — centralizado verticalmente via 1fr, base — CTA + indicador de
-   rolagem). Cada dobra só varia texto/conteúdo, nunca o mecanismo de
-   layout; a partir de 1024px só a escala tipográfica/espaçamento muda
-   (ver bloco @media min-width:1024px mais abaixo). */
-.hero-frame,
-.section-frame {
+/* ==========================================================
+   Composição DESKTOP (>=1024px) — Decisão 27
+   ==========================================================
+   Substitui integralmente o mecanismo genérico em grid da Decisão 25
+   (removido: .hero-frame/.section-frame/.dobra-* não são mais usados por
+   nenhum componente). Direção editorial por dobra, independente do
+   mobile (Decisão 26, área protegida, não tocada nesta rodada) — mesma
+   paleta (tokens --d-*), estrutura própria.
+
+   Cada dobra usa um "stage" (.d-stage): área útil centralizada, largura
+   fluida até 1280px, height:calc(100svh - header-height) (o header
+   desktop continua no fluxo do scroll-padding-top, inalterado). Dentro
+   dele, cada elemento é position:absolute com:
+   - top em porcentagem (relativa à altura inteira do stage — nunca
+     derivada de outro elemento);
+   - left/width calculados via gridX() (helper em
+     components/DesktopDobra.tsx), reproduzindo a métrica de um grid de
+     12 colunas conceituais com 24px de gap, sem exigir que os elementos
+     sejam filhos reais de um CSS Grid. */
+.d-stage {
   position: relative;
-  /* Não 100% do pai: scroll-padding-top desloca cada dobra
-     var(--header-height) para baixo ao encaixar (para não ficar atrás
-     do header fixo), mas a altura da dobra continua 100svh — sem este
-     ajuste, os últimos pixels da base (CTA/indicador) ficam empurrados
-     para fora da tela visível. */
-  height: calc(100svh - var(--header-height));
-  min-height: calc(100svh - var(--header-height));
-  max-width: 480px;
+  width: calc(100% - 80px);
+  max-width: var(--d-stage-max);
   margin-inline: auto;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  row-gap: 20px;
-  padding: calc(env(safe-area-inset-top, 0px) + 72px) 24px calc(env(safe-area-inset-bottom, 0px) + 28px) 24px;
-  /* Salvaguarda: se o conteúdo de alguma dobra for mais alto que a tela
-     (fontes grandes do sistema, telas muito baixas), rola dentro da
-     própria dobra em vez de vazar por cima da próxima. */
-  overflow-y: auto;
+  height: calc(100svh - var(--header-height));
 }
 
-/* Scrim: gradiente escuro na base de cada dobra, por cima do overlay de
-   vídeo e por baixo do conteúdo — garante contraste de botões/indicador. */
-.hero-frame::before,
-.section-frame::before {
-  content: "";
+@media (min-width: 1280px) {
+  .d-stage {
+    width: calc(100% - 128px);
+  }
+}
+
+.d-name-block {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.85) 100%);
-}
-
-.dobra-top,
-.dobra-center,
-.dobra-bottom {
-  position: relative;
-  z-index: 10;
-}
-
-/* grid-row explícito (não depende da ordem no DOM): dobras sem eyebrow
-   podem simplesmente não renderizar .dobra-top sem quebrar o encaixe das
-   outras duas linhas. */
-.dobra-top {
-  grid-row: 1;
-  text-align: center;
-}
-
-.dobra-center {
-  grid-row: 2;
-  align-self: center;
-  display: grid;
-  row-gap: 14px;
-  justify-items: center;
-  text-align: center;
-}
-
-.dobra-bottom {
-  grid-row: 3;
-  display: grid;
-  row-gap: 10px;
-  justify-items: center;
-}
-
-.dobra-eyebrow {
   margin: 0;
-  font-family: var(--font-display-mf);
-  font-weight: 500;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #ffffff;
-}
-
-/* Cidades/serviços de apoio, logo abaixo do eyebrow. */
-.dobra-tags {
-  margin: 4px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 8px;
-  font-family: var(--font-body-mf);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.dobra-tags .dobra-sep {
-  opacity: 0.5;
-}
-
-/* Número de destaque do Hero ("40 anos"): mesma família/coluna do
-   eyebrow, mas com escala própria — não é uma tag genérica. */
-.dobra-hero-years {
-  margin: 0;
-  font-family: var(--font-display-mf);
-  font-weight: 600;
-  font-size: clamp(44px, 13vw, 60px);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-}
-
-.dobra-title {
-  margin: 0;
-  width: 100%;
-  /* align-items:stretch (não center): cada linha (span/em) precisa ocupar
-     a largura do container para poder quebrar dentro dela — com "center"
-     cada linha vira max-content e ignora a largura disponível, estourando
-     a dobra em telas largas com fonte grande (ex.: título do Hero).
-     overflow-wrap:break-word é a rede de segurança para a palavra isolada
-     mais longa ("TRANSFORMANDO"), que mesmo dentro da largura certa ainda
-     pode ultrapassá-la nos tamanhos maiores do clamp() abaixo. */
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  text-align: center;
-  overflow-wrap: break-word;
+  gap: 8px;
+}
+
+.d-name {
+  margin: 0;
   font-family: var(--font-display-mf);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #ffffff;
-  font-size: clamp(28px, 7.5vw, 36px);
-  line-height: 1.1;
-}
-
-/* Hero e dobra de fechamento (8): título maior, protagonista da dobra. */
-.dobra-title-lg {
-  font-size: clamp(32px, 9vw, 44px);
-}
-
-/* "O QUE COMEÇOU..." (dobra de fechamento) usa Playfair Display
-   SemiBold no Figma, não Bold. */
-.dobra-title-semibold {
   font-weight: 600;
+  font-size: clamp(20px, 1.6vw, 26px);
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--d-name-green);
 }
 
-.dobra-title-plain {
+.d-services {
+  margin: 0;
+  font-family: var(--font-body-mf);
+  font-weight: 600;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.3;
+  color: var(--d-offwhite);
+}
+
+.d-title {
+  position: absolute;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--d-offwhite);
+}
+
+.d-title > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.d-title-plain {
   text-transform: none;
 }
 
-.dobra-title-gold {
+.d-title-gold {
   font-style: normal;
-  color: var(--color-accent-gold);
+  color: var(--d-gold);
 }
 
-.dobra-body {
+.d-body {
+  position: absolute;
   margin: 0;
-  max-width: 310px;
   font-family: var(--font-body-mf);
-  font-weight: 400;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: clamp(16px, 1.25vw, 18px);
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--d-offwhite);
 }
 
-.dobra-actions {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  row-gap: 12px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-/* ---- Botões (compartilhados por todas as dobras) ---- */
-.dobra-btn {
+/* ---- CTA desktop (56px de altura, largura automática) ----
+   Sem position:absolute na classe base: o botão "solo" (DButton) recebe
+   position:absolute inline (top + gridX); dentro de .d-actions-row (Hero,
+   dois CTAs lado a lado) o botão fica em fluxo normal (flex item). */
+.d-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: 100%;
-  max-width: 320px;
-  height: 48px;
-  padding: 0 24px;
-  border-radius: 8px;
+  width: auto;
+  min-width: 260px;
+  max-width: 360px;
+  height: 56px;
+  padding-inline: 28px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
   font-family: var(--font-display-mf);
   font-weight: 600;
-  font-size: 14px;
-  line-height: 1;
+  font-size: 17px;
+  box-sizing: border-box;
 }
 
-/* Botão WhatsApp (dobra 1): usa --mf-primary só aqui, sem afetar o token
-   de fundo compartilhado com outros elementos. */
-.dobra-btn-primary {
-  background: var(--mf-primary);
-  color: #ffffff;
+.d-btn-primary {
+  background: var(--d-green);
+  color: var(--d-offwhite);
 }
 
-.dobra-btn-primary:hover {
-  background: #384e21;
+.d-btn-primary:hover {
+  background: #3e5a1c;
 }
 
-.dobra-btn-primary svg {
+.d-btn-primary svg {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
 }
 
-/* Botão off-white (demais CTAs): tokens próprios, para não reaproveitar
-   --mf-cta-light-bg/--mf-cta-light-text — usadas também no fundo do
-   toggle de idioma ativo no header. */
-.dobra-btn-secondary {
-  background: var(--mf-btn-offwhite-bg);
-  color: var(--mf-btn-offwhite-text);
+.d-btn-secondary {
+  background: var(--d-cta-light-bg);
+  color: var(--d-cta-light-text);
 }
 
-.dobra-btn-secondary:hover {
+.d-btn-secondary:hover {
   background: #e6e6de;
 }
 
-.dobra-btn:disabled {
+.d-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* ---- Indicador de scroll ----
-   Dobra 1: seta + texto "ROLE PARA BAIXO". Dobras 2 a 8: só a seta.
-   Dobra 9 não tem indicador (é a última antes do footer). */
-.dobra-scroll-indicator {
-  margin-top: 12px;
+/* Hero: dois CTAs lado a lado. */
+.d-actions-row {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---- Indicador de rolagem ----
+   Seta + degradê LOCAL e sutil atrás dela (não é o scrim preto global
+   antigo — só reforça contraste da própria seta/texto). */
+.d-scroll-fade {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 84px;
+  background: linear-gradient(to top, rgba(21, 21, 15, 0.2), rgba(21, 21, 15, 0));
+  pointer-events: none;
+}
+
+.d-scroll-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-family: var(--font-display-mf);
   font-weight: 500;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--d-offwhite);
 }
 
-.dobra-scroll-indicator svg {
-  width: 14px;
-  height: 10px;
+.d-scroll-indicator svg {
+  width: 16px;
+  height: 11px;
 }
 
-/* ---- Dobra 9 (Impacto): métricas em grid, alinhadas e centralizadas ---- */
-.dobra-metrics {
+/* ---- Dobra 9 (Impacto) desktop: métricas em grid 2×2 (adaptação
+   intencional — no mobile são empilhadas em coluna única). ---- */
+.d-metrics {
+  position: absolute;
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  width: 100%;
+  column-gap: 56px;
+  row-gap: 48px;
 }
 
-.dobra-metric {
-  text-align: center;
-}
-
-.dobra-metric-value {
+.d-metric-value {
   margin: 0;
   font-family: var(--font-display-mf);
-  font-weight: 700;
-  font-size: 38px;
+  font-weight: 600;
+  font-size: clamp(46px, 3.5vw, 58px);
   line-height: 1;
-  color: #ffffff;
+  color: var(--d-offwhite);
 }
 
-.dobra-metric-label {
-  margin: 2px 0 0;
+.d-metric-label {
+  margin: 6px 0 0;
   font-family: var(--font-body-mf);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* ---- Escala desktop (>=1024px) ----
-   Mesmo mecanismo (grid de 3 linhas) do restante do arquivo; aqui só a
-   tipografia, espaçamento e largura máxima aumentam para telas maiores. */
-@media (min-width: 1024px) {
-  .hero-frame,
-  .section-frame {
-    max-width: 860px;
-    row-gap: 32px;
-    padding: calc(var(--header-height) + 56px) 56px 64px 56px;
-  }
-
-  .dobra-center {
-    row-gap: 20px;
-  }
-
-  .dobra-bottom {
-    row-gap: 16px;
-  }
-
-  .dobra-eyebrow {
-    font-size: 16px;
-  }
-
-  .dobra-tags {
-    font-size: 15px;
-    gap: 6px 12px;
-  }
-
-  .dobra-hero-years {
-    font-size: clamp(72px, 8vw, 108px);
-  }
-
-  .dobra-title {
-    font-size: clamp(2.5rem, 4vw, 4rem);
-  }
-
-  .dobra-title-lg {
-    font-size: clamp(3rem, 5.5vw, 4.75rem);
-  }
-
-  .dobra-body {
-    max-width: 620px;
-    font-size: 17px;
-    line-height: 1.6;
-  }
-
-  .dobra-actions {
-    flex-direction: row;
-    row-gap: 16px;
-    column-gap: 16px;
-  }
-
-  .dobra-btn {
-    width: auto;
-    min-width: 220px;
-    max-width: 340px;
-    height: 56px;
-    font-size: 16px;
-  }
-
-  .dobra-scroll-indicator {
-    font-size: 11px;
-    gap: 6px;
-  }
-
-  .dobra-metrics {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-  }
-
-  .dobra-metric-value {
-    font-size: 56px;
-  }
-
-  .dobra-metric-label {
-    font-size: 14px;
-  }
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--d-offwhite);
 }
 
 /* ==========================================================
