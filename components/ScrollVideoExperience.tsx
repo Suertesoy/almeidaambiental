@@ -42,7 +42,15 @@ const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
  *  próximo de "center" em todas as dobras, com pequenos desvios pontuais. */
 const MOBILE_CROP_X = [50, 56, 48, 51, 50, 52, 46, 51, 52];
 
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 1023px)").matches;
+}
+
+/** Sempre aplicado com o índice da dobra ALVO (nunca a última dobra
+ *  confirmada) — ver `videoTargetIndexRef` abaixo: durante uma transição, o
+ *  crop precisa acompanhar para onde o vídeo está indo, não de onde saiu. */
 function applyMobileCrop(video: HTMLVideoElement, index: number) {
+  if (!isMobileViewport()) return;
   const x = MOBILE_CROP_X[index] ?? 50;
   video.style.objectPosition = `${x}% center`;
 }
@@ -176,9 +184,20 @@ export default function ScrollVideoExperience() {
    *  currentTime corrigido). Fonte de verdade da "dobra atual" do vídeo —
    *  independente da posição de scroll, que só decide o próximo destino. */
   const videoStopIndexRef = useRef(0);
+  /** Dobra ALVO da transição em andamento (ou igual a videoStopIndexRef fora
+   *  de transição). Existe separadamente de videoStopIndexRef porque o crop
+   *  mobile precisa acompanhar para onde o vídeo está indo durante a
+   *  transição, não de onde ele partiu (videoStopIndexRef só é atualizado
+   *  quando a transição termina). */
+  const videoTargetIndexRef = useRef(0);
   /** Trava única: enquanto uma transição de vídeo está em andamento, nenhum
-   *  novo destino é aceito (nem por wheel, nem por scroll/touch). */
+   *  novo destino é aceito imediatamente (nem por wheel, nem por
+   *  scroll/touch) — mas fica registrado em pendingTargetIndexRef e é
+   *  atendido (um passo por vez) assim que a transição em andamento termina,
+   *  para não deixar dobra/vídeo dessincronizados quando o usuário continua
+   *  rolando (touch/inércia) enquanto uma transição ainda está tocando. */
   const isTransitioningRef = useRef(false);
+  const pendingTargetIndexRef = useRef<number | null>(null);
   const cancelActiveTransitionRef = useRef<(() => void) | null>(null);
   /** true assim que a reprodução inicial 0.00→1.00s (ou seu fallback) já
    *  aconteceu — garante que ela rode só uma vez por carregamento da Home. */
@@ -211,9 +230,19 @@ export default function ScrollVideoExperience() {
     if (!video) return;
 
     const fromIndex = videoStopIndexRef.current;
-    if (targetIndex === fromIndex || isTransitioningRef.current) return;
+    if (targetIndex === fromIndex) return;
+    if (isTransitioningRef.current) {
+      // Novo destino chegou (scroll/touch continuou) enquanto a transição
+      // atual ainda está tocando: registra para ser atendido, um passo por
+      // vez, assim que ela terminar — nunca ignorado, nunca um salto direto.
+      pendingTargetIndexRef.current = targetIndex;
+      return;
+    }
 
     isTransitioningRef.current = true;
+    videoTargetIndexRef.current = targetIndex;
+    applyMobileCrop(video, targetIndex);
+
     let cancelled = false;
     const isCancelled = () => cancelled;
     cancelActiveTransitionRef.current = () => {
@@ -225,11 +254,43 @@ export default function ScrollVideoExperience() {
     const run = targetIndex > fromIndex ? playForward : interpolateBackward;
 
     run(video, fromTime, toTime, isCancelled).then(() => {
-      if (!cancelled) {
-        videoStopIndexRef.current = targetIndex;
+      if (cancelled) {
+        isTransitioningRef.current = false;
+        cancelActiveTransitionRef.current = null;
+        return;
       }
+
+      videoStopIndexRef.current = targetIndex;
+      // Reaplica o crop do target ao final: garante estado final
+      // determinístico mesmo que nenhum evento de scroll novo chegue depois.
+      applyMobileCrop(video, targetIndex);
       isTransitioningRef.current = false;
       cancelActiveTransitionRef.current = null;
+
+      const pending = pendingTargetIndexRef.current;
+      pendingTargetIndexRef.current = null;
+
+      const lastIndex = SCROLL_STOPS.length - 1;
+      let desired = pending;
+      if (desired === null) {
+        // Sem pending explícito: confere onde a página realmente está agora
+        // (scroll/touch pode ter avançado mais durante a transição, sem
+        // gerar uma nova chamada a transitionTo — ex.: inércia terminou
+        // antes de um novo evento "scroll" dar match na dobra seguinte).
+        const first = sectionRefs.current[0];
+        const sectionHeight = first ? first.getBoundingClientRect().height : window.innerHeight;
+        if (sectionHeight > 0 && targetIndex !== lastIndex) {
+          const continuousPosition = clamp(window.scrollY / sectionHeight, 0, lastIndex);
+          desired = clamp(Math.round(continuousPosition), 0, lastIndex);
+        }
+      }
+
+      // Nunca mais de uma dobra por vez: se o destino real ainda é
+      // diferente do stop atual, avança só um passo na direção dele — o
+      // próprio .then() dessa nova transição repete a checagem até alcançar.
+      if (desired !== null && desired !== targetIndex) {
+        transitionTo(targetIndex + Math.sign(desired - targetIndex));
+      }
     });
   }, []);
 
@@ -366,6 +427,8 @@ export default function ScrollVideoExperience() {
       if (initialPlayedRef.current || cancelled) return;
       initialPlayedRef.current = true;
       isTransitioningRef.current = true;
+      videoTargetIndexRef.current = 0;
+      applyMobileCrop(video, 0);
       cancelActiveTransitionRef.current = () => {
         cancelled = true;
       };
@@ -376,6 +439,7 @@ export default function ScrollVideoExperience() {
       }).then(() => {
         if (!cancelled) {
           videoStopIndexRef.current = 0;
+          applyMobileCrop(video, 0);
         }
         isTransitioningRef.current = false;
         cancelActiveTransitionRef.current = null;
@@ -518,7 +582,14 @@ export default function ScrollVideoExperience() {
       const video = videoRef.current;
       if (video) {
         if (window.matchMedia("(max-width: 1023px)").matches) {
-          applyMobileCrop(video, videoStopIndexRef.current);
+          // Durante uma transição, o crop precisa ser o da dobra ALVO, não o
+          // da última dobra confirmada (videoStopIndexRef só atualiza ao
+          // final) — senão o enquadramento fica "atrasado" em relação ao
+          // que a página já está mostrando.
+          const cropIndex = isTransitioningRef.current
+            ? videoTargetIndexRef.current
+            : videoStopIndexRef.current;
+          applyMobileCrop(video, cropIndex);
         } else if (video.style.objectPosition) {
           // Volta ao object-position do CSS (center center) — o crop por
           // dobra é só para <1024px, nunca altera o desktop.

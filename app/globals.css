@@ -522,13 +522,16 @@ button {
     padding: 0;
   }
 
+  /* Centralizada pelo próprio texto (left:50% + translateX(-50%)), não por
+     uma largura/left fixos que dependiam do tamanho exato do glifo. */
   .mf-hero-label {
     position: absolute;
-    left: clamp(56.79px, 15.7761vw, 62px);
+    left: 50%;
     top: 237px;
-    width: clamp(272.06px, 75.5725vw, 297px);
+    transform: translateX(-50%);
     margin: 0;
     white-space: nowrap;
+    text-align: center;
     font-family: var(--font-display-mf);
     font-weight: 600;
     font-size: clamp(21.98px, 6.1069vw, 24px);
@@ -554,6 +557,9 @@ button {
     color: var(--mf-inverted-text);
   }
 
+  /* Caixa já centralizada no frame (left/width simétricos); o bug era a
+     ausência de text-align/align-items, que deixava cada linha colada à
+     esquerda dentro da caixa centralizada. */
   .mf-hero-title {
     position: absolute;
     left: clamp(26.56px, 7.3791vw, 29px);
@@ -562,6 +568,8 @@ button {
     margin: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     font-family: var(--font-display-mf);
     font-weight: 700;
     text-transform: uppercase;
@@ -683,50 +691,53 @@ button {
     text-transform: uppercase;
   }
 
+  /* ---- Prancheta de composição (dobras 2 a 9) ----
+     `.mf-section-frame` deixou de ser um container flex-column com
+     padding-top fixo (mecanismo genérico que gerava toda a divergência de
+     Y relatada). Agora é só o sistema de coordenadas: um retângulo
+     position:relative do tamanho da dobra. Cada bloco gráfico (rótulo,
+     subtítulo/localização, headline, corpo, CTA, indicadores) é
+     position:absolute e recebe `top` (e, quando o centro horizontal da
+     composição não é o padrão, `left`) por INSTÂNCIA, inline, em
+     HomeSections.tsx — porque cada dobra tem sua própria distribuição
+     vertical no Figma, não uma sequência mecânica label→gap→título→gap→
+     corpo→gap→CTA. Não reintroduzir margin-top/gap/justify-content/
+     margin-top:auto como mecanismo de posicionamento aqui. */
   .mf-section-frame {
     position: relative;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    padding: 130px 0 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .mf-section-frame.mf-center {
-    justify-content: center;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .mf-section-frame.mf-tight-top {
-    padding-top: 96px;
   }
 
   .mf-d-label {
-    margin: 0 auto;
-    text-align: center;
+    position: absolute;
+    margin: 0;
     white-space: nowrap;
+    text-align: center;
     font-family: var(--font-display-mf);
     font-weight: 600;
     text-transform: uppercase;
     color: var(--mf-label-light);
   }
 
+  /* Uma linha só, sempre — quem decide onde quebra é o Figma/screenshot
+     (nunca o navegador). inline-flex + nowrap mantém o espaçamento entre
+     itens/separadores sem permitir o wrap que trocava a composição. */
   .mf-d-subtitle {
-    margin: 6px auto 0;
-    max-width: 340px;
-    text-align: center;
+    position: absolute;
+    margin: 0;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    align-items: baseline;
+    gap: 8px;
     font-family: var(--font-body-mf);
     font-weight: 600;
     font-size: 13px;
     line-height: 18px;
     color: var(--mf-inverted-text);
     opacity: 0.88;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4px 10px;
   }
 
   .mf-d-subtitle .mf-sep {
@@ -734,7 +745,9 @@ button {
   }
 
   .mf-d-location {
-    margin: 4px auto 0;
+    position: absolute;
+    margin: 0;
+    white-space: nowrap;
     text-align: center;
     font-family: var(--font-body-mf);
     font-weight: 600;
@@ -743,7 +756,8 @@ button {
   }
 
   .mf-d-title {
-    margin: 24px 0 0;
+    position: absolute;
+    margin: 0;
     font-family: var(--font-display-mf);
     font-weight: 700;
     text-transform: uppercase;
@@ -780,37 +794,37 @@ button {
   }
 
   .mf-d-body {
-    margin: 16px 0 0;
+    position: absolute;
+    margin: 0;
+    text-align: center;
     font-family: var(--font-body-mf);
     font-weight: 600;
     color: var(--mf-inverted-text);
     box-sizing: border-box;
   }
 
-  .mf-d-body + .mf-d-body {
-    margin-top: 10px;
-  }
-
+  /* Wrapper do CTA: só posiciona o Y. O botão dentro dele continua
+     centralizando o próprio X via width + left (ver .mf-btn/JSX) — não
+     precisou mudar. */
   .mf-d-actions {
-    margin-top: 24px;
+    position: absolute;
+    left: 0;
+    width: 100%;
   }
 
-  .mf-d-actions.mf-d-actions-push-bottom {
-    margin-top: auto;
-    margin-bottom: 56px;
-  }
-
-  /* ---- Dobra 9 (Impacto): indicadores empilhados ---- */
+  /* ---- Dobra 9 (Impacto): cada indicador tem Y próprio, não gap de lista ---- */
   .mf-stats {
-    margin: 32px 0 0;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
     list-style: none;
   }
 
   .mf-stat-item {
+    position: absolute;
+    left: 0;
+    right: 0;
     text-align: center;
   }
 
@@ -830,6 +844,23 @@ button {
     font-size: 13px;
     color: var(--mf-inverted-text);
     opacity: 0.88;
+  }
+}
+
+/* 393px é a referência mestre (todas as coordenadas acima foram medidas
+   para ela) e nunca deve ser sacrificada por uma fórmula "universal". Only
+   acima dela: a prancheta de 393px inteira passa a ficar centralizada no
+   viewport (em vez de ancorada à esquerda), sem re-escalar nada dentro
+   dela — mesma composição, só recentralizada. Abaixo de 393px, mf() já
+   encolhe X/largura/fonte proporcionalmente (ver lib/mobile-fit.ts), então
+   a prancheta continua ocupando a viewport inteira normalmente. */
+@media (min-width: 394px) and (max-width: 1023px) {
+  .mf-hero-frame,
+  .mf-section-frame {
+    left: 50%;
+    right: auto;
+    width: 393px;
+    transform: translateX(-50%);
   }
 }
 

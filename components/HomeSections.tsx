@@ -10,14 +10,19 @@ import { ChevronDownIcon } from "./icons";
  *   grid de posicionamento definido em app/globals.css a partir de 1024px.
  *   Não foi alterado nesta tarefa, exceto o conteúdo das dobras 8 e 9, que
  *   estava trocado em relação ao vídeo/Figma (ver DECISOES desta entrega).
- * - `.mobile-fidelity` (<1024px): estrutura nova, pixel-fiel aos
- *   screenshots do Figma (referência 393px), com medidas em `style` porque
- *   cada dobra tem tamanho/tracking/line-height/largura própria — não um
- *   componente genérico compartilhado (ver AGENTS/instrução da tarefa).
+ * - `.mobile-fidelity` (<1024px): `.mf-section-frame` é a prancheta de
+ *   composição (position:relative); cada bloco gráfico é position:absolute
+ *   e recebe `top` (Y a partir do topo da própria dobra) e `left`/largura
+ *   por instância aqui, medidos a partir dos screenshots de referência do
+ *   Figma — não de um fluxo vertical genérico. `left: mf(196.5)` +
+ *   `translateX(-50%)` é o centro padrão da composição (393px / 2); a
+ *   dobra 5 usa 204.5, centro levemente deslocado, conforme o Figma.
  *
  * Um indicador de rolagem (seta, sem texto) aparece nas dobras 2 a 8; a
  * dobra 9 não tem, por ser a última antes do footer.
  */
+
+const CENTER_X = 196.5;
 
 function MobileScrollHint() {
   return (
@@ -61,10 +66,16 @@ export function Section02Content() {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <p className="mf-d-label" style={{ width: mf(297), fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.4 }}>
+        <p
+          className="mf-d-label"
+          style={{ top: 152, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.4 }}
+        >
           Almeida Ambiental
         </p>
-        <p className="mf-d-subtitle">
+        <p
+          className="mf-d-subtitle"
+          style={{ top: 204, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(10.5), lineHeight: "14px", gap: 5 }}
+        >
           <span>Diagnóstico</span>
           <span className="mf-sep">·</span>
           <span>Coleta</span>
@@ -77,7 +88,7 @@ export function Section02Content() {
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 28, width: mf(359), marginLeft: mf(17), fontSize: mf(35), lineHeight: "41px", letterSpacing: -1.4 }}
+          style={{ top: 270, width: mf(359), left: mf(17), fontSize: mf(35), lineHeight: "41px", letterSpacing: -1.4 }}
         >
           <span>RESÍDUOS GANHAM</span>
           <span>
@@ -86,7 +97,7 @@ export function Section02Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(289), marginLeft: mf(52), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.98 }}
+          style={{ top: 410, width: mf(289), left: mf(52), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.98 }}
         >
           Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
           responsável de resíduos.
@@ -119,15 +130,21 @@ export function Section03Content() {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <p className="mf-d-label" style={{ width: mf(283), fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.4 }}>
+        <p
+          className="mf-d-label"
+          style={{ top: 140, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.4 }}
+        >
           Almeida Ambiental
         </p>
-        <p className="mf-d-location" style={{ fontSize: mf(14), lineHeight: "30px", letterSpacing: -0.28 }}>
+        <p
+          className="mf-d-location"
+          style={{ top: 182, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(14), lineHeight: "30px", letterSpacing: -0.28 }}
+        >
           São José · Joinville · Araquari · Chapecó · SC
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 20, width: mf(311), marginLeft: mf(41), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
+          style={{ top: 240, width: mf(311), left: mf(41), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
         >
           <span>
             <em className="mf-d-title-gold">EFICIÊNCIA</em> EM
@@ -137,13 +154,13 @@ export function Section03Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(314), marginLeft: mf(39.5), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.98 }}
+          style={{ top: 420, width: mf(314), left: mf(39.5), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.98 }}
         >
           Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
           transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
           ambiental.
         </p>
-        <div className="mf-d-actions">
+        <div className="mf-d-actions" style={{ top: 560 }}>
           <Link href="/almeida-ambiental" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(31) }}>
             Conheça Almeida Ambiental
           </Link>
@@ -179,10 +196,13 @@ export function Section04Content() {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <p className="mf-d-label" style={{ width: mf(297), fontSize: mf(24), lineHeight: "30px", letterSpacing: -0.96 }}>
+        <p
+          className="mf-d-label"
+          style={{ top: 145, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: -0.96 }}
+        >
           Almeida Equipamentos
         </p>
-        <p className="mf-d-subtitle">
+        <p className="mf-d-subtitle" style={{ top: 187, left: mf(CENTER_X), transform: "translateX(-50%)" }}>
           <span>Compactadores</span>
           <span className="mf-sep">·</span>
           <span>Prensas</span>
@@ -193,7 +213,7 @@ export function Section04Content() {
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 28, width: mf(333), marginLeft: mf(30), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
+          style={{ top: 250, width: mf(333), left: mf(30), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
         >
           <span>
             <em className="mf-d-title-gold">TECNOLOGIA</em> QUE
@@ -203,7 +223,7 @@ export function Section04Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(309), marginLeft: mf(42), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
+          style={{ top: 420, width: mf(309), left: mf(42), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
         >
           Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
           décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
@@ -240,13 +260,21 @@ export function Section05Content() {
       {/* Composição intencionalmente fora do centro (centro x 204,5, não
           196,5 como as demais) — preservado conforme o Figma. */}
       <div className="mobile-fidelity mf-section-frame">
-        <p className="mf-d-label" style={{ width: mf(301), fontSize: mf(24), lineHeight: "30px", letterSpacing: -0.96 }}>
+        <p
+          className="mf-d-label"
+          style={{ top: 130, left: mf(204.5), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: -0.96 }}
+        >
           Almeida Equipamentos
         </p>
-        <p className="mf-d-location" style={{ fontSize: mf(14), lineHeight: "20px" }}>São José · SC</p>
+        <p
+          className="mf-d-location"
+          style={{ top: 172, left: mf(204.5), transform: "translateX(-50%)", fontSize: mf(14), lineHeight: "20px" }}
+        >
+          São José · SC
+        </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 20, width: mf(329), marginLeft: mf(40), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
+          style={{ top: 230, width: mf(329), left: mf(40), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
         >
           <span>ENGENHARIA PARA</span>
           <span>MOVIMENTAR</span>
@@ -254,18 +282,18 @@ export function Section05Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(337), marginLeft: mf(36), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
+          style={{ top: 430, width: mf(337), left: mf(36), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
         >
           Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
           realidades operacionais.
         </p>
         <p
           className="mf-d-body"
-          style={{ width: mf(337), marginLeft: mf(36), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
+          style={{ top: 480, width: mf(337), left: mf(36), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.56 }}
         >
           Conhecimento de campo conectado a tecnologias internacionais.
         </p>
-        <div className="mf-d-actions">
+        <div className="mf-d-actions" style={{ top: 600 }}>
           <Link href="/almeida-equipamentos" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(29) }}>
             Conheça Almeida Equipamentos
           </Link>
@@ -298,11 +326,16 @@ export function Section06Content() {
         </p>
       </div>
 
-      <div className="mobile-fidelity mf-section-frame mf-center">
-        <p className="mf-d-label" style={{ width: mf(291), fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.16 }}>
+      {/* Composição mais baixa/centrada que as demais dobras — Y vem do
+          Figma (não mais de .mf-center/justify-content:center). */}
+      <div className="mobile-fidelity mf-section-frame">
+        <p
+          className="mf-d-label"
+          style={{ top: 260, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.16 }}
+        >
           Saturno Ambiental
         </p>
-        <p className="mf-d-subtitle">
+        <p className="mf-d-subtitle" style={{ top: 302, left: mf(CENTER_X), transform: "translateX(-50%)" }}>
           <span>Gestão de Resíduos</span>
           <span className="mf-sep">·</span>
           <span>Cartonagem</span>
@@ -311,7 +344,7 @@ export function Section06Content() {
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 24, width: mf(334), marginLeft: mf(37), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
+          style={{ top: 366, width: mf(334), left: mf(37), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
         >
           <em className="mf-d-title-gold">EXPERIÊNCIA</em>
           <span>REGIONAL.</span>
@@ -319,7 +352,7 @@ export function Section06Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(300), marginLeft: mf(47), textAlign: "center", fontSize: mf(15), lineHeight: "15px", letterSpacing: -0.15 }}
+          style={{ top: 560, width: mf(300), left: mf(47), fontSize: mf(15), lineHeight: "15px", letterSpacing: -0.15 }}
         >
           Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
           conhecimento em gestão de resíduos das operações da região.
@@ -351,13 +384,21 @@ export function Section07Content() {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <p className="mf-d-label" style={{ width: mf(291), fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.16 }}>
+        <p
+          className="mf-d-label"
+          style={{ top: 110, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(24), lineHeight: "30px", letterSpacing: 2.16 }}
+        >
           Saturno Ambiental
         </p>
-        <p className="mf-d-location" style={{ fontSize: mf(14), lineHeight: "20px" }}>Blumenau · Vale do Itajaí</p>
+        <p
+          className="mf-d-location"
+          style={{ top: 152, left: mf(CENTER_X), transform: "translateX(-50%)", fontSize: mf(14), lineHeight: "20px" }}
+        >
+          Blumenau · Vale do Itajaí
+        </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 20, width: mf(353), marginLeft: mf(20), fontSize: mf(35), lineHeight: "35px", letterSpacing: 0.35 }}
+          style={{ top: 210, width: mf(353), left: mf(20), fontSize: mf(35), lineHeight: "35px", letterSpacing: 0.35 }}
         >
           <span>GESTÃO AMBIENTAL</span>
           <span>
@@ -367,12 +408,12 @@ export function Section07Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ width: mf(325), marginLeft: mf(34), textAlign: "center", fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.14 }}
+          style={{ top: 440, width: mf(325), left: mf(34), fontSize: mf(14), lineHeight: "15px", letterSpacing: -0.14 }}
         >
           Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
           construída para unir eficiência operacional e responsabilidade ambiental.
         </p>
-        <div className="mf-d-actions">
+        <div className="mf-d-actions" style={{ top: 580 }}>
           <Link href="/saturno-ambiental" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(29) }}>
             Conheça Saturno Ambiental
           </Link>
@@ -413,8 +454,9 @@ export function Section08Content() {
       </div>
 
       {/* Ritmo vertical bem diferente das demais dobras: headline logo no
-          topo, corpo bem mais abaixo, CTA perto do fim — preservado. */}
-      <div className="mobile-fidelity mf-section-frame mf-tight-top">
+          topo, corpo bem mais abaixo, CTA perto do fim — preservado, agora
+          com Y explícito em vez de marginTop:"auto". */}
+      <div className="mobile-fidelity mf-section-frame">
         <h2
           className="mf-d-title mf-d-title-plain mf-d-title-semibold"
           /* Seis linhas, não cinco: "OPERAÇÃO," e "TECNOLOGIA E" são linhas
@@ -424,7 +466,7 @@ export function Section08Content() {
              de tamanho de fonte nem de peso, era quebra de linha errada.
              Peso Playfair Display SemiBold (600, não 700) também confere
              com o Figma para esta dobra. */
-          style={{ width: mf(356), marginLeft: mf(19), fontSize: mf(35), lineHeight: "50px", letterSpacing: -2.45 }}
+          style={{ top: 100, width: mf(356), left: mf(19), fontSize: mf(35), lineHeight: "50px", letterSpacing: -2.45 }}
         >
           <span>O QUE COMEÇOU</span>
           <span>COM PAPEL E PAPELÃO</span>
@@ -435,11 +477,11 @@ export function Section08Content() {
         </h2>
         <p
           className="mf-d-body"
-          style={{ marginTop: "auto", textAlign: "center", fontSize: mf(14), lineHeight: "20px" }}
+          style={{ top: 590, left: mf(CENTER_X), transform: "translateX(-50%)", width: mf(360), fontSize: mf(14), lineHeight: "20px" }}
         >
           Há 40 anos transformando o presente, pensando no futuro.
         </p>
-        <div className="mf-d-actions" style={{ marginTop: 20, marginBottom: 56 }}>
+        <div className="mf-d-actions" style={{ top: 660 }}>
           <Link href="/contato" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(29) }}>
             Entre em contato com o Grupo Almeida
           </Link>
@@ -487,10 +529,10 @@ export function Section09Content() {
         </div>
       </div>
 
-      <div className="mobile-fidelity mf-section-frame mf-tight-top">
+      <div className="mobile-fidelity mf-section-frame">
         <h2
           className="mf-d-title mf-d-title-plain"
-          style={{ width: mf(321), marginLeft: mf(34), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
+          style={{ top: 100, width: mf(321), left: mf(34), fontSize: mf(35), lineHeight: "30px", letterSpacing: -0.35 }}
         >
           <span>Cada resíduo</span>
           <span>processado vira um</span>
@@ -498,24 +540,24 @@ export function Section09Content() {
           <em className="mf-d-title-gold">natureza reconhece.</em>
         </h2>
         <ul className="mf-stats">
-          <li className="mf-stat-item">
+          <li className="mf-stat-item" style={{ top: 300 }}>
             <p className="mf-stat-value">818.907</p>
             <p className="mf-stat-label">árvores preservadas</p>
           </li>
-          <li className="mf-stat-item">
+          <li className="mf-stat-item" style={{ top: 380 }}>
             <p className="mf-stat-value">54.873 t</p>
             <p className="mf-stat-label">materiais reciclados</p>
           </li>
-          <li className="mf-stat-item">
+          <li className="mf-stat-item" style={{ top: 460 }}>
             <p className="mf-stat-value">153.114 t</p>
             <p className="mf-stat-label">CO₂ evitadas</p>
           </li>
-          <li className="mf-stat-item">
+          <li className="mf-stat-item" style={{ top: 540 }}>
             <p className="mf-stat-value">1,27 bi</p>
             <p className="mf-stat-label">litros de água economizados</p>
           </li>
         </ul>
-        <div className="mf-d-actions" style={{ marginTop: 28, marginBottom: 40 }}>
+        <div className="mf-d-actions" style={{ top: 650 }}>
           {/* Relatório de Sustentabilidade 2025 ainda não disponível no projeto. */}
           <button type="button" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(29) }} disabled>
             Ver Relatório de Sustentabilidade 2025
