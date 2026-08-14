@@ -328,7 +328,19 @@ export default function ScrollVideoExperience() {
 
     function primeOnInteraction() {
       if (cancelled || decoderPrimedRef.current || !video) return;
-      const restoreTime = video.currentTime;
+      // Nunca inicia um play()/pause() de priming enquanto uma transição real
+      // (inclusive o segmento inicial 0→1.00s) está em andamento: os dois
+      // disputariam currentTime ao mesmo tempo e um play() de priming que
+      // termina depois do watch() da transição pode "arrastar" o vídeo para
+      // um instante posterior ao stop pretendido (ex.: a dobra 1 estabiliza
+      // visualmente num frame de trecho seguinte). Sem `once: true` no
+      // listener, a próxima interação tenta de novo.
+      if (isTransitioningRef.current) return;
+      // Restaura sempre para o tempo do stop já confirmado (fonte de
+      // verdade), nunca para um video.currentTime lido no instante do
+      // toque — esse valor é o que fica exposto caso o play() de priming
+      // demore para resolver.
+      const restoreTime = SCROLL_STOPS[videoStopIndexRef.current].time;
       video.muted = true;
       const playAttempt = video.play();
       if (playAttempt && typeof playAttempt.then === "function") {
@@ -375,8 +387,11 @@ export default function ScrollVideoExperience() {
     } else {
       video.addEventListener("loadeddata", runInitialSegment, { once: true });
     }
+    // Sem `once: true`: primeOnInteraction pode se recusar a agir (transição
+    // em andamento) e precisa poder tentar de novo na próxima interação: só
+    // removeInteractionListeners() (chamado dentro dela) desliga os listeners.
     interactionEvents.forEach((type) =>
-      window.addEventListener(type, primeOnInteraction, { once: true, passive: true })
+      window.addEventListener(type, primeOnInteraction, { passive: true })
     );
 
     return () => {

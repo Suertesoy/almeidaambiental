@@ -130,12 +130,15 @@ button {
 }
 
 .logo-link {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--color-foreground);
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  letter-spacing: 0.01em;
+}
+
+.logo-image {
+  height: 34px;
+  width: auto;
+  display: block;
 }
 
 .header-right {
@@ -152,7 +155,7 @@ button {
 .lang-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 6px;
@@ -160,6 +163,13 @@ button {
   font-size: 13px;
   color: var(--color-foreground);
   cursor: pointer;
+}
+
+.lang-flag {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: block;
 }
 
 .lang-btn[aria-current="true"] {
@@ -203,25 +213,14 @@ button {
 
 .mf-logo {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
+  align-items: center;
   text-decoration: none;
-  color: var(--mf-text-dark);
-  font-family: var(--font-display-mf);
 }
 
-.mf-logo-line1 {
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 0.02em;
-}
-
-.mf-logo-line2 {
-  font-weight: 600;
-  font-size: 7px;
-  letter-spacing: 3.85px;
-  margin-top: 4px;
+.mf-logo-image {
+  height: 52px;
+  width: auto;
+  display: block;
 }
 
 .mf-header-right {
@@ -249,17 +248,19 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display-mf);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--mf-text-dark);
+  padding: 4px;
   cursor: pointer;
+}
+
+.mf-lang-flag {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: block;
 }
 
 .mf-lang-btn[aria-current="true"] {
   background: var(--mf-cta-light-text);
-  color: var(--mf-inverted-text);
 }
 
 .mf-hamburger {
@@ -749,7 +750,17 @@ button {
     color: var(--mf-inverted-text);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     box-sizing: border-box;
+  }
+
+  /* "O QUE COMEÇOU..." (dobra institucional) usa Playfair Display SemiBold
+     no Figma, não Bold — a essa largura/tracking, o peso 700 alarga os
+     glifos o suficiente para a linha "COM PAPEL E PAPELÃO" ultrapassar os
+     356px do frame. 600 é o peso correto, não uma correção de encaixe. */
+  .mf-d-title-semibold {
+    font-weight: 600;
   }
 
   /* Cada <span>/<em> filho representa UMA linha decidida pelo Figma/

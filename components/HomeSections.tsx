@@ -127,7 +127,7 @@ export function Section03Content() {
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 20, width: mf(311), marginLeft: mf(41), fontSize: mf(35), lineHeight: "38px", letterSpacing: -1.4 }}
+          style={{ marginTop: 20, width: mf(311), marginLeft: mf(41), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
         >
           <span>
             <em className="mf-d-title-gold">EFICIÊNCIA</em> EM
@@ -193,7 +193,7 @@ export function Section04Content() {
         </p>
         <h2
           className="mf-d-title"
-          style={{ marginTop: 28, width: mf(333), marginLeft: mf(30), fontSize: mf(35), lineHeight: "38px", letterSpacing: -1.4 }}
+          style={{ marginTop: 28, width: mf(333), marginLeft: mf(30), fontSize: mf(35), lineHeight: "30px", letterSpacing: -1.4 }}
         >
           <span>
             <em className="mf-d-title-gold">TECNOLOGIA</em> QUE
@@ -416,17 +416,21 @@ export function Section08Content() {
           topo, corpo bem mais abaixo, CTA perto do fim — preservado. */}
       <div className="mobile-fidelity mf-section-frame mf-tight-top">
         <h2
-          className="mf-d-title mf-d-title-plain"
-          /* fontSize 30 (não 35): a 35px, a linha "COM PAPEL E PAPELÃO"
-             ultrapassa os 356px de largura do Figma e vaza a viewport em
-             393px — 30px é o maior tamanho que mantém as 5 linhas dentro
-             da largura informada, sem overflow horizontal. */
-          style={{ width: mf(356), marginLeft: mf(19), fontSize: mf(30), lineHeight: "43px", letterSpacing: -2.1 }}
+          className="mf-d-title mf-d-title-plain mf-d-title-semibold"
+          /* Seis linhas, não cinco: "OPERAÇÃO," e "TECNOLOGIA E" são linhas
+             separadas no Figma (height do node de texto = 300 = 6 × 50 de
+             line-height). Juntar as duas em "OPERAÇÃO, TECNOLOGIA E" é o que
+             fazia a linha ultrapassar os 356px a 35px — não era um problema
+             de tamanho de fonte nem de peso, era quebra de linha errada.
+             Peso Playfair Display SemiBold (600, não 700) também confere
+             com o Figma para esta dobra. */
+          style={{ width: mf(356), marginLeft: mf(19), fontSize: mf(35), lineHeight: "50px", letterSpacing: -2.45 }}
         >
           <span>O QUE COMEÇOU</span>
           <span>COM PAPEL E PAPELÃO</span>
           <span>HOJE CONECTA</span>
-          <span>OPERAÇÃO, TECNOLOGIA E</span>
+          <span>OPERAÇÃO,</span>
+          <span>TECNOLOGIA E</span>
           <span>SUSTENTABILIDADE.</span>
         </h2>
         <p
@@ -436,7 +440,7 @@ export function Section08Content() {
           Há 40 anos transformando o presente, pensando no futuro.
         </p>
         <div className="mf-d-actions" style={{ marginTop: 20, marginBottom: 56 }}>
-          <Link href="/contato" className="mf-btn mf-btn-primary" style={{ width: mf(335), marginLeft: mf(29) }}>
+          <Link href="/contato" className="mf-btn mf-btn-secondary" style={{ width: mf(335), marginLeft: mf(29) }}>
             Entre em contato com o Grupo Almeida
           </Link>
         </div>
