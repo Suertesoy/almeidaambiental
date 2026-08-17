@@ -4,19 +4,20 @@ import { useRef } from "react";
 import {
   MfActions,
   MfBody,
+  MfBottom,
   MfButton,
+  MfCenter,
   MfFrame,
   MfLabel,
   MfMetric,
   MfMetrics,
-  MfRegion,
   MfScrollHint,
   MfSubtitle,
   MfTitle,
 } from "./MobileDobra";
 import { DBody, DButton, DMetricsGrid, DNameBlock, DScrollHint, DTitle } from "./DesktopDobra";
 import { CountUpMetric, useEnterOnce, type MetricFormat } from "./AnimatedMetric";
-import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
+import { lockup, rhythm } from "../lib/responsive-type";
 
 /**
  * Conteúdo real das dobras 2 a 9 da Home (dobra 1 continua em HeroContent.tsx).
@@ -25,19 +26,22 @@ import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
  * - Desktop (>=1024px, `.desktop-only`): composição editorial própria
  *   (`.d-stage`, ver components/DesktopDobra.tsx) — cada dobra com sua
  *   própria distribuição em 12 colunas conceituais.
- * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo (`MfFrame`,
- *   ver components/MobileDobra.tsx) — topo (nome/subtítulo) e o bloco de
- *   baixo (corpo/CTA) ficam ancorados às extremidades da dobra via
- *   `MfRegion` (espaçador flex-grow) em vez de um `marginTop` encadeado, e
- *   cada dobra escolhe seu próprio alinhamento de tablet (`tabletAlign`,
- *   espelhando o `align` que a mesma dobra já usa no desktop), sem canvas
- *   fixo nem coordenadas absolutas.
+ * - Mobile+tablet (<1024px, `.mobile-fidelity`): três regiões explícitas
+ *   (`MfCenter` para a headline, `MfBottom` para corpo/CTA — ver
+ *   components/MobileDobra.tsx), sem canvas fixo nem coordenadas
+ *   absolutas. `onAdvance` dispara o mesmo mecanismo de transição usado
+ *   pelo scroll (wheel) — ver `goToIndex` em ScrollVideoExperience.tsx.
  */
 
 /* fontSize responde a largura E altura (vw + svh) — não só vw — para não
    ficar apertado em notebooks baixos (1280×720, 1366×768) mesmo quando a
    largura sobra (Seção 12/40 da tarefa). */
 const HEADLINE_FONT = { fontSize: "clamp(48px, 2.2vw + 2.6svh, 64px)", lineHeight: 0.98 };
+
+/** Tokens do subtítulo/localização institucional (nome → 4px → subtítulo),
+ *  compartilhados por todas as dobras 02–07 (regra 3 da tarefa: relação
+ *  tipográfica única, não recalibrada dobra a dobra). */
+const SUBTITLE_TOKENS = lockup(14, 18, 1);
 
 /** Dobra 9 (Impacto): tokens dos números/labels das métricas mobile. */
 const metricValueTokens = lockup(38, 42, 0);
@@ -60,7 +64,7 @@ const IMPACT_METRICS: Array<{
   { target: 1.27, format: "decimal2", suffix: " bi", display: "1,27 bi", label: "litros de água economizados" },
 ];
 
-export function Section02Content() {
+export function Section02Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -84,33 +88,36 @@ export function Section02Content() {
           Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
           responsável de resíduos.
         </DBody>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
-      {/* Sem subtítulo/serviços nesta dobra no Figma atual (só a D3 mantém
-          uma linha de localização abaixo do nome — não normalizar). */}
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(145)}>
+        <MfFrame tabletAlign="left">
           <MfLabel tokens={lockup(29, 30, 2.61)}>Almeida Ambiental</MfLabel>
-          <MfRegion weight={177} />
-          <MfTitle
-            refWidth={348}
-            tokens={lockup(35, 41, 0.7)}
-            lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
-          />
-          <MfRegion weight={186} />
-          <MfBody refWidth={326} tokens={lockup(16, 16, -1.12)}>
-            Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-            responsável de resíduos.
-          </MfBody>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>
+            Diagnóstico · Coleta · Triagem · Trituração · Descaracterização
+          </MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={348}
+              tokens={lockup(35, 41, 0.7)}
+              lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(16, 16, -1.12)}>
+              Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
+              responsável de resíduos.
+            </MfBody>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section03Content() {
+export function Section03Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -142,44 +149,44 @@ export function Section03Content() {
         <DButton top="66%" colA={8} colB={13} variant="secondary" href="/almeida-ambiental">
           Conheça Almeida Ambiental
         </DButton>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(144)}>
+        <MfFrame tabletAlign="left">
           <MfLabel tokens={lockup(29, 30, 2.9)}>Almeida Ambiental</MfLabel>
-          <MfSubtitle marginTop={rhythm(6)} tokens={lockup(14, 30, 1.12)}>
-            São José · Joinville · Araquari · Chapecó · SC
-          </MfSubtitle>
-          <MfRegion weight={102} />
-          <MfTitle
-            refWidth={350}
-            tokens={lockup(35, 30, 3.5)}
-            lines={[
-              [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
-              [{ text: "CADA ETAPA" }],
-              [{ text: "DO PROCESSO" }],
-            ]}
-          />
-          <MfRegion weight={58} />
-          <MfBody refWidth={335} tokens={lockup(16, 16, -1.12)}>
-            Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
-            transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
-            ambiental.
-          </MfBody>
-          <MfActions marginTop={rhythm(60)}>
-            <MfButton variant="secondary" href="/almeida-ambiental">
-              Conheça Almeida Ambiental
-            </MfButton>
-          </MfActions>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>São José · Joinville · Araquari · Chapecó · SC</MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={350}
+              tokens={lockup(35, 30, 3.5)}
+              lines={[
+                [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
+                [{ text: "CADA ETAPA" }],
+                [{ text: "DO PROCESSO" }],
+              ]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(16, 16, -1.12)}>
+              Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
+              transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
+              ambiental.
+            </MfBody>
+            <MfActions marginTop="8px">
+              <MfButton variant="secondary" href="/almeida-ambiental">
+                Conheça Almeida Ambiental
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section04Content() {
+export function Section04Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -208,35 +215,38 @@ export function Section04Content() {
           Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
           décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
         </DBody>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="right" paddingTop={framePaddingTop(143)}>
+        <MfFrame tabletAlign="right">
           <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
-          <MfRegion weight={129} />
-          <MfTitle
-            refWidth={333}
-            tokens={lockup(35, 30, -1.4)}
-            lines={[
-              [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
-              [{ text: "NASCEU DA" }],
-              [{ text: "PRÓPRIA OPERAÇÃO" }],
-            ]}
-          />
-          <MfRegion weight={184} />
-          <MfBody refWidth={326} tokens={lockup(16, 16, -0.64)}>
-            Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
-            décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
-          </MfBody>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>Compactadores · Prensas · Trituradores · Containers</MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={333}
+              tokens={lockup(35, 30, -1.4)}
+              lines={[
+                [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
+                [{ text: "NASCEU DA" }],
+                [{ text: "PRÓPRIA OPERAÇÃO" }],
+              ]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(16, 16, -0.64)}>
+              Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
+              décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
+            </MfBody>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section05Content() {
+export function Section05Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -260,39 +270,42 @@ export function Section05Content() {
         <DButton top="68%" colA={1} colB={6} variant="secondary" href="/almeida-equipamentos">
           Conheça Almeida Equipamentos
         </DButton>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="right" paddingTop={framePaddingTop(142)}>
+        <MfFrame tabletAlign="right">
           <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
-          <MfRegion weight={154} />
-          <MfTitle
-            refWidth={351}
-            tokens={lockup(35, 30, 1.4)}
-            lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
-          />
-          <MfRegion weight={78} />
-          <MfBody refWidth={335} tokens={lockup(16, 16, -0.64)}>
-            Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
-            realidades operacionais.
-          </MfBody>
-          <MfBody marginTop={rhythm(14)} refWidth={335} tokens={lockup(16, 16, -0.64)}>
-            Conhecimento de campo conectado a tecnologias internacionais.
-          </MfBody>
-          <MfActions marginTop={rhythm(17)}>
-            <MfButton variant="secondary" href="/almeida-equipamentos">
-              Conheça Almeida Equipamentos
-            </MfButton>
-          </MfActions>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>São José · SC</MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={351}
+              tokens={lockup(35, 30, 1.4)}
+              lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(16, 16, -0.64)}>
+              Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
+              realidades operacionais.
+            </MfBody>
+            <MfBody marginTop={rhythm(14)} tokens={lockup(16, 16, -0.64)}>
+              Conhecimento de campo conectado a tecnologias internacionais.
+            </MfBody>
+            <MfActions marginTop="8px">
+              <MfButton variant="secondary" href="/almeida-equipamentos">
+                Conheça Almeida Equipamentos
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section06Content() {
+export function Section06Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -317,34 +330,34 @@ export function Section06Content() {
           Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
           conhecimento em gestão de resíduos das operações da região.
         </DBody>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(143)}>
+        <MfFrame tabletAlign="left">
           <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
-          <MfRegion weight={142} />
-          <MfTitle
-            refWidth={350}
-            tokens={lockup(35, 30, 2.1)}
-            lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
-          />
-          {/* Espaço grande e proposital (193 vs 142 acima do título): preserva
-              a razão medida no Figma, não normalizar para uma centralização
-              exata. */}
-          <MfRegion weight={193} />
-          <MfBody refWidth={334} tokens={lockup(15, 16, -0.15)}>
-            Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
-            conhecimento em gestão de resíduos das operações da região.
-          </MfBody>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>Gestão de Resíduos · Cartonagem · Consultoria</MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={350}
+              tokens={lockup(35, 30, 2.1)}
+              lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(15, 16, -0.15)}>
+              Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
+              conhecimento em gestão de resíduos das operações da região.
+            </MfBody>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section07Content() {
+export function Section07Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
@@ -376,34 +389,37 @@ export function Section07Content() {
         <DButton top="68%" colA={8} colB={13} variant="secondary" href="/saturno-ambiental">
           Conheça Saturno Ambiental
         </DButton>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(144)}>
+        <MfFrame tabletAlign="left">
           <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
-          <MfRegion weight={147} />
-          <MfTitle
-            refWidth={353}
-            tokens={lockup(35, 35, 0.35)}
-            lines={[
-              [{ text: "GESTÃO AMBIENTAL" }],
-              [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
-              [{ text: "DA COLETA" }],
-            ]}
-          />
-          <MfRegion weight={91} />
-          <MfBody refWidth={325} tokens={lockup(16, 16, -0.16)}>
-            Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-            construída para unir eficiência operacional e responsabilidade ambiental.
-          </MfBody>
-          <MfActions marginTop={rhythm(15)}>
-            <MfButton variant="secondary" href="/saturno-ambiental">
-              Conheça Saturno Ambiental
-            </MfButton>
-          </MfActions>
+          <MfSubtitle tokens={SUBTITLE_TOKENS}>Blumenau · Vale do Itajaí</MfSubtitle>
+          <MfCenter>
+            <MfTitle
+              refWidth={353}
+              tokens={lockup(35, 35, 0.35)}
+              lines={[
+                [{ text: "GESTÃO AMBIENTAL" }],
+                [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
+                [{ text: "DA COLETA" }],
+              ]}
+            />
+          </MfCenter>
+          <MfBottom>
+            <MfBody tokens={lockup(16, 16, -0.16)}>
+              Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
+              construída para unir eficiência operacional e responsabilidade ambiental.
+            </MfBody>
+            <MfActions marginTop="8px">
+              <MfButton variant="secondary" href="/saturno-ambiental">
+                Conheça Saturno Ambiental
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
@@ -417,7 +433,7 @@ export function Section07Content() {
  * Corrigido aqui: dobra 8 = fechamento, dobra 9 = estatísticas — sem
  * mudar timing de vídeo, só o texto de cada uma.
  */
-export function Section08Content() {
+export function Section08Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       {/* Desktop: 4 linhas explícitas (não 6 como no mobile) — só a quebra
@@ -444,45 +460,48 @@ export function Section08Content() {
         <DButton top="77%" centerX variant="secondary" href="/contato">
           Entre em contato com o Grupo Almeida
         </DButton>
-        <DScrollHint />
+        <DScrollHint onAdvance={onAdvance} />
       </div>
 
       {/* Dobra sem nome/subtítulo: título+corpo+botão ficam alinhados à
           esquerda (não centralizados como nas demais dobras — confirmado
           no Figma atual). Seis linhas exatas, nenhuma junta às outras. */}
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(173, { floorScale: 0.45 })}>
-          <MfTitle
-            refWidth={356}
-            widthGrowth={1.4}
-            align="left"
-            tokens={lockup(35, 39, -2.45)}
-            lines={[
-              [{ text: "O QUE COMEÇOU" }],
-              [{ text: "COM PAPEL E PAPELÃO" }],
-              [{ text: "HOJE CONECTA" }],
-              [{ text: "OPERAÇÃO,", gold: true }],
-              [{ text: "TECNOLOGIA E" }],
-              [{ text: "SUSTENTABILIDADE.", green: true }],
-            ]}
-          />
-          <MfRegion weight={133} />
-          <MfBody refWidth={325} tokens={lockup(16, 16, -1.12)}>
-            Há 40 anos transformando o presente, pensando no futuro.
-          </MfBody>
-          <MfActions marginTop={rhythm(21)}>
-            <MfButton variant="secondary" href="/contato">
-              Entre em contato com o Grupo Almeida
-            </MfButton>
-          </MfActions>
+        <MfFrame tabletAlign="left">
+          <MfCenter align="left">
+            <MfTitle
+              refWidth={356}
+              widthGrowth={1.4}
+              align="left"
+              tokens={lockup(35, 39, -2.45)}
+              lines={[
+                [{ text: "O QUE COMEÇOU" }],
+                [{ text: "COM PAPEL E PAPELÃO" }],
+                [{ text: "HOJE CONECTA" }],
+                [{ text: "OPERAÇÃO,", gold: true }],
+                [{ text: "TECNOLOGIA E" }],
+                [{ text: "SUSTENTABILIDADE.", green: true }],
+              ]}
+            />
+          </MfCenter>
+          <MfBottom align="left">
+            <MfBody tokens={lockup(16, 16, -1.12)}>
+              Há 40 anos transformando o presente, pensando no futuro.
+            </MfBody>
+            <MfActions marginTop="8px">
+              <MfButton variant="secondary" href="/contato">
+                Entre em contato com o Grupo Almeida
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
-        <MfScrollHint />
+        <MfScrollHint onAdvance={onAdvance} />
       </div>
     </>
   );
 }
 
-export function Section09Content() {
+export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
   // Dois refs (desktop/mobile) em vez de um wrapper comum: os dois blocos
   // já existem lado a lado (um deles sempre display:none via CSS conforme
   // o breakpoint) — o observer dispara pelo primeiro que intersectar de
@@ -495,7 +514,8 @@ export function Section09Content() {
     <>
       {/* Desktop: sem "Impacto Positivo · 2025" (igual ao mobile). Métricas em
           grid 2×2 — adaptação intencional para telas largas (mobile: coluna
-          única). Sem indicador de rolagem: depois dela vem o footer. */}
+          única). Última dobra antes do footer: o chevron avança para o
+          rodapé (mesmo mecanismo já usado entre as demais dobras). */}
       <div className="desktop-only d-stage" ref={desktopRef}>
         <DTitle
           top="25%"
@@ -535,52 +555,56 @@ export function Section09Content() {
         <DButton top="72%" colA={7} colB={13} variant="secondary" disabled>
           Ver Relatório de Sustentabilidade 2025
         </DButton>
+        <DScrollHint isLast onAdvance={onAdvance} />
       </div>
 
       {/* Sem "Impacto Positivo · 2025" no mobile. Métricas empilhadas em coluna
-          única no mobile puro, grid 2×2 a partir do tablet. Sem indicador de
-          rolagem: depois dela vem o footer. */}
+          única no mobile puro, grid 2×2 a partir do tablet. Última dobra
+          antes do footer: chevron avança para o rodapé. */}
       <div className="mobile-fidelity mf-section-frame" ref={mobileRef}>
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(88, { floorScale: 0.45 })}>
-          <MfTitle
-            refWidth={321}
-            tokens={lockup(35, 30, -0.35)}
-            plain
-            align="left"
-            lines={[
-              [{ text: "Cada resíduo" }],
-              [{ text: "processado vira um" }],
-              [{ text: "número que a" }],
-              [{ text: "natureza reconhece.", gold: true }],
-            ]}
-          />
-          <MfRegion weight={42} />
-          <MfMetrics gap={rhythm(24)}>
-            {IMPACT_METRICS.map((m) => (
-              <MfMetric
-                key={m.label}
-                value={
-                  <CountUpMetric
-                    target={m.target}
-                    format={m.format}
-                    suffix={m.suffix}
-                    display={m.display}
-                    active={active}
-                  />
-                }
-                label={m.label}
-                valueTokens={metricValueTokens}
-                labelTokens={metricLabelTokens}
-              />
-            ))}
-          </MfMetrics>
-          <MfRegion weight={33} />
-          <MfActions>
-            <MfButton variant="secondary" disabled>
-              Ver Relatório de Sustentabilidade 2025
-            </MfButton>
-          </MfActions>
+        <MfFrame tabletAlign="left">
+          <MfCenter align="left">
+            <MfTitle
+              refWidth={321}
+              tokens={lockup(35, 30, -0.35)}
+              plain
+              align="left"
+              lines={[
+                [{ text: "Cada resíduo" }],
+                [{ text: "processado vira um" }],
+                [{ text: "número que a" }],
+                [{ text: "natureza reconhece.", gold: true }],
+              ]}
+            />
+          </MfCenter>
+          <MfBottom align="left">
+            <MfMetrics gap={rhythm(24)}>
+              {IMPACT_METRICS.map((m) => (
+                <MfMetric
+                  key={m.label}
+                  value={
+                    <CountUpMetric
+                      target={m.target}
+                      format={m.format}
+                      suffix={m.suffix}
+                      display={m.display}
+                      active={active}
+                    />
+                  }
+                  label={m.label}
+                  valueTokens={metricValueTokens}
+                  labelTokens={metricLabelTokens}
+                />
+              ))}
+            </MfMetrics>
+            <MfActions marginTop="8px">
+              <MfButton variant="secondary" disabled>
+                Ver Relatório de Sustentabilidade 2025
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
+        <MfScrollHint isLast onAdvance={onAdvance} />
       </div>
     </>
   );

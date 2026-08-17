@@ -9,24 +9,19 @@ import { ChevronDownIcon } from "./icons";
  * mobile+tablet (<1024px) das dobras da Home.
  *
  * `MfFrame` é uma coluna flex (`height:100%`) alinhada à esquerda por
- * padrão (nome/subtítulo/corpo, fiel ao Figma 393px); `MfTitle`/`MfActions`
- * recentralizam a si mesmos via `align-self` (ver `.mf-frame > .mf-d-title`
- * em app/globals.css), exceto nas dobras de fechamento/impacto
- * (`align="left"`), onde o título também fica à esquerda. A partir de
- * 600px, `data-tablet-align` espelha a direção editorial esquerda/direita
- * do desktop.
+ * padrão (nome/subtítulo/corpo, fiel ao Figma 393px). A partir de 600px,
+ * `data-tablet-align` espelha a direção editorial esquerda/direita do
+ * desktop.
  *
- * REGIÕES, não uma coluna de margins encadeados: a distância entre o bloco
- * do TOPO (nome/subtítulo) e o título, e entre o título e o bloco de BAIXO
- * (corpo/CTA), é feita por `MfRegion` — um espaçador `flex-grow` — em vez
- * de `marginTop`. Isso ancora o topo e o fundo de cada dobra às respectivas
- * extremidades da seção (o bloco de baixo nunca "sobe" só porque o título
- * ficou mais baixo, nem "desce" da tela em viewports baixas antes de todo
- * o espaço livre entre as regiões ter sido consumido) e preserva a
- * PROPORÇÃO do espaço acima/abaixo do título medida no Figma, em vez de
- * forçar centralização exata. Gaps pequenos e internos a uma região (nome→
- * subtítulo, corpo→CTA, corpo 1→corpo 2) continuam `marginTop` normal via
- * `rhythm()` — só as duas costuras entre regiões viram `MfRegion`.
+ * TRÊS REGIÕES EXPLÍCITAS, não pesos arbitrários de espaçador: `MfFrame`
+ * ancora o nome/subtítulo institucional a `header + 16px` fixos
+ * (`padding-top`, ver app/globals.css); `MfCenter` (`flex:1`) centraliza a
+ * headline sozinha no espaço realmente disponível entre o topo e o bloco
+ * de baixo, independente do tamanho de qualquer um dos dois; `MfBottom`
+ * tem altura natural e fica encostado no fim do frame, seguido por
+ * `MfScrollHint` (irmão de `MfFrame`, `margin-top: 16px` fixos) — o bloco
+ * de baixo nunca é calculado a partir da headline, e a headline nunca
+ * desliza porque o body/subtítulo mudou de tamanho.
  */
 
 type Segment = { text: string; gold?: boolean; green?: boolean };
@@ -55,30 +50,62 @@ function renderLine(line: TitleLine, keyPrefix: string) {
 export function MfFrame({
   children,
   tabletAlign = "center",
-  paddingTop,
 }: {
   children: ReactNode;
   tabletAlign?: "center" | "left" | "right";
-  paddingTop: string;
 }) {
   return (
-    <div className="mf-frame" data-tablet-align={tabletAlign} style={{ paddingTop }}>
+    <div className="mf-frame" data-tablet-align={tabletAlign}>
+      {children}
+    </div>
+  );
+}
+
+/** Região CENTER: a headline vive aqui, centralizada no espaço disponível
+ *  entre o topo (nome/subtítulo) e o bloco de baixo (`MfBottom`) — nunca
+ *  no centro matemático da tela inteira. `align="left"` cobre as dobras
+ *  sem nome/subtítulo (fechamento/impacto), onde o título também fica à
+ *  esquerda em vez de centralizado. */
+export function MfCenter({
+  align = "center",
+  children,
+}: {
+  align?: "center" | "left";
+  children: ReactNode;
+}) {
+  return (
+    <div className="mf-center" data-align={align}>
+      {children}
+    </div>
+  );
+}
+
+/** Região BOTTOM: texto menor + botão (ou só texto), ancorada a partir do
+ *  fundo do frame — a distância até o `MfScrollHint` seguinte é fixa
+ *  (16px, ver `.mf-scrollhint` em app/globals.css), nunca calculada a
+ *  partir da headline. */
+export function MfBottom({
+  align = "center",
+  children,
+}: {
+  align?: "center" | "left";
+  children: ReactNode;
+}) {
+  return (
+    <div className="mf-bottom" data-align={align}>
       {children}
     </div>
   );
 }
 
 export function MfLabel({
-  marginTop,
   tokens,
   children,
 }: {
-  marginTop?: string;
   tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
-    marginTop,
     fontSize: tokens.fontSize,
     lineHeight: tokens.lineHeight,
     letterSpacing: tokens.letterSpacing,
@@ -90,17 +117,17 @@ export function MfLabel({
   );
 }
 
+/** Sempre 4px abaixo do título institucional (`.mf-d-subtitle` já define
+ *  essa margem fixa em CSS) — não aceita `marginTop` próprio de propósito,
+ *  para não reabrir a ambiguidade que essa relação tinha antes. */
 export function MfSubtitle({
-  marginTop,
   tokens,
   children,
 }: {
-  marginTop?: string;
   tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
-    marginTop,
     fontSize: tokens.fontSize,
     lineHeight: tokens.lineHeight,
     letterSpacing: tokens.letterSpacing,
@@ -121,6 +148,9 @@ export function MfTitle({
   plain = false,
   align = "center",
 }: {
+  /** Só usado na Hero, onde a headline soma ao mesmo bloco central de
+   *  "Grupo Almeida"/"40 anos" (regra 10 da tarefa) — nas demais dobras a
+   *  headline é o único filho de `MfCenter`, sem necessidade de margem. */
   marginTop?: string;
   refWidth: number;
   /** Multiplicador do teto de largura em tablet (padrão 1.6×). */
@@ -148,22 +178,21 @@ export function MfTitle({
   );
 }
 
+/** Regra 8 da tarefa: largura sempre igual à do botão (CSS `.mf-d-body`
+ *  já fixa `width:100%; max-width:380px`, o mesmo container de
+ *  `.mf-d-actions`/`.mf-btn`) e texto sempre `text-align:left`, mesmo
+ *  quando o bloco (via `MfBottom`) está centralizado ou à direita. */
 export function MfBody({
   marginTop,
-  refWidth,
-  widthGrowth,
   tokens,
   children,
 }: {
   marginTop?: string;
-  refWidth: number;
-  widthGrowth?: number;
   tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
     marginTop,
-    width: contentWidth(refWidth, widthGrowth ? { ceilScale: widthGrowth } : undefined),
     fontSize: tokens.fontSize,
     lineHeight: tokens.lineHeight,
     letterSpacing: tokens.letterSpacing,
@@ -173,16 +202,6 @@ export function MfBody({
       {children}
     </p>
   );
-}
-
-/** Espaçador elástico entre duas REGIÕES de uma dobra (topo↔título,
- *  título↔bloco de baixo) — cresce/encolhe para absorver a folga vertical
- *  da viewport, com `weight` proporcional ao gap medido no Figma entre as
- *  duas regiões (não precisa ser convertido pra %: só a RAZÃO entre os
- *  dois `MfRegion` de uma dobra importa). `min-height:0` deixa encolher
- *  até 0 em viewports muito baixas antes de qualquer região ser cortada. */
-export function MfRegion({ weight }: { weight: number }) {
-  return <div aria-hidden="true" style={{ flex: `${weight} 1 0px`, minHeight: 0 }} />;
 }
 
 export function MfActions({ marginTop, children }: { marginTop?: string; children: ReactNode }) {
@@ -219,20 +238,33 @@ export function MfButton({
   );
 }
 
-/* Indicador (fade + seta) fica FLUSH com a base real da dobra — a seta
-   fica a `bottom`px do fundo, valor medido no Figma: 10px no indicador
-   simples (42px de altura), 20px na Hero (bloco com rótulo "Role para
-   baixo", 64px de altura, padding-bottom próprio). Não é uma margem de
-   segurança arbitrária. */
-export function MfScrollHint({ bottom = 10, label }: { bottom?: number; label?: string }) {
+/** Indicador de rolagem CLICÁVEL (regras 11/13 da tarefa): botão real
+ *  (não mais uma div aria-hidden), 44×44 de alvo de toque, focus-visible.
+ *  `onAdvance` dispara o MESMO mecanismo de navegação usado pelo wheel
+ *  desktop (ver `goToIndex` em ScrollVideoExperience.tsx) — sem lógica
+ *  duplicada. */
+export function MfScrollHint({
+  label,
+  isLast = false,
+  onAdvance,
+}: {
+  label?: string;
+  isLast?: boolean;
+  onAdvance: () => void;
+}) {
   return (
-    <>
-      {label ? <p className="mf-hero-scroll-label">{label}</p> : null}
+    <div className="mf-scrollhint">
       <div className="mf-bottom-fade" aria-hidden="true" />
-      <div className="mf-d-arrow" style={{ bottom: `${bottom}px` }} aria-hidden="true">
+      {label ? <p className="mf-hero-scroll-label">{label}</p> : null}
+      <button
+        type="button"
+        className="mf-d-arrow"
+        onClick={onAdvance}
+        aria-label={isLast ? "Ir para o rodapé" : "Ir para a próxima seção"}
+      >
         <ChevronDownIcon />
-      </div>
-    </>
+      </button>
+    </div>
   );
 }
 

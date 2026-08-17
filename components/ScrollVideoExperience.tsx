@@ -296,6 +296,28 @@ export default function ScrollVideoExperience() {
     return () => query.removeEventListener("change", handleChange);
   }, []);
 
+  // Reset de scroll da Home (Seções 17/18 da tarefa): garante que um F5 ou
+  // um retorno via BFCache sempre comecem na primeira dobra, mesmo que o
+  // navegador tente restaurar a última posição de rolagem. O
+  // `history.scrollRestoration = "manual"` desliga a restauração nativa
+  // (idealmente já setado o mais cedo possível — ver script em
+  // app/layout.tsx); aqui, `useLayoutEffect` reforça o reset ANTES da
+  // primeira pintura (cobre o caso de hidratação/navegação client-side), e
+  // o listener de `pageshow` cobre BFCache (a página é restaurada sem
+  // remontar o componente — só o evento dispara de novo). Roda só na
+  // inicialização e nesses dois eventos pontuais, nunca em resposta a
+  // scroll do usuário: não é um loop forçando a página de volta ao topo.
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    const resetScroll = () => window.scrollTo(0, 0);
+    resetScroll();
+    window.addEventListener("pageshow", resetScroll);
+    return () => window.removeEventListener("pageshow", resetScroll);
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -432,30 +454,21 @@ export default function ScrollVideoExperience() {
     };
   }, [reducedMotion]);
 
-  // Mouse/trackpad (desktop): cada gesto muda exatamente uma posição
-  // (dobra↔dobra ou dobra 9↔footer), com uma única animação (~620ms)
-  // controlando scroll + vídeo + fade juntos. Bloqueia novos gestos
-  // enquanto uma transição está em andamento (sem enfileirar). Não
-  // intercepta toque: no mobile, o CSS Scroll Snap nativo resolve o gesto e
-  // o listener de posição de scroll abaixo mantém o vídeo/fade em sincronia
-  // contínua com ele.
-  const onWheel = useCallback((event: WheelEvent) => {
-    if (isAnimatingRef.current) {
-      event.preventDefault();
-      return;
-    }
-
-    const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0;
-    if (direction === 0) return;
+  /** Função central de navegação (regra 11 da tarefa): dado um índice alvo
+   *  0..FOOTER_INDEX, dispara a MESMA transição (~620ms, scroll + vídeo +
+   *  fade numa única animação) usada pelo wheel abaixo. Tanto o wheel
+   *  quanto qualquer chevron (mobile ou desktop, em qualquer dobra,
+   *  inclusive dobra 9 → footer) chamam esta função — nenhuma lógica de
+   *  transição duplicada em outro lugar. */
+  const goToIndex = useCallback((target: number) => {
+    if (isAnimatingRef.current) return;
 
     const current = currentIndexRef.current;
-    const target = clamp(current + direction, 0, FOOTER_INDEX);
-    if (target === current) return;
+    const clampedTarget = clamp(target, 0, FOOTER_INDEX);
+    if (clampedTarget === current) return;
 
     const video = videoRef.current;
     if (!video) return;
-
-    event.preventDefault();
 
     isAnimatingRef.current = true;
     let cancelled = false;
@@ -467,7 +480,7 @@ export default function ScrollVideoExperience() {
       video,
       sectionRefs.current,
       current,
-      target,
+      clampedTarget,
       footerTimeRef.current,
       () => cancelled,
       (pos) => {
@@ -475,11 +488,36 @@ export default function ScrollVideoExperience() {
         applyContentOpacity(contentRefs.current, pos);
       }
     ).then(() => {
-      if (!cancelled) currentIndexRef.current = target;
+      if (!cancelled) currentIndexRef.current = clampedTarget;
       isAnimatingRef.current = false;
       cancelActiveRef.current = null;
     });
   }, []);
+
+  // Mouse/trackpad (desktop): cada gesto muda exatamente uma posição
+  // (dobra↔dobra ou dobra 9↔footer), via a mesma `goToIndex` usada pelos
+  // chevrons. Bloqueia novos gestos enquanto uma transição está em
+  // andamento (sem enfileirar). Não intercepta toque: no mobile, o CSS
+  // Scroll Snap nativo resolve o gesto e o listener de posição de scroll
+  // abaixo mantém o vídeo/fade em sincronia contínua com ele.
+  const onWheel = useCallback(
+    (event: WheelEvent) => {
+      if (isAnimatingRef.current) {
+        event.preventDefault();
+        return;
+      }
+
+      const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0;
+      if (direction === 0) return;
+
+      const target = clamp(currentIndexRef.current + direction, 0, FOOTER_INDEX);
+      if (target === currentIndexRef.current) return;
+
+      event.preventDefault();
+      goToIndex(target);
+    },
+    [goToIndex]
+  );
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -537,6 +575,8 @@ export default function ScrollVideoExperience() {
   }, [reducedMotion]);
 
   if (reducedMotion) {
+    const scrollToNext = () =>
+      document.getElementById(SCROLL_STOPS[1].id)?.scrollIntoView({ block: "start" });
     return (
       <section className="hero-static" aria-label="Grupo Almeida">
         <div
@@ -557,7 +597,7 @@ export default function ScrollVideoExperience() {
         />
         <div className="hero-overlay" aria-hidden="true" />
         <div className="hero-content-layer">
-          <HeroContent />
+          <HeroContent onAdvance={scrollToNext} />
         </div>
         {SCROLL_STOPS.slice(1).map((stop) => (
           <div key={stop.id} id={stop.id} className="scroll-anchor-static" />
@@ -595,12 +635,14 @@ export default function ScrollVideoExperience() {
           }}
         >
           <div ref={heroRef} className="hero-content-layer">
-            <HeroContent />
+            <HeroContent onAdvance={() => goToIndex(1)} />
           </div>
         </section>
 
         {SCROLL_STOPS.slice(1).map((stop, i) => {
           const SectionContent = SECTION_CONTENT[i];
+          const isLast = i === SECTION_CONTENT.length - 1;
+          const nextIndex = isLast ? FOOTER_INDEX : i + 2;
           return (
             <section
               key={stop.id}
@@ -616,7 +658,7 @@ export default function ScrollVideoExperience() {
                   contentRefs.current[i] = el;
                 }}
               >
-                <SectionContent />
+                <SectionContent onAdvance={() => goToIndex(nextIndex)} />
               </div>
             </section>
           );

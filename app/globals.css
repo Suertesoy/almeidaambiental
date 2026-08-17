@@ -691,13 +691,27 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  margin: -8px;
+  cursor: pointer;
   font-family: var(--font-display-mf);
   font-weight: 500;
   font-size: 11px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--d-offwhite);
+}
+
+.d-scroll-indicator:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .d-scroll-indicator svg {
@@ -764,32 +778,58 @@ button {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ---- TOP / CENTER / BOTTOM ----
+   Três regiões explícitas, não mais pesos arbitrários de espaçador
+   (MfRegion, removido): o nome/subtítulo institucional (TOP) fica ancorado
+   a `header + 16px` fixos (não percentual de viewport); a headline (dentro
+   de `.mf-center`, `flex:1`) se centraliza sozinha no espaço realmente
+   disponível entre o TOP e o BOTTOM, sem depender do tamanho de nenhum dos
+   dois; o bloco de baixo (`.mf-bottom`) tem altura natural e fica
+   encostado no fim do `.mf-frame`, que por sua vez é seguido por
+   `.mf-scrollhint` (também no fluxo, `margin-top: 16px` fixos — ver regras
+   6/7 da tarefa) — o resultado é um bottom ancorado a partir do fundo real
+   da dobra, nunca calculado a partir da headline. */
 .mf-frame {
   position: relative;
   z-index: 2;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
   text-align: left;
   padding-inline: clamp(20px, 7vw, 64px);
-  padding-bottom: clamp(60px, 11svh, 108px);
+  padding-top: calc(var(--header-height) + 16px);
 }
 
-/* Título e ações são o bloco centralizado da composição (Figma 393px);
-   recentralizam a si mesmos dentro do `.mf-frame` alinhado à esquerda. */
-.mf-frame > .mf-d-title,
-.mf-frame > .mf-d-actions {
-  align-self: center;
+.mf-center {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Dobras "fechamento"/"impacto" (sem nome/subtítulo) usam tudo alinhado
-   à esquerda, título incluído — ver `titleAlign="left"` em MfTitle. */
-.mf-frame > .mf-d-title[data-align="left"] {
-  align-self: flex-start;
+.mf-center[data-align="left"] {
+  align-items: flex-start;
+}
+
+.mf-bottom {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mf-bottom[data-align="left"] {
+  align-items: flex-start;
 }
 
 @media (min-width: 600px) {
@@ -801,13 +841,13 @@ button {
     align-items: flex-end;
     text-align: right;
   }
-  .mf-frame[data-tablet-align="left"] > .mf-d-title[data-align="center"],
-  .mf-frame[data-tablet-align="left"] > .mf-d-actions {
-    align-self: flex-start;
+  .mf-frame[data-tablet-align="left"] .mf-center,
+  .mf-frame[data-tablet-align="left"] .mf-bottom {
+    align-items: flex-start;
   }
-  .mf-frame[data-tablet-align="right"] > .mf-d-title[data-align="center"],
-  .mf-frame[data-tablet-align="right"] > .mf-d-actions {
-    align-self: flex-end;
+  .mf-frame[data-tablet-align="right"] .mf-center,
+  .mf-frame[data-tablet-align="right"] .mf-bottom {
+    align-items: flex-end;
   }
 }
 
@@ -820,10 +860,14 @@ button {
   color: var(--m393-name-green);
 }
 
+/* Subtítulo: sempre 4px abaixo do título institucional — relação fixa,
+   não um marginTop responsivo (regra 3 da tarefa). Sem `nowrap`: alguns
+   dos subtítulos restaurados (regra 4 da tarefa) são longos demais para
+   uma única linha em 360-393px — quebram em vez de vazar/cortar. */
 .mf-d-subtitle,
 .mf-d-location {
-  margin: 0;
-  white-space: nowrap;
+  margin: 4px 0 0;
+  max-width: 380px;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
@@ -870,8 +914,15 @@ button {
   color: var(--m393-name-green);
 }
 
+/* Regra 8 da tarefa: o body/texto menor usa a MESMA largura (mesmo
+   max-width/container) do botão (.mf-btn/.mf-d-actions, ambos
+   width:100%/max-width:380px) e o texto sempre fica alinhado à esquerda,
+   mesmo quando o bloco (via `.mf-bottom`) está centralizado ou à direita. */
 .mf-d-body {
   margin: 0;
+  width: 100%;
+  max-width: 380px;
+  text-align: left;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
@@ -942,11 +993,13 @@ button {
   cursor: not-allowed;
 }
 
-/* ---- Indicador de rolagem (seta + fade discreto na base) ----
-   Fora do fluxo de `.mf-frame` de propósito: ancorado à base real da
-   snap-section (safe-area), independente de quanto conteúdo houver acima
-   — único gradiente adicional permitido no mobile/tablet (o scrim preto
-   global das dobras desktop não existe aqui). */
+/* ---- Indicador de rolagem (seta + fade discreto na base), CLICÁVEL ----
+   `.mf-scrollhint` é o último item de fluxo de `.mf-hero-frame`/
+   `.mf-section-frame` (irmão de `.mf-frame`, fora dele): `margin-top: 16px`
+   é a distância fixa entre o fim do bloco de baixo (texto/botão) e o
+   indicador (regras 6/7 da tarefa) — nunca calculada a partir da headline.
+   O fade continua fora do fluxo (absolute), ancorado à base real da
+   snap-section independente da altura de `.mf-scrollhint`. */
 .mf-bottom-fade {
   position: absolute;
   z-index: 1;
@@ -958,15 +1011,38 @@ button {
   pointer-events: none;
 }
 
-.mf-d-arrow {
-  position: absolute;
+.mf-scrollhint {
+  position: relative;
   z-index: 2;
-  left: 50%;
-  transform: translateX(-50%);
+  flex: 0 0 auto;
+  width: 100%;
+  margin-top: 16px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Botão real (regra 13 da tarefa): alvo de toque 44×44 mínimo, SVG
+   continua pequeno visualmente dentro dele. */
+.mf-d-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   color: var(--m393-offwhite);
+}
+
+.mf-d-arrow:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .mf-d-arrow svg {
@@ -975,11 +1051,6 @@ button {
 }
 
 .mf-hero-scroll-label {
-  position: absolute;
-  z-index: 2;
-  bottom: clamp(30px, 5.6svh, 46px);
-  left: 50%;
-  transform: translateX(-50%);
   margin: 0;
   white-space: nowrap;
   font-family: var(--font-display-mf);

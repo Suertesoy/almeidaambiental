@@ -1,6 +1,6 @@
 import { ChevronDownIcon, WhatsAppIcon } from "./icons";
-import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
-import { MfActions, MfButton, MfFrame, MfLabel, MfRegion, MfScrollHint, MfTitle } from "./MobileDobra";
+import { lockup, rhythm } from "../lib/responsive-type";
+import { MfActions, MfBottom, MfButton, MfCenter, MfFrame, MfLabel, MfScrollHint, MfTitle } from "./MobileDobra";
 import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
 
 /**
@@ -10,9 +10,16 @@ import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
  * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo
  *   (`MfFrame`) calibrado a partir da referência 393px do Figma, sem
  *   canvas fixo nem coordenadas absolutas por elemento.
+ *
+ * Composição central (Grupo Almeida / 40 anos / headline) tratada como um
+ * bloco único dentro de `MfCenter` (regra 10 da tarefa: mesmo raciocínio
+ * TOP/CENTER/BOTTOM do resto das dobras, adaptado — aqui não há um
+ * subtítulo institucional separado). Os dois CTAs formam o `MfBottom`; o
+ * último botão fica 16px acima do indicador de rolagem via o mesmo
+ * `margin-top` fixo de `.mf-scrollhint` usado em todas as outras dobras.
  */
 
-export default function HeroContent() {
+export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       {/* ---------------- Desktop (>=1024px): composição editorial ---------------- */}
@@ -80,61 +87,68 @@ export default function HeroContent() {
           </DButtonInline>
         </DActionsRow>
 
-        <div className="d-scroll-indicator" style={{ bottom: "28px" }} aria-hidden="true">
-          <span>Role para baixo</span>
+        <button
+          type="button"
+          className="d-scroll-indicator"
+          style={{ bottom: "28px" }}
+          onClick={onAdvance}
+          aria-label="Ir para a próxima seção"
+        >
+          <span aria-hidden="true">Role para baixo</span>
           <ChevronDownIcon />
-        </div>
+        </button>
       </div>
 
       {/* ---------------- Mobile+tablet (<1024px): fluxo ---------------- */}
       <div className="mobile-fidelity mf-hero-frame">
-        <MfFrame paddingTop={framePaddingTop(236)}>
-          <MfLabel tokens={lockup(29, 30, 9.28)}>Grupo Almeida</MfLabel>
+        <MfFrame>
+          <MfCenter>
+            <MfLabel tokens={lockup(29, 30, 9.28)}>Grupo Almeida</MfLabel>
 
-          <p
-            style={{
-              margin: 0,
-              marginTop: rhythm(15),
-              alignSelf: "center",
-              whiteSpace: "nowrap",
-              fontFamily: "var(--font-display-mf)",
-              fontWeight: 600,
-              color: "var(--m393-offwhite)",
-              ...lockup(60, 30, -2.4),
-            }}
-          >
-            40 anos
-          </p>
+            <p
+              style={{
+                margin: 0,
+                marginTop: rhythm(15),
+                whiteSpace: "nowrap",
+                fontFamily: "var(--font-display-mf)",
+                fontWeight: 600,
+                color: "var(--m393-offwhite)",
+                ...lockup(60, 30, -2.4),
+              }}
+            >
+              40 anos
+            </p>
 
-          {/* Sem node de headline dedicado no Figma nesta rodada (a arte de
-              fundo já compõe "TRANSFORMANDO RESÍDUO EM RESULTADO"); valores
-              mantidos da calibração anterior por falta de referência nova.
-              Região título ancorada ao centro via MfRegion (124:36, mesma
-              razão da calibração anterior), não mais um marginTop fixo. */}
-          <MfRegion weight={124} />
-          <MfTitle
-            refWidth={335}
-            tokens={lockup(35, 30, -1)}
-            lines={[
-              [{ text: "TRANSFORMANDO" }],
-              [{ text: "RESÍDUO" }],
-              [{ text: "EM " }, { text: "RESULTADO", gold: true }],
-            ]}
-          />
-          <MfRegion weight={36} />
+            {/* Sem node de headline dedicado no Figma nesta rodada (a arte
+                de fundo já compõe "TRANSFORMANDO RESÍDUO EM RESULTADO");
+                valores mantidos da calibração anterior por falta de
+                referência nova. */}
+            <MfTitle
+              marginTop={rhythm(32)}
+              refWidth={335}
+              tokens={lockup(35, 30, -1)}
+              lines={[
+                [{ text: "TRANSFORMANDO" }],
+                [{ text: "RESÍDUO" }],
+                [{ text: "EM " }, { text: "RESULTADO", gold: true }],
+              ]}
+            />
+          </MfCenter>
 
-          <MfActions>
-            <MfButton variant="primary">
-              <WhatsAppIcon />
-              Falar com o Grupo Almeida
-            </MfButton>
-            <MfButton variant="secondary" href="#section-02">
-              Conheça nossa história
-            </MfButton>
-          </MfActions>
+          <MfBottom>
+            <MfActions>
+              <MfButton variant="primary">
+                <WhatsAppIcon />
+                Falar com o Grupo Almeida
+              </MfButton>
+              <MfButton variant="secondary" href="#section-02">
+                Conheça nossa história
+              </MfButton>
+            </MfActions>
+          </MfBottom>
         </MfFrame>
 
-        <MfScrollHint bottom={20} label="Role para baixo" />
+        <MfScrollHint label="Role para baixo" onAdvance={onAdvance} />
       </div>
     </>
   );

@@ -223,13 +223,22 @@ export function DActionsRow({ top, children, ...placement }: { top: string; chil
   );
 }
 
-export function DScrollHint() {
+/** Indicador de rolagem CLICÁVEL (regras 11/13/14 da tarefa): botão real,
+ *  `onAdvance` dispara o mesmo mecanismo de transição (~620ms) usado pelo
+ *  wheel — ver `goToIndex` em ScrollVideoExperience.tsx. */
+export function DScrollHint({ isLast = false, onAdvance }: { isLast?: boolean; onAdvance: () => void }) {
   return (
     <>
       <div className="d-scroll-fade" aria-hidden="true" />
-      <div className="d-scroll-indicator" style={{ bottom: "28px" }} aria-hidden="true">
+      <button
+        type="button"
+        className="d-scroll-indicator"
+        style={{ bottom: "28px" }}
+        onClick={onAdvance}
+        aria-label={isLast ? "Ir para o rodapé" : "Ir para a próxima seção"}
+      >
         <ChevronDownIcon />
-      </div>
+      </button>
     </>
   );
 }
