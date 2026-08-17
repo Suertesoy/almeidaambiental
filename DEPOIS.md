@@ -1,5 +1,7 @@
 # Depois (Backlog e Ideias)
 
+Este arquivo é backlog e memória auxiliar. Não é fonte de verdade nem lista automática de tarefas. Um item aqui só entra em execução quando for solicitado ou priorizado.
+
 Este documento é o estacionamento de ideias e itens fora da tarefa atual. Estar aqui NÃO significa que o item está aprovado.
 
 | Item | Motivo de estar aqui | Quando revisar | Status |
