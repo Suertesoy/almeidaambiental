@@ -5,24 +5,17 @@ import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
 
 /**
  * Dobra 1 (Hero). Dois blocos independentes:
- * - Desktop (>=1024px, `.desktop-only`): composição editorial própria da
- *   Decisão 27 (`.d-stage`, ver components/DesktopDobra.tsx).
+ * - Desktop (>=1024px, `.desktop-only`): composição editorial própria
+ *   (`.d-stage`, ver components/DesktopDobra.tsx).
  * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo
- *   (`MfFrame`, Decisão 28) calibrado a partir da referência 393px, sem
- *   canvas fixo nem coordenadas absolutas por elemento (ver DECISOES.md).
+ *   (`MfFrame`) calibrado a partir da referência 393px do Figma, sem
+ *   canvas fixo nem coordenadas absolutas por elemento.
  */
-
-/** Abaixo de ~630px de altura real (Safari com as duas barras visíveis num
- *  aparelho baixo, ex.: iPhone SE), os quatro espaçamentos do Hero param de
- *  encolher no mesmo ritmo (em vez de continuar comprimindo até sobrepor o
- *  CTA): floor = valor de cada rhythm() em ~630svh, então o floor bate onde
- *  a curva normal já estaria nessa altura — nada muda acima disso. */
-const HERO_SHORT_FLOOR = 0.739;
 
 export default function HeroContent() {
   return (
     <>
-      {/* ---------------- Desktop (>=1024px): composição editorial (Decisão 27) ---------------- */}
+      {/* ---------------- Desktop (>=1024px): composição editorial ---------------- */}
       <div className="desktop-only d-stage">
         <p
           style={{
@@ -93,27 +86,31 @@ export default function HeroContent() {
         </div>
       </div>
 
-      {/* ---------------- Mobile+tablet (<1024px): fluxo (Decisão 28) ---------------- */}
+      {/* ---------------- Mobile+tablet (<1024px): fluxo ---------------- */}
       <div className="mobile-fidelity mf-hero-frame">
-        <MfFrame paddingTop={framePaddingTop(207, { floorScale: HERO_SHORT_FLOOR })}>
-          <MfLabel tokens={lockup(24, 30, 7.2)}>Grupo Almeida</MfLabel>
+        <MfFrame paddingTop={framePaddingTop(236)}>
+          <MfLabel tokens={lockup(29, 30, 9.28)}>Grupo Almeida</MfLabel>
 
           <p
             style={{
               margin: 0,
-              marginTop: rhythm(91, { floorScale: HERO_SHORT_FLOOR }),
+              marginTop: rhythm(15),
+              alignSelf: "center",
               whiteSpace: "nowrap",
               fontFamily: "var(--font-display-mf)",
               fontWeight: 600,
               color: "var(--m393-offwhite)",
-              ...lockup(60, 66, -2.4),
+              ...lockup(60, 30, -2.4),
             }}
           >
             40 anos
           </p>
 
+          {/* Sem node de headline dedicado no Figma nesta rodada (a arte de
+              fundo já compõe "TRANSFORMANDO RESÍDUO EM RESULTADO"); valores
+              mantidos da calibração anterior por falta de referência nova. */}
           <MfTitle
-            marginTop={rhythm(124, { floorScale: HERO_SHORT_FLOOR })}
+            marginTop={rhythm(124)}
             refWidth={335}
             tokens={lockup(35, 30, -1)}
             lines={[
@@ -123,7 +120,7 @@ export default function HeroContent() {
             ]}
           />
 
-          <MfActions marginTop={rhythm(36, { floorScale: HERO_SHORT_FLOOR })}>
+          <MfActions marginTop={rhythm(36)}>
             <MfButton variant="primary">
               <WhatsAppIcon />
               Falar com o Grupo Almeida
@@ -134,7 +131,7 @@ export default function HeroContent() {
           </MfActions>
         </MfFrame>
 
-        <MfScrollHint bottom={22} label="Role para baixo" />
+        <MfScrollHint bottom={20} label="Role para baixo" />
       </div>
     </>
   );

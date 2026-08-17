@@ -39,9 +39,8 @@
   --font-display-mf: var(--font-playfair), Georgia, serif;
   --font-body-mf: var(--font-inter), -apple-system, sans-serif;
 
-  /* ---- Tokens exclusivos da composição mobile <1024px (Decisão 26) ----
-     Direção de arte por dobra, independente da paleta/tipografia acima
-     (protegida — não alterar; ver Decisão 27 sobre o desktop). */
+  /* ---- Tokens exclusivos da composição mobile <1024px ----
+     Direção de arte por dobra, independente da paleta/tipografia acima. */
   --m393-bg: #f7f6f1;
   --m393-offwhite: #f7f6f1;
   --m393-green: #4e6b24;
@@ -52,11 +51,11 @@
   --m393-cta-light-bg: #f3f5ec;
   --m393-overlay: rgba(78, 107, 36, 0.6);
 
-  /* ---- Tokens exclusivos da composição editorial desktop >=1024px (Decisão 27) ----
-     Mesma paleta de direção de arte da Decisão 26 (mesmos valores hex),
+  /* ---- Tokens exclusivos da composição editorial desktop >=1024px ----
+     Mesma paleta de direção de arte do mobile (mesmos valores hex),
      tokens próprios para não acoplar CSS de desktop a nomes "m393-"
-     (mobile, área protegida) nem aos tokens antigos da Decisão 25
-     (--color-accent-gold/--mf-primary, que deixam de ser usados no
+     (mobile) nem aos tokens antigos --color-accent-gold/--mf-primary
+     (que deixam de ser usados no
      desktop mas permanecem definidos, sem efeito). */
   --d-offwhite: #f7f6f1;
   --d-gold: #edc812;
@@ -144,7 +143,7 @@ button {
   }
 }
 
-/* Mobile (<1024px, Decisão 26): o header é fixed e fica SOBRE a
+/* Mobile (<1024px): o header é fixed e fica SOBRE a
    snap-section (que ocupa 100% da tela, sem desconto de altura de
    header) — scroll-padding-top precisa ser 0, senão sobra uma faixa no
    final de cada dobra ao encaixar. */
@@ -242,7 +241,7 @@ button {
   background: var(--color-muted);
 }
 
-/* ---- Header mobile (<1024px): 65px, sólido, sem transparência (Decisão 26) ----
+/* ---- Header mobile (<1024px): 65px, sólido, sem transparência ----
    Sem gradiente, sem opacidade perceptível, sem blur — o header precisa
    ficar sólido como no desenho de referência, já que fica fixed sobre a
    snap-section (que não tem mais desconto de altura de header). */
@@ -360,6 +359,7 @@ button {
   border-bottom: 1px solid rgba(21, 21, 15, 0.08);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   max-height: calc(100svh - var(--header-height));
+  max-height: calc(100dvh - var(--header-height));
   overflow-y: auto;
 }
 
@@ -404,9 +404,17 @@ button {
   z-index: 1;
 }
 
+/* Altura da dobra: 100svh é a MENOR viewport possível (barra do Safari
+   sempre expandida) — quando a barra recolhe durante o scroll, a viewport
+   visual real cresce além de 100svh e sobra uma faixa vazia abaixo da
+   dobra encaixada (bug confirmado em iPhone real). 100dvh acompanha a
+   viewport dinâmica e fecha essa faixa; a declaração svh antes dela é só
+   fallback para navegadores sem suporte a dvh (é ignorada onde dvh existe,
+   nunca as duas competem). */
 .snap-section {
   position: relative;
   height: 100svh;
+  height: 100dvh;
   width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -418,6 +426,7 @@ button {
 .hero-static {
   position: relative;
   height: 100svh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
 }
@@ -460,13 +469,10 @@ button {
 }
 
 /* ==========================================================
-   Composição DESKTOP (>=1024px) — Decisão 27
+   Composição DESKTOP (>=1024px)
    ==========================================================
-   Substitui integralmente o mecanismo genérico em grid da Decisão 25
-   (removido: .hero-frame/.section-frame/.dobra-* não são mais usados por
-   nenhum componente). Direção editorial por dobra, independente do
-   mobile (Decisão 26, área protegida, não tocada nesta rodada) — mesma
-   paleta (tokens --d-*), estrutura própria.
+   Direção editorial por dobra, independente do mobile — mesma paleta
+   (tokens --d-*), estrutura própria.
 
    Cada dobra usa um "stage" (.d-stage): área útil centralizada, largura
    fluida até 1280px, height:calc(100svh - header-height) (o header
@@ -484,6 +490,7 @@ button {
   max-width: var(--d-stage-max);
   margin-inline: auto;
   height: calc(100svh - var(--header-height));
+  height: calc(100dvh - var(--header-height));
 }
 
 @media (min-width: 1280px) {
@@ -689,22 +696,25 @@ button {
 }
 
 /* ==========================================================
-   Composição MOBILE + TABLET (<1024px) — Decisão 28
+   Composição MOBILE + TABLET (<1024px)
    ==========================================================
-   Layout de FLUXO (flex column) por dobra, não mais uma prancheta de
+   Layout de FLUXO (flex column) por dobra, não uma prancheta de
    coordenadas absolutas: `.mf-frame` (ver components/MobileDobra.tsx) é
-   o único elemento que decide alinhamento — centro por padrão (fidelidade
-   ao Figma 393×852), esquerda/direita a partir de 600px via
-   `data-tablet-align`, espelhando a direção editorial que o desktop já
-   usa por dobra (ver components/HomeSections.tsx). Todo o resto é filho
-   em fluxo normal: a ordem no JSX é a ordem visual, e o espaçamento entre
-   blocos vem de `margin-top` gerado por `rhythm()`/`framePaddingTop()`
-   (lib/responsive-type.ts) — clamp()s em `svh`, não pixels fixos nem um
-   canvas de 393px centralizado (ver Decisão 28 em DECISOES.md). 393px
-   continua sendo a referência de calibração de cada lockup tipográfico,
-   só deixou de ser um viewport renderizado dentro de telas maiores. Nada
-   disso é usado acima de 1024px (.desktop-only/.mobile-fidelity, topo
-   deste arquivo). */
+   quem decide alinhamento. Todo o resto é filho em fluxo normal: a ordem
+   no JSX é a ordem visual, e o espaçamento entre blocos vem de
+   `margin-top` gerado por `rhythm()`/`framePaddingTop()`
+   (lib/responsive-type.ts) — clamp()s em `svh`, não pixels fixos.
+
+   O Figma 393px mostra nome/subtítulo/corpo alinhados à ESQUERDA por
+   padrão em toda dobra (mesmo em largura de celular puro), enquanto o
+   título e as ações ficam CENTRALIZADOS — não é "tudo centro até o
+   tablet" como numa rodada anterior. `.mf-frame` já nasce alinhado à
+   esquerda; `.mf-d-title`/`.mf-d-actions` recentralizam a si mesmos via
+   `align-self`. A partir de 600px, dobras com direção editorial
+   esquerda/direita no desktop espelham esse alinhamento aqui também via
+   `data-tablet-align`, dando ao tablet uma composição própria (em vez de
+   continuar como um celular esticado). Nada disso é usado acima de
+   1024px (.desktop-only/.mobile-fidelity, topo deste arquivo). */
 
 .mf-hero-frame,
 .mf-section-frame {
@@ -721,17 +731,26 @@ button {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  text-align: center;
+  text-align: left;
   padding-inline: clamp(20px, 7vw, 64px);
-  padding-bottom: clamp(72px, 11svh, 108px);
+  padding-bottom: clamp(60px, 11svh, 108px);
 }
 
-/* 600px+: dobras cuja direção editorial no desktop é esquerda/direita
-   adotam o mesmo alinhamento aqui — é o que dá ao tablet uma composição
-   própria (Seção 10 da tarefa), em vez de continuar centralizado como um
-   celular esticado. */
+/* Título e ações são o bloco centralizado da composição (Figma 393px);
+   recentralizam a si mesmos dentro do `.mf-frame` alinhado à esquerda. */
+.mf-frame > .mf-d-title,
+.mf-frame > .mf-d-actions {
+  align-self: center;
+}
+
+/* Dobras "fechamento"/"impacto" (sem nome/subtítulo) usam tudo alinhado
+   à esquerda, título incluído — ver `titleAlign="left"` em MfTitle. */
+.mf-frame > .mf-d-title[data-align="left"] {
+  align-self: flex-start;
+}
+
 @media (min-width: 600px) {
   .mf-frame[data-tablet-align="left"] {
     align-items: flex-start;
@@ -740,6 +759,14 @@ button {
   .mf-frame[data-tablet-align="right"] {
     align-items: flex-end;
     text-align: right;
+  }
+  .mf-frame[data-tablet-align="left"] > .mf-d-title[data-align="center"],
+  .mf-frame[data-tablet-align="left"] > .mf-d-actions {
+    align-self: flex-start;
+  }
+  .mf-frame[data-tablet-align="right"] > .mf-d-title[data-align="center"],
+  .mf-frame[data-tablet-align="right"] > .mf-d-actions {
+    align-self: flex-end;
   }
 }
 
@@ -755,6 +782,7 @@ button {
 .mf-d-subtitle,
 .mf-d-location {
   margin: 0;
+  white-space: nowrap;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
@@ -770,11 +798,18 @@ button {
   color: var(--m393-offwhite);
 }
 
+/* Dobras de fechamento/impacto (D8/D9): título alinhado à esquerda como
+   nome/corpo, não centralizado — ver `titleAlign="left"` em MfTitle. */
+.mf-d-title[data-align="left"] {
+  align-items: flex-start;
+  text-align: left;
+}
+
 @media (min-width: 600px) {
-  [data-tablet-align="left"] .mf-d-title {
+  [data-tablet-align="left"] .mf-d-title[data-align="center"] {
     align-items: flex-start;
   }
-  [data-tablet-align="right"] .mf-d-title {
+  [data-tablet-align="right"] .mf-d-title[data-align="center"] {
     align-items: flex-end;
   }
 }
@@ -805,7 +840,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(10px, 2.2svh, 20px);
+  gap: clamp(8px, 1.3svh, 16px);
   width: 100%;
   max-width: 380px;
 }
