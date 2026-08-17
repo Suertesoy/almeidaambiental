@@ -534,14 +534,22 @@ button {
    - `.d-hint`: indicador de rolagem, sempre 40px abaixo do fim de
      `.d-main` (margin-top fixo), sem caixa/fade retangular isolada atrás
      (ver `.d-bottom-fade`, largura total do stage). */
+/* .section-layer/.hero-content-layer (position:absolute; inset:0) tiram o
+   stage do fluxo flex de .snap-section — a altura do stage sozinha nunca
+   posiciona nada, ela só soma. A origem geométrica certa vem de
+   padding-top:header-height aqui (regra 32 da tarefa): o stage ocupa a
+   viewport inteira (100dvh) e empurra TODO o conteúdo para começar
+   exatamente no fim real do header, em vez de descontar a altura do
+   header do próprio stage (o que deixava conteúdo atrás dele). */
 .d-stage {
   position: relative;
   width: 100%;
   max-width: var(--d-stage-max);
   margin-inline: auto;
   padding-inline: clamp(40px, 5vw, 80px);
-  height: calc(100svh - var(--header-height));
-  height: calc(100dvh - var(--header-height));
+  padding-top: var(--header-height);
+  height: 100svh;
+  height: 100dvh;
 }
 
 .d-frame {
@@ -549,20 +557,6 @@ button {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-/* Fade decorativo full-width atrás da região inferior — largura total do
-   stage (nunca uma caixa isolada atrás só do chevron, regra 12 da
-   tarefa): pointer-events:none, só reforça contraste do texto/seta sobre
-   o vídeo, igual em intenção ao `.mf-bottom-fade` do mobile. */
-.d-bottom-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 240px;
-  background: linear-gradient(to top, rgba(21, 21, 15, 0.16), rgba(21, 21, 15, 0));
-  pointer-events: none;
 }
 
 .d-top {
@@ -895,16 +889,18 @@ button {
    `margin-top` gerado por `rhythm()`/`framePaddingTop()`
    (lib/responsive-type.ts) — clamp()s em `svh`, não pixels fixos.
 
-   O Figma 393px mostra nome/subtítulo/corpo alinhados à ESQUERDA por
-   padrão em toda dobra (mesmo em largura de celular puro), enquanto o
-   título e as ações ficam CENTRALIZADOS — não é "tudo centro até o
-   tablet" como numa rodada anterior. `.mf-frame` já nasce alinhado à
-   esquerda; `.mf-d-title`/`.mf-d-actions` recentralizam a si mesmos via
-   `align-self`. A partir de 600px, dobras com direção editorial
+   Nome/subtítulo institucional (`.mf-institutional-top`), headline e body
+   ficam CENTRALIZADOS em toda dobra 2+ (regras 13/14/21/24 da tarefa) — a
+   única exceção da Home inteira é a headline da Hero, alinhada à esquerda.
+   `.mf-frame` nasce alinhado à esquerda (`align-items:flex-start`) só como
+   base estrutural; nome/subtítulo se recentralizam via `align-self` no
+   próprio wrapper, headline/body via `align-self`/`text-align` nos seus
+   elementos. A partir de 600px, dobras com direção editorial
    esquerda/direita no desktop espelham esse alinhamento aqui também via
-   `data-tablet-align`, dando ao tablet uma composição própria (em vez de
-   continuar como um celular esticado). Nada disso é usado acima de
-   1024px (.desktop-only/.mobile-fidelity, topo deste arquivo). */
+   `data-tablet-align` — mas só para headline/CTA, nunca para
+   nome+subtítulo institucional, que permanece centralizado em qualquer
+   largura. Nada disso é usado acima de 1024px
+   (.desktop-only/.mobile-fidelity, topo deste arquivo). */
 
 .mf-hero-frame,
 .mf-section-frame {
@@ -938,7 +934,22 @@ button {
   align-items: flex-start;
   text-align: left;
   padding-inline: clamp(20px, 7vw, 64px);
+  /* Variante "default": dobras de fechamento/impacto (D8/D9), sem
+     nome/subtítulo institucional — preserva a composição própria
+     (regra 29 da tarefa), valor inalterado. */
   padding-top: calc(var(--header-height) + 40px);
+}
+
+/* Hero: Grupo Almeida a 96px do fim real do header (regra 3 da tarefa) —
+   composição própria, não reaproveita a variante institucional. */
+.mf-frame[data-variant="hero"] {
+  padding-top: calc(var(--header-height) + 96px);
+}
+
+/* Dobras institucionais (2 a 7): título institucional a 72px do fim real
+   do header (regra 11 da tarefa). */
+.mf-frame[data-variant="institutional"] {
+  padding-top: calc(var(--header-height) + 72px);
 }
 
 .mf-center {
@@ -986,23 +997,62 @@ button {
   }
 }
 
+/* Bloco NOME + SUBTÍTULO institucional (regras 11–17 da tarefa): 348px de
+   largura alvo na referência 393px, sempre centralizado — independente do
+   `data-tablet-align` da headline/CTA ao lado. */
+.mf-institutional-top {
+  width: min(348px, 100%);
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Bloco "Grupo Almeida" + "40 anos" da Hero — composição própria (regra 8
+   da tarefa), não reaproveita `.mf-institutional-top`: sem teto de 348px,
+   sempre centralizado. */
+.mf-hero-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 16px fixos abaixo de "Grupo Almeida" (regra 4 da tarefa) — não um
+   `rhythm()` responsivo. */
+.mf-hero-years {
+  margin: 0;
+  margin-top: 16px;
+  white-space: nowrap;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  color: var(--m393-offwhite);
+}
+
 .mf-d-label {
   margin: 0;
+  width: 100%;
   white-space: nowrap;
+  text-align: center;
   font-family: var(--font-display-mf);
   font-weight: 600;
   text-transform: uppercase;
   color: var(--m393-name-green);
 }
 
-/* Subtítulo: sempre 4px abaixo do título institucional — relação fixa,
-   não um marginTop responsivo (regra 3 da tarefa). Sem `nowrap`: alguns
-   dos subtítulos restaurados (regra 4 da tarefa) são longos demais para
-   uma única linha em 360-393px — quebram em vez de vazar/cortar. */
+/* Subtítulo: sempre 4px abaixo do título institucional — relação fixa
+   (regra 15 da tarefa). `nowrap` é obrigatório (regra 16): cada subtítulo
+   recebe seu próprio `lockup()` inline (ver os seis `<MfSubtitle tokens=…>`
+   em components/HomeSections.tsx) calibrado para caber numa linha só
+   dentro dos 348px, em vez de um token único para os seis (regra 17). */
 .mf-d-subtitle,
 .mf-d-location {
   margin: 4px 0 0;
-  max-width: 380px;
+  width: 100%;
+  white-space: nowrap;
+  text-align: center;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
@@ -1049,15 +1099,16 @@ button {
   color: var(--m393-name-green);
 }
 
-/* Regra 8 da tarefa: o body/texto menor usa a MESMA largura (mesmo
-   max-width/container) do botão (.mf-btn/.mf-d-actions, ambos
-   width:100%/max-width:380px) e o texto sempre fica alinhado à esquerda,
-   mesmo quando o bloco (via `.mf-bottom`) está centralizado ou à direita. */
+/* O body/texto menor usa a MESMA largura (mesmo max-width/container) do
+   botão (.mf-btn/.mf-d-actions, ambos width:100%/max-width:380px) e o
+   texto fica CENTRALIZADO (regra 24 da tarefa — substitui a regra anterior
+   de alinhamento à esquerda), mesmo quando o bloco (via `.mf-bottom`) está
+   à esquerda/direita no tablet. */
 .mf-d-body {
   margin: 0;
   width: 100%;
   max-width: 380px;
-  text-align: left;
+  text-align: center;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
@@ -1130,9 +1181,9 @@ button {
 
 /* ---- Indicador de rolagem (seta + fade discreto na base), CLICÁVEL ----
    `.mf-scrollhint` é o último item de fluxo de `.mf-hero-frame`/
-   `.mf-section-frame` (irmão de `.mf-frame`, fora dele): `margin-top: 16px`
-   é a distância fixa entre o fim do bloco de baixo (texto/botão) e o
-   indicador (regras 6/7 da tarefa) — nunca calculada a partir da headline.
+   `.mf-section-frame` (irmão de `.mf-frame`, fora dele): `margin-top: 32px`
+   é a distância fixa entre o fim do bloco de baixo (texto/botão/CTA) e o
+   indicador (regra 27 da tarefa) — nunca calculada a partir da headline.
    O fade continua fora do fluxo (absolute), ancorado à base real da
    snap-section independente da altura de `.mf-scrollhint`. */
 .mf-bottom-fade {
@@ -1151,7 +1202,7 @@ button {
   z-index: 2;
   flex: 0 0 auto;
   width: 100%;
-  margin-top: 40px;
+  margin-top: 32px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;

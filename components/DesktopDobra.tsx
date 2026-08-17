@@ -50,16 +50,11 @@ function renderLine(line: TitleLine, keyPrefix: string) {
   });
 }
 
-/** Área útil da dobra: fade decorativo full-width (atrás de toda a região
- *  inferior, não uma caixa isolada atrás do chevron) + as três regiões
- *  (DTop/DMain/DHint) em coluna flex, altura total do stage. */
+/** Área útil da dobra: as três regiões (DTop/DMain/DHint) em coluna flex,
+ *  altura total do stage. Sem painel/fade atrás do conteúdo (regra 34 da
+ *  tarefa) — o texto existe diretamente sobre vídeo + overlay global. */
 export function DFrame({ children }: { children: ReactNode }) {
-  return (
-    <div className="d-frame">
-      <div className="d-bottom-fade" aria-hidden="true" />
-      {children}
-    </div>
-  );
+  return <div className="d-frame">{children}</div>;
 }
 
 /** Região TOP: nome institucional. Mesmo grid de 12 colunas de `DMain`,

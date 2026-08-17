@@ -1,5 +1,5 @@
 import { WhatsAppIcon } from "./icons";
-import { lockup, rhythm } from "../lib/responsive-type";
+import { lockup } from "../lib/responsive-type";
 import { MfActions, MfBottom, MfButton, MfCenter, MfFrame, MfLabel, MfScrollHint, MfTitle } from "./MobileDobra";
 import { DActionsRow, DButton, DFrame, DHint, DTitle } from "./DesktopDobra";
 
@@ -11,8 +11,17 @@ import { DActionsRow, DButton, DFrame, DHint, DTitle } from "./DesktopDobra";
  *   `DFrame`, mesmo raciocínio de região CENTER das demais dobras); os
  *   dois CTAs (`.d-hero-actions`) e o `DHint` seguem em fluxo normal
  *   abaixo dele — nada posicionado via `top` percentual.
- * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo
- *   (`MfFrame`) calibrado a partir da referência 393px do Figma.
+ * - Mobile+tablet (<1024px, `.mobile-fidelity`): composição PRÓPRIA
+ *   (`MfFrame variant="hero"`, regra 8 da tarefa — não governada pelo
+ *   mesmo padding-top das dobras institucionais). Estrutura fiel à
+ *   referência anexada, de cima para baixo:
+ *     header → 96px fixos (regra 3) → "Grupo Almeida" → 16px fixos
+ *     (regra 4) → "40 anos" → espaço flexível (`MfCenter`, respiro
+ *     editorial) → headline ALINHADA À ESQUERDA (regra 5, única exceção
+ *     de alinhamento da Home) → bloco inferior (`MfBottom`) com os dois
+ *     CTAs a 8px fixos um do outro (regra 6, gap explícito, não o clamp
+ *     responsivo padrão) → 32px fixos (regra 27, `.mf-scrollhint`) até
+ *     "Role para baixo" + chevron.
  */
 
 export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
@@ -54,32 +63,28 @@ export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
         </DFrame>
       </div>
 
-      {/* ---------------- Mobile+tablet (<1024px): fluxo ---------------- */}
+      {/* ---------------- Mobile+tablet (<1024px): composição própria da Hero ---------------- */}
       <div className="mobile-fidelity mf-hero-frame">
-        <MfFrame>
-          <MfCenter>
+        <MfFrame variant="hero">
+          {/* Grupo Almeida → 16px fixos (regra 4, não `rhythm()`) → 40 anos,
+              bloco centralizado, distinto da headline (que fica sozinha em
+              `MfCenter`, alinhada à esquerda). */}
+          <div className="mf-hero-top">
             <MfLabel tokens={lockup(29, 30, 9.28)}>Grupo Almeida</MfLabel>
-
-            <p
-              style={{
-                margin: 0,
-                marginTop: rhythm(15),
-                whiteSpace: "nowrap",
-                fontFamily: "var(--font-display-mf)",
-                fontWeight: 600,
-                color: "var(--m393-offwhite)",
-                ...lockup(60, 30, -2.4),
-              }}
-            >
+            <p className="mf-hero-years" style={lockup(60, 30, -2.4)}>
               40 anos
             </p>
+          </div>
 
-            {/* Sem node de headline dedicado no Figma nesta rodada (a arte
-                de fundo já compõe "TRANSFORMANDO RESÍDUO EM RESULTADO");
-                valores mantidos da calibração anterior por falta de
-                referência nova. */}
+          {/* Espaço flexível (regra 9: respiro editorial, não compactado)
+              antes da headline — única headline da Home alinhada à
+              esquerda (regra 5). Sem node de headline dedicado no Figma
+              nesta rodada (a arte de fundo já compõe "TRANSFORMANDO
+              RESÍDUO EM RESULTADO"); valores mantidos da calibração
+              anterior por falta de referência tipográfica nova. */}
+          <MfCenter align="left">
             <MfTitle
-              marginTop={rhythm(32)}
+              align="left"
               refWidth={335}
               tokens={lockup(35, 30, -1)}
               lines={[
@@ -90,8 +95,10 @@ export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
             />
           </MfCenter>
 
-          <MfBottom>
-            <MfActions>
+          <MfBottom align="left">
+            {/* 8px fixos entre os dois CTAs (regra 6) — gap explícito, não
+                o clamp responsivo padrão de `.mf-d-actions`. */}
+            <MfActions gap="8px">
               <MfButton variant="primary">
                 <WhatsAppIcon />
                 Falar com o Grupo Almeida
@@ -103,6 +110,8 @@ export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
           </MfBottom>
         </MfFrame>
 
+        {/* 32px fixos do fim do segundo CTA até aqui (regra 7,
+            `.mf-scrollhint`). */}
         <MfScrollHint label="Role para baixo" onAdvance={onAdvance} />
       </div>
     </>

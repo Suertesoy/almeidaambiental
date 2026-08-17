@@ -8,6 +8,7 @@ import {
   MfButton,
   MfCenter,
   MfFrame,
+  MfInstitutionalTop,
   MfLabel,
   MfMetric,
   MfMetrics,
@@ -41,11 +42,15 @@ import { lockup, rhythm } from "../lib/responsive-type";
  *   se centraliza sozinha e o cluster body+CTA fica encostado no fim) e
  *   `DHint` (chevron, 40px abaixo do fim de `DMain`) — ver
  *   components/DesktopDobra.tsx. Nenhum elemento usa `top` percentual.
- * - Mobile+tablet (<1024px, `.mobile-fidelity`): três regiões explícitas
- *   (`MfCenter` para a headline, `MfBottom` para corpo/CTA — ver
- *   components/MobileDobra.tsx), sem canvas fixo nem coordenadas
- *   absolutas. `onAdvance` dispara o mesmo mecanismo de transição usado
- *   pelo scroll (wheel) — ver `goToIndex` em ScrollVideoExperience.tsx.
+ * - Mobile+tablet (<1024px, `.mobile-fidelity`): `MfFrame variant="institutional"`
+ *   ancora o título institucional a `header + 72px` fixos (regra 11 da
+ *   tarefa). `MfInstitutionalTop` agrupa nome+subtítulo num bloco de 348px
+ *   sempre centralizado (regras 12–15); `MfCenter` centraliza a headline
+ *   sozinha no espaço disponível; `MfBottom` (corpo/CTA, centralizado —
+ *   regra 24) fica encostado no fim, seguido por `MfScrollHint` a 32px
+ *   fixos (regra 27) — ver components/MobileDobra.tsx. `onAdvance` dispara
+ *   o mesmo mecanismo de transição usado pelo scroll (wheel) — ver
+ *   `goToIndex` em ScrollVideoExperience.tsx.
  */
 
 /* fontSize responde a largura E altura (vw + svh) — não só vw — para não
@@ -55,10 +60,15 @@ import { lockup, rhythm } from "../lib/responsive-type";
    não recalibrada dobra a dobra). */
 const HEADLINE_FONT = { fontSize: "clamp(48px, 2.2vw + 2.6svh, 64px)", lineHeight: 0.98 };
 
-/** Tokens do subtítulo/localização institucional (nome → 4px → subtítulo),
- *  compartilhados por todas as dobras 02–07 (regra 3 da tarefa: relação
- *  tipográfica única, não recalibrada dobra a dobra). */
-const SUBTITLE_TOKENS = lockup(14, 18, 1);
+/** Headline mobile das dobras institucionais (2 a 7): base tipográfica
+ *  ÚNICA — 35px / 41px / 2% (regras 18–20 da tarefa), não recalibrada
+ *  dobra a dobra. As dobras de fechamento/impacto (8/9) preservam sua
+ *  própria composição (regra 29) e não usam este token. */
+const MOBILE_HEADLINE_TOKENS = lockup(35, 41, 0.7);
+
+/** Body mobile de todas as dobras (regra 23 da tarefa): 16px / 21px / 7%,
+ *  base ÚNICA — substitui os tokens por-dobra usados antes. */
+const MOBILE_BODY_TOKENS = lockup(16, 21, 1.12);
 
 /** Dobra 9 (Impacto): tokens dos números/labels das métricas mobile. */
 const metricValueTokens = lockup(38, 42, 0);
@@ -115,20 +125,22 @@ export function Section02Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left">
-          <MfLabel tokens={lockup(29, 30, 2.61)}>Almeida Ambiental</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>
-            Diagnóstico · Coleta · Triagem · Trituração · Descaracterização
-          </MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="left">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(29, 30, 2.61)}>Almeida Ambiental</MfLabel>
+            <MfSubtitle tokens={lockup(11.3, 14, -0.11)}>
+              Diagnóstico · Coleta · Triagem · Trituração · Descaracterização
+            </MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={348}
-              tokens={lockup(35, 41, 0.7)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(16, 16, -1.12)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
               responsável de resíduos.
             </MfBody>
@@ -184,13 +196,17 @@ export function Section03Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left">
-          <MfLabel tokens={lockup(29, 30, 2.9)}>Almeida Ambiental</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>São José · Joinville · Araquari · Chapecó · SC</MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="left">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(29, 30, 2.9)}>Almeida Ambiental</MfLabel>
+            <MfSubtitle tokens={lockup(13.5, 17, -0.3)}>
+              São José · Joinville · Araquari · Chapecó · SC
+            </MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={350}
-              tokens={lockup(35, 30, 3.5)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[
                 [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
                 [{ text: "CADA ETAPA" }],
@@ -199,7 +215,7 @@ export function Section03Content({ onAdvance }: { onAdvance: () => void }) {
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(16, 16, -1.12)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
               transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
               ambiental.
@@ -256,13 +272,17 @@ export function Section04Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="right">
-          <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>Compactadores · Prensas · Trituradores · Containers</MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="right">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(26, 27, -0.6)}>Almeida Equipamentos</MfLabel>
+            <MfSubtitle tokens={lockup(13, 16, -0.3)}>
+              Compactadores · Prensas · Trituradores · Containers
+            </MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={333}
-              tokens={lockup(35, 30, -1.4)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[
                 [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
                 [{ text: "NASCEU DA" }],
@@ -271,7 +291,7 @@ export function Section04Content({ onAdvance }: { onAdvance: () => void }) {
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(16, 16, -0.64)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
               décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
             </MfBody>
@@ -318,22 +338,24 @@ export function Section05Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="right">
-          <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>São José · SC</MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="right">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(26, 27, -0.6)}>Almeida Equipamentos</MfLabel>
+            <MfSubtitle tokens={lockup(16, 20, 0.8)}>São José · SC</MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={351}
-              tokens={lockup(35, 30, 1.4)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(16, 16, -0.64)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
               realidades operacionais.
             </MfBody>
-            <MfBody marginTop={rhythm(14)} tokens={lockup(16, 16, -0.64)}>
+            <MfBody marginTop={rhythm(14)} tokens={MOBILE_BODY_TOKENS}>
               Conhecimento de campo conectado a tecnologias internacionais.
             </MfBody>
             <MfActions marginTop="8px">
@@ -383,18 +405,20 @@ export function Section06Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left">
-          <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>Gestão de Resíduos · Cartonagem · Consultoria</MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="left">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
+            <MfSubtitle tokens={lockup(14, 18, 0)}>Gestão de Resíduos · Cartonagem · Consultoria</MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={350}
-              tokens={lockup(35, 30, 2.1)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(15, 16, -0.15)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
               conhecimento em gestão de resíduos das operações da região.
             </MfBody>
@@ -450,13 +474,15 @@ export function Section07Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left">
-          <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
-          <MfSubtitle tokens={SUBTITLE_TOKENS}>Blumenau · Vale do Itajaí</MfSubtitle>
+        <MfFrame variant="institutional" tabletAlign="left">
+          <MfInstitutionalTop>
+            <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
+            <MfSubtitle tokens={lockup(16, 20, 0.4)}>Blumenau · Vale do Itajaí</MfSubtitle>
+          </MfInstitutionalTop>
           <MfCenter>
             <MfTitle
               refWidth={353}
-              tokens={lockup(35, 35, 0.35)}
+              tokens={MOBILE_HEADLINE_TOKENS}
               lines={[
                 [{ text: "GESTÃO AMBIENTAL" }],
                 [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
@@ -465,7 +491,7 @@ export function Section07Content({ onAdvance }: { onAdvance: () => void }) {
             />
           </MfCenter>
           <MfBottom>
-            <MfBody tokens={lockup(16, 16, -0.16)}>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
               construída para unir eficiência operacional e responsabilidade ambiental.
             </MfBody>
@@ -529,16 +555,17 @@ export function Section08Content({ onAdvance }: { onAdvance: () => void }) {
         </DFrame>
       </div>
 
-      {/* Dobra sem nome/subtítulo: título+corpo+botão ficam alinhados à
-          esquerda (não centralizados como nas demais dobras — confirmado
-          no Figma atual). Seis linhas exatas, nenhuma junta às outras. */}
+      {/* Dobra sem nome/subtítulo (regra 29 da tarefa): preserva a
+          composição própria (largura/quebra de linha calibradas para esta
+          copy), mas headline e body ficam centralizados como as demais
+          dobras 2+ — a única exceção de alinhamento da Home é a headline
+          da Hero (regra 21). */}
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left">
-          <MfCenter align="left">
+        <MfFrame>
+          <MfCenter>
             <MfTitle
               refWidth={356}
               widthGrowth={1.4}
-              align="left"
               tokens={lockup(35, 39, -2.45)}
               lines={[
                 [{ text: "O QUE COMEÇOU" }],
@@ -550,8 +577,8 @@ export function Section08Content({ onAdvance }: { onAdvance: () => void }) {
               ]}
             />
           </MfCenter>
-          <MfBottom align="left">
-            <MfBody tokens={lockup(16, 16, -1.12)}>
+          <MfBottom>
+            <MfBody tokens={MOBILE_BODY_TOKENS}>
               Há 40 anos transformando o presente, pensando no futuro.
             </MfBody>
             <MfActions marginTop="8px">
@@ -633,16 +660,16 @@ export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
       </div>
 
       {/* Sem "Impacto Positivo · 2025" no mobile. Métricas empilhadas em coluna
-          única no mobile puro, grid 2×2 a partir do tablet. Última dobra
-          antes do footer: chevron avança para o rodapé. */}
+          única no mobile puro, grid 2×2 a partir do tablet. Headline
+          centralizada (regra 21 — única exceção da Home é a Hero). Última
+          dobra antes do footer: chevron avança para o rodapé. */}
       <div className="mobile-fidelity mf-section-frame" ref={mobileRef}>
-        <MfFrame tabletAlign="left">
-          <MfCenter align="left">
+        <MfFrame>
+          <MfCenter>
             <MfTitle
               refWidth={321}
               tokens={lockup(35, 30, -0.35)}
               plain
-              align="left"
               lines={[
                 [{ text: "Cada resíduo" }],
                 [{ text: "processado vira um" }],
@@ -651,7 +678,7 @@ export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
               ]}
             />
           </MfCenter>
-          <MfBottom align="left">
+          <MfBottom>
             <MfMetrics gap={rhythm(24)}>
               {IMPACT_METRICS.map((m) => (
                 <MfMetric
@@ -671,10 +698,10 @@ export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
                 />
               ))}
             </MfMetrics>
-            {/* Regra 24 da tarefa: mínimo absoluto de 24px entre o fim do
-                bloco de métricas e o início do CTA — não os 8px usados nas
-                outras dobras (body → botão), porque aqui o vizinho de cima
-                são números grandes, não texto corrido. */}
+            {/* Regra 30 da tarefa: mínimo de 24px entre o fim do bloco de
+                métricas e o início do CTA — não os 8px usados nas outras
+                dobras (body → botão), porque aqui o vizinho de cima são
+                números grandes, não texto corrido. */}
             <MfActions marginTop="24px">
               <MfButton variant="secondary" disabled>
                 Ver Relatório de Sustentabilidade 2025

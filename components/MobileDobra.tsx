@@ -8,20 +8,27 @@ import { ChevronDownIcon } from "./icons";
  * Primitivos de LAYOUT DE FLUXO (flex column) usados pela composição
  * mobile+tablet (<1024px) das dobras da Home.
  *
- * `MfFrame` é uma coluna flex (`height:100%`) alinhada à esquerda por
- * padrão (nome/subtítulo/corpo, fiel ao Figma 393px). A partir de 600px,
- * `data-tablet-align` espelha a direção editorial esquerda/direita do
- * desktop.
+ * `MfFrame` tem TRÊS VARIANTES de `padding-top` (`data-variant`, ver
+ * app/globals.css) — medidas fixas a partir do fim real do header, não uma
+ * regra genérica única:
+ *   - `hero`: header + 96px (Grupo Almeida — regra 3 da tarefa). Composição
+ *     própria, não reaproveita a variante institucional.
+ *   - `institutional`: header + 72px (título institucional — regra 11).
+ *   - `default` (dobras de fechamento/impacto, sem nome/subtítulo): mantém
+ *     o valor anterior, header + 40px.
  *
- * TRÊS REGIÕES EXPLÍCITAS, não pesos arbitrários de espaçador: `MfFrame`
- * ancora o nome/subtítulo institucional a `header + 16px` fixos
- * (`padding-top`, ver app/globals.css); `MfCenter` (`flex:1`) centraliza a
- * headline sozinha no espaço realmente disponível entre o topo e o bloco
- * de baixo, independente do tamanho de qualquer um dos dois; `MfBottom`
- * tem altura natural e fica encostado no fim do frame, seguido por
- * `MfScrollHint` (irmão de `MfFrame`, `margin-top: 16px` fixos) — o bloco
- * de baixo nunca é calculado a partir da headline, e a headline nunca
- * desliza porque o body/subtítulo mudou de tamanho.
+ * Dentro do frame, `MfCenter` (`flex:1`) centraliza a headline sozinha no
+ * espaço realmente disponível entre o bloco de cima e o de baixo,
+ * independente do tamanho de qualquer um dos dois; `MfBottom` tem altura
+ * natural e fica encostado no fim do frame, seguido por `MfScrollHint`
+ * (irmão de `MfFrame`, `margin-top: 32px` fixos — regra 27) — o bloco de
+ * baixo nunca é calculado a partir da headline, e a headline nunca desliza
+ * porque o body/subtítulo mudou de tamanho.
+ *
+ * A partir de 600px, `data-tablet-align` espelha a direção editorial
+ * esquerda/direita do desktop para a headline/CTA — nome+subtítulo
+ * institucional permanecem sempre centralizados (regras 13/14), em
+ * qualquer largura.
  */
 
 type Segment = { text: string; gold?: boolean; green?: boolean };
@@ -50,15 +57,27 @@ function renderLine(line: TitleLine, keyPrefix: string) {
 export function MfFrame({
   children,
   tabletAlign = "center",
+  variant = "default",
 }: {
   children: ReactNode;
   tabletAlign?: "center" | "left" | "right";
+  /** "hero" (header+96px), "institutional" (header+72px) ou "default"
+   *  (header+40px, dobras de fechamento/impacto sem nome/subtítulo). */
+  variant?: "default" | "hero" | "institutional";
 }) {
   return (
-    <div className="mf-frame" data-tablet-align={tabletAlign}>
+    <div className="mf-frame" data-tablet-align={tabletAlign} data-variant={variant}>
       {children}
     </div>
   );
+}
+
+/** Bloco NOME + SUBTÍTULO institucional (regras 11–17 da tarefa): largura
+ *  alvo de 348px na referência 393px, sempre centralizado horizontalmente
+ *  dentro do frame — independente de `tabletAlign` (headline/CTA podem
+ *  espelhar esquerda/direita no tablet, mas nome+subtítulo não). */
+export function MfInstitutionalTop({ children }: { children: ReactNode }) {
+  return <div className="mf-institutional-top">{children}</div>;
 }
 
 /** Região CENTER: a headline vive aqui, centralizada no espaço disponível
@@ -204,9 +223,19 @@ export function MfBody({
   );
 }
 
-export function MfActions({ marginTop, children }: { marginTop?: string; children: ReactNode }) {
+export function MfActions({
+  marginTop,
+  gap,
+  children,
+}: {
+  marginTop?: string;
+  /** Override do gap padrão (clamp 8–16px, ver `.mf-d-actions`). Só a Hero
+   *  usa isto: 8px fixos entre os dois CTAs, não responsivo (regra 6). */
+  gap?: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="mf-d-actions" style={{ marginTop }}>
+    <div className="mf-d-actions" style={{ marginTop, gap }}>
       {children}
     </div>
   );
