@@ -504,7 +504,7 @@ button {
   margin: 0;
   font-family: var(--font-display-mf);
   font-weight: 600;
-  font-size: clamp(20px, 1.6vw, 26px);
+  font-size: clamp(20px, 0.9vw + 1svh, 26px);
   line-height: 1.15;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -515,7 +515,7 @@ button {
   margin: 0;
   font-family: var(--font-body-mf);
   font-weight: 600;
-  font-size: clamp(13px, 1vw, 15px);
+  font-size: clamp(13px, 0.55vw + 0.65svh, 15px);
   line-height: 1.3;
   color: var(--d-offwhite);
 }
@@ -545,12 +545,17 @@ button {
   color: var(--d-gold);
 }
 
+.d-title-green {
+  font-style: normal;
+  color: var(--d-name-green);
+}
+
 .d-body {
   position: absolute;
   margin: 0;
   font-family: var(--font-body-mf);
   font-weight: 600;
-  font-size: clamp(16px, 1.25vw, 18px);
+  font-size: clamp(16px, 0.7vw + 0.8svh, 18px);
   line-height: 1.45;
   color: var(--d-offwhite);
 }
@@ -669,7 +674,7 @@ button {
   margin: 0;
   font-family: var(--font-display-mf);
   font-weight: 600;
-  font-size: clamp(46px, 3.5vw, 58px);
+  font-size: clamp(46px, 1.9vw + 2.2svh, 58px);
   line-height: 1;
   color: var(--d-offwhite);
 }
@@ -684,18 +689,22 @@ button {
 }
 
 /* ==========================================================
-   Composição MOBILE (<1024px) — Decisão 26
+   Composição MOBILE + TABLET (<1024px) — Decisão 28
    ==========================================================
-   Direção de arte por dobra: cada dobra tem seu próprio sistema de
-   coordenadas (.mf-hero-frame/.mf-section-frame, position:relative) com
-   filhos position:absolute posicionados individualmente via top/left
-   (ver components/HeroContent.tsx, components/HomeSections.tsx e
-   components/MobileDobra.tsx). Não compartilha geometria com o desktop
-   (.hero-frame/.section-frame/.dobra-* acima, intocados). 393px é a
-   largura de referência mestre; lib/mobile-fit.ts (mf()) escala
-   left/width/font-size entre 360px e 393px. Nada disso é usado acima de
-   1024px — a visibilidade é resolvida por .desktop-only/.mobile-fidelity
-   (ver topo deste arquivo). */
+   Layout de FLUXO (flex column) por dobra, não mais uma prancheta de
+   coordenadas absolutas: `.mf-frame` (ver components/MobileDobra.tsx) é
+   o único elemento que decide alinhamento — centro por padrão (fidelidade
+   ao Figma 393×852), esquerda/direita a partir de 600px via
+   `data-tablet-align`, espelhando a direção editorial que o desktop já
+   usa por dobra (ver components/HomeSections.tsx). Todo o resto é filho
+   em fluxo normal: a ordem no JSX é a ordem visual, e o espaçamento entre
+   blocos vem de `margin-top` gerado por `rhythm()`/`framePaddingTop()`
+   (lib/responsive-type.ts) — clamp()s em `svh`, não pixels fixos nem um
+   canvas de 393px centralizado (ver Decisão 28 em DECISOES.md). 393px
+   continua sendo a referência de calibração de cada lockup tipográfico,
+   só deixou de ser um viewport renderizado dentro de telas maiores. Nada
+   disso é usado acima de 1024px (.desktop-only/.mobile-fidelity, topo
+   deste arquivo). */
 
 .mf-hero-frame,
 .mf-section-frame {
@@ -706,24 +715,37 @@ button {
   overflow: hidden;
 }
 
-/* 394px–1023px: a prancheta permanece com 393px de largura fixa,
-   centralizada — a composição não cresce horizontalmente acima da
-   referência mestre. */
-@media (min-width: 394px) and (max-width: 1023px) {
-  .mf-hero-frame,
-  .mf-section-frame {
-    left: 50%;
-    right: auto;
-    width: 393px;
-    transform: translateX(-50%);
+.mf-frame {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding-inline: clamp(20px, 7vw, 64px);
+  padding-bottom: clamp(72px, 11svh, 108px);
+}
+
+/* 600px+: dobras cuja direção editorial no desktop é esquerda/direita
+   adotam o mesmo alinhamento aqui — é o que dá ao tablet uma composição
+   própria (Seção 10 da tarefa), em vez de continuar centralizado como um
+   celular esticado. */
+@media (min-width: 600px) {
+  .mf-frame[data-tablet-align="left"] {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .mf-frame[data-tablet-align="right"] {
+    align-items: flex-end;
+    text-align: right;
   }
 }
 
 .mf-d-label {
-  position: absolute;
   margin: 0;
   white-space: nowrap;
-  text-align: center;
   font-family: var(--font-display-mf);
   font-weight: 600;
   text-transform: uppercase;
@@ -732,25 +754,29 @@ button {
 
 .mf-d-subtitle,
 .mf-d-location {
-  position: absolute;
   margin: 0;
-  white-space: nowrap;
-  text-align: center;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
 }
 
 .mf-d-title {
-  position: absolute;
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   font-family: var(--font-display-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
+}
+
+@media (min-width: 600px) {
+  [data-tablet-align="left"] .mf-d-title {
+    align-items: flex-start;
+  }
+  [data-tablet-align="right"] .mf-d-title {
+    align-items: flex-end;
+  }
 }
 
 .mf-d-title > span {
@@ -763,28 +789,48 @@ button {
   color: var(--m393-gold);
 }
 
+.mf-d-title-green {
+  font-style: normal;
+  color: var(--m393-name-green);
+}
+
 .mf-d-body {
-  position: absolute;
   margin: 0;
-  text-align: center;
   font-family: var(--font-body-mf);
   font-weight: 600;
   color: var(--m393-offwhite);
 }
 
 .mf-d-actions {
-  position: absolute;
-  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(10px, 2.2svh, 20px);
   width: 100%;
+  max-width: 380px;
 }
 
-/* ---- Botão mobile padrão (335×52, todas as dobras) ---- */
+@media (min-width: 600px) {
+  [data-tablet-align="left"] .mf-d-actions {
+    align-items: flex-start;
+  }
+  [data-tablet-align="right"] .mf-d-actions {
+    align-items: flex-end;
+  }
+}
+
+/* ---- Botão mobile/tablet padrão ----
+   Sem width fixa: cresce até max-width dentro do gutter disponível
+   (Seção 33 da tarefa), altura mínima de 52px preservada em todas as
+   telas. */
 .mf-btn {
-  position: absolute;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  height: 52px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
@@ -821,10 +867,13 @@ button {
 }
 
 /* ---- Indicador de rolagem (seta + fade discreto na base) ----
-   Único gradiente adicional permitido no mobile (o scrim preto global das
-   dobras desktop não existe aqui). */
+   Fora do fluxo de `.mf-frame` de propósito: ancorado à base real da
+   snap-section (safe-area), independente de quanto conteúdo houver acima
+   — único gradiente adicional permitido no mobile/tablet (o scrim preto
+   global das dobras desktop não existe aqui). */
 .mf-bottom-fade {
   position: absolute;
+  z-index: 1;
   height: 42px;
   left: 0;
   right: 0;
@@ -835,6 +884,7 @@ button {
 
 .mf-d-arrow {
   position: absolute;
+  z-index: 2;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -850,7 +900,8 @@ button {
 
 .mf-hero-scroll-label {
   position: absolute;
-  bottom: 39px;
+  z-index: 2;
+  bottom: clamp(30px, 5.6svh, 46px);
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
@@ -862,20 +913,45 @@ button {
   color: var(--m393-offwhite);
 }
 
-/* ---- Dobra 9 (Impacto): métricas empilhadas em coluna única ---- */
+/* ---- Dobra 9 (Impacto): métricas ----
+   Coluna única no mobile puro (fidelidade ao Figma); grid 2×2 a partir do
+   tablet, onde já sobra largura suficiente sem espremer os números
+   (mesma adaptação que o desktop já faz, Seção 32 da tarefa). */
+.mf-d-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3.6svh, 32px);
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .mf-d-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(24px, 5vw, 56px);
+    row-gap: clamp(20px, 4svh, 40px);
+    width: auto;
+  }
+  [data-tablet-align="left"] .mf-d-metrics {
+    justify-items: start;
+  }
+}
+
 .mf-d-metric {
-  position: absolute;
-  left: 0;
-  right: 0;
   text-align: center;
+}
+
+@media (min-width: 600px) {
+  [data-tablet-align="left"] .mf-d-metric {
+    text-align: left;
+  }
 }
 
 .mf-d-metric-value {
   margin: 0;
   font-family: var(--font-display-mf);
   font-weight: 600;
-  font-size: 38px;
-  line-height: 42px;
   color: var(--m393-offwhite);
 }
 
@@ -883,8 +959,6 @@ button {
   margin: 2px 0 0;
   font-family: var(--font-body-mf);
   font-weight: 600;
-  font-size: 13px;
-  line-height: 15px;
   color: var(--m393-offwhite);
 }
 

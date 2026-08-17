@@ -1,15 +1,15 @@
 import { ChevronDownIcon, WhatsAppIcon } from "./icons";
-import { mf } from "../lib/mobile-fit";
-import { MfButton, MfTitle } from "./MobileDobra";
+import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
+import { MfActions, MfButton, MfFrame, MfLabel, MfScrollHint, MfTitle } from "./MobileDobra";
 import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
 
 /**
  * Dobra 1 (Hero). Dois blocos independentes:
  * - Desktop (>=1024px, `.desktop-only`): composição editorial própria da
  *   Decisão 27 (`.d-stage`, ver components/DesktopDobra.tsx).
- * - Mobile (<1024px, `.mobile-fidelity`): prancheta de coordenadas por
- *   elemento da Decisão 26, referência 393px — área protegida, não
- *   tocada nesta rodada (ver DECISOES.md).
+ * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo
+ *   (`MfFrame`, Decisão 28) calibrado a partir da referência 393px, sem
+ *   canvas fixo nem coordenadas absolutas por elemento (ver DECISOES.md).
  */
 export default function HeroContent() {
   return (
@@ -45,7 +45,7 @@ export default function HeroContent() {
             whiteSpace: "nowrap",
             fontFamily: "var(--font-display-mf)",
             fontWeight: 600,
-            fontSize: "clamp(72px, 7vw, 104px)",
+            fontSize: "clamp(72px, 3.6vw + 4.4svh, 104px)",
             letterSpacing: "-3px",
             color: "var(--d-offwhite)",
           }}
@@ -58,7 +58,7 @@ export default function HeroContent() {
           centerX
           maxWidth="1000px"
           align="center"
-          fontSize="clamp(60px, 5.4vw, 78px)"
+          fontSize="clamp(60px, 3vw + 3.4svh, 78px)"
           lineHeight={0.92}
           letterSpacing="-1px"
           lines={[
@@ -85,70 +85,48 @@ export default function HeroContent() {
         </div>
       </div>
 
-      {/* ---------------- Mobile (<1024px): prancheta 393px ---------------- */}
+      {/* ---------------- Mobile+tablet (<1024px): fluxo (Decisão 28) ---------------- */}
       <div className="mobile-fidelity mf-hero-frame">
-        <p
-          className="mf-d-label"
-          style={{
-            top: "207px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: mf(24),
-            lineHeight: "30px",
-            letterSpacing: "7.2px",
-          }}
-        >
-          Grupo Almeida
-        </p>
+        <MfFrame paddingTop={framePaddingTop(207)}>
+          <MfLabel tokens={lockup(24, 30, 7.2)}>Grupo Almeida</MfLabel>
 
-        <p
-          style={{
-            position: "absolute",
-            margin: 0,
-            top: "249px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: mf(213),
-            fontFamily: "var(--font-display-mf)",
-            fontWeight: 600,
-            fontSize: mf(60),
-            lineHeight: "66px",
-            letterSpacing: "-2.4px",
-            color: "var(--m393-offwhite)",
-            textAlign: "center",
-          }}
-        >
-          40 anos
-        </p>
+          <p
+            style={{
+              margin: 0,
+              marginTop: rhythm(12),
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-display-mf)",
+              fontWeight: 600,
+              color: "var(--m393-offwhite)",
+              ...lockup(60, 66, -2.4),
+            }}
+          >
+            40 anos
+          </p>
 
-        <MfTitle
-          top={455}
-          left={29}
-          width={335}
-          fontSize={35}
-          lineHeight={30}
-          letterSpacing={-1}
-          lines={[
-            [{ text: "TRANSFORMANDO" }],
-            [{ text: "RESÍDUO" }],
-            [{ text: "EM " }, { text: "RESULTADO", gold: true }],
-          ]}
-        />
+          <MfTitle
+            marginTop={rhythm(140)}
+            refWidth={335}
+            tokens={lockup(35, 30, -1)}
+            lines={[
+              [{ text: "TRANSFORMANDO" }],
+              [{ text: "RESÍDUO" }],
+              [{ text: "EM " }, { text: "RESULTADO", gold: true }],
+            ]}
+          />
 
-        <MfButton top={593} left={29} variant="primary">
-          <WhatsAppIcon />
-          Falar com o Grupo Almeida
-        </MfButton>
+          <MfActions marginTop={rhythm(48)}>
+            <MfButton variant="primary">
+              <WhatsAppIcon />
+              Falar com o Grupo Almeida
+            </MfButton>
+            <MfButton variant="secondary" href="#section-02">
+              Conheça nossa história
+            </MfButton>
+          </MfActions>
+        </MfFrame>
 
-        <MfButton top={669} left={29} variant="secondary" href="#section-02">
-          Conheça nossa história
-        </MfButton>
-
-        <p className="mf-hero-scroll-label">Role para baixo</p>
-        <div className="mf-bottom-fade" aria-hidden="true" />
-        <div className="mf-d-arrow" style={{ bottom: "22px" }} aria-hidden="true">
-          <ChevronDownIcon />
-        </div>
+        <MfScrollHint bottom={22} label="Role para baixo" />
       </div>
     </>
   );

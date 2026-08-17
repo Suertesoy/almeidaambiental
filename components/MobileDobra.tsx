@@ -1,57 +1,77 @@
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
-import { mf } from "../lib/mobile-fit";
+import type { LockupTokens } from "../lib/responsive-type";
+import { contentWidth } from "../lib/responsive-type";
 import { ChevronDownIcon } from "./icons";
 
 /**
- * Primitivos de posicionamento absoluto usados só pela composição mobile
- * (<1024px) das dobras da Home — cada instância recebe suas próprias
- * coordenadas (ver especificação numérica em app/globals.css e nas seções
- * 14 a 22 da tarefa que originou este arquivo). Nunca deriva posição de
- * irmãos: cada elemento é absoluto com seu próprio `top`.
+ * Primitivos de LAYOUT DE FLUXO (flex column) usados pela composição
+ * mobile+tablet (<1024px) das dobras da Home — Decisão 28. Substituem os
+ * antigos primitivos `position:absolute` + `top`/`left` em px (Decisão 26).
  *
- * Regra de escala (lib/mobile-fit.ts): `mf()` só é aplicado a left/width/
- * font-size (grandezas horizontais). top/bottom/height/line-height/
- * letter-spacing permanecem literais, exatamente como especificado.
+ * `MfFrame` é a única peça que sabe alinhar (centro no mobile puro,
+ * esquerda/direita no tablet via `data-tablet-align`, ver app/globals.css).
+ * Todo o resto é filho em fluxo normal: a ordem no JSX É a ordem visual, e
+ * o espaçamento entre blocos vem de `marginTop` (gerado por
+ * `rhythm()`/`framePaddingTop()` em lib/responsive-type.ts), não de
+ * coordenadas absolutas. Cada dobra continua livre para escolher sua
+ * própria combinação de elementos/gaps — não existe uma estrutura única
+ * "topo/centro/base" imposta aqui.
  */
 
-type Segment = { text: string; gold?: boolean };
+type Segment = { text: string; gold?: boolean; green?: boolean };
 type TitleLine = Segment[];
 
 function renderLine(line: TitleLine, keyPrefix: string) {
-  return line.map((seg, i) =>
-    seg.gold ? (
-      <em key={`${keyPrefix}-${i}`} className="mf-d-title-gold">
-        {seg.text}
-      </em>
-    ) : (
-      <span key={`${keyPrefix}-${i}`}>{seg.text}</span>
-    )
+  return line.map((seg, i) => {
+    if (seg.gold) {
+      return (
+        <em key={`${keyPrefix}-${i}`} className="mf-d-title-gold">
+          {seg.text}
+        </em>
+      );
+    }
+    if (seg.green) {
+      return (
+        <em key={`${keyPrefix}-${i}`} className="mf-d-title-green">
+          {seg.text}
+        </em>
+      );
+    }
+    return <span key={`${keyPrefix}-${i}`}>{seg.text}</span>;
+  });
+}
+
+export function MfFrame({
+  children,
+  tabletAlign = "center",
+  paddingTop,
+}: {
+  children: ReactNode;
+  tabletAlign?: "center" | "left" | "right";
+  paddingTop: string;
+}) {
+  return (
+    <div className="mf-frame" data-tablet-align={tabletAlign} style={{ paddingTop }}>
+      {children}
+    </div>
   );
 }
 
 export function MfLabel({
-  top,
-  centerX,
-  fontSize,
-  lineHeight,
-  letterSpacing,
+  marginTop,
+  tokens,
   children,
 }: {
-  top: number;
-  centerX: number;
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing: number;
+  marginTop?: string;
+  tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
-    top: `${top}px`,
-    left: mf(centerX),
-    transform: "translateX(-50%)",
-    fontSize: mf(fontSize),
-    lineHeight: `${lineHeight}px`,
-    letterSpacing: `${letterSpacing}px`,
+    marginTop,
+    fontSize: tokens.fontSize,
+    lineHeight: tokens.lineHeight,
+    letterSpacing: tokens.letterSpacing,
   };
   return (
     <p className="mf-d-label" style={style}>
@@ -61,67 +81,50 @@ export function MfLabel({
 }
 
 export function MfSubtitle({
-  top,
-  centerX,
-  fontSize,
-  lineHeight,
-  letterSpacing = 0,
-  className = "mf-d-subtitle",
+  marginTop,
+  tokens,
   children,
 }: {
-  top: number;
-  centerX: number;
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing?: number;
-  className?: string;
+  marginTop?: string;
+  tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
-    top: `${top}px`,
-    left: mf(centerX),
-    transform: "translateX(-50%)",
-    fontSize: mf(fontSize),
-    lineHeight: `${lineHeight}px`,
-    letterSpacing: `${letterSpacing}px`,
+    marginTop,
+    fontSize: tokens.fontSize,
+    lineHeight: tokens.lineHeight,
+    letterSpacing: tokens.letterSpacing,
   };
   return (
-    <p className={className} style={style}>
+    <p className="mf-d-subtitle" style={style}>
       {children}
     </p>
   );
 }
 
 export function MfTitle({
-  top,
-  left,
-  width,
-  fontSize,
-  lineHeight,
-  letterSpacing,
+  marginTop,
+  refWidth,
+  widthGrowth,
+  tokens,
   lines,
   plain = false,
-  semibold = true,
 }: {
-  top: number;
-  left: number;
-  width: number;
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing: number;
+  marginTop?: string;
+  refWidth: number;
+  /** Multiplicador do teto de largura em tablet (padrão 1.6×). */
+  widthGrowth?: number;
+  tokens: LockupTokens;
   lines: TitleLine[];
   plain?: boolean;
-  semibold?: boolean;
 }) {
   const style: CSSProperties = {
-    top: `${top}px`,
-    left: mf(left),
-    width: mf(width),
-    fontSize: mf(fontSize),
-    lineHeight: `${lineHeight}px`,
-    letterSpacing: `${letterSpacing}px`,
+    marginTop,
+    width: contentWidth(refWidth, widthGrowth ? { ceilScale: widthGrowth } : undefined),
+    fontSize: tokens.fontSize,
+    lineHeight: tokens.lineHeight,
+    letterSpacing: tokens.letterSpacing,
     textTransform: plain ? "none" : "uppercase",
-    fontWeight: semibold ? 600 : 700,
   };
   return (
     <h2 className="mf-d-title" style={style}>
@@ -133,32 +136,24 @@ export function MfTitle({
 }
 
 export function MfBody({
-  top,
-  left,
-  width,
-  fontSize,
-  lineHeight,
-  letterSpacing,
-  nowrap = false,
+  marginTop,
+  refWidth,
+  widthGrowth,
+  tokens,
   children,
 }: {
-  top: number;
-  left: number;
-  width: number;
-  fontSize: number;
-  lineHeight: number;
-  letterSpacing: number;
-  nowrap?: boolean;
+  marginTop?: string;
+  refWidth: number;
+  widthGrowth?: number;
+  tokens: LockupTokens;
   children: ReactNode;
 }) {
   const style: CSSProperties = {
-    top: `${top}px`,
-    left: mf(left),
-    width: mf(width),
-    fontSize: mf(fontSize),
-    lineHeight: `${lineHeight}px`,
-    letterSpacing: `${letterSpacing}px`,
-    whiteSpace: nowrap ? "nowrap" : "normal",
+    marginTop,
+    width: contentWidth(refWidth, widthGrowth ? { ceilScale: widthGrowth } : undefined),
+    fontSize: tokens.fontSize,
+    lineHeight: tokens.lineHeight,
+    letterSpacing: tokens.letterSpacing,
   };
   return (
     <p className="mf-d-body" style={style}>
@@ -167,49 +162,44 @@ export function MfBody({
   );
 }
 
+export function MfActions({ marginTop, children }: { marginTop?: string; children: ReactNode }) {
+  return (
+    <div className="mf-d-actions" style={{ marginTop }}>
+      {children}
+    </div>
+  );
+}
+
 export function MfButton({
-  top,
-  left,
-  width = 335,
-  height = 52,
   variant,
   href,
   disabled,
   children,
 }: {
-  top: number;
-  left: number;
-  width?: number;
-  height?: number;
   variant: "primary" | "secondary";
   href?: string;
   disabled?: boolean;
   children: ReactNode;
 }) {
-  const style: CSSProperties = {
-    top: `${top}px`,
-    left: mf(left),
-    width: mf(width),
-    height: `${height}px`,
-  };
   const className = `mf-btn ${variant === "primary" ? "mf-btn-primary" : "mf-btn-secondary"}`;
   if (href) {
     return (
-      <Link href={href} className={className} style={style}>
+      <Link href={href} className={className}>
         {children}
       </Link>
     );
   }
   return (
-    <button type="button" className={className} style={style} disabled={disabled}>
+    <button type="button" className={className} disabled={disabled}>
       {children}
     </button>
   );
 }
 
-export function MfScrollHint({ bottom = 22 }: { bottom?: number }) {
+export function MfScrollHint({ bottom = 22, label }: { bottom?: number; label?: string }) {
   return (
     <>
+      {label ? <p className="mf-hero-scroll-label">{label}</p> : null}
       <div className="mf-bottom-fade" aria-hidden="true" />
       <div className="mf-d-arrow" style={{ bottom: `${bottom}px` }} aria-hidden="true">
         <ChevronDownIcon />
@@ -218,19 +208,51 @@ export function MfScrollHint({ bottom = 22 }: { bottom?: number }) {
   );
 }
 
-export function MfMetric({
-  top,
-  value,
-  label,
+export function MfMetrics({
+  marginTop,
+  gap,
+  children,
 }: {
-  top: number;
-  value: string;
-  label: string;
+  marginTop?: string;
+  gap?: string;
+  children: ReactNode;
 }) {
   return (
-    <div className="mf-d-metric" style={{ top: `${top}px` }}>
-      <p className="mf-d-metric-value">{value}</p>
-      <p className="mf-d-metric-label">{label}</p>
+    <div className="mf-d-metrics" style={{ marginTop, gap }}>
+      {children}
+    </div>
+  );
+}
+
+export function MfMetric({
+  value,
+  label,
+  valueTokens,
+  labelTokens,
+}: {
+  value: string;
+  label: string;
+  valueTokens: LockupTokens;
+  labelTokens: LockupTokens;
+}) {
+  const valueStyle: CSSProperties = {
+    fontSize: valueTokens.fontSize,
+    lineHeight: valueTokens.lineHeight,
+    letterSpacing: valueTokens.letterSpacing,
+  };
+  const labelStyle: CSSProperties = {
+    fontSize: labelTokens.fontSize,
+    lineHeight: labelTokens.lineHeight,
+    letterSpacing: labelTokens.letterSpacing,
+  };
+  return (
+    <div className="mf-d-metric">
+      <p className="mf-d-metric-value" style={valueStyle}>
+        {value}
+      </p>
+      <p className="mf-d-metric-label" style={labelStyle}>
+        {label}
+      </p>
     </div>
   );
 }

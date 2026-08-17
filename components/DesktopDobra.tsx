@@ -42,19 +42,27 @@ function xStyle(placement: XPlacement): CSSProperties {
   return { left, width };
 }
 
-type Segment = { text: string; gold?: boolean };
+type Segment = { text: string; gold?: boolean; green?: boolean };
 type TitleLine = Segment[];
 
 function renderLine(line: TitleLine, keyPrefix: string) {
-  return line.map((seg, i) =>
-    seg.gold ? (
-      <em key={`${keyPrefix}-${i}`} className="d-title-gold">
-        {seg.text}
-      </em>
-    ) : (
-      <span key={`${keyPrefix}-${i}`}>{seg.text}</span>
-    )
-  );
+  return line.map((seg, i) => {
+    if (seg.gold) {
+      return (
+        <em key={`${keyPrefix}-${i}`} className="d-title-gold">
+          {seg.text}
+        </em>
+      );
+    }
+    if (seg.green) {
+      return (
+        <em key={`${keyPrefix}-${i}`} className="d-title-green">
+          {seg.text}
+        </em>
+      );
+    }
+    return <span key={`${keyPrefix}-${i}`}>{seg.text}</span>;
+  });
 }
 
 export function DNameBlock({
