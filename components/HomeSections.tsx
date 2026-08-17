@@ -6,6 +6,7 @@ import {
   MfLabel,
   MfMetric,
   MfMetrics,
+  MfRegion,
   MfScrollHint,
   MfSubtitle,
   MfTitle,
@@ -21,8 +22,10 @@ import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
  *   (`.d-stage`, ver components/DesktopDobra.tsx) — cada dobra com sua
  *   própria distribuição em 12 colunas conceituais.
  * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo (`MfFrame`,
- *   ver components/MobileDobra.tsx) — cada dobra com seu próprio ritmo
- *   vertical (`rhythm()`) e alinhamento de tablet (`tabletAlign`,
+ *   ver components/MobileDobra.tsx) — topo (nome/subtítulo) e o bloco de
+ *   baixo (corpo/CTA) ficam ancorados às extremidades da dobra via
+ *   `MfRegion` (espaçador flex-grow) em vez de um `marginTop` encadeado, e
+ *   cada dobra escolhe seu próprio alinhamento de tablet (`tabletAlign`,
  *   espelhando o `align` que a mesma dobra já usa no desktop), sem canvas
  *   fixo nem coordenadas absolutas.
  */
@@ -68,13 +71,14 @@ export function Section02Content() {
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="left" paddingTop={framePaddingTop(145)}>
           <MfLabel tokens={lockup(29, 30, 2.61)}>Almeida Ambiental</MfLabel>
+          <MfRegion weight={177} />
           <MfTitle
-            marginTop={rhythm(177)}
             refWidth={348}
             tokens={lockup(35, 41, 0.7)}
             lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
           />
-          <MfBody marginTop={rhythm(186)} refWidth={326} tokens={lockup(16, 16, -1.12)}>
+          <MfRegion weight={186} />
+          <MfBody refWidth={326} tokens={lockup(16, 16, -1.12)}>
             Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
             responsável de resíduos.
           </MfBody>
@@ -126,8 +130,8 @@ export function Section03Content() {
           <MfSubtitle marginTop={rhythm(6)} tokens={lockup(14, 30, 1.12)}>
             São José · Joinville · Araquari · Chapecó · SC
           </MfSubtitle>
+          <MfRegion weight={102} />
           <MfTitle
-            marginTop={rhythm(102)}
             refWidth={350}
             tokens={lockup(35, 30, 3.5)}
             lines={[
@@ -136,7 +140,8 @@ export function Section03Content() {
               [{ text: "DO PROCESSO" }],
             ]}
           />
-          <MfBody marginTop={rhythm(58)} refWidth={335} tokens={lockup(16, 16, -1.12)}>
+          <MfRegion weight={58} />
+          <MfBody refWidth={335} tokens={lockup(16, 16, -1.12)}>
             Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
             transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
             ambiental.
@@ -188,8 +193,8 @@ export function Section04Content() {
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="right" paddingTop={framePaddingTop(143)}>
           <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
+          <MfRegion weight={129} />
           <MfTitle
-            marginTop={rhythm(129)}
             refWidth={333}
             tokens={lockup(35, 30, -1.4)}
             lines={[
@@ -198,7 +203,8 @@ export function Section04Content() {
               [{ text: "PRÓPRIA OPERAÇÃO" }],
             ]}
           />
-          <MfBody marginTop={rhythm(184)} refWidth={326} tokens={lockup(16, 16, -0.64)}>
+          <MfRegion weight={184} />
+          <MfBody refWidth={326} tokens={lockup(16, 16, -0.64)}>
             Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
             décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
           </MfBody>
@@ -239,13 +245,14 @@ export function Section05Content() {
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="right" paddingTop={framePaddingTop(142)}>
           <MfLabel tokens={lockup(29, 30, -0.87)}>Almeida Equipamentos</MfLabel>
+          <MfRegion weight={154} />
           <MfTitle
-            marginTop={rhythm(154)}
             refWidth={351}
             tokens={lockup(35, 30, 1.4)}
             lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
           />
-          <MfBody marginTop={rhythm(78)} refWidth={335} tokens={lockup(16, 16, -0.64)}>
+          <MfRegion weight={78} />
+          <MfBody refWidth={335} tokens={lockup(16, 16, -0.64)}>
             Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
             realidades operacionais.
           </MfBody>
@@ -292,17 +299,20 @@ export function Section06Content() {
         <DScrollHint />
       </div>
 
-      {/* Grande espaço proposital entre headline e body (rhythm(193)): não aproximar. */}
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="left" paddingTop={framePaddingTop(143)}>
           <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
+          <MfRegion weight={142} />
           <MfTitle
-            marginTop={rhythm(142)}
             refWidth={350}
             tokens={lockup(35, 30, 2.1)}
             lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
           />
-          <MfBody marginTop={rhythm(193)} refWidth={334} tokens={lockup(15, 16, -0.15)}>
+          {/* Espaço grande e proposital (193 vs 142 acima do título): preserva
+              a razão medida no Figma, não normalizar para uma centralização
+              exata. */}
+          <MfRegion weight={193} />
+          <MfBody refWidth={334} tokens={lockup(15, 16, -0.15)}>
             Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
             conhecimento em gestão de resíduos das operações da região.
           </MfBody>
@@ -351,8 +361,8 @@ export function Section07Content() {
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="left" paddingTop={framePaddingTop(144)}>
           <MfLabel tokens={lockup(29, 30, 2.61)}>Saturno Ambiental</MfLabel>
+          <MfRegion weight={147} />
           <MfTitle
-            marginTop={rhythm(147)}
             refWidth={353}
             tokens={lockup(35, 35, 0.35)}
             lines={[
@@ -361,7 +371,8 @@ export function Section07Content() {
               [{ text: "DA COLETA" }],
             ]}
           />
-          <MfBody marginTop={rhythm(91)} refWidth={325} tokens={lockup(16, 16, -0.16)}>
+          <MfRegion weight={91} />
+          <MfBody refWidth={325} tokens={lockup(16, 16, -0.16)}>
             Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
             construída para unir eficiência operacional e responsabilidade ambiental.
           </MfBody>
@@ -434,7 +445,8 @@ export function Section08Content() {
               [{ text: "SUSTENTABILIDADE.", green: true }],
             ]}
           />
-          <MfBody marginTop={rhythm(133)} refWidth={325} tokens={lockup(16, 16, -1.12)}>
+          <MfRegion weight={133} />
+          <MfBody refWidth={325} tokens={lockup(16, 16, -1.12)}>
             Há 40 anos transformando o presente, pensando no futuro.
           </MfBody>
           <MfActions marginTop={rhythm(21)}>
@@ -507,13 +519,15 @@ export function Section09Content() {
               [{ text: "natureza reconhece.", gold: true }],
             ]}
           />
-          <MfMetrics marginTop={rhythm(42, { floorScale: 0.45 })} gap={rhythm(24)}>
+          <MfRegion weight={42} />
+          <MfMetrics gap={rhythm(24)}>
             <MfMetric value="818.907" label="árvores preservadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="54.873 t" label="materiais reciclados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="153.114 t" label="CO₂ evitadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="1,27 bi" label="litros de água economizados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
           </MfMetrics>
-          <MfActions marginTop={rhythm(33, { floorScale: 0.45 })}>
+          <MfRegion weight={33} />
+          <MfActions>
             <MfButton variant="secondary" disabled>
               Ver Relatório de Sustentabilidade 2025
             </MfButton>

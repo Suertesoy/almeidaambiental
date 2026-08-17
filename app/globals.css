@@ -136,10 +136,16 @@ button {
 }
 
 /* Desktop (>=1024px): header some do fluxo de scroll (o conteúdo da dobra
-   respeita a altura do header), comportamento inalterado. */
+   respeita a altura do header), comportamento inalterado. O wheel/trackpad
+   é interceptado e animado inteiramente via JS (ScrollVideoExperience —
+   scroll + vídeo + fade numa única animação); o snap nativo do navegador
+   fica desligado aqui para não competir com essa animação no meio do
+   caminho (ele continua ativo no mobile, onde o gesto de toque não é
+   interceptado). */
 @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
   html {
     scroll-padding-top: var(--header-height);
+    scroll-snap-type: none;
   }
 }
 

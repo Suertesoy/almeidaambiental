@@ -8,16 +8,25 @@ import { ChevronDownIcon } from "./icons";
  * Primitivos de LAYOUT DE FLUXO (flex column) usados pela composição
  * mobile+tablet (<1024px) das dobras da Home.
  *
- * `MfFrame` alinha à esquerda por padrão (nome/subtítulo/corpo, fiel ao
- * Figma 393px); `MfTitle`/`MfActions` recentralizam a si mesmos via
- * `align-self` (ver `.mf-frame > .mf-d-title` em app/globals.css), exceto
- * nas dobras de fechamento/impacto (`titleAlign="left"`), onde o título
- * também fica à esquerda. A partir de 600px, `data-tablet-align` espelha
- * a direção editorial esquerda/direita do desktop. Todo o resto é filho
- * em fluxo normal: a ordem no JSX É a ordem visual, e o espaçamento entre
- * blocos vem de `marginTop` (gerado por `rhythm()`/`framePaddingTop()` em
- * lib/responsive-type.ts), não de coordenadas absolutas. Cada dobra
- * continua livre para escolher sua própria combinação de elementos/gaps.
+ * `MfFrame` é uma coluna flex (`height:100%`) alinhada à esquerda por
+ * padrão (nome/subtítulo/corpo, fiel ao Figma 393px); `MfTitle`/`MfActions`
+ * recentralizam a si mesmos via `align-self` (ver `.mf-frame > .mf-d-title`
+ * em app/globals.css), exceto nas dobras de fechamento/impacto
+ * (`align="left"`), onde o título também fica à esquerda. A partir de
+ * 600px, `data-tablet-align` espelha a direção editorial esquerda/direita
+ * do desktop.
+ *
+ * REGIÕES, não uma coluna de margins encadeados: a distância entre o bloco
+ * do TOPO (nome/subtítulo) e o título, e entre o título e o bloco de BAIXO
+ * (corpo/CTA), é feita por `MfRegion` — um espaçador `flex-grow` — em vez
+ * de `marginTop`. Isso ancora o topo e o fundo de cada dobra às respectivas
+ * extremidades da seção (o bloco de baixo nunca "sobe" só porque o título
+ * ficou mais baixo, nem "desce" da tela em viewports baixas antes de todo
+ * o espaço livre entre as regiões ter sido consumido) e preserva a
+ * PROPORÇÃO do espaço acima/abaixo do título medida no Figma, em vez de
+ * forçar centralização exata. Gaps pequenos e internos a uma região (nome→
+ * subtítulo, corpo→CTA, corpo 1→corpo 2) continuam `marginTop` normal via
+ * `rhythm()` — só as duas costuras entre regiões viram `MfRegion`.
  */
 
 type Segment = { text: string; gold?: boolean; green?: boolean };
@@ -164,6 +173,16 @@ export function MfBody({
       {children}
     </p>
   );
+}
+
+/** Espaçador elástico entre duas REGIÕES de uma dobra (topo↔título,
+ *  título↔bloco de baixo) — cresce/encolhe para absorver a folga vertical
+ *  da viewport, com `weight` proporcional ao gap medido no Figma entre as
+ *  duas regiões (não precisa ser convertido pra %: só a RAZÃO entre os
+ *  dois `MfRegion` de uma dobra importa). `min-height:0` deixa encolher
+ *  até 0 em viewports muito baixas antes de qualquer região ser cortada. */
+export function MfRegion({ weight }: { weight: number }) {
+  return <div aria-hidden="true" style={{ flex: `${weight} 1 0px`, minHeight: 0 }} />;
 }
 
 export function MfActions({ marginTop, children }: { marginTop?: string; children: ReactNode }) {

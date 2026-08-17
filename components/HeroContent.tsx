@@ -1,6 +1,6 @@
 import { ChevronDownIcon, WhatsAppIcon } from "./icons";
 import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
-import { MfActions, MfButton, MfFrame, MfLabel, MfScrollHint, MfTitle } from "./MobileDobra";
+import { MfActions, MfButton, MfFrame, MfLabel, MfRegion, MfScrollHint, MfTitle } from "./MobileDobra";
 import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
 
 /**
@@ -108,9 +108,11 @@ export default function HeroContent() {
 
           {/* Sem node de headline dedicado no Figma nesta rodada (a arte de
               fundo já compõe "TRANSFORMANDO RESÍDUO EM RESULTADO"); valores
-              mantidos da calibração anterior por falta de referência nova. */}
+              mantidos da calibração anterior por falta de referência nova.
+              Região título ancorada ao centro via MfRegion (124:36, mesma
+              razão da calibração anterior), não mais um marginTop fixo. */}
+          <MfRegion weight={124} />
           <MfTitle
-            marginTop={rhythm(124)}
             refWidth={335}
             tokens={lockup(35, 30, -1)}
             lines={[
@@ -119,8 +121,9 @@ export default function HeroContent() {
               [{ text: "EM " }, { text: "RESULTADO", gold: true }],
             ]}
           />
+          <MfRegion weight={36} />
 
-          <MfActions marginTop={rhythm(36)}>
+          <MfActions>
             <MfButton variant="primary">
               <WhatsAppIcon />
               Falar com o Grupo Almeida
