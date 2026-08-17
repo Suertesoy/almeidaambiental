@@ -64,7 +64,7 @@
   --d-cta-light-bg: #f3f5ec;
   --d-cta-light-text: #3e5a1c;
   --d-gutter: 40px;
-  --d-stage-max: 1280px;
+  --d-stage-max: 1440px;
 }
 
 @media (min-width: 1024px) {
@@ -515,37 +515,71 @@ button {
    Direção editorial por dobra, independente do mobile — mesma paleta
    (tokens --d-*), estrutura própria.
 
-   Cada dobra usa um "stage" (.d-stage): área útil centralizada, largura
-   fluida até 1280px, height:calc(100svh - header-height) (o header
-   desktop continua no fluxo do scroll-padding-top, inalterado). Dentro
-   dele, cada elemento é position:absolute com:
-   - top em porcentagem (relativa à altura inteira do stage — nunca
-     derivada de outro elemento);
-   - left/width calculados via gridX() (helper em
-     components/DesktopDobra.tsx), reproduzindo a métrica de um grid de
-     12 colunas conceituais com 24px de gap, sem exigir que os elementos
-     sejam filhos reais de um CSS Grid. */
+   Cada dobra usa um "stage" (.d-stage): área útil centralizada, entre
+   1280 e 1440px, height:calc(100dvh - header-height) — o header desktop
+   continua no fluxo do scroll-padding-top, inalterado. `padding-inline`
+   usa o MESMO clamp de `.header-inner`, então as bordas do conteúdo
+   sempre batem com a logo/menu do header em qualquer largura.
+
+   Dentro do stage, `.d-frame` é uma coluna flex com três regiões reais
+   (ver components/DesktopDobra.tsx: DTop/DMain/DHint) — não mais
+   coordenadas `top` isoladas por elemento:
+   - `.d-top`: nome/subtítulo institucional, ancorado a header+40px.
+   - `.d-main`: grid REAL de 12 colunas (CSS Grid, não mais gridX() em
+     left/width calculados), flex:1 — ocupa todo o espaço entre .d-top e
+     .d-hint. A headline (`.d-title`) se centraliza sozinha nesse espaço
+     (align-self:center, nunca empurrada pelo body); o cluster body+CTA
+     (`.d-bottom-cluster`) fica encostado no fim (align-self:end) — os
+     dois nunca dependem um do outro.
+   - `.d-hint`: indicador de rolagem, sempre 40px abaixo do fim de
+     `.d-main` (margin-top fixo), sem caixa/fade retangular isolada atrás
+     (ver `.d-bottom-fade`, largura total do stage). */
 .d-stage {
   position: relative;
-  width: calc(100% - 80px);
+  width: 100%;
   max-width: var(--d-stage-max);
   margin-inline: auto;
+  padding-inline: clamp(40px, 5vw, 80px);
   height: calc(100svh - var(--header-height));
   height: calc(100dvh - var(--header-height));
 }
 
-@media (min-width: 1280px) {
-  .d-stage {
-    width: calc(100% - 128px);
-  }
+.d-frame {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fade decorativo full-width atrás da região inferior — largura total do
+   stage (nunca uma caixa isolada atrás só do chevron, regra 12 da
+   tarefa): pointer-events:none, só reforça contraste do texto/seta sobre
+   o vídeo, igual em intenção ao `.mf-bottom-fade` do mobile. */
+.d-bottom-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 240px;
+  background: linear-gradient(to top, rgba(21, 21, 15, 0.16), rgba(21, 21, 15, 0));
+  pointer-events: none;
+}
+
+.d-top {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  padding-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
 }
 
 .d-name-block {
-  position: absolute;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .d-name {
@@ -563,13 +597,32 @@ button {
   margin: 0;
   font-family: var(--font-body-mf);
   font-weight: 600;
-  font-size: clamp(13px, 0.55vw + 0.65svh, 15px);
+  font-size: clamp(14px, 0.5vw + 0.75svh, 16px);
   line-height: 1.3;
+  white-space: nowrap;
   color: var(--d-offwhite);
 }
 
+/* Região CENTER+BOTTOM: grid real de 12 colunas ocupando todo o espaço
+   entre .d-top e .d-hint. `.d-title` e `.d-bottom-cluster` são os únicos
+   filhos esperados aqui, uma única linha (grid-template-rows:1fr) que
+   ocupa 100% da altura — é isso que permite `align-self` centralizar a
+   headline e ancorar o cluster no fim, cada um de forma independente. */
+.d-main {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 1fr;
+  column-gap: 24px;
+  align-items: center;
+}
+
 .d-title {
-  position: absolute;
+  grid-row: 1;
+  align-self: center;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -598,9 +651,20 @@ button {
   color: var(--d-name-green);
 }
 
+/* Cluster inferior (body + CTA, ou só body): um único item de grid
+   (align-self:end) — garante "body/CTA a 40px do chevron" sempre, com ou
+   sem botão, independente da altura da headline (regras 9/10 da tarefa). */
+.d-bottom-cluster {
+  grid-row: 1;
+  align-self: end;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .d-body {
-  position: absolute;
   margin: 0;
+  width: 100%;
   font-family: var(--font-body-mf);
   font-weight: 600;
   font-size: clamp(16px, 0.7vw + 0.8svh, 18px);
@@ -608,18 +672,26 @@ button {
   color: var(--d-offwhite);
 }
 
-/* ---- CTA desktop (56px de altura, largura automática) ----
-   Sem position:absolute na classe base: o botão "solo" (DButton) recebe
-   position:absolute inline (top + gridX); dentro de .d-actions-row (Hero,
-   dois CTAs lado a lado) o botão fica em fluxo normal (flex item). */
+/* Regra 9 da tarefa: 8px fixos entre o fim do body e o início do CTA. */
+.d-actions {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  width: 100%;
+}
+
+/* ---- CTA desktop (56px de altura) ----
+   Largura automática por padrão (Hero: dois botões lado a lado dentro de
+   .d-actions-row, fluxo normal); dentro de .d-bottom-cluster, ocupa 100%
+   do container — regra 11: body e CTA compartilham a mesma largura de
+   coluna, sem botão enorme isolado. */
 .d-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   width: auto;
-  min-width: 260px;
-  max-width: 360px;
   height: 56px;
   padding-inline: 28px;
   border-radius: 6px;
@@ -631,6 +703,11 @@ button {
   font-weight: 600;
   font-size: 17px;
   box-sizing: border-box;
+}
+
+.d-bottom-cluster .d-btn,
+.d-impact-cluster .d-btn {
+  width: 100%;
 }
 
 .d-btn-primary {
@@ -662,32 +739,73 @@ button {
   cursor: not-allowed;
 }
 
-/* Hero: dois CTAs lado a lado. */
+/* ---- Hero desktop: composição especial (regra 13 da tarefa) ----
+   "Grupo Almeida" / "40 anos" / headline formam um único bloco
+   centralizado — mesmo raciocínio de região CENTER das demais dobras,
+   adaptado (não há subtítulo institucional separado aqui). Os dois CTAs
+   (.d-actions-row) seguem em fluxo normal, 40px abaixo desse bloco. */
+.d-hero-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.d-hero-name {
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 7.2px;
+  text-transform: uppercase;
+  color: var(--d-name-green);
+}
+
+.d-hero-years {
+  margin: 0;
+  margin-top: 12px;
+  white-space: nowrap;
+  font-family: var(--font-display-mf);
+  font-weight: 600;
+  font-size: clamp(72px, 3.6vw + 4.4svh, 104px);
+  letter-spacing: -3px;
+  color: var(--d-offwhite);
+}
+
+.d-hero-main .d-title {
+  margin-top: 16px;
+}
+
+/* Hero: dois CTAs lado a lado, fluxo normal (sem position:absolute),
+   sempre 40px abaixo do bloco central (regra 13 da tarefa). */
 .d-actions-row {
-  position: absolute;
+  flex: 0 0 auto;
+  margin-top: 40px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
 }
 
 /* ---- Indicador de rolagem ----
-   Seta + degradê LOCAL e sutil atrás dela (não é o scrim preto global
-   antigo — só reforça contraste da própria seta/texto). */
-.d-scroll-fade {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 180px;
-  height: 84px;
-  background: linear-gradient(to top, rgba(21, 21, 15, 0.2), rgba(21, 21, 15, 0));
-  pointer-events: none;
+   Região HINT: sempre 40px abaixo do fim de .d-main (margin-top fixo,
+   regras 9/10/12 da tarefa) — botão semântico, 44×44 de alvo mínimo,
+   sem caixa/card/bloco opaco (o fade é .d-bottom-fade, acima). */
+.d-hint {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  margin-top: 40px;
+  padding-bottom: 28px;
+  display: flex;
+  justify-content: center;
 }
 
 .d-scroll-indicator {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -697,6 +815,7 @@ button {
   min-height: 44px;
   background: transparent;
   border: none;
+  box-shadow: none;
   padding: 8px;
   margin: -8px;
   cursor: pointer;
@@ -719,10 +838,26 @@ button {
   height: 11px;
 }
 
-/* ---- Dobra 9 (Impacto) desktop: métricas em grid 2×2 (adaptação
-   intencional — no mobile são empilhadas em coluna única). ---- */
+/* ---- Dobra 9 (Impacto) desktop: métricas em grid 2×2 + CTA integrado no
+   MESMO cluster (flex column, botão logo abaixo das métricas — regra 21
+   da tarefa: nada de botão flutuando sozinho). No mobile as métricas são
+   empilhadas em coluna única (ver .mf-d-metrics), adaptação intencional. */
+.d-impact-cluster {
+  grid-row: 1;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* CTA integrado logo abaixo das métricas (regra 21 da tarefa) — não os
+   40px usados entre o cluster inferior e o chevron (regra 9), esse gap é
+   interno ao próprio cluster. */
+.d-impact-cluster .d-actions {
+  margin-top: 32px;
+}
+
 .d-metrics {
-  position: absolute;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -803,7 +938,7 @@ button {
   align-items: flex-start;
   text-align: left;
   padding-inline: clamp(20px, 7vw, 64px);
-  padding-top: calc(var(--header-height) + 16px);
+  padding-top: calc(var(--header-height) + 40px);
 }
 
 .mf-center {
@@ -1016,7 +1151,7 @@ button {
   z-index: 2;
   flex: 0 0 auto;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 40px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;

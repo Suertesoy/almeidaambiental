@@ -3,44 +3,29 @@ import Link from "next/link";
 import { ChevronDownIcon } from "./icons";
 
 /**
- * Primitivos da composição editorial DESKTOP (>=1024px) — Decisão 27.
- * Independente do mobile (components/MobileDobra.tsx, área protegida da
- * Decisão 26 — não importado nem reaproveitado aqui de propósito, para
- * não criar acoplamento entre os dois sistemas).
+ * Primitivos da composição editorial DESKTOP (>=1024px).
+ * Independente do mobile (components/MobileDobra.tsx) — não importado nem
+ * reaproveitado aqui de propósito, para não criar acoplamento entre os
+ * dois sistemas.
  *
- * `.d-stage` (ver app/globals.css) é a área útil de cada dobra:
- * position:relative, altura cheia (calc(100svh - header)). Cada elemento
- * é position:absolute com `top` em porcentagem (sempre relativo à altura
- * inteira do stage) e `left`/`width` calculados por `gridX()` — um grid
- * conceitual de 12 colunas com 24px de gap, sem exigir CSS Grid real.
+ * Arquitetura: `.d-stage` (ver app/globals.css) é a área útil de cada
+ * dobra. Dentro dela, `DFrame` é uma coluna flex com três regiões reais —
+ * não mais um `top` percentual isolado por elemento:
+ *
+ *   DTop   — nome/subtítulo institucional, ancorado a header+40px.
+ *   DMain  — grid REAL de 12 colunas (CSS Grid), flex:1 (todo o espaço
+ *            restante). A headline (`DTitle`) se centraliza sozinha nesse
+ *            espaço (align-self:center, nunca empurrada pelo body); o
+ *            cluster body+CTA (`DBottomCluster`) fica encostado no fim
+ *            (align-self:end) — os dois nunca dependem um do outro.
+ *   DHint  — indicador de rolagem, 40px abaixo do fim de DMain, sem caixa
+ *            isolada atrás (o fade é full-width, ver `.d-bottom-fade`).
+ *
+ * `colA`/`colB` viram `grid-column` (linhas 1..13 de um grid de 12
+ * colunas) — a mesma numeração conceitual que a antiga gridX() já usava,
+ * então as escolhas horizontais de cada dobra não mudaram, só deixaram de
+ * precisar de left/width calculados a mão.
  */
-
-const GAP_PX = 24;
-const COLUMNS = 12;
-
-export function gridX(colA: number, colB: number) {
-  const span = colB - colA;
-  const leftPct = ((colA - 1) * 100) / COLUMNS;
-  const leftPx = ((colA - 1) * GAP_PX) / COLUMNS;
-  const widthPct = (span * 100) / COLUMNS;
-  const widthPx = (span * GAP_PX) / COLUMNS;
-  return {
-    left: `calc(${leftPct}% + ${leftPx}px)`,
-    width: `calc(${widthPct}% + ${widthPx}px)`,
-  };
-}
-
-type XPlacement =
-  | { colA: number; colB: number; centerX?: false }
-  | { centerX: true; colA?: undefined; colB?: undefined };
-
-function xStyle(placement: XPlacement): CSSProperties {
-  if (placement.centerX) {
-    return { left: "50%", transform: "translateX(-50%)" };
-  }
-  const { left, width } = gridX(placement.colA, placement.colB);
-  return { left, width };
-}
 
 type Segment = { text: string; gold?: boolean; green?: boolean };
 type TitleLine = Segment[];
@@ -65,16 +50,50 @@ function renderLine(line: TitleLine, keyPrefix: string) {
   });
 }
 
+/** Área útil da dobra: fade decorativo full-width (atrás de toda a região
+ *  inferior, não uma caixa isolada atrás do chevron) + as três regiões
+ *  (DTop/DMain/DHint) em coluna flex, altura total do stage. */
+export function DFrame({ children }: { children: ReactNode }) {
+  return (
+    <div className="d-frame">
+      <div className="d-bottom-fade" aria-hidden="true" />
+      {children}
+    </div>
+  );
+}
+
+/** Região TOP: nome institucional. Mesmo grid de 12 colunas de `DMain`,
+ *  para as bordas horizontais baterem entre as regiões. */
+export function DTop({ children }: { children: ReactNode }) {
+  return <div className="d-top">{children}</div>;
+}
+
+/** Região CENTER+BOTTOM: grid real de 12 colunas ocupando todo o espaço
+ *  entre DTop e DHint. `DTitle`/`DBottomCluster`/`DImpactCluster` são os
+ *  únicos filhos esperados aqui. */
+export function DMain({ children }: { children: ReactNode }) {
+  return <div className="d-main">{children}</div>;
+}
+
+type GridPlacement =
+  | { colA: number; colB: number; centerX?: false }
+  | { centerX: true; colA?: undefined; colB?: undefined };
+
+function gridColumnStyle(placement: GridPlacement): CSSProperties {
+  if (placement.centerX) {
+    return { gridColumn: "1 / 13", justifySelf: "center" };
+  }
+  return { gridColumn: `${placement.colA} / ${placement.colB}` };
+}
+
 export function DNameBlock({
-  top,
   align = "left",
   name,
   services,
   ...placement
-}: { top: string; align?: "left" | "right"; name: string; services?: string } & XPlacement) {
+}: { align?: "left" | "right"; name: string; services?: string } & GridPlacement) {
   const style: CSSProperties = {
-    top,
-    ...xStyle(placement),
+    ...gridColumnStyle(placement),
     alignItems: align === "right" ? "flex-end" : "flex-start",
     textAlign: align,
   };
@@ -86,8 +105,9 @@ export function DNameBlock({
   );
 }
 
+/** Headline — sempre a região CENTER (`.d-title` já define
+ *  align-self:center via CSS, independente da altura do body ao lado). */
 export function DTitle({
-  top,
   align = "left",
   maxWidth,
   fontSize,
@@ -97,7 +117,6 @@ export function DTitle({
   plain = false,
   ...placement
 }: {
-  top: string;
   align?: "left" | "right" | "center";
   maxWidth?: string;
   fontSize: string;
@@ -105,10 +124,9 @@ export function DTitle({
   letterSpacing?: string;
   lines: TitleLine[];
   plain?: boolean;
-} & XPlacement) {
+} & GridPlacement) {
   const style: CSSProperties = {
-    top,
-    ...xStyle(placement),
+    ...gridColumnStyle(placement),
     maxWidth,
     fontSize,
     lineHeight,
@@ -125,28 +143,46 @@ export function DTitle({
   );
 }
 
-export function DBody({
-  top,
+/** Cluster BOTTOM (body + CTA, ou só body): um único item de grid
+ *  (align-self:end via CSS) — garante "body/CTA a 40px do chevron"
+ *  sempre, com ou sem botão, sem depender da altura da headline. */
+export function DBottomCluster({
   align = "left",
-  maxWidth = "540px",
-  fontSize,
-  nowrap = false,
+  maxWidth = "440px",
   children,
   ...placement
 }: {
-  top: string;
   align?: "left" | "right" | "center";
   maxWidth?: string;
+  children: ReactNode;
+} & GridPlacement) {
+  const style: CSSProperties = {
+    ...gridColumnStyle(placement),
+    maxWidth,
+    alignItems: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start",
+    textAlign: align,
+  };
+  return (
+    <div className="d-bottom-cluster" style={style}>
+      {children}
+    </div>
+  );
+}
+
+export function DBody({
+  marginTop,
+  fontSize,
+  nowrap = false,
+  children,
+}: {
+  marginTop?: string;
   fontSize?: string;
   nowrap?: boolean;
   children: ReactNode;
-} & XPlacement) {
+}) {
   const style: CSSProperties = {
-    top,
-    ...xStyle(placement),
-    maxWidth,
+    marginTop,
     fontSize,
-    textAlign: align,
     whiteSpace: nowrap ? "nowrap" : "normal",
   };
   return (
@@ -156,39 +192,13 @@ export function DBody({
   );
 }
 
-export function DButton({
-  top,
-  variant,
-  href,
-  disabled,
-  children,
-  ...placement
-}: {
-  top: string;
-  variant: "primary" | "secondary";
-  href?: string;
-  disabled?: boolean;
-  children: ReactNode;
-} & XPlacement) {
-  const style: CSSProperties = { position: "absolute", top, ...xStyle(placement) };
-  const className = `d-btn ${variant === "primary" ? "d-btn-primary" : "d-btn-secondary"}`;
-  if (href) {
-    return (
-      <Link href={href} className={className} style={style}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <button type="button" className={className} style={style} disabled={disabled}>
-      {children}
-    </button>
-  );
+/** Wrapper do(s) botão(ões) dentro do cluster inferior — 8px fixos acima
+ *  dele (regra 9 da tarefa), mesmo padrão de `MfActions` no mobile. */
+export function DActions({ children }: { children: ReactNode }) {
+  return <div className="d-actions">{children}</div>;
 }
 
-/** Variante sem position:absolute própria — usada como filho de
- *  DActionsRow (Hero: dois CTAs lado a lado em fluxo flex normal). */
-export function DButtonInline({
+export function DButton({
   variant,
   href,
   disabled,
@@ -214,43 +224,55 @@ export function DButtonInline({
   );
 }
 
-export function DActionsRow({ top, children, ...placement }: { top: string; children: ReactNode } & XPlacement) {
-  const style: CSSProperties = { position: "absolute", top, ...xStyle(placement) };
+/** Linha de ações da Hero (dois CTAs lado a lado, fluxo normal — não é
+ *  mais um item posicionado via top/gridX). */
+export function DActionsRow({ children }: { children: ReactNode }) {
+  return <div className="d-actions-row">{children}</div>;
+}
+
+/** Indicador de rolagem — região HINT: sempre 40px abaixo do fim de
+ *  `DMain` (margin-top fixo em `.d-hint`), sem caixa/fade retangular
+ *  isolada atrás (regra 12 da tarefa). `label` cobre o "Role para baixo"
+ *  da Hero — mesmo componente, sem lógica duplicada. */
+export function DHint({
+  label,
+  isLast = false,
+  onAdvance,
+}: {
+  label?: string;
+  isLast?: boolean;
+  onAdvance: () => void;
+}) {
   return (
-    <div className="d-actions-row" style={style}>
+    <div className="d-hint">
+      <button
+        type="button"
+        className="d-scroll-indicator"
+        onClick={onAdvance}
+        aria-label={isLast ? "Ir para o rodapé" : "Ir para a próxima seção"}
+      >
+        {label ? <span aria-hidden="true">{label}</span> : null}
+        <ChevronDownIcon />
+      </button>
+    </div>
+  );
+}
+
+/** Cluster da Dobra 9 (Impacto): métricas 2×2 + CTA no mesmo bloco
+ *  (align-self:center via CSS — não há região TOP nessa dobra, então o
+ *  cluster acompanha o mesmo peso vertical da headline ao lado). */
+export function DImpactCluster({ children, ...placement }: { children: ReactNode } & GridPlacement) {
+  const style: CSSProperties = gridColumnStyle(placement);
+  return (
+    <div className="d-impact-cluster" style={style}>
       {children}
     </div>
   );
 }
 
-/** Indicador de rolagem CLICÁVEL (regras 11/13/14 da tarefa): botão real,
- *  `onAdvance` dispara o mesmo mecanismo de transição (~620ms) usado pelo
- *  wheel — ver `goToIndex` em ScrollVideoExperience.tsx. */
-export function DScrollHint({ isLast = false, onAdvance }: { isLast?: boolean; onAdvance: () => void }) {
+export function DMetricsGrid({ metrics }: { metrics: Array<{ value: ReactNode; label: string }> }) {
   return (
-    <>
-      <div className="d-scroll-fade" aria-hidden="true" />
-      <button
-        type="button"
-        className="d-scroll-indicator"
-        style={{ bottom: "28px" }}
-        onClick={onAdvance}
-        aria-label={isLast ? "Ir para o rodapé" : "Ir para a próxima seção"}
-      >
-        <ChevronDownIcon />
-      </button>
-    </>
-  );
-}
-
-export function DMetricsGrid({
-  top,
-  metrics,
-  ...placement
-}: { top: string; metrics: Array<{ value: ReactNode; label: string }> } & XPlacement) {
-  const style: CSSProperties = { top, ...xStyle(placement) };
-  return (
-    <ul className="d-metrics" style={style}>
+    <ul className="d-metrics">
       {metrics.map((m) => (
         <li key={m.label}>
           <p className="d-metric-value">{m.value}</p>

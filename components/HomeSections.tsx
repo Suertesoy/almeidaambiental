@@ -15,7 +15,20 @@ import {
   MfSubtitle,
   MfTitle,
 } from "./MobileDobra";
-import { DBody, DButton, DMetricsGrid, DNameBlock, DScrollHint, DTitle } from "./DesktopDobra";
+import {
+  DActions,
+  DBody,
+  DBottomCluster,
+  DButton,
+  DFrame,
+  DHint,
+  DImpactCluster,
+  DMain,
+  DMetricsGrid,
+  DNameBlock,
+  DTitle,
+  DTop,
+} from "./DesktopDobra";
 import { CountUpMetric, useEnterOnce, type MetricFormat } from "./AnimatedMetric";
 import { lockup, rhythm } from "../lib/responsive-type";
 
@@ -23,9 +36,11 @@ import { lockup, rhythm } from "../lib/responsive-type";
  * Conteúdo real das dobras 2 a 9 da Home (dobra 1 continua em HeroContent.tsx).
  *
  * Cada dobra renderiza dois blocos independentes:
- * - Desktop (>=1024px, `.desktop-only`): composição editorial própria
- *   (`.d-stage`, ver components/DesktopDobra.tsx) — cada dobra com sua
- *   própria distribuição em 12 colunas conceituais.
+ * - Desktop (>=1024px, `.desktop-only`): `DFrame` com três regiões reais —
+ *   `DTop` (nome/subtítulo), `DMain` (grid de 12 colunas onde a headline
+ *   se centraliza sozinha e o cluster body+CTA fica encostado no fim) e
+ *   `DHint` (chevron, 40px abaixo do fim de `DMain`) — ver
+ *   components/DesktopDobra.tsx. Nenhum elemento usa `top` percentual.
  * - Mobile+tablet (<1024px, `.mobile-fidelity`): três regiões explícitas
  *   (`MfCenter` para a headline, `MfBottom` para corpo/CTA — ver
  *   components/MobileDobra.tsx), sem canvas fixo nem coordenadas
@@ -35,7 +50,9 @@ import { lockup, rhythm } from "../lib/responsive-type";
 
 /* fontSize responde a largura E altura (vw + svh) — não só vw — para não
    ficar apertado em notebooks baixos (1280×720, 1366×768) mesmo quando a
-   largura sobra (Seção 12/40 da tarefa). */
+   largura sobra. Escala compartilhada por toda headline de dobra (2 a 9,
+   inclusive o fechamento — regra 25 da tarefa: uma escala desktop única,
+   não recalibrada dobra a dobra). */
 const HEADLINE_FONT = { fontSize: "clamp(48px, 2.2vw + 2.6svh, 64px)", lineHeight: 0.98 };
 
 /** Tokens do subtítulo/localização institucional (nome → 4px → subtítulo),
@@ -68,27 +85,33 @@ export function Section02Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock
-          top="18%"
-          colA={1}
-          colB={6}
-          name="Almeida Ambiental"
-          services="Diagnóstico · Coleta · Triagem · Trituração · Descaracterização"
-        />
-        <DTitle
-          top="38%"
-          colA={1}
-          colB={8}
-          maxWidth="760px"
-          align="left"
-          {...HEADLINE_FONT}
-          lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
-        />
-        <DBody top="49%" colA={9} colB={13} maxWidth="420px" align="left">
-          Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-          responsável de resíduos.
-        </DBody>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock
+              colA={1}
+              colB={6}
+              name="Almeida Ambiental"
+              services="Diagnóstico · Coleta · Triagem · Trituração · Descaracterização"
+            />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={1}
+              colB={8}
+              maxWidth="760px"
+              align="left"
+              {...HEADLINE_FONT}
+              lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
+            />
+            <DBottomCluster colA={9} colB={13} align="left" maxWidth="420px">
+              <DBody>
+                Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
+                responsável de resíduos.
+              </DBody>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -121,35 +144,43 @@ export function Section03Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock
-          top="18%"
-          colA={1}
-          colB={6}
-          name="Almeida Ambiental"
-          services="São José · Joinville · Araquari · Chapecó · SC"
-        />
-        <DTitle
-          top="37%"
-          colA={1}
-          colB={8}
-          maxWidth="760px"
-          align="left"
-          {...HEADLINE_FONT}
-          lines={[
-            [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
-            [{ text: "CADA ETAPA" }],
-            [{ text: "DO PROCESSO" }],
-          ]}
-        />
-        <DBody top="42%" colA={8} colB={13} maxWidth="460px" align="left">
-          Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
-          transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
-          ambiental.
-        </DBody>
-        <DButton top="66%" colA={8} colB={13} variant="secondary" href="/almeida-ambiental">
-          Conheça Almeida Ambiental
-        </DButton>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock
+              colA={1}
+              colB={6}
+              name="Almeida Ambiental"
+              services="São José · Joinville · Araquari · Chapecó · SC"
+            />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={1}
+              colB={8}
+              maxWidth="760px"
+              align="left"
+              {...HEADLINE_FONT}
+              lines={[
+                [{ text: "EFICIÊNCIA", gold: true }, { text: " EM" }],
+                [{ text: "CADA ETAPA" }],
+                [{ text: "DO PROCESSO" }],
+              ]}
+            />
+            <DBottomCluster colA={8} colB={13} align="left" maxWidth="420px">
+              <DBody>
+                Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
+                transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
+                ambiental.
+              </DBody>
+              <DActions>
+                <DButton variant="secondary" href="/almeida-ambiental">
+                  Conheça Almeida Ambiental
+                </DButton>
+              </DActions>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -190,32 +221,38 @@ export function Section04Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock
-          top="18%"
-          colA={7}
-          colB={13}
-          align="right"
-          name="Almeida Equipamentos"
-          services="Compactadores · Prensas · Trituradores · Containers"
-        />
-        <DTitle
-          top="38%"
-          colA={5}
-          colB={13}
-          maxWidth="760px"
-          align="right"
-          {...HEADLINE_FONT}
-          lines={[
-            [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
-            [{ text: "NASCEU DA" }],
-            [{ text: "PRÓPRIA OPERAÇÃO" }],
-          ]}
-        />
-        <DBody top="50%" colA={1} colB={6} maxWidth="480px" align="left">
-          Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
-          décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
-        </DBody>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock
+              colA={7}
+              colB={13}
+              align="right"
+              name="Almeida Equipamentos"
+              services="Compactadores · Prensas · Trituradores · Containers"
+            />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={5}
+              colB={13}
+              maxWidth="760px"
+              align="right"
+              {...HEADLINE_FONT}
+              lines={[
+                [{ text: "TECNOLOGIA", gold: true }, { text: " QUE" }],
+                [{ text: "NASCEU DA" }],
+                [{ text: "PRÓPRIA OPERAÇÃO" }],
+              ]}
+            />
+            <DBottomCluster colA={1} colB={6} align="left" maxWidth="480px">
+              <DBody>
+                Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
+                décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
+              </DBody>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -250,27 +287,34 @@ export function Section05Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock top="18%" colA={7} colB={13} align="right" name="Almeida Equipamentos" services="São José · SC" />
-        <DTitle
-          top="35%"
-          colA={6}
-          colB={13}
-          maxWidth="760px"
-          align="right"
-          {...HEADLINE_FONT}
-          lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
-        />
-        <DBody top="43%" colA={1} colB={6} maxWidth="500px" align="left">
-          Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
-          realidades operacionais.
-        </DBody>
-        <DBody top="54%" colA={1} colB={6} maxWidth="500px" align="left">
-          Conhecimento de campo conectado a tecnologias internacionais.
-        </DBody>
-        <DButton top="68%" colA={1} colB={6} variant="secondary" href="/almeida-equipamentos">
-          Conheça Almeida Equipamentos
-        </DButton>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock colA={7} colB={13} align="right" name="Almeida Equipamentos" services="São José · SC" />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={6}
+              colB={13}
+              maxWidth="760px"
+              align="right"
+              {...HEADLINE_FONT}
+              lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
+            />
+            <DBottomCluster colA={1} colB={6} align="left" maxWidth="420px">
+              <DBody>
+                Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
+                realidades operacionais.
+              </DBody>
+              <DBody marginTop="14px">Conhecimento de campo conectado a tecnologias internacionais.</DBody>
+              <DActions>
+                <DButton variant="secondary" href="/almeida-equipamentos">
+                  Conheça Almeida Equipamentos
+                </DButton>
+              </DActions>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -309,28 +353,33 @@ export function Section06Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock
-          top="18%"
-          colA={1}
-          colB={6}
-          name="Saturno Ambiental"
-          services="Gestão de Resíduos · Cartonagem · Consultoria"
-        />
-        <DTitle
-          top="37%"
-          colA={1}
-          colB={8}
-          maxWidth="760px"
-          align="left"
-          {...HEADLINE_FONT}
-          lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
-        />
-        {/* Grande espaço proposital entre headline (top 37%) e body (top 58%): não aproximar. */}
-        <DBody top="58%" colA={8} colB={13} maxWidth="440px" align="left">
-          Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
-          conhecimento em gestão de resíduos das operações da região.
-        </DBody>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock
+              colA={1}
+              colB={6}
+              name="Saturno Ambiental"
+              services="Gestão de Resíduos · Cartonagem · Consultoria"
+            />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={1}
+              colB={8}
+              maxWidth="760px"
+              align="left"
+              {...HEADLINE_FONT}
+              lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
+            />
+            <DBottomCluster colA={8} colB={13} align="left" maxWidth="440px">
+              <DBody>
+                Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
+                conhecimento em gestão de resíduos das operações da região.
+              </DBody>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -361,35 +410,43 @@ export function Section07Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
       <div className="desktop-only d-stage">
-        <DNameBlock
-          top="18%"
-          colA={7}
-          colB={13}
-          align="right"
-          name="Saturno Ambiental"
-          services="Blumenau · Vale do Itajaí"
-        />
-        <DTitle
-          top="36%"
-          colA={1}
-          colB={8}
-          maxWidth="760px"
-          align="left"
-          {...HEADLINE_FONT}
-          lines={[
-            [{ text: "GESTÃO AMBIENTAL" }],
-            [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
-            [{ text: "DA COLETA" }],
-          ]}
-        />
-        <DBody top="45%" colA={8} colB={13} maxWidth="460px" align="left">
-          Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-          construída para unir eficiência operacional e responsabilidade ambiental.
-        </DBody>
-        <DButton top="68%" colA={8} colB={13} variant="secondary" href="/saturno-ambiental">
-          Conheça Saturno Ambiental
-        </DButton>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DTop>
+            <DNameBlock
+              colA={7}
+              colB={13}
+              align="right"
+              name="Saturno Ambiental"
+              services="Blumenau · Vale do Itajaí"
+            />
+          </DTop>
+          <DMain>
+            <DTitle
+              colA={1}
+              colB={8}
+              maxWidth="760px"
+              align="left"
+              {...HEADLINE_FONT}
+              lines={[
+                [{ text: "GESTÃO AMBIENTAL" }],
+                [{ text: "QUE " }, { text: "VAI ALÉM", gold: true }],
+                [{ text: "DA COLETA" }],
+              ]}
+            />
+            <DBottomCluster colA={8} colB={13} align="left" maxWidth="420px">
+              <DBody>
+                Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
+                construída para unir eficiência operacional e responsabilidade ambiental.
+              </DBody>
+              <DActions>
+                <DButton variant="secondary" href="/saturno-ambiental">
+                  Conheça Saturno Ambiental
+                </DButton>
+              </DActions>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       <div className="mobile-fidelity mf-section-frame">
@@ -436,31 +493,40 @@ export function Section07Content({ onAdvance }: { onAdvance: () => void }) {
 export function Section08Content({ onAdvance }: { onAdvance: () => void }) {
   return (
     <>
-      {/* Desktop: 4 linhas explícitas (não 6 como no mobile) — só a quebra
-          muda por causa da largura maior, a copy continua a mesma. */}
+      {/* Desktop: sem DTop (dobra sem nome/subtítulo) — DMain ocupa a
+          altura inteira do stage, então a headline se centraliza no
+          espaço todo. Seis linhas (igual ao mobile, não quatro como
+          antes): a linha mais longa fica bem mais curta, o que permite um
+          max-width editorial de verdade sem encostar nas bordas da tela
+          (regra 20 da tarefa) — a copy não muda, só a quebra de linha. */}
       <div className="desktop-only d-stage">
-        <DTitle
-          top="18%"
-          centerX
-          maxWidth="min(1000px, 80vw)"
-          align="center"
-          fontSize="clamp(54px, 2.6vw + 3svh, 72px)"
-          lineHeight={1.02}
-          letterSpacing="-2px"
-          lines={[
-            [{ text: "O QUE COMEÇOU" }],
-            [{ text: "COM PAPEL E PAPELÃO" }],
-            [{ text: "HOJE CONECTA " }, { text: "OPERAÇÃO,", gold: true }],
-            [{ text: "TECNOLOGIA E " }, { text: "SUSTENTABILIDADE.", green: true }],
-          ]}
-        />
-        <DBody top="67%" centerX maxWidth="620px" align="center" fontSize="18px">
-          Há 40 anos transformando o presente, pensando no futuro.
-        </DBody>
-        <DButton top="77%" centerX variant="secondary" href="/contato">
-          Entre em contato com o Grupo Almeida
-        </DButton>
-        <DScrollHint onAdvance={onAdvance} />
+        <DFrame>
+          <DMain>
+            <DTitle
+              centerX
+              maxWidth="700px"
+              align="center"
+              {...HEADLINE_FONT}
+              lines={[
+                [{ text: "O QUE COMEÇOU" }],
+                [{ text: "COM PAPEL E PAPELÃO" }],
+                [{ text: "HOJE CONECTA" }],
+                [{ text: "OPERAÇÃO,", gold: true }],
+                [{ text: "TECNOLOGIA E" }],
+                [{ text: "SUSTENTABILIDADE.", green: true }],
+              ]}
+            />
+            <DBottomCluster centerX align="center" maxWidth="460px">
+              <DBody fontSize="18px">Há 40 anos transformando o presente, pensando no futuro.</DBody>
+              <DActions>
+                <DButton variant="secondary" href="/contato">
+                  Entre em contato com o Grupo Almeida
+                </DButton>
+              </DActions>
+            </DBottomCluster>
+          </DMain>
+          <DHint onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       {/* Dobra sem nome/subtítulo: título+corpo+botão ficam alinhados à
@@ -512,50 +578,58 @@ export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
 
   return (
     <>
-      {/* Desktop: sem "Impacto Positivo · 2025" (igual ao mobile). Métricas em
-          grid 2×2 — adaptação intencional para telas largas (mobile: coluna
-          única). Última dobra antes do footer: o chevron avança para o
-          rodapé (mesmo mecanismo já usado entre as demais dobras). */}
+      {/* Desktop: sem DTop (igual ao mobile, sem "Impacto Positivo ·
+          2025"). Headline e cluster de métricas+CTA dividem DMain lado a
+          lado, os dois com o mesmo peso vertical (align-self:center) — o
+          CTA fica integrado logo abaixo das métricas, não flutuando
+          isolado (regra 21 da tarefa). Métricas em grid 2×2 — adaptação
+          intencional para telas largas (mobile: coluna única). Última
+          dobra antes do footer: o chevron avança para o rodapé (mesmo
+          mecanismo já usado entre as demais dobras). */}
       <div className="desktop-only d-stage" ref={desktopRef}>
-        <DTitle
-          top="25%"
-          colA={1}
-          colB={6}
-          maxWidth="600px"
-          align="left"
-          plain
-          fontSize="clamp(48px, 2.2vw + 2.6svh, 64px)"
-          lineHeight={0.98}
-          lines={[
-            [{ text: "Cada resíduo" }],
-            [{ text: "processado vira um" }],
-            [{ text: "número que a" }],
-            [{ text: "natureza reconhece.", gold: true }],
-          ]}
-        />
-        <DMetricsGrid
-          top="24%"
-          colA={7}
-          colB={13}
-          metrics={IMPACT_METRICS.map((m) => ({
-            value: (
-              <CountUpMetric
-                target={m.target}
-                format={m.format}
-                suffix={m.suffix}
-                display={m.display}
-                active={active}
+        <DFrame>
+          <DMain>
+            <DTitle
+              colA={1}
+              colB={6}
+              maxWidth="600px"
+              align="left"
+              plain
+              {...HEADLINE_FONT}
+              lines={[
+                [{ text: "Cada resíduo" }],
+                [{ text: "processado vira um" }],
+                [{ text: "número que a" }],
+                [{ text: "natureza reconhece.", gold: true }],
+              ]}
+            />
+            <DImpactCluster colA={7} colB={13}>
+              <DMetricsGrid
+                metrics={IMPACT_METRICS.map((m) => ({
+                  value: (
+                    <CountUpMetric
+                      target={m.target}
+                      format={m.format}
+                      suffix={m.suffix}
+                      display={m.display}
+                      active={active}
+                    />
+                  ),
+                  label: m.label,
+                }))}
               />
-            ),
-            label: m.label,
-          }))}
-        />
-        {/* Relatório de Sustentabilidade 2025 ainda não disponível no projeto:
-            botão fica sem destino definitivo nesta etapa (ver DECISOES.md). */}
-        <DButton top="72%" colA={7} colB={13} variant="secondary" disabled>
-          Ver Relatório de Sustentabilidade 2025
-        </DButton>
-        <DScrollHint isLast onAdvance={onAdvance} />
+              {/* Relatório de Sustentabilidade 2025 ainda não disponível no
+                  projeto: botão fica sem destino definitivo nesta etapa
+                  (ver DECISOES.md). */}
+              <DActions>
+                <DButton variant="secondary" disabled>
+                  Ver Relatório de Sustentabilidade 2025
+                </DButton>
+              </DActions>
+            </DImpactCluster>
+          </DMain>
+          <DHint isLast onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       {/* Sem "Impacto Positivo · 2025" no mobile. Métricas empilhadas em coluna
@@ -597,7 +671,11 @@ export function Section09Content({ onAdvance }: { onAdvance: () => void }) {
                 />
               ))}
             </MfMetrics>
-            <MfActions marginTop="8px">
+            {/* Regra 24 da tarefa: mínimo absoluto de 24px entre o fim do
+                bloco de métricas e o início do CTA — não os 8px usados nas
+                outras dobras (body → botão), porque aqui o vizinho de cima
+                são números grandes, não texto corrido. */}
+            <MfActions marginTop="24px">
               <MfButton variant="secondary" disabled>
                 Ver Relatório de Sustentabilidade 2025
               </MfButton>

@@ -1,22 +1,18 @@
-import { ChevronDownIcon, WhatsAppIcon } from "./icons";
+import { WhatsAppIcon } from "./icons";
 import { lockup, rhythm } from "../lib/responsive-type";
 import { MfActions, MfBottom, MfButton, MfCenter, MfFrame, MfLabel, MfScrollHint, MfTitle } from "./MobileDobra";
-import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
+import { DActionsRow, DButton, DFrame, DHint, DTitle } from "./DesktopDobra";
 
 /**
  * Dobra 1 (Hero). Dois blocos independentes:
- * - Desktop (>=1024px, `.desktop-only`): composição editorial própria
- *   (`.d-stage`, ver components/DesktopDobra.tsx).
+ * - Desktop (>=1024px, `.desktop-only`): composição editorial especial
+ *   (regra 13 da tarefa) — "Grupo Almeida" / "40 anos" / headline formam
+ *   um único bloco centralizado (`.d-hero-main`, flex:1 dentro de
+ *   `DFrame`, mesmo raciocínio de região CENTER das demais dobras); os
+ *   dois CTAs (`.d-hero-actions`) e o `DHint` seguem em fluxo normal
+ *   abaixo dele — nada posicionado via `top` percentual.
  * - Mobile+tablet (<1024px, `.mobile-fidelity`): layout de fluxo
- *   (`MfFrame`) calibrado a partir da referência 393px do Figma, sem
- *   canvas fixo nem coordenadas absolutas por elemento.
- *
- * Composição central (Grupo Almeida / 40 anos / headline) tratada como um
- * bloco único dentro de `MfCenter` (regra 10 da tarefa: mesmo raciocínio
- * TOP/CENTER/BOTTOM do resto das dobras, adaptado — aqui não há um
- * subtítulo institucional separado). Os dois CTAs formam o `MfBottom`; o
- * último botão fica 16px acima do indicador de rolagem via o mesmo
- * `margin-top` fixo de `.mf-scrollhint` usado em todas as outras dobras.
+ *   (`MfFrame`) calibrado a partir da referência 393px do Figma.
  */
 
 export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
@@ -24,79 +20,38 @@ export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
     <>
       {/* ---------------- Desktop (>=1024px): composição editorial ---------------- */}
       <div className="desktop-only d-stage">
-        <p
-          style={{
-            position: "absolute",
-            margin: 0,
-            top: "18%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-display-mf)",
-            fontWeight: 600,
-            fontSize: "24px",
-            letterSpacing: "7.2px",
-            textTransform: "uppercase",
-            color: "var(--d-name-green)",
-          }}
-        >
-          Grupo Almeida
-        </p>
+        <DFrame>
+          <div className="d-hero-main">
+            <p className="d-hero-name">Grupo Almeida</p>
+            <p className="d-hero-years">40 anos</p>
+            <DTitle
+              centerX
+              maxWidth="1000px"
+              align="center"
+              fontSize="clamp(60px, 3vw + 3.4svh, 78px)"
+              lineHeight={0.92}
+              letterSpacing="-1px"
+              lines={[
+                [{ text: "TRANSFORMANDO" }],
+                [{ text: "RESÍDUO" }],
+                [{ text: "EM " }, { text: "RESULTADO", gold: true }],
+              ]}
+            />
+          </div>
 
-        <p
-          style={{
-            position: "absolute",
-            margin: 0,
-            top: "24%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-display-mf)",
-            fontWeight: 600,
-            fontSize: "clamp(72px, 3.6vw + 4.4svh, 104px)",
-            letterSpacing: "-3px",
-            color: "var(--d-offwhite)",
-          }}
-        >
-          40 anos
-        </p>
+          <DActionsRow>
+            {/* Número/link oficial do WhatsApp ainda não confirmado nesta etapa. */}
+            <DButton variant="primary">
+              <WhatsAppIcon />
+              Falar com o Grupo Almeida
+            </DButton>
+            <DButton variant="secondary" href="#section-02">
+              Conheça nossa história
+            </DButton>
+          </DActionsRow>
 
-        <DTitle
-          top="43%"
-          centerX
-          maxWidth="1000px"
-          align="center"
-          fontSize="clamp(60px, 3vw + 3.4svh, 78px)"
-          lineHeight={0.92}
-          letterSpacing="-1px"
-          lines={[
-            [{ text: "TRANSFORMANDO" }],
-            [{ text: "RESÍDUO" }],
-            [{ text: "EM " }, { text: "RESULTADO", gold: true }],
-          ]}
-        />
-
-        <DActionsRow top="72%" centerX>
-          {/* Número/link oficial do WhatsApp ainda não confirmado nesta etapa. */}
-          <DButtonInline variant="primary">
-            <WhatsAppIcon />
-            Falar com o Grupo Almeida
-          </DButtonInline>
-          <DButtonInline variant="secondary" href="#section-02">
-            Conheça nossa história
-          </DButtonInline>
-        </DActionsRow>
-
-        <button
-          type="button"
-          className="d-scroll-indicator"
-          style={{ bottom: "28px" }}
-          onClick={onAdvance}
-          aria-label="Ir para a próxima seção"
-        >
-          <span aria-hidden="true">Role para baixo</span>
-          <ChevronDownIcon />
-        </button>
+          <DHint label="Role para baixo" onAdvance={onAdvance} />
+        </DFrame>
       </div>
 
       {/* ---------------- Mobile+tablet (<1024px): fluxo ---------------- */}
