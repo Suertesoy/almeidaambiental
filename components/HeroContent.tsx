@@ -11,6 +11,14 @@ import { DActionsRow, DButtonInline, DTitle } from "./DesktopDobra";
  *   (`MfFrame`, Decisão 28) calibrado a partir da referência 393px, sem
  *   canvas fixo nem coordenadas absolutas por elemento (ver DECISOES.md).
  */
+
+/** Abaixo de ~630px de altura real (Safari com as duas barras visíveis num
+ *  aparelho baixo, ex.: iPhone SE), os quatro espaçamentos do Hero param de
+ *  encolher no mesmo ritmo (em vez de continuar comprimindo até sobrepor o
+ *  CTA): floor = valor de cada rhythm() em ~630svh, então o floor bate onde
+ *  a curva normal já estaria nessa altura — nada muda acima disso. */
+const HERO_SHORT_FLOOR = 0.739;
+
 export default function HeroContent() {
   return (
     <>
@@ -87,13 +95,13 @@ export default function HeroContent() {
 
       {/* ---------------- Mobile+tablet (<1024px): fluxo (Decisão 28) ---------------- */}
       <div className="mobile-fidelity mf-hero-frame">
-        <MfFrame paddingTop={framePaddingTop(207)}>
+        <MfFrame paddingTop={framePaddingTop(207, { floorScale: HERO_SHORT_FLOOR })}>
           <MfLabel tokens={lockup(24, 30, 7.2)}>Grupo Almeida</MfLabel>
 
           <p
             style={{
               margin: 0,
-              marginTop: rhythm(12),
+              marginTop: rhythm(91, { floorScale: HERO_SHORT_FLOOR }),
               whiteSpace: "nowrap",
               fontFamily: "var(--font-display-mf)",
               fontWeight: 600,
@@ -105,7 +113,7 @@ export default function HeroContent() {
           </p>
 
           <MfTitle
-            marginTop={rhythm(140)}
+            marginTop={rhythm(124, { floorScale: HERO_SHORT_FLOOR })}
             refWidth={335}
             tokens={lockup(35, 30, -1)}
             lines={[
@@ -115,7 +123,7 @@ export default function HeroContent() {
             ]}
           />
 
-          <MfActions marginTop={rhythm(48)}>
+          <MfActions marginTop={rhythm(36, { floorScale: HERO_SHORT_FLOOR })}>
             <MfButton variant="primary">
               <WhatsAppIcon />
               Falar com o Grupo Almeida

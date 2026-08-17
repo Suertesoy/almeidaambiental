@@ -70,12 +70,12 @@ export function Section02Content() {
             Diagnóstico · Coleta · Triagem · Trituração · Descaracterização
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(89)}
+            marginTop={rhythm(144)}
             refWidth={359}
             tokens={lockup(35, 41, -1.4)}
             lines={[[{ text: "RESÍDUOS GANHAM" }], [{ text: "UM NOVO " }, { text: "DESTINO", gold: true }]]}
           />
-          <MfBody marginTop={rhythm(103)} refWidth={289} tokens={lockup(14, 15, -0.98)}>
+          <MfBody marginTop={rhythm(172)} refWidth={289} tokens={lockup(14, 15, -0.98)}>
             Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
             responsável de resíduos.
           </MfBody>
@@ -128,7 +128,7 @@ export function Section03Content() {
             São José · Joinville · Araquari · Chapecó · SC
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(66)}
+            marginTop={rhythm(111)}
             refWidth={311}
             tokens={lockup(35, 30, -1.4)}
             lines={[
@@ -137,12 +137,12 @@ export function Section03Content() {
               [{ text: "DO PROCESSO" }],
             ]}
           />
-          <MfBody marginTop={rhythm(98)} refWidth={314} tokens={lockup(14, 15, -0.98)}>
+          <MfBody marginTop={rhythm(112)} refWidth={314} tokens={lockup(14, 15, -0.98)}>
             Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
             transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
             ambiental.
           </MfBody>
-          <MfActions marginTop={rhythm(83)}>
+          <MfActions marginTop={rhythm(17)}>
             <MfButton variant="secondary" href="/almeida-ambiental">
               Conheça Almeida Ambiental
             </MfButton>
@@ -193,7 +193,7 @@ export function Section04Content() {
             Compactadores · Prensas · Trituradores · Containers
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(70)}
+            marginTop={rhythm(150)}
             refWidth={333}
             tokens={lockup(35, 30, -1.4)}
             lines={[
@@ -202,7 +202,7 @@ export function Section04Content() {
               [{ text: "PRÓPRIA OPERAÇÃO" }],
             ]}
           />
-          <MfBody marginTop={rhythm(88)} refWidth={309} tokens={lockup(14, 15, -0.56)}>
+          <MfBody marginTop={rhythm(156)} refWidth={309} tokens={lockup(14, 15, -0.56)}>
             Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
             décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
           </MfBody>
@@ -247,19 +247,19 @@ export function Section05Content() {
             São José · SC
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(69)}
+            marginTop={rhythm(124)}
             refWidth={329}
             tokens={lockup(35, 30, -0.35)}
             lines={[[{ text: "ENGENHARIA PARA" }], [{ text: "MOVIMENTAR" }], [{ text: "MAIS COM MENOS", gold: true }]]}
           />
-          <MfBody marginTop={rhythm(79)} refWidth={337} tokens={lockup(14, 15, -0.56)}>
+          <MfBody marginTop={rhythm(82)} refWidth={337} tokens={lockup(14, 15, -0.56)}>
             Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
             realidades operacionais.
           </MfBody>
           <MfBody marginTop={rhythm(14)} refWidth={337} tokens={lockup(14, 15, -0.56)}>
             Conhecimento de campo conectado a tecnologias internacionais.
           </MfBody>
-          <MfActions marginTop={rhythm(94)}>
+          <MfActions marginTop={rhythm(16)}>
             <MfButton variant="secondary" href="/almeida-equipamentos">
               Conheça Almeida Equipamentos
             </MfButton>
@@ -299,7 +299,7 @@ export function Section06Content() {
         <DScrollHint />
       </div>
 
-      {/* Grande espaço proposital entre headline e body (rhythm(224)): não aproximar. */}
+      {/* Grande espaço proposital entre headline e body (rhythm(190)): não aproximar. */}
       <div className="mobile-fidelity mf-section-frame">
         <MfFrame tabletAlign="left" paddingTop={framePaddingTop(151)}>
           <MfLabel tokens={lockup(24, 30, 2.16)}>Saturno Ambiental</MfLabel>
@@ -307,12 +307,12 @@ export function Section06Content() {
             Gestão de Resíduos · Cartonagem · Consultoria
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(74)}
+            marginTop={rhythm(130)}
             refWidth={334}
             tokens={lockup(35, 30, -0.35)}
             lines={[[{ text: "EXPERIÊNCIA", gold: true }], [{ text: "REGIONAL." }], [{ text: "FORÇA DE GRUPO." }]]}
           />
-          <MfBody marginTop={rhythm(224)} refWidth={300} tokens={lockup(15, 15, -0.15)}>
+          <MfBody marginTop={rhythm(190)} refWidth={300} tokens={lockup(15, 15, -0.15)}>
             Em Blumenau, a Saturno Ambiental amplia a presença do Grupo Almeida e aproxima décadas de
             conhecimento em gestão de resíduos das operações da região.
           </MfBody>
@@ -365,7 +365,7 @@ export function Section07Content() {
             Blumenau · Vale do Itajaí
           </MfSubtitle>
           <MfTitle
-            marginTop={rhythm(54)}
+            marginTop={rhythm(125)}
             refWidth={353}
             tokens={lockup(35, 35, 0.35)}
             lines={[
@@ -374,11 +374,11 @@ export function Section07Content() {
               [{ text: "DA COLETA" }],
             ]}
           />
-          <MfBody marginTop={rhythm(114)} refWidth={325} tokens={lockup(14, 15, -0.14)}>
+          <MfBody marginTop={rhythm(82)} refWidth={325} tokens={lockup(14, 15, -0.14)}>
             Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
             construída para unir eficiência operacional e responsabilidade ambiental.
           </MfBody>
-          <MfActions marginTop={rhythm(74)}>
+          <MfActions marginTop={rhythm(9)}>
             <MfButton variant="secondary" href="/saturno-ambiental">
               Conheça Saturno Ambiental
             </MfButton>
@@ -431,7 +431,7 @@ export function Section08Content() {
       {/* Seis linhas exatas, nenhuma junta às outras (line-height mais aberto
           que as demais dobras — intencional, não normalizar). */}
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="center" paddingTop={framePaddingTop(145)}>
+        <MfFrame tabletAlign="center" paddingTop={framePaddingTop(173, { floorScale: 0.45 })}>
           <MfTitle
             refWidth={356}
             widthGrowth={1.4}
@@ -445,10 +445,10 @@ export function Section08Content() {
               [{ text: "SUSTENTABILIDADE.", green: true }],
             ]}
           />
-          <MfBody marginTop={rhythm(62)} refWidth={360} tokens={lockup(14, 20, 0)}>
+          <MfBody marginTop={rhythm(84)} refWidth={360} tokens={lockup(14, 20, 0)}>
             Há 40 anos transformando o presente, pensando no futuro.
           </MfBody>
-          <MfActions marginTop={rhythm(68)}>
+          <MfActions marginTop={rhythm(11)}>
             <MfButton variant="secondary" href="/contato">
               Entre em contato com o Grupo Almeida
             </MfButton>
@@ -505,7 +505,7 @@ export function Section09Content() {
           única no mobile puro, grid 2×2 a partir do tablet. Sem indicador de
           rolagem: depois dela vem o footer. */}
       <div className="mobile-fidelity mf-section-frame">
-        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(92)}>
+        <MfFrame tabletAlign="left" paddingTop={framePaddingTop(88, { floorScale: 0.45 })}>
           <MfTitle
             refWidth={321}
             tokens={lockup(35, 30, -0.35)}
@@ -517,13 +517,13 @@ export function Section09Content() {
               [{ text: "natureza reconhece.", gold: true }],
             ]}
           />
-          <MfMetrics marginTop={rhythm(42)} gap={rhythm(24)}>
+          <MfMetrics marginTop={rhythm(42, { floorScale: 0.45 })} gap={rhythm(24)}>
             <MfMetric value="818.907" label="árvores preservadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="54.873 t" label="materiais reciclados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="153.114 t" label="CO₂ evitadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
             <MfMetric value="1,27 bi" label="litros de água economizados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
           </MfMetrics>
-          <MfActions marginTop={rhythm(33)}>
+          <MfActions marginTop={rhythm(33, { floorScale: 0.45 })}>
             <MfButton variant="secondary" disabled>
               Ver Relatório de Sustentabilidade 2025
             </MfButton>

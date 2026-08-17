@@ -99,8 +99,11 @@ export function rhythm(refPx: number, opts: { floorScale?: number; ceilScale?: n
 /** Padding-top do frame: nunca menos que a altura do header + respiro
  *  mínimo, mesmo quando `rhythm()` comprimiria mais que isso numa tela
  *  muito baixa. */
-export function framePaddingTop(refTopPx: number): string {
-  return `max(calc(var(--header-height) + 16px), ${rhythm(refTopPx)})`;
+export function framePaddingTop(
+  refTopPx: number,
+  opts: { floorScale?: number; ceilScale?: number } = {}
+): string {
+  return `max(calc(var(--header-height) + 16px), ${rhythm(refTopPx, opts)})`;
 }
 
 /**
