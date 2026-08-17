@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import {
   MfActions,
   MfBody,
@@ -12,6 +15,7 @@ import {
   MfTitle,
 } from "./MobileDobra";
 import { DBody, DButton, DMetricsGrid, DNameBlock, DScrollHint, DTitle } from "./DesktopDobra";
+import { CountUpMetric, useEnterOnce, type MetricFormat } from "./AnimatedMetric";
 import { framePaddingTop, lockup, rhythm } from "../lib/responsive-type";
 
 /**
@@ -38,6 +42,23 @@ const HEADLINE_FONT = { fontSize: "clamp(48px, 2.2vw + 2.6svh, 64px)", lineHeigh
 /** Dobra 9 (Impacto): tokens dos números/labels das métricas mobile. */
 const metricValueTokens = lockup(38, 42, 0);
 const metricLabelTokens = lockup(13, 15, 0);
+
+/** Dobra 9 (Impacto): valores oficiais das métricas — `target`/`format`
+ *  alimentam o count-up (CountUpMetric), `display` é o texto final exato
+ *  (também usado por leitor de tela, ver AnimatedMetric.tsx). Não alterar
+ *  os números oficiais. */
+const IMPACT_METRICS: Array<{
+  target: number;
+  format: MetricFormat;
+  suffix: string;
+  display: string;
+  label: string;
+}> = [
+  { target: 818907, format: "integer", suffix: "", display: "818.907", label: "árvores preservadas" },
+  { target: 54873, format: "integer", suffix: " t", display: "54.873 t", label: "materiais reciclados" },
+  { target: 153114, format: "integer", suffix: " t", display: "153.114 t", label: "CO₂ evitadas" },
+  { target: 1.27, format: "decimal2", suffix: " bi", display: "1,27 bi", label: "litros de água economizados" },
+];
 
 export function Section02Content() {
   return (
@@ -462,12 +483,20 @@ export function Section08Content() {
 }
 
 export function Section09Content() {
+  // Dois refs (desktop/mobile) em vez de um wrapper comum: os dois blocos
+  // já existem lado a lado (um deles sempre display:none via CSS conforme
+  // o breakpoint) — o observer dispara pelo primeiro que intersectar de
+  // verdade, sem precisar de um elemento extra em volta dos dois.
+  const desktopRef = useRef<HTMLDivElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
+  const active = useEnterOnce([desktopRef, mobileRef]);
+
   return (
     <>
       {/* Desktop: sem "Impacto Positivo · 2025" (igual ao mobile). Métricas em
           grid 2×2 — adaptação intencional para telas largas (mobile: coluna
           única). Sem indicador de rolagem: depois dela vem o footer. */}
-      <div className="desktop-only d-stage">
+      <div className="desktop-only d-stage" ref={desktopRef}>
         <DTitle
           top="25%"
           colA={1}
@@ -488,12 +517,18 @@ export function Section09Content() {
           top="24%"
           colA={7}
           colB={13}
-          metrics={[
-            { value: "818.907", label: "árvores preservadas" },
-            { value: "54.873 t", label: "materiais reciclados" },
-            { value: "153.114 t", label: "CO₂ evitadas" },
-            { value: "1,27 bi", label: "litros de água economizados" },
-          ]}
+          metrics={IMPACT_METRICS.map((m) => ({
+            value: (
+              <CountUpMetric
+                target={m.target}
+                format={m.format}
+                suffix={m.suffix}
+                display={m.display}
+                active={active}
+              />
+            ),
+            label: m.label,
+          }))}
         />
         {/* Relatório de Sustentabilidade 2025 ainda não disponível no projeto:
             botão fica sem destino definitivo nesta etapa (ver DECISOES.md). */}
@@ -505,7 +540,7 @@ export function Section09Content() {
       {/* Sem "Impacto Positivo · 2025" no mobile. Métricas empilhadas em coluna
           única no mobile puro, grid 2×2 a partir do tablet. Sem indicador de
           rolagem: depois dela vem o footer. */}
-      <div className="mobile-fidelity mf-section-frame">
+      <div className="mobile-fidelity mf-section-frame" ref={mobileRef}>
         <MfFrame tabletAlign="left" paddingTop={framePaddingTop(88, { floorScale: 0.45 })}>
           <MfTitle
             refWidth={321}
@@ -521,10 +556,23 @@ export function Section09Content() {
           />
           <MfRegion weight={42} />
           <MfMetrics gap={rhythm(24)}>
-            <MfMetric value="818.907" label="árvores preservadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
-            <MfMetric value="54.873 t" label="materiais reciclados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
-            <MfMetric value="153.114 t" label="CO₂ evitadas" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
-            <MfMetric value="1,27 bi" label="litros de água economizados" valueTokens={metricValueTokens} labelTokens={metricLabelTokens} />
+            {IMPACT_METRICS.map((m) => (
+              <MfMetric
+                key={m.label}
+                value={
+                  <CountUpMetric
+                    target={m.target}
+                    format={m.format}
+                    suffix={m.suffix}
+                    display={m.display}
+                    active={active}
+                  />
+                }
+                label={m.label}
+                valueTokens={metricValueTokens}
+                labelTokens={metricLabelTokens}
+              />
+            ))}
           </MfMetrics>
           <MfRegion weight={33} />
           <MfActions>

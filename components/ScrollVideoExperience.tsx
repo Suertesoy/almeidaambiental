@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SCROLL_STOPS } from "../lib/scroll-timeline";
+import { HERO_POSTER_DATA_URI } from "../lib/hero-poster";
 import HeroContent from "./HeroContent";
 import {
   Section02Content,
@@ -277,6 +278,14 @@ export default function ScrollVideoExperience() {
   const footerTimeRef = useRef(SCROLL_STOPS[SCROLL_STOPS.length - 1].time);
 
   const [reducedMotion, setReducedMotion] = useState(false);
+  /** true assim que o vídeo tem um frame REAL pronto para pintura (não só
+   *  metadata) — até lá, `.hero-poster` (frame extraído do próprio vídeo)
+   *  cobre a tela, eliminando o flash verde chapado (overlay sem nada
+   *  desenhado por trás) no primeiro paint. `loadeddata` é o sinal usado
+   *  (HAVE_CURRENT_DATA); `canplay`/`playing` como reforço, para o caso de
+   *  algum navegador atrasar `loadeddata` no autoplay mudo. Dispara uma
+   *  única vez, nunca volta a `false`. */
+  const [videoReady, setVideoReady] = useState(false);
 
   // Detecta prefers-reduced-motion antes da pintura, para minimizar troca visual.
   useLayoutEffect(() => {
@@ -286,6 +295,26 @@ export default function ScrollVideoExperience() {
     query.addEventListener("change", handleChange);
     return () => query.removeEventListener("change", handleChange);
   }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.readyState >= 2) {
+      setVideoReady(true);
+      return;
+    }
+
+    const markReady = () => setVideoReady(true);
+    video.addEventListener("loadeddata", markReady);
+    video.addEventListener("canplay", markReady);
+    video.addEventListener("playing", markReady);
+    return () => {
+      video.removeEventListener("loadeddata", markReady);
+      video.removeEventListener("canplay", markReady);
+      video.removeEventListener("playing", markReady);
+    };
+  }, [reducedMotion]);
 
   useEffect(() => {
     return () => {
@@ -510,10 +539,16 @@ export default function ScrollVideoExperience() {
   if (reducedMotion) {
     return (
       <section className="hero-static" aria-label="Grupo Almeida">
+        <div
+          className={`hero-poster${videoReady ? " hero-poster-hidden" : ""}`}
+          style={{ backgroundImage: `url(${HERO_POSTER_DATA_URI})` }}
+          aria-hidden="true"
+        />
         <video
           ref={videoRef}
           className="hero-video"
           src={VIDEO_SRC}
+          poster={HERO_POSTER_DATA_URI}
           muted
           playsInline
           preload="metadata"
@@ -534,10 +569,15 @@ export default function ScrollVideoExperience() {
   return (
     <>
       <div className="video-layer" aria-hidden="true">
+        <div
+          className={`hero-poster${videoReady ? " hero-poster-hidden" : ""}`}
+          style={{ backgroundImage: `url(${HERO_POSTER_DATA_URI})` }}
+        />
         <video
           ref={videoRef}
           className="hero-video"
           src={VIDEO_SRC}
+          poster={HERO_POSTER_DATA_URI}
           muted
           playsInline
           preload="auto"

@@ -258,7 +258,7 @@ export function MfMetric({
   valueTokens,
   labelTokens,
 }: {
-  value: string;
+  value: ReactNode;
   label: string;
   valueTokens: LockupTokens;
   labelTokens: LockupTokens;

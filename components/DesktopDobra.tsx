@@ -238,7 +238,7 @@ export function DMetricsGrid({
   top,
   metrics,
   ...placement
-}: { top: string; metrics: Array<{ value: string; label: string }> } & XPlacement) {
+}: { top: string; metrics: Array<{ value: ReactNode; label: string }> } & XPlacement) {
   const style: CSSProperties = { top, ...xStyle(placement) };
   return (
     <ul className="d-metrics" style={style}>

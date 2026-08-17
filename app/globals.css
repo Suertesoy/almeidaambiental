@@ -125,6 +125,20 @@ button {
   font-family: inherit;
 }
 
+/* Conteúdo só para leitor de tela (ex.: valor final acessível por trás de
+   um número animado com aria-hidden, ver components/AnimatedMetric.tsx). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -444,6 +458,27 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center center;
+}
+
+/* Frame estático extraído do próprio vídeo, visível por trás do vídeo até
+   que ele tenha um frame real pronto para pintura (ver `videoReady` em
+   ScrollVideoExperience.tsx) — elimina o flash verde chapado (overlay sem
+   nada por trás) no primeiro paint, inclusive se autoplay for bloqueado. */
+.hero-poster {
+  position: absolute;
+  inset: 0;
+  /* background-image vem inline (style, ver ScrollVideoExperience.tsx) como
+     data URI — evita um round-trip de rede extra que poderia perder a
+     corrida contra o primeiro paint (a causa raiz do flash verde). */
+  background-size: cover;
+  background-position: center center;
+  opacity: 1;
+  transition: opacity 160ms ease-out;
+  pointer-events: none;
+}
+
+.hero-poster-hidden {
+  opacity: 0;
 }
 
 .hero-overlay {
@@ -1041,6 +1076,86 @@ button {
   font-size: 14px;
   color: var(--color-foreground);
   opacity: 0.8;
+}
+
+/* Bloco institucional das 4 empresas/unidades do grupo — discreto, sem
+   cards verdes: só divisor sutil entre itens no mobile e grid 2×2 a partir
+   de 640px. O Grupo Almeida (acima) não tem CNPJ próprio; cada empresa
+   tem o seu. */
+.footer-companies {
+  width: 100%;
+  max-width: 640px;
+  margin: 4px 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.footer-companies-heading {
+  margin: 0 0 16px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+  opacity: 0.55;
+}
+
+.footer-companies-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px 24px;
+}
+
+@media (min-width: 640px) {
+  .footer-companies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    text-align: left;
+  }
+}
+
+.footer-company {
+  padding-top: 12px;
+  border-top: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.footer-company:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+@media (min-width: 640px) {
+  .footer-company {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+.footer-company-name {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-foreground);
+}
+
+.footer-company-location {
+  margin: 2px 0 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-foreground);
+  opacity: 0.7;
+}
+
+.footer-company-cnpj {
+  margin: 2px 0 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-foreground);
+  opacity: 0.55;
 }
 
 .footer-nav {
