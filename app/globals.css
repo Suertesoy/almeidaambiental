@@ -12,6 +12,10 @@
      Ajustar esta variável quando o valor definitivo for informado. */
   --color-accent-gold: #e2b024;
 
+  /* Oliva Claro — usado pelas propostas /home2 e /home3 (comparação de
+     Home). Não consumido pela Home 1; puramente aditivo. */
+  --color-olive-light: #c7d79e;
+
   /* Overlay obrigatório sobre o vídeo: #4E6B24 a 54% de opacidade. */
   --overlay-video: rgba(78, 107, 36, 0.54);
 
@@ -405,6 +409,53 @@ button {
 }
 
 .menu-link:hover {
+  background: var(--color-muted);
+}
+
+/* ---- Grupo temporário "Versões da Home" (homologação) ---- */
+.menu-versions {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--color-muted);
+}
+
+.menu-versions-heading {
+  margin: 0 0 8px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+  opacity: 0.5;
+}
+
+.menu-versions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.menu-versions-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  color: var(--color-foreground);
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+.menu-versions-link:hover {
+  opacity: 1;
+  border-color: var(--color-primary);
   background: var(--color-muted);
 }
 

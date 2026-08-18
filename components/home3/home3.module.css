@@ -1,0 +1,497 @@
+/* ==========================================================
+   /home3 — Corporate Hub / B2B Industrial
+   Escopo via CSS Modules, mesmo mecanismo de /home2: zero vazamento
+   para a Home 1. Scroll contínuo, sem snap, em qualquer breakpoint.
+   ========================================================== */
+
+html:has([data-page="home3"]) {
+  scroll-snap-type: none;
+}
+
+.page {
+  padding-top: var(--header-height);
+  background: var(--color-background);
+  overflow-x: clip;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+.section {
+  padding-block: clamp(64px, 12vw, 96px);
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-block: clamp(96px, 7vw, 144px);
+  }
+}
+
+.toneCarvao {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.toneOlive {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.toneOliveLight {
+  background: var(--color-olive-light);
+  color: var(--color-foreground);
+}
+
+.toneCard {
+  background: var(--color-card);
+  color: var(--color-foreground);
+}
+
+/* ---------------- Tipografia ---------------- */
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.68;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 18px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(21, 21, 15, 0.18);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kicker {
+  margin: 0 0 18px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  opacity: 0.62;
+}
+
+.headlineXl {
+  margin: 0 0 20px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(32px, 3vw + 14px, 58px);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.headlineLg {
+  margin: 0 0 16px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(26px, 2.2vw + 14px, 40px);
+  line-height: 1.08;
+}
+
+.headlineMd {
+  margin: 0 0 12px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(20px, 1.2vw + 14px, 26px);
+  line-height: 1.15;
+}
+
+.gold {
+  color: var(--color-accent-gold);
+}
+
+.body {
+  margin: 0 0 24px;
+  max-width: 56ch;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: clamp(15px, 0.3vw + 14px, 16px);
+  line-height: 1.6;
+  opacity: 0.82;
+}
+
+/* ---------------- CTAs ---------------- */
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding-inline: 24px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btnPrimary {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+.btnPrimary:hover {
+  background: #3e5a1c;
+}
+
+.btnPrimary svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btnOnDark {
+  background: rgba(247, 246, 241, 0.1);
+  border-color: rgba(247, 246, 241, 0.4);
+  color: var(--color-background);
+}
+
+.btnOnDark:hover {
+  background: rgba(247, 246, 241, 0.18);
+}
+
+.btnOutline {
+  background: transparent;
+  border-color: rgba(21, 21, 15, 0.28);
+  color: var(--color-foreground);
+}
+
+.btnOutline:hover {
+  background: rgba(21, 21, 15, 0.06);
+}
+
+.btnOnOlive {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.btnOnOlive:hover {
+  background: #2a2a1f;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+/* ---------------- Hero modular ---------------- */
+
+.heroSection {
+  padding-block: 48px;
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    min-height: clamp(650px, 62vw, 760px);
+    display: flex;
+    align-items: center;
+    padding-block: 64px;
+  }
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 7fr 5fr;
+    gap: 56px;
+  }
+}
+
+.heroMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  order: -1;
+}
+
+@media (min-width: 1024px) {
+  .heroMedia {
+    order: 0;
+    aspect-ratio: 5 / 6;
+  }
+}
+
+.heroMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------------- Faixa de tração / ESG ---------------- */
+
+.tractionSection {
+  padding-block: clamp(40px, 6vw, 64px);
+}
+
+.tractionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px 24px;
+}
+
+@media (min-width: 900px) {
+  .tractionGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.tractionItem {
+  text-align: left;
+}
+
+.tractionValue {
+  display: block;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(28px, 1.6vw + 18px, 38px);
+  line-height: 1;
+}
+
+.tractionLabel {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ---------------- Ecossistema (cards) ---------------- */
+
+.sectionHead {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-card);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.cardMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.cardMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cardBody {
+  padding: 28px 26px 30px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cardKicker {
+  margin: 0 0 12px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  opacity: 0.6;
+}
+
+.cardTitle {
+  margin: 0 0 20px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(20px, 1vw + 14px, 24px);
+  line-height: 1.14;
+}
+
+.cardCta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.cardCta:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- Ciclo operacional ---------------- */
+
+.processHead {
+  max-width: 640px;
+}
+
+.processRow {
+  list-style: none;
+  margin: 48px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .processRow {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+}
+
+.processStep {
+  padding: 20px 18px;
+  border: 1px solid rgba(247, 246, 241, 0.18);
+  border-radius: 10px;
+}
+
+.processIndex {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 18px;
+  color: var(--color-olive-light);
+}
+
+.processLabel {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* ---------------- Spotlight editorial (equipamentos) ---------------- */
+
+.spotlightGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .spotlightGrid {
+    grid-template-columns: 5fr 7fr;
+  }
+
+  .spotlightGrid.reverse {
+    grid-template-columns: 7fr 5fr;
+  }
+
+  .spotlightGrid.reverse .spotlightMedia {
+    order: 2;
+  }
+}
+
+.spotlightMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.spotlightMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.25) contrast(1.08);
+}
+
+/* ---------------- Presença regional ---------------- */
+
+.localityList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+}
+
+.localityList li {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(20px, 1.6vw + 12px, 30px);
+  opacity: 0.85;
+}
+
+.localityList li:not(:last-child)::after {
+  content: "·";
+  margin-left: 18px;
+  opacity: 0.4;
+}
+
+/* ---------------- Fechamento / conversão ---------------- */
+
+.closingInner {
+  max-width: 760px;
+}
+
+.closingInner .headlineXl {
+  font-size: clamp(28px, 2.6vw + 14px, 46px);
+}

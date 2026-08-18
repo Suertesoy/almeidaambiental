@@ -11,6 +11,13 @@ const MENU_ITEMS = [
   { label: "Contato", href: "/contato" },
 ];
 
+/** Homologação com a cliente: comparação das três propostas de Home. */
+const HOME_VERSIONS = [
+  { label: "Home 1", href: "/" },
+  { label: "Home 2", href: "/home2" },
+  { label: "Home 3", href: "/home3" },
+];
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -100,6 +107,22 @@ export default function Header() {
             </li>
           ))}
         </ul>
+
+        {/* Grupo temporário para homologação com a cliente — comparação das
+            três propostas de Home. Discreto, dentro do menu, sem entrar na
+            navbar visível. Remover quando a decisão for fechada. */}
+        <div className="menu-versions">
+          <p className="menu-versions-heading">Versões da Home</p>
+          <ul className="menu-versions-list">
+            {HOME_VERSIONS.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="menu-versions-link" onClick={() => setMenuOpen(false)}>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
     </>
   );
