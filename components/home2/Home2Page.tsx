@@ -9,7 +9,10 @@ import Reveal from "../shared/Reveal";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 
-const POSTER = "/images/home-video-poster.webp";
+const IMG_GRUPO = "/images/home-variants/group/grupo-aerial-cinematic.webp";
+const IMG_AMBIENTAL = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
+const IMG_EQUIPAMENTOS = "/images/home-variants/equipamentos/equipamentos-compactador.webp";
+const IMG_SATURNO = "/images/home-variants/saturno/saturno-galpao.webp";
 
 export default function Home2Page() {
   const impactRef = useRef<HTMLDivElement>(null);
@@ -44,7 +47,12 @@ export default function Home2Page() {
               </Reveal>
             </div>
             <Reveal className={`${styles.media} ${styles.mediaGradientCarvao}`}>
-              <SectionMedia imageSrc={POSTER} alt="Vista aérea da unidade operacional do Grupo Almeida" objectPosition="center 60%" />
+              <SectionMedia
+                imageSrc={IMG_GRUPO}
+                alt="Vista aérea da unidade operacional do Grupo Almeida"
+                objectPosition="center 42%"
+                priority
+              />
             </Reveal>
           </div>
         </div>
@@ -74,7 +82,7 @@ export default function Home2Page() {
             </Reveal>
             <Reveal>
               <div className={styles.media}>
-                <SectionMedia imageSrc={POSTER} alt="Operação da Almeida Ambiental" objectPosition="center 45%" />
+                <SectionMedia imageSrc={IMG_AMBIENTAL} alt="Operação da Almeida Ambiental" objectPosition="center 40%" />
               </div>
               <div className={styles.calloutCard}>
                 <p className={styles.headlineSm}>
@@ -96,7 +104,7 @@ export default function Home2Page() {
         <div className={styles.sectionInner}>
           <div className={`${styles.splitGrid} ${styles.mediaLeft}`}>
             <Reveal className={`${styles.media} ${styles.mediaDuotone}`}>
-              <SectionMedia imageSrc={POSTER} alt="Frota e equipamentos da Almeida Equipamentos" objectPosition="left center" />
+              <SectionMedia imageSrc={IMG_EQUIPAMENTOS} alt="Compactador industrial da Almeida Equipamentos" objectPosition="center 55%" />
             </Reveal>
             <Reveal className={styles.content}>
               <p className={styles.eyebrow}>Almeida Equipamentos</p>
@@ -154,7 +162,7 @@ export default function Home2Page() {
               </div>
             </Reveal>
             <Reveal className={`${styles.media} ${styles.mediaWarm}`}>
-              <SectionMedia imageSrc={POSTER} alt="Operação regional da Saturno Ambiental em Blumenau" objectPosition="right center" />
+              <SectionMedia imageSrc={IMG_SATURNO} alt="Operação regional da Saturno Ambiental em Blumenau" objectPosition="center 55%" />
             </Reveal>
           </div>
         </div>

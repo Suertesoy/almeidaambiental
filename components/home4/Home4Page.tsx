@@ -9,7 +9,11 @@ import Reveal from "../shared/Reveal";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 
-const POSTER = "/images/home-video-poster.webp";
+const IMG_GRUPO_HERO = "/images/home-variants/editorial/grupo-editorial-detail.webp";
+const IMG_AMBIENTAL = "/images/home-variants/ambiental/ambiental-logistica-editorial.webp";
+const IMG_EQUIPAMENTOS = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
+const IMG_SATURNO = "/images/home-variants/saturno/saturno-documental.webp";
+const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
 const CHAPTERS = [
   { number: "01", label: "Almeida Ambiental", href: "#home4-almeida-ambiental" },
@@ -53,7 +57,7 @@ export default function Home4Page() {
             </Reveal>
 
             <Reveal className={styles.heroMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Operação do Grupo Almeida" objectPosition="center 40%" />
+              <SectionMedia imageSrc={IMG_GRUPO_HERO} alt="Operação do Grupo Almeida" objectPosition="center 30%" priority />
             </Reveal>
 
             <Reveal className={styles.heroCopy}>
@@ -122,7 +126,7 @@ export default function Home4Page() {
 
           <Reveal className={styles.chapterRow}>
             <div className={styles.chapterMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Operação da Almeida Ambiental" objectPosition="center 55%" />
+              <SectionMedia imageSrc={IMG_AMBIENTAL} alt="Operação da Almeida Ambiental" objectPosition="center" />
             </div>
             <div className={styles.chapterText}>
               <h3 className={styles.chapterHeadlineLg}>
@@ -188,9 +192,9 @@ export default function Home4Page() {
           <Reveal className={`${styles.chapterRow} ${styles.reverse}`}>
             <div className={`${styles.chapterMedia} ${styles.mediaDuotone}`}>
               <SectionMedia
-                imageSrc={POSTER}
+                imageSrc={IMG_EQUIPAMENTOS}
                 alt="Detalhe operacional da Almeida Equipamentos"
-                objectPosition="left 40%"
+                objectPosition="center 55%"
               />
             </div>
             <div className={styles.chapterText}>
@@ -243,7 +247,7 @@ export default function Home4Page() {
               </div>
             </div>
             <div className={styles.saturnoMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Presença regional da Saturno Ambiental" objectPosition="center 50%" />
+              <SectionMedia imageSrc={IMG_SATURNO} alt="Presença regional da Saturno Ambiental" objectPosition="center 60%" />
             </div>
           </Reveal>
         </div>
@@ -313,7 +317,7 @@ export default function Home4Page() {
               </div>
             </div>
             <div className={styles.manifestoMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Grupo Almeida" objectPosition="center 45%" />
+              <SectionMedia imageSrc={IMG_MANIFESTO} alt="Grupo Almeida" objectPosition="center 45%" />
             </div>
           </Reveal>
         </div>

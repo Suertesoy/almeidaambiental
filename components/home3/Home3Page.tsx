@@ -9,7 +9,12 @@ import Reveal from "../shared/Reveal";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 
-const POSTER = "/images/home-video-poster.webp";
+const IMG_GRUPO_HERO = "/images/home-variants/group/grupo-aerial-clean.webp";
+const IMG_AMBIENTAL_CARD = "/images/home-variants/ambiental/ambiental-logistica-clean.webp";
+const IMG_EQUIPAMENTOS_CARD = "/images/home-variants/equipamentos/equipamentos-triturador.webp";
+const IMG_SATURNO_CARD = "/images/home-variants/saturno/saturno-fardos.webp";
+const IMG_EQUIPAMENTOS_SPOTLIGHT = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
+const IMG_SATURNO_SPOTLIGHT = "/images/home-variants/saturno/saturno-operacao.webp";
 
 const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização"];
 
@@ -45,7 +50,12 @@ export default function Home3Page() {
               </div>
             </Reveal>
             <Reveal className={styles.heroMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Vista aérea da unidade operacional do Grupo Almeida" objectPosition="center 55%" />
+              <SectionMedia
+                imageSrc={IMG_GRUPO_HERO}
+                alt="Vista aérea da unidade operacional do Grupo Almeida"
+                objectPosition="center 45%"
+                priority
+              />
             </Reveal>
           </div>
         </div>
@@ -86,7 +96,7 @@ export default function Home3Page() {
           <div className={styles.cardsGrid}>
             <Reveal className={styles.card}>
               <div className={styles.cardMedia}>
-                <SectionMedia imageSrc={POSTER} alt="Almeida Ambiental" objectPosition="center 45%" />
+                <SectionMedia imageSrc={IMG_AMBIENTAL_CARD} alt="Almeida Ambiental" objectPosition="center" />
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.cardKicker}>Diagnóstico · Coleta · Triagem · Trituração · Descaracterização</p>
@@ -103,7 +113,7 @@ export default function Home3Page() {
 
             <Reveal className={styles.card}>
               <div className={styles.cardMedia}>
-                <SectionMedia imageSrc={POSTER} alt="Almeida Equipamentos" objectPosition="left center" />
+                <SectionMedia imageSrc={IMG_EQUIPAMENTOS_CARD} alt="Almeida Equipamentos" objectPosition="center 55%" />
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.cardKicker}>Compactadores · Prensas · Trituradores · Containers</p>
@@ -120,7 +130,7 @@ export default function Home3Page() {
 
             <Reveal className={styles.card}>
               <div className={styles.cardMedia}>
-                <SectionMedia imageSrc={POSTER} alt="Saturno Ambiental" objectPosition="right center" />
+                <SectionMedia imageSrc={IMG_SATURNO_CARD} alt="Saturno Ambiental" objectPosition="center" />
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.cardKicker}>Gestão de Resíduos · Cartonagem · Consultoria</p>
@@ -170,7 +180,7 @@ export default function Home3Page() {
         <div className={styles.container}>
           <Reveal className={styles.spotlightGrid}>
             <div className={styles.spotlightMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Detalhe operacional da Almeida Equipamentos" objectPosition="left 40%" />
+              <SectionMedia imageSrc={IMG_EQUIPAMENTOS_SPOTLIGHT} alt="Detalhe operacional da Almeida Equipamentos" objectPosition="center" />
             </div>
             <div>
               <p className={styles.eyebrow}>Almeida Equipamentos</p>
@@ -218,7 +228,7 @@ export default function Home3Page() {
               </div>
             </div>
             <div className={styles.spotlightMedia}>
-              <SectionMedia imageSrc={POSTER} alt="Presença regional da Saturno Ambiental" objectPosition="center 50%" />
+              <SectionMedia imageSrc={IMG_SATURNO_SPOTLIGHT} alt="Presença regional da Saturno Ambiental" objectPosition="center 55%" />
             </div>
           </Reveal>
         </div>
