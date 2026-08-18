@@ -42,10 +42,14 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
     - O Header passou a usar verde floresta profundo, sólido, em qualquer rota (não é mais exclusivo da Home principal).
     - Homes 2, 3 e 4 deixam de ser opções públicas de navegação (removido o bloco "Versões da Home" do menu) e permanecem só como referência de homologação enquanto forem úteis; as rotas continuam existindo.
 
+## Arquitetura de informação — página Nossa História
+
+15. **Rota `/historia` (2026-08-18).** A página institucional "Nossa História" — experiência de storytelling cronológico de 1985 a 2026, com linha do tempo contínua — vive em `/historia`, não em `/grupo-almeida` como um registro anterior deste arquivo previa. Pedido explícito do responsável do projeto substitui a rota planejada antes (Regra 2 do AGENT_RULES_SITE.md). O CTA "Conheça nossa história" da Home (`components/home/Hero.tsx`) navega para `/historia` via `next/link` — deixou de ser âncora para `#almeida-ambiental`.
+
 ## Decisões pendentes
 
 - Confirmar número/link oficial do WhatsApp do Grupo Almeida.
 - Confirmar arquivo vetorial oficial da logo do Grupo Almeida — o arquivo atual (`public/brand/logo-grupo-almeida.png`) tem fundo opaco (não transparente), então sobre o header escuro ele é exibido dentro de uma pequena "plaqueta" clara do tamanho da logo. Substituir por uma versão com fundo transparente (idealmente uma variante clara/reversa) resolve isso definitivamente.
 - Confirmar valor oficial do dourado de destaque usado na Home (o valor atual, `#C9A227`, é uma referência inicial da nova direção cromática, assim como o dourado anterior usado por /home2 e /home3).
-- Construir a página `/grupo-almeida` (Nossa História) — até lá, o CTA "Conheça nossa história" do Hero aponta para o início da narrativa dentro da própria Home, não para uma rota inexistente.
+- As fotografias de `/historia` (`public/historia/*.webp`) são reconstituições ilustrativas geradas via IA (Magnific/MCP), marcadas como tal na interface ("Imagem ilustrativa") e centralizadas em `lib/historia-data.ts` (`sourceType: "illustrative"`). Substituir por fotografia real do acervo do Grupo Almeida assim que disponível — perguntar à equipe quais desses momentos têm registro fotográfico real.
 - Reconfirmar em dispositivo físico real, antes do go-live, o comportamento de autoplay do vídeo do Hero em iOS Safari.

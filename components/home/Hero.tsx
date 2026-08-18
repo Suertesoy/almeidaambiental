@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import styles from "./home.module.css";
 import { HERO_POSTER_DATA_URI } from "../../lib/hero-poster";
 import { ChevronDownIcon } from "../icons";
@@ -104,13 +105,12 @@ export default function Hero() {
         <h1 className={styles.heroHeadline}>
           TRANSFORMANDO RESÍDUO EM <span className={styles.gold}>RESULTADO</span>
         </h1>
-        {/* /grupo-almeida ainda não existe (fora do escopo desta tarefa — ver
-            Seção 16). Para não deixar o CTA morto nem inventar outra rota,
-            ele leva por enquanto ao início da narrativa institucional dentro
-            da própria Home. */}
-        <a className={styles.heroCta} href="#almeida-ambiental">
+        {/* /historia é a experiência editorial de storytelling cronológico
+            (1985–2026) — navegação client-side via next/link, não mais uma
+            âncora dentro da própria Home. */}
+        <Link className={styles.heroCta} href="/historia">
           Conheça nossa história
-        </a>
+        </Link>
       </div>
 
       <a className={styles.heroScrollHint} href="#almeida-ambiental">
