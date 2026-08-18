@@ -33,12 +33,19 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
 
 ## Sobre a experiência visual da Home
 
-13. **Vídeo/scrollytelling não é arquitetura protegida.** O vídeo controlado por scroll é parte da experiência atual da Home, mas sua implementação técnica (componentes, CSS, estratégia responsiva, mecanismos de layout) pode ser refatorada quando necessário para atingir a direção de design vigente.
-14. **393×852 não é restrição permanente.** Foi uma referência de design mobile usada em uma fase do projeto, não uma regra de arquitetura a preservar.
+13. **393×852 não é restrição permanente.** Foi uma referência de design mobile usada em uma fase do projeto, não uma regra de arquitetura a preservar.
+14. **Reconstrução da Home após validação da cliente (2026-08-18).** A cliente escolheu a Home 1 como base narrativa, mas validou o contraste, o tratamento tipográfico e a sobriedade observados nas Homes 2 e 3. Isso substitui a direção visual anterior da Home principal:
+    - O scrollytelling com vídeo sincronizado ao scroll (`ScrollVideoExperience`, `SCROLL_STOPS`, snap obrigatório, interceptação de wheel) deixou de existir na Home principal. O vídeo institucional agora vive só na primeira dobra (Hero), sem overlay verde e sem seeks programáticos; depois do Hero o scroll é contínuo e natural do navegador.
+    - As seções seguintes usam fotografia real compondo o layout (nunca como `background-image`), com narrativa progressiva de duas seções por empresa (Almeida Ambiental, Almeida Equipamentos, Saturno Ambiental), impacto 2025 integrado ao CTA do relatório e manifesto final.
+    - Tipografia permanece Playfair Display (display) + Inter (corpo); o ajuste pedido foi de hierarquia/peso, não de família — corpo de texto voltou a Inter regular (400), Playfair reservado a headlines/números/manifesto.
+    - Nova direção cromática: verde floresta profundo e carvão como superfícies escuras, oliva Almeida como cor de identidade/apoio, pedra quente como superfície clara substituindo o off-white dominante, e dourado envelhecido como accent editorial pontual — ainda **provisório**, sem valor oficial confirmado (ver pendências).
+    - O Header passou a usar verde floresta profundo, sólido, em qualquer rota (não é mais exclusivo da Home principal).
+    - Homes 2, 3 e 4 deixam de ser opções públicas de navegação (removido o bloco "Versões da Home" do menu) e permanecem só como referência de homologação enquanto forem úteis; as rotas continuam existindo.
 
 ## Decisões pendentes
 
-- Confirmar número/link oficial do WhatsApp do Grupo Almeida para o CTA principal da Home.
-- Confirmar arquivo vetorial oficial da logo do Grupo Almeida.
-- Confirmar valor oficial do dourado/amarelo de destaque usado na Home.
-- Reconfirmar em dispositivo físico real, antes do go-live, a ausência de engasgo de seek do vídeo institucional.
+- Confirmar número/link oficial do WhatsApp do Grupo Almeida.
+- Confirmar arquivo vetorial oficial da logo do Grupo Almeida — o arquivo atual (`public/brand/logo-grupo-almeida.png`) tem fundo opaco (não transparente), então sobre o header escuro ele é exibido dentro de uma pequena "plaqueta" clara do tamanho da logo. Substituir por uma versão com fundo transparente (idealmente uma variante clara/reversa) resolve isso definitivamente.
+- Confirmar valor oficial do dourado de destaque usado na Home (o valor atual, `#C9A227`, é uma referência inicial da nova direção cromática, assim como o dourado anterior usado por /home2 e /home3).
+- Construir a página `/grupo-almeida` (Nossa História) — até lá, o CTA "Conheça nossa história" do Hero aponta para o início da narrativa dentro da própria Home, não para uma rota inexistente.
+- Reconfirmar em dispositivo físico real, antes do go-live, o comportamento de autoplay do vídeo do Hero em iOS Safari.

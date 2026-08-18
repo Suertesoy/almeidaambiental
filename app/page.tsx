@@ -1,12 +1,12 @@
 import Header from "../components/Header";
-import ScrollVideoExperience from "../components/ScrollVideoExperience";
+import HomePage from "../components/home/HomePage";
 import Footer from "../components/Footer";
 
 export default function Home() {
   return (
     <main>
       <Header />
-      <ScrollVideoExperience />
+      <HomePage />
       <Footer />
     </main>
   );

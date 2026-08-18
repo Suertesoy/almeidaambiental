@@ -11,14 +11,6 @@ const MENU_ITEMS = [
   { label: "Contato", href: "/contato" },
 ];
 
-/** Homologação com a cliente: comparação das propostas de Home. */
-const HOME_VERSIONS = [
-  { label: "Home 1", href: "/" },
-  { label: "Home 2", href: "/home2" },
-  { label: "Home 3", href: "/home3" },
-  { label: "Home 4", href: "/home4" },
-];
-
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -30,7 +22,9 @@ export default function Header() {
             e versionados em public/brand/. */}
         <div className="desktop-only header-inner">
           <Link href="/" className="logo-link" aria-label="Grupo Almeida — página inicial">
-            <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="logo-image" />
+            <span className="logo-plate">
+              <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="logo-image" />
+            </span>
           </Link>
 
           <div className="header-right">
@@ -63,7 +57,9 @@ export default function Header() {
             bloco acima. */}
         <div className="mobile-fidelity mf-header-inner">
           <Link href="/" className="mf-logo" aria-label="Grupo Almeida — página inicial">
-            <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="mf-logo-image" />
+            <span className="mf-logo-plate">
+              <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="mf-logo-image" />
+            </span>
           </Link>
 
           <div className="mf-header-right">
@@ -108,22 +104,6 @@ export default function Header() {
             </li>
           ))}
         </ul>
-
-        {/* Grupo temporário para homologação com a cliente — comparação das
-            três propostas de Home. Discreto, dentro do menu, sem entrar na
-            navbar visível. Remover quando a decisão for fechada. */}
-        <div className="menu-versions">
-          <p className="menu-versions-heading">Versões da Home</p>
-          <ul className="menu-versions-list">
-            {HOME_VERSIONS.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="menu-versions-link" onClick={() => setMenuOpen(false)}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
       </nav>
     </>
   );
