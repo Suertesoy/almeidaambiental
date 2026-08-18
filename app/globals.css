@@ -1082,6 +1082,21 @@ button {
   color: var(--m393-offwhite);
 }
 
+/* Cluster inferior da Hero (regras 34–37 da tarefa): headline + CTAs
+   passam a compartilhar a MESMA largura (`width:100%; max-width:380px`,
+   idêntico a `.mf-d-actions`/`.mf-btn`) em vez de dois números copiados em
+   lugares diferentes — headline usa `MfTitle fullWidth`, que herda esse
+   teto do wrapper. 24px fixos entre o fim da headline e o primeiro CTA
+   vêm de `MfActions marginTop="24px"` (não deste wrapper, que não define
+   gap). Só a Hero usa isto. */
+.mf-hero-lower {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .mf-d-label {
   margin: 0;
   width: 100%;

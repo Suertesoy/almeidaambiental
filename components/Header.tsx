@@ -11,11 +11,12 @@ const MENU_ITEMS = [
   { label: "Contato", href: "/contato" },
 ];
 
-/** Homologação com a cliente: comparação das três propostas de Home. */
+/** Homologação com a cliente: comparação das propostas de Home. */
 const HOME_VERSIONS = [
   { label: "Home 1", href: "/" },
   { label: "Home 2", href: "/home2" },
   { label: "Home 3", href: "/home3" },
+  { label: "Home 4", href: "/home4" },
 ];
 
 export default function Header() {

@@ -17,11 +17,14 @@ import { DActionsRow, DButton, DFrame, DHint, DTitle } from "./DesktopDobra";
  *   referência anexada, de cima para baixo:
  *     header → 96px fixos (regra 3) → "Grupo Almeida" → 16px fixos
  *     (regra 4) → "40 anos" → espaço flexível (`MfCenter`, respiro
- *     editorial) → headline ALINHADA À ESQUERDA (regra 5, única exceção
- *     de alinhamento da Home) → bloco inferior (`MfBottom`) com os dois
- *     CTAs a 8px fixos um do outro (regra 6, gap explícito, não o clamp
- *     responsivo padrão) → 32px fixos (regra 27, `.mf-scrollhint`) até
- *     "Role para baixo" + chevron.
+ *     editorial, sem conteúdo) → bloco inferior (`MfBottom`/`.mf-hero-lower`)
+ *     com a headline ALINHADA À ESQUERDA (regra 5, única exceção de
+ *     alinhamento da Home), agora no MESMO cluster dos CTAs — 24px fixos
+ *     até o primeiro botão (regra 37 da tarefa, `MfActions marginTop`) —
+ *     e os dois CTAs a 8px fixos um do outro (regra 6, gap explícito, não
+ *     o clamp responsivo padrão) → 32px fixos (regra 27, `.mf-scrollhint`)
+ *     até "Role para baixo" + chevron. Headline e CTAs compartilham a
+ *     mesma largura via `.mf-hero-lower` (regra 36).
  */
 
 export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
@@ -76,37 +79,40 @@ export default function HeroContent({ onAdvance }: { onAdvance: () => void }) {
             </p>
           </div>
 
-          {/* Espaço flexível (regra 9: respiro editorial, não compactado)
-              antes da headline — única headline da Home alinhada à
-              esquerda (regra 5). Sem node de headline dedicado no Figma
-              nesta rodada (a arte de fundo já compõe "TRANSFORMANDO
-              RESÍDUO EM RESULTADO"); valores mantidos da calibração
-              anterior por falta de referência tipográfica nova. */}
-          <MfCenter align="left">
-            <MfTitle
-              align="left"
-              refWidth={335}
-              tokens={lockup(35, 30, -1)}
-              lines={[
-                [{ text: "TRANSFORMANDO" }],
-                [{ text: "RESÍDUO" }],
-                [{ text: "EM " }, { text: "RESULTADO", gold: true }],
-              ]}
-            />
-          </MfCenter>
+          {/* Espaço flexível (regra 9: respiro editorial, não compactado) —
+              agora vazio: a headline deixou de viver aqui sozinha e passou
+              a pertencer ao cluster inferior, junto dos CTAs (regra 34). */}
+          <MfCenter align="left" />
 
           <MfBottom align="left">
-            {/* 8px fixos entre os dois CTAs (regra 6) — gap explícito, não
-                o clamp responsivo padrão de `.mf-d-actions`. */}
-            <MfActions gap="8px">
-              <MfButton variant="primary">
-                <WhatsAppIcon />
-                Falar com o Grupo Almeida
-              </MfButton>
-              <MfButton variant="secondary" href="#section-02">
-                Conheça nossa história
-              </MfButton>
-            </MfActions>
+            {/* Cluster inferior único (regra 35): headline + CTAs
+                compartilham a mesma largura (`.mf-hero-lower`, regra 36 —
+                mesmo wrapper/max-width de `.mf-d-actions`/`.mf-btn`, em vez
+                de dois números copiados). */}
+            <div className="mf-hero-lower">
+              <MfTitle
+                align="left"
+                fullWidth
+                tokens={lockup(35, 30, -1)}
+                lines={[
+                  [{ text: "TRANSFORMANDO" }],
+                  [{ text: "RESÍDUO" }],
+                  [{ text: "EM " }, { text: "RESULTADO", gold: true }],
+                ]}
+              />
+              {/* 24px fixos da headline até o primeiro CTA (regra 37) e 8px
+                  fixos entre os dois CTAs (regra 6) — gaps explícitos, não
+                  o clamp responsivo padrão de `.mf-d-actions`. */}
+              <MfActions marginTop="24px" gap="8px">
+                <MfButton variant="primary">
+                  <WhatsAppIcon />
+                  Falar com o Grupo Almeida
+                </MfButton>
+                <MfButton variant="secondary" href="#section-02">
+                  Conheça nossa história
+                </MfButton>
+              </MfActions>
+            </div>
           </MfBottom>
         </MfFrame>
 

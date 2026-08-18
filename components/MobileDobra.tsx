@@ -90,7 +90,10 @@ export function MfCenter({
   children,
 }: {
   align?: "center" | "left";
-  children: ReactNode;
+  /** Pode ficar vazio: só espaço flexível entre o bloco de cima e o de
+   *  baixo (ex.: Hero, regra 40 da tarefa — headline passou a viver em
+   *  `MfBottom`, junto dos CTAs). */
+  children?: ReactNode;
 }) {
   return (
     <div className="mf-center" data-align={align}>
@@ -162,6 +165,7 @@ export function MfTitle({
   marginTop,
   refWidth,
   widthGrowth,
+  fullWidth = false,
   tokens,
   lines,
   plain = false,
@@ -171,9 +175,15 @@ export function MfTitle({
    *  "Grupo Almeida"/"40 anos" (regra 10 da tarefa) — nas demais dobras a
    *  headline é o único filho de `MfCenter`, sem necessidade de margem. */
   marginTop?: string;
-  refWidth: number;
+  /** Ignorado quando `fullWidth` é true. */
+  refWidth?: number;
   /** Multiplicador do teto de largura em tablet (padrão 1.6×). */
   widthGrowth?: number;
+  /** Regra 36 da tarefa (Home 1, Hero): força width 100% do container pai
+   *  em vez do `contentWidth()` fluido ancorado em 393px — usado quando a
+   *  caixa de texto precisa bater exatamente com a largura de outro
+   *  elemento (aqui, os CTAs), não com sua própria referência de Figma. */
+  fullWidth?: boolean;
   tokens: LockupTokens;
   lines: TitleLine[];
   plain?: boolean;
@@ -182,7 +192,9 @@ export function MfTitle({
 }) {
   const style: CSSProperties = {
     marginTop,
-    width: contentWidth(refWidth, widthGrowth ? { ceilScale: widthGrowth } : undefined),
+    width: fullWidth
+      ? "100%"
+      : contentWidth(refWidth ?? 0, widthGrowth ? { ceilScale: widthGrowth } : undefined),
     fontSize: tokens.fontSize,
     lineHeight: tokens.lineHeight,
     letterSpacing: tokens.letterSpacing,
