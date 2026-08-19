@@ -32,17 +32,40 @@
   --header-height: 64px;
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* ---- Spacing editorial (Checkpoint B, refinamento global 2026-08) ----
+     Poucos padrões reais em vez de valores arbitrários por seção:
+     compact = subseções internas (materiais, fluxo, listas de apoio),
+     default = ritmo padrão das seções de página (já era o valor de .section),
+     editorial = seções com mais peso narrativo (hero adjacente, manifesto,
+     capítulos completos com imagem). Consumidos por company-page.module.css
+     e pelas páginas de empresa/contato — não pela Home (spacing próprio) nem
+     por /historia (fora de escopo desta rodada). */
+  --space-section-compact: clamp(40px, 7vw, 72px);
+  --space-section-default: clamp(64px, 11vw, 112px);
+  --space-section-editorial: clamp(80px, 12vw, 140px);
+
+  /* Offset único para scroll-margin-top de qualquer alvo de âncora do site —
+     header fixo + pequeno respiro editorial. Onde existir uma segunda barra
+     sticky (ex.: nav de produtos da Equipamentos), soma-se a altura dela por
+     cima deste valor no próprio módulo. */
+  --anchor-offset: calc(var(--header-height) + 16px);
 }
 
 @media (min-width: 1024px) {
   :root {
     --header-height: 80px;
+    --space-section-default: clamp(96px, 8vw, 140px);
+    --space-section-editorial: clamp(120px, 9vw, 160px);
   }
 }
 
 @media (max-width: 1023px) {
   :root {
-    --header-height: 65px;
+    /* Reduzido de 65px — header mobile estava visualmente alto (logo de
+       44px dentro de uma plaqueta de 65px de altura total). Ver
+       .mf-logo-image/.mf-logo-plate abaixo. */
+    --header-height: 56px;
   }
 }
 
@@ -168,7 +191,7 @@ html {
 }
 
 .mf-logo-plate {
-  padding: 6px 10px;
+  padding: 5px 9px;
 }
 
 .logo-image {
@@ -189,6 +212,7 @@ html {
 }
 
 .lang-btn {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -200,6 +224,14 @@ html {
   font-size: 13px;
   color: var(--color-background);
   cursor: pointer;
+}
+
+/* Área de toque confortável (~44px) sem inchar o visual do seletor:
+   pseudo-elemento invisível expande o alvo clicável além da caixa do botão. */
+.lang-btn::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
 }
 
 .lang-flag {
@@ -247,7 +279,9 @@ html {
 }
 
 .mf-logo-image {
-  height: 44px;
+  /* Reduzido de 44px — dentro de um header de 56px, uma logo de 44px + o
+     padding da plaqueta praticamente preenchia a barra inteira. */
+  height: 26px;
   width: auto;
   display: block;
 }
@@ -255,13 +289,16 @@ html {
 .mf-header-right {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 16vw, 65px);
+  /* Era clamp(16px, 16vw, 65px) — o termo 16vw destoava dos outros clamps
+     do arquivo e forçava um vão quase sempre no máximo (65px) entre o
+     seletor de idioma e o hambúrguer em qualquer celular. */
+  gap: clamp(12px, 4vw, 20px);
 }
 
 .mf-lang-toggle {
   display: flex;
   align-items: center;
-  height: 36px;
+  height: 32px;
   padding: 3px;
   background: rgba(247, 246, 241, 0.08);
   border: 1px solid rgba(247, 246, 241, 0.24);
@@ -269,21 +306,30 @@ html {
 }
 
 .mf-lang-btn {
-  width: 30px;
-  height: 30px;
+  position: relative;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
   border: none;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 3px;
   cursor: pointer;
 }
 
+/* Mesma técnica do .lang-btn desktop: alvo clicável ~44px sem aumentar o
+   pill visual do seletor PT/EN. */
+.mf-lang-btn::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+}
+
 .mf-lang-flag {
-  width: 22px;
-  height: 22px;
+  width: 19px;
+  height: 19px;
   border-radius: 999px;
   display: block;
 }
@@ -373,11 +419,11 @@ html {
   z-index: 2;
   background: var(--color-background);
   color: var(--color-foreground);
-  padding: 48px 20px 32px;
+  padding: 32px 20px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   text-align: center;
   border-top: 1px solid rgba(21, 21, 15, 0.08);
 }
@@ -404,13 +450,13 @@ html {
 .footer-companies {
   width: 100%;
   max-width: 640px;
-  margin: 4px 0;
-  padding-top: 20px;
+  margin: 2px 0;
+  padding-top: 16px;
   border-top: 1px solid rgba(21, 21, 15, 0.08);
 }
 
 .footer-companies-heading {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -426,7 +472,7 @@ html {
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px 24px;
+  gap: 12px 20px;
 }
 
 @media (min-width: 640px) {
@@ -437,7 +483,7 @@ html {
 }
 
 .footer-company {
-  padding-top: 12px;
+  padding-top: 10px;
   border-top: 1px solid rgba(21, 21, 15, 0.08);
 }
 
@@ -472,7 +518,7 @@ html {
 .footer-company-cnpj {
   margin: 2px 0 0;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-foreground);
   opacity: 0.55;
 }
