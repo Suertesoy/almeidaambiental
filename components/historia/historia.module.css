@@ -216,7 +216,6 @@
 
 .chapter {
   position: relative;
-  padding-block: clamp(56px, 9vw, 96px);
 }
 
 .chapterStone {
@@ -314,15 +313,26 @@
   }
 }
 
+/* Posicionamento absoluto, não grid-row: 1 / -1 — sem grid-template-rows
+   explícito em .spine, a grade "explícita" de linhas tem zero trilhas, e
+   a linha -1 resolve para a MESMA linha 1 (não a última linha implícita
+   criada pelos .eventRow). Na prática o .rail sempre renderizou com
+   altura zero: a régua nunca existiu visualmente, só os pontos — a causa
+   raiz de "marcadores desconectados". position:absolute com top/bottom:0
+   contorna o problema por completo, sem depender de contagem de linhas. */
 .rail {
-  grid-column: 1;
-  grid-row: 1 / -1;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40px;
 }
 
 @media (min-width: 1024px) {
   .rail {
-    grid-column: 2;
+    left: 50%;
+    width: 48px;
+    transform: translateX(-50%);
   }
 }
 
@@ -333,29 +343,98 @@
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
-  background: rgba(21, 21, 15, 0.14);
+  /* Trilha "ainda não percorrida": antes era cinza quase invisível
+     (rgba(21,21,15,0.14)) contra o fundo stone/stone-alt, o que fazia os
+     pontos parecerem soltos entre si. Agora é o próprio dourado, só
+     esmaecido — a régua já lê como uma linha contínua antes mesmo do
+     preenchimento de scroll (.railFill) passar por cima dela. */
+  background: rgba(201, 162, 39, 0.35);
 }
 
 .chapterForest .railTrack {
-  background: rgba(247, 246, 241, 0.16);
+  background: rgba(201, 162, 39, 0.45);
 }
 
 .railFill {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  width: 2px;
   height: 100%;
   transform-origin: top center;
-  transform: scaleY(var(--line-progress, 0));
+  /* width:2px + translateX(-50%) para ficar do mesmo tamanho/posição de
+     .railTrack — antes disso ficava invisível junto com o .rail (altura
+     zero), então esse descompasso (100% da largura da coluna, não 2px)
+     nunca tinha sido notado. */
+  transform: translateX(-50%) scaleY(var(--line-progress, 0));
   background: linear-gradient(to bottom, var(--color-gold-aged), var(--color-gold-aged));
   will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .railFill {
-    transform: scaleY(1);
+    transform: translateX(-50%) scaleY(1);
   }
+}
+
+/* ---------------- Conector entre seções ----------------
+   Substitui o padding-block que .chapter/.growthScale/.mapSection tinham
+   antes (mesma altura, clamp(56px, 9vw, 96px) — nenhuma mudança de ritmo
+   vertical) por um bloco que carrega a própria linha dourada, para que a
+   régua nunca "suma" na transição entre um capítulo e o próximo, ou entre
+   um capítulo e o intervalo de GrowthScale/ExpansionMap (Seção 66 da
+   tarefa: linha contínua ligando todos os pontos). Puramente decorativo
+   (aria-hidden), não introduz novo conteúdo semântico nem mexe no motion
+   de scroll existente (.railFill/useLineProgress).
+
+   No desktop, o .rail de verdade não fica no centro do .container: ele
+   mora dentro de .spine, que por sua vez ocupa só a coluna de conteúdo de
+   .chapterLayout (depois da coluna fixa de 220–300px do cabeçalho fixo +
+   gap). .spineBridgeOuter replica esse mesmo deslocamento de duas colunas
+   — vazia a primeira, com o .spineBridge (mesmo grid do .spine) na
+   segunda — para que a linha caia exatamente sob o .rail em qualquer
+   seção, mesmo nas que não têm cabeçalho fixo (GrowthScale/ExpansionMap). */
+.spineBridgeOuter {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .spineBridgeOuter {
+    display: grid;
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    column-gap: clamp(32px, 4vw, 64px);
+  }
+}
+
+.spineBridge {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  height: clamp(56px, 9vw, 96px);
+}
+
+@media (min-width: 1024px) {
+  .spineBridge {
+    grid-column: 2;
+    grid-template-columns: 1fr 48px 1fr;
+  }
+}
+
+.spineBridgeLine {
+  grid-column: 1;
+  justify-self: center;
+  width: 2px;
+  height: 100%;
+  background: rgba(201, 162, 39, 0.35);
+}
+
+@media (min-width: 1024px) {
+  .spineBridgeLine {
+    grid-column: 2;
+  }
+}
+
+.chapterForest .spineBridgeLine {
+  background: rgba(201, 162, 39, 0.45);
 }
 
 /* ---------------- Eventos ---------------- */
@@ -571,7 +650,7 @@
 /* ---------------- Subnarrativa: crescimento em m² ---------------- */
 
 .growthScale {
-  padding-block: clamp(56px, 9vw, 96px);
+  position: relative;
 }
 
 .growthHead {
@@ -635,7 +714,7 @@
 /* ---------------- Mapa de expansão ---------------- */
 
 .mapSection {
-  padding-block: clamp(56px, 9vw, 96px);
+  position: relative;
 }
 
 .mapLayout {

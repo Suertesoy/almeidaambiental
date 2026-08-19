@@ -25,6 +25,12 @@ export default function ChapterSection({ chapter }: { chapter: Chapter }) {
   return (
     <section className={`${styles.chapter} ${TONE_CLASS[meta.tone]}`} aria-labelledby={`chapter-${chapter}`}>
       <div className={styles.container}>
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
+          </div>
+        </div>
+
         <div className={styles.chapterLayout}>
           <header className={styles.chapterHead}>
             <span className={styles.chapterIndex}>{meta.index} / 04</span>
@@ -43,6 +49,12 @@ export default function ChapterSection({ chapter }: { chapter: Chapter }) {
             {events.map((event) => (
               <TimelineEventRow key={event.id} event={event} />
             ))}
+          </div>
+        </div>
+
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
           </div>
         </div>
       </div>

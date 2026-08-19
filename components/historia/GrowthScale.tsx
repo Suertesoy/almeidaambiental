@@ -36,6 +36,12 @@ export default function GrowthScale() {
   return (
     <section className={`${styles.growthScale} ${styles.chapterStone}`} aria-labelledby="growth-scale-heading">
       <div className={styles.container}>
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
+          </div>
+        </div>
+
         <div className={styles.growthHead}>
           <p className={styles.eyebrow}>Uma história em metros quadrados</p>
           <h2 id="growth-scale-heading" className={styles.chapterHeadline}>
@@ -46,6 +52,12 @@ export default function GrowthScale() {
           {GROWTH_SCALE.map((item, index) => (
             <GrowthItem key={item.year} year={item.year} sqm={item.sqm} index={index} />
           ))}
+        </div>
+
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
+          </div>
         </div>
       </div>
     </section>

@@ -19,6 +19,12 @@ export default function ExpansionMap() {
   return (
     <section className={`${styles.mapSection} ${styles.chapterForest}`} aria-labelledby="map-heading">
       <div className={styles.container}>
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
+          </div>
+        </div>
+
         <div className={styles.mapLayout}>
           <div>
             <p className={styles.eyebrow}>Presença em Santa Catarina</p>
@@ -52,6 +58,12 @@ export default function ExpansionMap() {
               </svg>
             </div>
             <p className={styles.mapCaption}>Mapa editorial estilizado, sem escala geográfica exata.</p>
+          </div>
+        </div>
+
+        <div className={styles.spineBridgeOuter}>
+          <div className={styles.spineBridge} aria-hidden="true">
+            <span className={styles.spineBridgeLine} />
           </div>
         </div>
       </div>
