@@ -2,151 +2,119 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./contato.module.css";
 import Reveal from "../shared/Reveal";
-import { MailIcon, PhoneIcon, WhatsAppIcon } from "../icons";
-import { CONTACTS } from "../../lib/contact-data";
+import { PhoneIcon, WhatsAppIcon } from "../icons";
+import { REGIONS } from "../../lib/contact-data";
 
 const SECTION_TONE = [shared.toneStone, shared.toneStoneAlt, shared.toneForest];
 const SECTION_DARK = [false, false, true];
 
+const DIRECTORY = [
+  { id: "sao-jose", index: "01", title: "São José", subtitle: "Matriz · Almeida Ambiental · Almeida Equipamentos", cta: "Ver contatos" },
+  { id: "araquari-joinville", index: "02", title: "Araquari / Joinville", subtitle: "Almeida Ambiental", cta: "Ver contato" },
+  { id: "blumenau", index: "03", title: "Blumenau", subtitle: "Saturno Ambiental", cta: "Ver contatos" },
+];
+
 /**
- * /contato — diretório institucional do Grupo Almeida (não formulário).
- * Hero curto → navegação rápida entre as três empresas → um bloco de
- * contato por empresa (Almeida Ambiental e Equipamentos no eixo de São
- * José, Saturno com mudança de ritmo para o Vale do Itajaí) → CTA
- * institucional final. Dados centralizados em lib/contact-data.ts.
+ * /contato — diretório institucional organizado por operação/região (não
+ * mais por empresa): Hero curto → diretório rápido → São José → Araquari /
+ * Joinville → Blumenau → fechamento curto. Dados oficiais centralizados em
+ * lib/contact-data.ts — sem fax, sem e-mail (nenhum dos dois faz parte dos
+ * canais fornecidos para esta reconstrução).
  */
 export default function ContatoPage() {
   return (
     <div className={styles.page} data-page="contato">
       {/* ---------------- Hero ---------------- */}
-      <section className={`${shared.section} ${shared.toneForest}`}>
+      <section className={`${shared.sectionCompact} ${shared.toneForest}`}>
         <div className={shared.container}>
           <Reveal>
             <p className={shared.eyebrow}>Contato</p>
-            <h1 className={styles.heroTitle}>Vamos encontrar o canal certo para você.</h1>
+            <h1 className={styles.heroTitle}>Encontre o canal certo para sua operação.</h1>
             <p className={`${shared.body} ${styles.heroLede}`}>
-              O Grupo Almeida reúne diferentes frentes de atuação. Escolha a empresa relacionada à sua necessidade e
-              fale diretamente com a equipe responsável.
+              Atendimento direto para São José, Araquari / Joinville e Blumenau.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ---------------- Navegação rápida ---------------- */}
-      <nav className={styles.quickNav} aria-label="Ir para a empresa">
-        <ul className={styles.quickNavList}>
-          {CONTACTS.map((company) => (
-            <li key={company.id}>
-              <a href={`#${company.id}`} className={styles.quickNavLink}>
-                {company.name}
+      {/* ---------------- Diretório rápido ---------------- */}
+      <nav className={styles.directory} aria-label="Diretório rápido">
+        <ol className={styles.directoryList}>
+          {DIRECTORY.map((item) => (
+            <li key={item.id}>
+              <a className={styles.directoryRow} href={`#${item.id}`}>
+                <span className={styles.directoryIndex}>{item.index}</span>
+                <span className={styles.directoryText}>
+                  <span className={styles.directoryTitle}>{item.title}</span>
+                  <span className={styles.directorySubtitle}>{item.subtitle}</span>
+                </span>
+                <span className={styles.directoryCta}>
+                  {item.cta}
+                  <span aria-hidden="true"> →</span>
+                </span>
               </a>
             </li>
           ))}
-        </ul>
+        </ol>
       </nav>
 
-      {/* ---------------- Blocos por empresa ---------------- */}
-      {CONTACTS.map((company, index) => (
+      {/* ---------------- Blocos regionais ---------------- */}
+      {REGIONS.map((region, index) => (
         <section
-          key={company.id}
-          id={company.id}
-          className={`${shared.section} ${SECTION_TONE[index]} ${styles.companySection}`}
+          key={region.id}
+          id={region.id}
+          className={`${shared.section} ${SECTION_TONE[index]} ${styles.regionSection}`}
         >
           <div className={shared.container}>
             <Reveal>
-              <div className={styles.companyGrid}>
+              <div className={styles.regionGrid}>
                 <div>
-                  <p className={shared.eyebrow}>{company.eyebrow}</p>
-                  <h2 className={shared.headline}>{company.name}</h2>
-                  <p className={shared.body}>{company.description}</p>
+                  <p className={shared.eyebrow}>{region.eyebrow}</p>
+                  <h2 className={shared.headline}>{region.headline}</h2>
+                  <p className={shared.body}>{region.description}</p>
+                  <p className={styles.cnpjLine}>
+                    {region.cnpjLabel}: {region.cnpj}
+                  </p>
                 </div>
 
                 <div className={`${styles.channels} ${SECTION_DARK[index] ? styles.channelsDark : ""}`}>
-                  <div className={styles.channel}>
-                    <span className={styles.channelLabel}>Endereço</span>
-                    <p className={styles.channelAddress}>
-                      {company.addressLines.map((line, lineIndex) => (
-                        <span key={line}>
-                          {line}
-                          {lineIndex < company.addressLines.length - 1 && <br />}
-                        </span>
-                      ))}
-                    </p>
+                  {region.addressLines && (
+                    <div className={styles.channel}>
+                      <span className={styles.channelLabel}>Endereço</span>
+                      <p className={styles.channelAddress}>
+                        {region.addressLines.map((line, lineIndex) => (
+                          <span key={line}>
+                            {line}
+                            {lineIndex < region.addressLines!.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+                      {region.mapHref && (
+                        <a className={styles.channelLink} href={region.mapHref} target="_blank" rel="noopener noreferrer">
+                          Ver localização
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  {region.channels.map((channel) => (
                     <a
-                      className={styles.channelLink}
-                      href={company.mapHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      key={channel.href}
+                      className={styles.channelRow}
+                      href={channel.href}
+                      target={channel.action === "whatsapp" ? "_blank" : undefined}
+                      rel={channel.action === "whatsapp" ? "noopener noreferrer" : undefined}
                     >
-                      Ver localização
+                      <span className={styles.channelRowLabel}>{channel.label}</span>
+                      <span className={styles.channelRowNumber}>{channel.display}</span>
+                      <span className={styles.channelRowAction}>
+                        {channel.action === "whatsapp" ? <WhatsAppIcon /> : <PhoneIcon />}
+                        {channel.action === "whatsapp" ? "Abrir WhatsApp" : "Ligar"}
+                      </span>
                     </a>
-                  </div>
+                  ))}
 
-                  {company.phones.length > 0 && (
-                    <div className={styles.channel}>
-                      <span className={styles.channelLabel}>Telefone</span>
-                      <div className={styles.channelPhoneRow}>
-                        {company.phones.map((phone) => (
-                          <a key={phone.href} className={styles.channelPhone} href={phone.href}>
-                            <PhoneIcon />
-                            <span>
-                              {phone.display}
-                              {phone.label && <span className={styles.channelSubLabel}> · {phone.label}</span>}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                      {company.phoneNote && <p className={styles.channelNote}>{company.phoneNote}</p>}
-                    </div>
-                  )}
-
-                  {company.whatsapp.length > 0 && (
-                    <div className={styles.channel}>
-                      <span className={styles.channelLabel}>WhatsApp</span>
-                      <div className={styles.channelPhoneRow}>
-                        {company.whatsapp.map((wa) => (
-                          <a
-                            key={wa.href}
-                            className={styles.channelPhone}
-                            href={wa.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <WhatsAppIcon />
-                            <span>
-                              {wa.display}
-                              {wa.label && <span className={styles.channelSubLabel}> · {wa.label}</span>}
-                            </span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {company.email && (
-                    <div className={styles.channel}>
-                      <span className={styles.channelLabel}>E-mail</span>
-                      <a className={styles.channelLink} href={company.email.href}>
-                        <MailIcon />
-                        {company.email.display}
-                      </a>
-                    </div>
-                  )}
-
-                  {company.secondaryUnit && (
-                    <div className={styles.channel}>
-                      <span className={styles.channelLabel}>{company.secondaryUnit.label}</span>
-                      <a
-                        className={styles.channelPhone}
-                        href={company.secondaryUnit.phone.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <WhatsAppIcon />
-                        <span>{company.secondaryUnit.phone.display}</span>
-                      </a>
-                    </div>
-                  )}
+                  {region.note && <p className={styles.channelNote}>{region.note}</p>}
                 </div>
               </div>
             </Reveal>
@@ -154,7 +122,7 @@ export default function ContatoPage() {
         </section>
       ))}
 
-      {/* ---------------- CTA final ---------------- */}
+      {/* ---------------- Fechamento ---------------- */}
       <section className={`${shared.section} ${shared.toneCarvao} ${shared.finalCta}`}>
         <div className={shared.container}>
           <h2 className={shared.finalCtaHeadline}>Três frentes. Um mesmo Grupo.</h2>
@@ -166,7 +134,7 @@ export default function ContatoPage() {
             <Link className={`${shared.btn} ${shared.btnSolidGold}`} href="/">
               Voltar para a Home
             </Link>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/historia">
+            <Link className={shared.btnEditorial} href="/historia">
               Conheça nossa história
             </Link>
           </div>

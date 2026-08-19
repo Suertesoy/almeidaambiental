@@ -1,10 +1,9 @@
 /* ==========================================================
-   /contato — diretório institucional das três empresas do Grupo Almeida.
+   /contato — diretório institucional por região/operação do Grupo Almeida.
    Reaproveita as primitivas de components/shared/company-page.module.css
-   (container, tons de seção, tipografia, CTA final) — este arquivo só
-   soma o que é exclusivo desta página: hero curto, navegação rápida entre
-   empresas e a estrutura de canais de contato (endereço/telefone/WhatsApp/
-   e-mail).
+   (container, tons de seção, tipografia, CTA final) — este arquivo só soma
+   o que é exclusivo desta página: hero curto, diretório rápido e os blocos
+   regionais (endereço/CNPJ/canais).
    ========================================================== */
 
 .page {
@@ -15,80 +14,120 @@
 /* ---------------- Hero ---------------- */
 
 .heroTitle {
-  margin: 14px 0 0;
-  max-width: 720px;
+  margin: 12px 0 0;
+  max-width: 640px;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(32px, 3vw + 18px, 56px);
-  line-height: 1.1;
+  font-size: clamp(28px, 2.6vw + 16px, 46px);
+  line-height: 1.12;
   letter-spacing: -0.01em;
   text-wrap: balance;
   color: inherit;
 }
 
 .heroLede {
-  max-width: 60ch;
+  margin-top: 12px;
+  max-width: 56ch;
 }
 
-/* ---------------- Navegação rápida entre empresas ---------------- */
+/* ---------------- Diretório rápido ---------------- */
 
-.quickNav {
+.directory {
   background: var(--color-card);
   border-bottom: 1px solid rgba(21, 21, 15, 0.08);
 }
 
-.quickNavList {
+.directoryList {
   list-style: none;
   margin: 0;
-  padding: 18px clamp(20px, 6vw, 64px);
+  padding: 0 clamp(20px, 6vw, 64px);
   max-width: 1320px;
   margin-inline: auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
-.quickNavLink {
-  display: inline-flex;
+.directoryRow {
+  display: flex;
   align-items: center;
-  min-height: 44px;
-  padding-inline: 18px;
-  border: 1px solid rgba(21, 21, 15, 0.22);
-  border-radius: 999px;
+  gap: clamp(16px, 3vw, 28px);
+  padding: 18px 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.1);
+  text-decoration: none;
+  color: inherit;
+}
+
+.directoryList li:first-child .directoryRow {
+  border-top: none;
+}
+
+.directoryRow:hover {
+  opacity: 0.72;
+}
+
+.directoryRow:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.directoryIndex {
+  flex: none;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 15px;
+  opacity: 0.45;
+}
+
+.directoryText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.directoryTitle {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(19px, 1.2vw + 14px, 24px);
+}
+
+.directorySubtitle {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.62;
+}
+
+.directoryCta {
+  flex: none;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 13px;
-  color: var(--color-foreground);
-  text-decoration: none;
+  font-size: 14px;
   white-space: nowrap;
 }
 
-.quickNavLink:hover {
-  background: rgba(21, 21, 15, 0.06);
+/* ---------------- Bloco regional ---------------- */
+
+.regionSection {
+  scroll-margin-top: var(--anchor-offset);
 }
 
-.quickNavLink:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* ---------------- Bloco de empresa ---------------- */
-
-.companySection {
-  scroll-margin-top: calc(var(--header-height) + 12px);
-}
-
-.companyGrid {
+.regionGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(32px, 6vw, 56px);
 }
 
 @media (min-width: 1024px) {
-  .companyGrid {
+  .regionGrid {
     grid-template-columns: 5fr 7fr;
     align-items: start;
   }
+}
+
+.cnpjLine {
+  margin: 12px 0 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.6;
 }
 
 .channels {
@@ -96,20 +135,21 @@
   flex-direction: column;
 }
 
-.channel {
-  padding: 20px 0;
+.channel,
+.channelRow {
+  padding: 18px 0;
   border-top: 1px solid rgba(21, 21, 15, 0.14);
 }
 
 /* Aplicado via styles.channelsDark (JS) nos blocos sobre fundo escuro
-   (Saturno usa shared.toneForest) — não dá para encadear seletores de
-   company-page.module.css aqui: são módulos CSS diferentes, cada um com
-   suas próprias classes com hash. */
-.channelsDark .channel {
+   (Blumenau usa shared.toneForest) — módulos CSS diferentes não deixam
+   encadear seletores de company-page.module.css aqui. */
+.channelsDark .channel,
+.channelsDark .channelRow {
   border-top-color: rgba(247, 246, 241, 0.22);
 }
 
-.channel:first-child {
+.channels > *:first-child {
   padding-top: 0;
   border-top: none;
 }
@@ -146,51 +186,69 @@
   text-underline-offset: 3px;
 }
 
-.channelPhoneRow {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.channelPhone {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(19px, 1.2vw + 14px, 25px);
-  color: inherit;
-  text-decoration: none;
-}
-
-.channelPhone svg,
-.channelLink svg {
-  flex: none;
-  opacity: 0.75;
-}
-
-.channelPhone:hover,
-.channelLink:hover {
-  opacity: 0.72;
-}
-
-.channelPhone:focus-visible,
-.channelLink:focus-visible,
-.quickNavLink:focus-visible {
+.channelLink:focus-visible {
   outline: 3px solid currentColor;
   outline-offset: 4px;
 }
 
-.channelSubLabel {
+/* Cada canal (Atendimento/Logística/Administrativo/Telefone/WhatsApp) é um
+   único link cobrindo o bloco inteiro — alvo de toque grande, número em
+   sans serif (nunca a serifada editorial, para leitura rápida e sem
+   ambiguidade), ação explícita abaixo. */
+.channelRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.channelRow:hover {
+  opacity: 0.78;
+}
+
+.channelRow:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+
+.channelRowLabel {
   font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
   font-weight: 600;
-  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   opacity: 0.6;
 }
 
+.channelRowNumber {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: clamp(19px, 1.2vw + 14px, 23px);
+  letter-spacing: 0.01em;
+}
+
+.channelRowAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.channelRowAction svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
 .channelNote {
-  margin: 8px 0 0;
+  margin: 16px 0 0;
+  max-width: 48ch;
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   line-height: 1.5;

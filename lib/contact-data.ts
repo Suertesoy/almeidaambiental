@@ -1,113 +1,92 @@
 /**
  * Fonte de dados da página /contato.
  *
- * Consulta feita em 2026-08-19. A home atual de https://www.almeidaambiental.com.br/
- * hoje é uma página de manutenção ("Estamos atualizando nosso site") que só
- * lista telefone/WhatsApp por unidade — sem endereço, fax ou e-mail. As
- * antigas páginas /ambiental/contatos/, /equipamentos/contatos/ e
- * /saturno/contatos/ retornam 404. Por isso os campos abaixo vêm de duas
- * camadas, nunca de diretório externo (Regra 5, AGENT_RULES_SITE.md):
+ * Reconstrução de 2026-08-19: a partir desta versão, os canais publicados
+ * aqui vêm EXCLUSIVAMENTE dos dados oficiais fornecidos pelo responsável do
+ * projeto para esta tarefa — nunca do site antigo, de buscas externas, de
+ * diretórios ou de capturas arquivadas (essas fontes deixaram de ser usadas
+ * a partir de agora). Nenhum fax, nenhum e-mail: nenhum dos dois faz parte
+ * dos canais oficiais fornecidos, então nenhum aparece na página.
  *
- * 1. A home atual (ao vivo) — telefones e links wa.me de cada unidade,
- *    incluindo o WhatsApp "Manutenção" da Equipamentos e a unidade de
- *    Araquari/Joinville.
- * 2. Capturas arquivadas (web.archive.org) das páginas antigas ainda no ar
- *    até pouco tempo atrás, usadas só para os campos que a home atual não
- *    publica mais (endereço completo e e-mail):
- *    - Almeida Ambiental: snapshot de 2024-11-14 do WP REST
- *      (/ambiental/wp-json/wp/v2/pages/203) — traz endereço e
- *      contato@almeidaambiental.com.br.
- *    - Saturno Ambiental: snapshot de 2024-09-13 de /saturno/contatos/ —
- *      traz endereço, os dois telefones e atendimento@almeidaambiental.com.br.
- *    - Almeida Equipamentos: NENHUM snapshot recente de uma página própria
- *      de contato foi encontrado. O endereço abaixo assume o mesmo prédio
- *      institucional de São José (mesma leitura feita para o Footer.tsx,
- *      que já lista Ambiental e Equipamentos na mesma cidade) e não foi
- *      reverificado linha a linha para a Equipamentos especificamente. Não
- *      há e-mail publicado ou arquivado para a Equipamentos — campo omitido
- *      de propósito em vez de reaproveitar o da Ambiental (ver relatório da
- *      tarefa, item Divergências).
+ * Estrutura por região/operação (não mais por empresa) — São José reúne
+ * Almeida Ambiental (matriz) e Almeida Equipamentos (mesma estrutura, sem
+ * canal próprio); Araquari/Joinville e Blumenau são blocos independentes.
  */
 
-export type PhoneChannel = {
-  /** Rótulo curto opcional (ex.: "Comercial", "Manutenção"). */
-  label?: string;
+export type Channel = {
+  label: string;
   display: string;
   href: string;
+  action: "whatsapp" | "call";
 };
 
-export type CompanyContact = {
-  id: string;
+export type RegionContact = {
+  id: "sao-jose" | "araquari-joinville" | "blumenau";
   eyebrow: string;
-  name: string;
+  headline: string;
   description: string;
-  addressLines: string[];
-  mapHref: string;
-  phones: PhoneChannel[];
-  /** Nota curta sob o telefone principal (ex.: mesmo número atende como fax). */
-  phoneNote?: string;
-  whatsapp: PhoneChannel[];
-  email?: { display: string; href: string };
-  /** Unidade adicional da mesma empresa, exibida como linha secundária. */
-  secondaryUnit?: { label: string; phone: PhoneChannel };
+  cnpjLabel: string;
+  cnpj: string;
+  addressLines?: string[];
+  mapHref?: string;
+  channels: Channel[];
+  /** Nota curta e neutra — nunca linguagem de "estrutura operacional". */
+  note?: string;
 };
 
 const mapsQuery = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
-export const CONTACTS: CompanyContact[] = [
+export const REGIONS: RegionContact[] = [
   {
-    id: "almeida-ambiental",
-    eyebrow: "Gestão de resíduos",
-    name: "Almeida Ambiental",
-    description:
-      "Para assuntos relacionados a coleta, triagem, classificação, trituração, descaracterização e demais soluções da operação ambiental.",
+    id: "sao-jose",
+    eyebrow: "Matriz · São José",
+    headline: "Grupo Almeida",
+    description: "Atendimento da matriz e suporte às operações do Grupo Almeida em São José.",
+    cnpjLabel: "CNPJ Almeida Ambiental",
+    cnpj: "04.910.399/0001-07",
     addressLines: [
       "Esquina com Rua Francisco Severino de Souza",
       "Rua Governador José Boabaid — Distrito Industrial",
       "São José, SC — CEP 88104-760",
     ],
     mapHref: mapsQuery("Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
-    phones: [{ display: "+55 (48) 3259-4444", href: "tel:+554832594444" }],
-    phoneNote: "O mesmo número também atende como fax.",
-    whatsapp: [{ display: "+55 (48) 3259-4444", href: "https://wa.me/554832594444" }],
-    email: { display: "contato@almeidaambiental.com.br", href: "mailto:contato@almeidaambiental.com.br" },
-    secondaryUnit: {
-      label: "Também atende em Araquari / Joinville",
-      phone: { display: "+55 (47) 99949-6299", href: "https://wa.me/5547999496299" },
-    },
+    channels: [
+      { label: "Atendimento", display: "(48) 3259-4444", href: "https://wa.me/554832594444", action: "whatsapp" },
+      { label: "Logística", display: "(48) 99946-6066", href: "https://wa.me/5548999466066", action: "whatsapp" },
+    ],
+    note: "Para Almeida Equipamentos, utilize os canais da matriz em São José.",
   },
   {
-    id: "almeida-equipamentos",
-    eyebrow: "Tecnologia e equipamentos",
-    name: "Almeida Equipamentos",
-    description:
-      "Para compra, locação, consignação, informações técnicas e orientação sobre equipamentos para gestão de resíduos.",
-    addressLines: [
-      "Esquina com Rua Francisco Severino de Souza",
-      "Rua Governador José Boabaid — Distrito Industrial",
-      "São José, SC — CEP 88104-760",
-    ],
-    mapHref: mapsQuery("Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
-    phones: [{ label: "Comercial", display: "+55 (48) 3259-4444", href: "tel:+554832594444" }],
-    phoneNote: "O mesmo número também atende como fax.",
-    whatsapp: [
-      { label: "Comercial", display: "+55 (48) 3259-4444", href: "https://wa.me/554832594444" },
-      { label: "Manutenção", display: "+55 (48) 9969-1712", href: "https://wa.me/554899691712" },
+    id: "araquari-joinville",
+    eyebrow: "Araquari / Joinville",
+    headline: "Almeida Ambiental",
+    description: "Atendimento da unidade de Araquari / Joinville.",
+    cnpjLabel: "CNPJ Almeida Ambiental",
+    cnpj: "04.910.399/0002-80",
+    channels: [
+      { label: "Administrativo", display: "(47) 99949-6299", href: "https://wa.me/5547999496299", action: "whatsapp" },
     ],
   },
   {
-    id: "saturno-ambiental",
+    id: "blumenau",
     eyebrow: "Vale do Itajaí",
-    name: "Saturno Ambiental",
-    description:
-      "Para serviços ambientais, gestão de resíduos, cartonagem e atendimento da operação da Saturno em Blumenau e região.",
+    headline: "Saturno Ambiental",
+    description: "Serviços ambientais, gestão de resíduos e cartonagem em Blumenau e região.",
+    cnpjLabel: "CNPJ Saturno Ambiental",
+    cnpj: "02.111.538/0001-07",
     addressLines: ["Rua Marechal Rondon, 510 — Salto Norte", "Blumenau, SC — CEP 89065-200"],
     mapHref: mapsQuery("Rua Marechal Rondon, 510, Salto Norte, Blumenau, SC, 89065-200"),
-    phones: [
-      { display: "+55 (47) 3323-8441", href: "tel:+554733238441" },
-      { display: "+55 (47) 3339-0323", href: "tel:+554733390323" },
+    channels: [
+      { label: "Telefone", display: "(47) 3323-8441", href: "tel:+554733238441", action: "call" },
+      { label: "WhatsApp", display: "(48) 98464-9289", href: "https://wa.me/5548984649289", action: "whatsapp" },
     ],
-    whatsapp: [{ display: "+55 (48) 98464-9289", href: "https://wa.me/5548984649289" }],
-    email: { display: "atendimento@almeidaambiental.com.br", href: "mailto:atendimento@almeidaambiental.com.br" },
   },
 ];
+
+/** Anchors regionais reutilizados pelos CTAs de outras páginas — única
+ *  fonte de verdade para não duplicar "/contato#..." espalhado pelo site. */
+export const CONTACT_ANCHORS = {
+  saoJose: "/contato#sao-jose",
+  araquariJoinville: "/contato#araquari-joinville",
+  blumenau: "/contato#blumenau",
+};
