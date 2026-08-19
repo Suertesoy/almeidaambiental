@@ -1,0 +1,84 @@
+/* ==========================================================
+   /saturno-ambiental — extras exclusivos desta página. Identidade mais
+   regional/próxima/humana (Seção 51): as três frentes que a Saturno
+   compartilha com a Almeida Ambiental (Coleta/Triagem/Trituração) ganham
+   um tratamento mais compacto e sóbrio aqui — sem ser o mesmo grande
+   capítulo editorial da outra página — para que Cartonagem e Gestão
+   Ambiental, exclusivas da Saturno, tenham o protagonismo.
+   ========================================================== */
+
+.page {
+  background: var(--color-stone-warm);
+  overflow-x: clip;
+}
+
+.frentesCompactGrid {
+  margin-top: clamp(40px, 6vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .frentesCompactGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(32px, 4vw, 56px);
+  }
+}
+
+.frentesCompactItem {
+  padding: 28px 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+@media (min-width: 768px) {
+  .frentesCompactItem {
+    padding: 0;
+    border-top: none;
+  }
+}
+
+.frentesCompactIndex {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+}
+
+.frentesCompactHeadline {
+  margin: 0 0 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(19px, 1vw + 14px, 22px);
+  line-height: 1.2;
+}
+
+.frentesCompactCopy {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.82;
+  max-width: 46ch;
+}
+
+/* ---------------- Saturno + Grupo Almeida ---------------- */
+
+.groupBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 6px 14px;
+  border: 1px solid rgba(247, 246, 241, 0.32);
+  border-radius: 999px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
