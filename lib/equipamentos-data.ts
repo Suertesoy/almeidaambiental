@@ -163,3 +163,30 @@ export const FEIRA_IMAGE = img(
 );
 
 export const PARTNERS = ["Pöttinger", "Austropressen", "Heger"];
+
+/**
+ * Seção "Eficiência que aparece no transporte" (ponte editorial entre os
+ * seis produtos e "qual tecnologia para qual material"). Pesquisa dedicada
+ * em Pöttinger, Austropressen e Heger não encontrou uma relação de
+ * capacidade logística comparável e confiável entre os três estágios
+ * (solto/prensado/compactado) — nenhuma fonte oficial publica kg por
+ * transporte equivalentes entre produtos diferentes, e o catálogo antigo da
+ * Almeida (fora do portfólio autorizado, ver header deste arquivo) não
+ * conta como fonte. Por isso `scale` é só a proporção ilustrativa da
+ * barra (0–1), não um dado medido — nenhum número aparece no rótulo. O
+ * único número confirmado (motor/relação de compactação do Compactador de
+ * Fuso, "até 5:1", fonte Pöttinger — ver PRODUCTS acima) é citado como nota
+ * de apoio abaixo do gráfico, não como valor das três barras.
+ */
+export type DensityStage = {
+  id: string;
+  label: string;
+  density: string;
+  scale: number;
+};
+
+export const DENSITY_STAGES: DensityStage[] = [
+  { id: "solto", label: "Material solto", density: "Baixa densidade", scale: 0.3 },
+  { id: "prensado", label: "Material prensado", density: "Densidade intermediária", scale: 0.62 },
+  { id: "compactado", label: "Material compactado", density: "Alta densidade", scale: 1 },
+];

@@ -109,6 +109,136 @@
   opacity: 0.75;
 }
 
+/* ---------------- Eficiência que aparece no transporte ---------------- */
+
+.densitySection {
+  border-bottom: 1px solid rgba(247, 246, 241, 0.14);
+}
+
+.densityChart {
+  margin-top: clamp(40px, 6vw, 64px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 4vw, 56px);
+  align-items: end;
+  max-width: 820px;
+}
+
+@media (min-width: 1024px) {
+  .densityChart {
+    max-width: none;
+    gap: clamp(40px, 6vw, 96px);
+  }
+}
+
+.densityBar {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.densityBarTrack {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 34vw, 380px);
+  display: flex;
+  justify-content: center;
+}
+
+.densityBarFill {
+  position: absolute;
+  bottom: 0;
+  width: clamp(44px, 9vw, 176px);
+  max-width: 80%;
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 760ms cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 3px 3px 0 0;
+}
+
+.densityBarFill[data-stage="solto"] {
+  background: rgba(247, 246, 241, 0.18);
+}
+
+.densityBarFill[data-stage="prensado"] {
+  background: var(--color-primary);
+}
+
+.densityBarFill[data-stage="compactado"] {
+  background: var(--color-gold-aged);
+}
+
+.densityChartActive .densityBar:nth-child(1) .densityBarFill {
+  transform: scaleY(var(--bar-scale));
+  transition-delay: 40ms;
+}
+
+.densityChartActive .densityBar:nth-child(2) .densityBarFill {
+  transform: scaleY(var(--bar-scale));
+  transition-delay: 160ms;
+}
+
+.densityChartActive .densityBar:nth-child(3) .densityBarFill {
+  transform: scaleY(var(--bar-scale));
+  transition-delay: 280ms;
+}
+
+.densityBarLabel {
+  margin: 16px 0 4px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(14px, 1vw + 10px, 18px);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 420ms ease, transform 420ms ease;
+  transition-delay: 480ms;
+}
+
+.densityBarTag {
+  margin: 0;
+  color: var(--color-gold-aged);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 420ms ease, transform 420ms ease;
+  transition-delay: 560ms;
+}
+
+.densityChartActive .densityBarLabel,
+.densityChartActive .densityBarTag {
+  opacity: 1;
+  transform: none;
+}
+
+.densityNote {
+  margin: 16px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.68;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .densityBarFill {
+    transform: scaleY(var(--bar-scale));
+    transition: none;
+  }
+
+  .densityBarLabel,
+  .densityBarTag {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ---------------- Qual tecnologia para qual material ---------------- */
 
 .matrixGrid {

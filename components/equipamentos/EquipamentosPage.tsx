@@ -4,6 +4,7 @@ import styles from "./equipamentos.module.css";
 import CompanyHero from "../shared/CompanyHero";
 import ProductRotation from "../shared/ProductRotation";
 import EditorialCTA from "../shared/EditorialCTA";
+import LogisticsEfficiency from "./LogisticsEfficiency";
 import {
   HERO_IMAGE,
   DETALHE_MECANICO_IMAGE,
@@ -28,8 +29,9 @@ const MODALITIES = ["Compra", "Locação", "Consignação"];
  * /almeida-equipamentos — a mais visual e tecnológica das três páginas
  * (Seção 31 em diante), sem virar loja virtual: sem preço, sem carrinho.
  * Hero técnico → posicionamento (Compra/Locação/Consignação) → navegação
- * interna → seis capítulos de produto (portfólio EXATO, Seção 32) → "qual
- * tecnologia para qual material" → parcerias internacionais → CTA final.
+ * interna → seis capítulos de produto (portfólio EXATO, Seção 32) →
+ * "eficiência que aparece no transporte" (ponte editorial, LogisticsEfficiency)
+ * → "qual tecnologia para qual material" → parcerias internacionais → CTA final.
  * O depoimento CTS (Seção 48) não entra: nenhum texto aprovado da autoria
  * original foi localizado no repositório — ver pendências no relatório do
  * checkpoint em vez de inventar a fala.
@@ -142,6 +144,9 @@ export default function EquipamentosPage() {
           </section>
         );
       })}
+
+      {/* ---------------- Eficiência que aparece no transporte ---------------- */}
+      <LogisticsEfficiency />
 
       {/* ---------------- Qual tecnologia para qual material ---------------- */}
       <section className={`${shared.section} ${shared.toneForest}`}>
