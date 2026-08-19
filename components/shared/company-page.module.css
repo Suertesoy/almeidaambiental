@@ -18,14 +18,20 @@
   padding-inline: clamp(20px, 6vw, 64px);
 }
 
+/* Três camadas de spacing (tokens em app/globals.css) em vez de valores
+   arbitrários por seção: compact para subseções internas (materiais,
+   fluxo), default para o ritmo padrão de seção, editorial para capítulos
+   com mais peso narrativo. */
 .section {
-  padding-block: clamp(64px, 11vw, 112px);
+  padding-block: var(--space-section-default);
 }
 
-@media (min-width: 1024px) {
-  .section {
-    padding-block: clamp(96px, 8vw, 140px);
-  }
+.sectionCompact {
+  padding-block: var(--space-section-compact);
+}
+
+.sectionEditorial {
+  padding-block: var(--space-section-editorial);
 }
 
 .toneForest {
@@ -85,6 +91,32 @@
 
 .gold {
   color: var(--color-gold-aged);
+}
+
+/* Camada "Subheading / Editorial Heading": para títulos internos que hoje
+   usavam .headline (48px) fora de contexto de título principal de seção —
+   ex. nome de cada pilar, cada produto, cada frente de serviço. Mantém a
+   serifada como protagonista, só um degrau abaixo de .headline. */
+.subheading {
+  margin: 0 0 12px;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(20px, 1.6vw + 12px, 28px);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+/* Camada "Dados técnicos": números que precisam ser lidos rápido e sem
+   ambiguidade (telefone, CNPJ) — sempre sans serif, nunca a serifada
+   editorial. */
+.dataNumber {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: clamp(18px, 1.2vw + 14px, 22px);
+  letter-spacing: 0.01em;
+  color: inherit;
 }
 
 .body {
@@ -165,6 +197,41 @@
 .btn:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Terceiro nível de CTA: link editorial (texto + seta), para cross-links
+   que não são a conversão principal da tela (ex. "Conheça a Almeida
+   Equipamentos"). Não é um .btn — sem caixa, sem altura fixa. */
+.btnEditorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btnEditorial::after {
+  content: "→";
+  transition: transform 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnEditorial::after {
+    transition: none;
+  }
+}
+
+.btnEditorial:hover::after {
+  transform: translateX(3px);
+}
+
+.btnEditorial:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
 }
 
 /* ---------------- Duo (texto + fotografia) ---------------- */
@@ -277,13 +344,55 @@
 }
 
 .flowStep {
-  padding: 18px 16px;
+  position: relative;
+  padding: 18px 16px 18px 28px;
   border-top: 1px solid rgba(21, 21, 15, 0.18);
 }
 
 .toneForest .flowStep,
 .toneCarvao .flowStep {
   border-top-color: rgba(247, 246, 241, 0.22);
+}
+
+/* Conector vertical entre etapas — só no empilhamento mobile, onde a
+   sequência precisa ficar clara sem virar infográfico corporativo. No
+   grid horizontal (≥720px) o border-top + índice numerado já bastam. */
+.flowStep::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 26px;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.flowStep:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 33px;
+  bottom: -16px;
+  width: 1px;
+  background: rgba(21, 21, 15, 0.18);
+}
+
+.toneForest .flowStep:not(:last-child)::after,
+.toneCarvao .flowStep:not(:last-child)::after {
+  background: rgba(247, 246, 241, 0.22);
+}
+
+@media (min-width: 720px) {
+  .flowStep {
+    padding-left: 16px;
+  }
+
+  .flowStep::before,
+  .flowStep::after {
+    display: none;
+  }
 }
 
 .flowIndex {

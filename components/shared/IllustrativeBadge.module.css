@@ -1,0 +1,34 @@
+/* Microlegenda editorial — informação preservada, sem competir com a
+   imagem. Menor e mais discreta que as badges anteriores (fundo escuro
+   dominante), mas ainda com contraste suficiente para leitura. */
+.badge {
+  position: absolute;
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: rgba(8, 10, 8, 0.46);
+  color: var(--color-background);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.bottomRight {
+  right: 10px;
+  bottom: 10px;
+}
+
+.bottomLeft {
+  left: 10px;
+  bottom: 10px;
+}
+
+/* Variante para heros: evita a área do Header fixo. */
+.topRight {
+  right: clamp(16px, 4vw, 32px);
+  top: calc(var(--header-height) + 16px);
+}

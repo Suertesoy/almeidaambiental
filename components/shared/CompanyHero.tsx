@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./CompanyHero.module.css";
+import IllustrativeBadge from "./IllustrativeBadge";
 import type { EditorialImage } from "../../lib/media";
 
 export type CompanyHeroCta = {
@@ -38,7 +39,7 @@ export default function CompanyHero({
     <section className={styles.hero} aria-label={eyebrow}>
       <img src={image.src} alt={image.alt} className={styles.media} loading="eager" fetchPriority="high" />
       <div className={styles.scrim} aria-hidden="true" />
-      {image.sourceType !== "archive" && <span className={styles.illustrativeTag}>Imagem ilustrativa</span>}
+      {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" />}
 
       <div className={styles.content}>
         <p className={styles.eyebrow}>{eyebrow}</p>

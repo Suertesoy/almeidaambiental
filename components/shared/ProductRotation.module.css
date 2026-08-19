@@ -53,19 +53,3 @@
     animation: none;
   }
 }
-
-.caption {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  padding: 4px 10px;
-  background: rgba(8, 10, 8, 0.6);
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: 3px;
-  backdrop-filter: blur(2px);
-}

@@ -1,4 +1,5 @@
 import styles from "./ProductRotation.module.css";
+import IllustrativeBadge from "./IllustrativeBadge";
 import type { EditorialImage } from "../../lib/media";
 
 export type ProductRotationProps = {
@@ -44,7 +45,7 @@ export default function ProductRotation({ image, videoSrc, priority = false }: P
           decoding="async"
         />
       )}
-      <span className={styles.caption}>Visualização ilustrativa</span>
+      <IllustrativeBadge label="Visualização ilustrativa" position="bottom-left" />
     </div>
   );
 }

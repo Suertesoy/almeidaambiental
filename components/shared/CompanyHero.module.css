@@ -123,23 +123,6 @@
 }
 
 .btn:focus-visible {
-  outline: 3px solid var(--color-background);
+  outline: 3px solid var(--color-primary);
   outline-offset: 2px;
-}
-
-.illustrativeTag {
-  position: absolute;
-  z-index: 2;
-  right: clamp(16px, 4vw, 32px);
-  top: calc(var(--header-height) + 20px);
-  padding: 4px 10px;
-  background: rgba(8, 10, 8, 0.55);
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: 3px;
-  backdrop-filter: blur(2px);
 }
