@@ -9,6 +9,7 @@
 
 import { img } from "./media";
 import { CORE_MATERIALS } from "./materials";
+import { CONTACT_ANCHORS } from "./contact-data";
 
 export const HERO_IMAGE = img(
   "saturno-ambiental",
@@ -73,7 +74,7 @@ export const FRENTES: Frente[] = [
     headline: "Papelão que volta para a operação.",
     copy: "A Saturno mantém um setor dedicado à confecção e comercialização de caixas de papelão, com opções novas e usadas em diferentes tamanhos. É uma extensão natural de uma operação que conhece o material desde a recuperação até sua reutilização.",
     tags: ["Diferentes tamanhos e opções conforme disponibilidade"],
-    cta: { label: "Consultar tamanhos e estoque", href: "/contato" },
+    cta: { label: "Consultar tamanhos e estoque", href: CONTACT_ANCHORS.blumenau },
     image: CARTONAGEM_IMAGE,
   },
   {
@@ -91,7 +92,7 @@ export const FRENTES: Frente[] = [
       "Educação ambiental",
       "Orientações relacionadas a programas ambientais e sistemas de MTR",
     ],
-    cta: { label: "Conversar sobre Gestão Ambiental", href: "/contato" },
+    cta: { label: "Conversar sobre Gestão Ambiental", href: CONTACT_ANCHORS.blumenau },
     image: GESTAO_AMBIENTAL_IMAGE,
   },
 ];
