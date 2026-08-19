@@ -1,0 +1,65 @@
+/* ==========================================================
+   /almeida-ambiental — extras exclusivos desta página. Tokens e primitivas
+   compartilhadas (container, duo, tons, tipografia, CTAs) vêm de
+   components/shared/company-page.module.css; este arquivo só cobre o que é
+   específico da Almeida Ambiental (índice dos pilares, presença regional).
+   ========================================================== */
+
+.page {
+  background: var(--color-stone-warm);
+  overflow-x: clip;
+}
+
+.pillarIndex {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+}
+
+/* ---------------- Capacidade e presença ---------------- */
+
+.presenceList {
+  list-style: none;
+  margin: clamp(40px, 6vw, 64px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .presenceList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .presenceList {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.presenceItem {
+  padding-top: 16px;
+  border-top: 1px solid rgba(247, 246, 241, 0.22);
+}
+
+.presenceCity {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(22px, 1.4vw + 14px, 28px);
+  color: var(--color-gold-aged);
+}
+
+.presenceNote {
+  margin: 24px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  opacity: 0.78;
+}

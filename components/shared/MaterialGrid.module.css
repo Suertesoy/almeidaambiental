@@ -1,0 +1,103 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(32px, 5vw, 56px);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.illustrativeTag {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  background: rgba(8, 10, 8, 0.62);
+  color: var(--color-background);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  backdrop-filter: blur(2px);
+}
+
+/* variant "tags": nomes em pílulas soltas, uma composição mais solta/mosaico */
+.tagsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tagsList li {
+  padding: 10px 16px;
+  border: 1px solid rgba(21, 21, 15, 0.22);
+  border-radius: 999px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dark .tagsList li {
+  border-color: rgba(247, 246, 241, 0.3);
+}
+
+/* variant "index": lista numerada em duas colunas, mais sóbria/regional */
+.indexList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 560px) {
+  .indexList {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.indexItem {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dark .indexItem {
+  border-top-color: rgba(247, 246, 241, 0.22);
+}
+
+.indexNumber {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.5;
+}

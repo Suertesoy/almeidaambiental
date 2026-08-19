@@ -1,0 +1,145 @@
+/* Hero de página de empresa — imagem (ou vídeo sutil) de fundo, scrim
+   inferior, conteúdo alinhado embaixo. Mesmo padrão do Hero da Home
+   (components/home/Hero.tsx) e do Hero 1985 de /historia: nada de overlay
+   verde/colorido sobre a mídia, só o gradiente neutro para apoiar leitura. */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.media,
+.poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 10, 8, 0.72) 0%, rgba(8, 10, 8, 0.32) 42%, rgba(8, 10, 8, 0.04) 68%);
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-inline: clamp(20px, 6vw, 64px);
+  padding-bottom: clamp(56px, 9vh, 104px);
+  color: var(--color-background);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+.title {
+  margin: 14px 0 0;
+  max-width: 820px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(34px, 3.4vw + 18px, 64px);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.42);
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 20px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 400;
+  font-size: clamp(15px, 0.3vw + 14px, 18px);
+  line-height: 1.62;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  opacity: 0.94;
+}
+
+.subcopy {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  opacity: 0.85;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  height: 52px;
+  padding-inline: 26px;
+  border-radius: 4px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.btnPrimary {
+  border: 1px solid var(--color-gold-aged);
+  background: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnSecondary {
+  border: 1px solid rgba(247, 246, 241, 0.55);
+  color: var(--color-background);
+  backdrop-filter: blur(2px);
+}
+
+.btnSecondary:hover {
+  background: rgba(247, 246, 241, 0.12);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-background);
+  outline-offset: 2px;
+}
+
+.illustrativeTag {
+  position: absolute;
+  z-index: 2;
+  right: clamp(16px, 4vw, 32px);
+  top: calc(var(--header-height) + 20px);
+  padding: 4px 10px;
+  background: rgba(8, 10, 8, 0.55);
+  color: var(--color-background);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  backdrop-filter: blur(2px);
+}

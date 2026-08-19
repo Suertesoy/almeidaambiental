@@ -1,0 +1,333 @@
+/* ==========================================================
+   Primitivas editoriais compartilhadas pelas três páginas de empresa
+   (Almeida Ambiental, Almeida Equipamentos, Saturno Ambiental).
+
+   Mesmo vocabulário visual já estabelecido em components/home/home.module.css
+   (container, tons de seção, tipografia, duo texto+foto, CTAs) — não um
+   componente de layout genérico, só os tokens reaproveitados como classes,
+   para que as três páginas pareçam parte do mesmo sistema sem repetir a
+   mesma sequência de seções entre si. Cada página soma seu próprio CSS
+   Module (ex.: almeida-ambiental.module.css) só para o que é exclusivo
+   dela.
+   ========================================================== */
+
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 64px);
+}
+
+.section {
+  padding-block: clamp(64px, 11vw, 112px);
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-block: clamp(96px, 8vw, 140px);
+  }
+}
+
+.toneForest {
+  background: var(--color-forest-deep);
+  color: var(--color-background);
+}
+
+.toneCarvao {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.toneStone {
+  background: var(--color-stone-warm);
+  color: var(--color-foreground);
+}
+
+.toneStoneAlt {
+  background: var(--color-stone-warm-alt);
+  color: var(--color-foreground);
+}
+
+/* ---------------- Tipografia editorial ---------------- */
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: inherit;
+  opacity: 0.72;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.locationLine {
+  margin: 0 0 14px;
+  color: inherit;
+  opacity: 0.72;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.headline {
+  margin: 0 0 20px;
+  max-width: 640px;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(30px, 2.6vw + 16px, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.gold {
+  color: var(--color-gold-aged);
+}
+
+.body {
+  margin: 0 0 20px;
+  max-width: 56ch;
+  color: inherit;
+  opacity: 0.88;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 400;
+  font-size: clamp(15px, 0.3vw + 14px, 18px);
+  line-height: 1.62;
+}
+
+.body:last-of-type {
+  margin-bottom: 24px;
+}
+
+/* ---------------- CTAs ---------------- */
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding-inline: 24px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  background: transparent;
+}
+
+.btnOutlineOnDark {
+  border-color: rgba(247, 246, 241, 0.4);
+  color: var(--color-background);
+}
+
+.btnOutlineOnDark:hover {
+  background: rgba(247, 246, 241, 0.1);
+}
+
+.btnOutlineOnLight {
+  border-color: rgba(21, 21, 15, 0.32);
+  color: var(--color-foreground);
+}
+
+.btnOutlineOnLight:hover {
+  background: rgba(21, 21, 15, 0.06);
+}
+
+.btnSolidGold {
+  background: var(--color-gold-aged);
+  border-color: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+}
+
+.btnSolidGold:hover {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ---------------- Duo (texto + fotografia) ---------------- */
+
+.duo {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "media" "content";
+  gap: clamp(28px, 6vw, 48px);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .duo {
+    gap: clamp(48px, 5vw, 88px);
+  }
+
+  .duoMediaRight {
+    grid-template-columns: 7fr 5fr;
+    grid-template-areas: "content media";
+  }
+
+  .duoMediaLeft {
+    grid-template-columns: 5fr 7fr;
+    grid-template-areas: "media content";
+  }
+
+  .duoMediaRight.duoMediaNarrow {
+    grid-template-columns: 8fr 4fr;
+  }
+
+  .duoMediaLeft.duoMediaWide {
+    grid-template-columns: 7fr 5fr;
+  }
+
+  .duoMediaLeft.duoMediaNarrow {
+    grid-template-columns: 4fr 8fr;
+  }
+
+  .duoEven {
+    grid-template-columns: 6fr 6fr;
+  }
+}
+
+.duoContent {
+  grid-area: content;
+}
+
+.duoMedia {
+  grid-area: media;
+  position: relative;
+  overflow: hidden;
+}
+
+.duoMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.duoMediaLandscape {
+  aspect-ratio: 16 / 10;
+}
+
+.duoMediaTall {
+  aspect-ratio: 3 / 4;
+}
+
+.duoMediaSquare {
+  aspect-ratio: 1 / 1;
+}
+
+/* ---------------- Apoio (tags separadas por ponto) ---------------- */
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.tagRow li:not(:last-child)::after {
+  content: "·";
+  margin-left: 14px;
+  opacity: 0.6;
+}
+
+/* ---------------- Fluxo horizontal/vertical (ex.: Diagnóstico → Coleta → ...) ---------------- */
+
+.flowRow {
+  list-style: none;
+  margin: clamp(40px, 6vw, 64px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .flowRow {
+    grid-template-columns: repeat(var(--flow-steps, 5), 1fr);
+  }
+}
+
+.flowStep {
+  padding: 18px 16px;
+  border-top: 1px solid rgba(21, 21, 15, 0.18);
+}
+
+.toneForest .flowStep,
+.toneCarvao .flowStep {
+  border-top-color: rgba(247, 246, 241, 0.22);
+}
+
+.flowIndex {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.flowLabel {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ---------------- CTA editorial final ---------------- */
+
+.finalCta {
+  text-align: center;
+}
+
+.finalCta .container {
+  max-width: 760px;
+}
+
+.finalCtaHeadline {
+  margin: 0 0 20px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(28px, 2.6vw + 16px, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.finalCta .body {
+  max-width: 52ch;
+  margin-inline: auto 24px;
+  text-align: center;
+}
+
+.finalCta .ctaRow {
+  justify-content: center;
+}
