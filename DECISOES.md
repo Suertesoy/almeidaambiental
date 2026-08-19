@@ -46,8 +46,15 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
 
 15. **Rota `/historia` (2026-08-18).** A página institucional "Nossa História" — experiência de storytelling cronológico de 1985 a 2026, com linha do tempo contínua — vive em `/historia`, não em `/grupo-almeida` como um registro anterior deste arquivo previa. Pedido explícito do responsável do projeto substitui a rota planejada antes (Regra 2 do AGENT_RULES_SITE.md). O CTA "Conheça nossa história" da Home (`components/home/Hero.tsx`) navega para `/historia` via `next/link` — deixou de ser âncora para `#almeida-ambiental`.
 
+## Arquitetura de informação — página Contato
+
+16. **Rota `/contato` (2026-08-19).** Diretório institucional das três empresas (não formulário) — Almeida Ambiental, Almeida Equipamentos e Saturno Ambiental, cada uma com endereço, telefone, WhatsApp e e-mail quando publicados. O site antigo (`https://www.almeidaambiental.com.br/`) mudou de forma: hoje é uma página de manutenção só com telefone/WhatsApp por unidade, e as antigas páginas `/ambiental/contatos/`, `/equipamentos/contatos/` e `/saturno/contatos/` retornam 404. Os dados publicados em `lib/contact-data.ts` vêm da combinação dessa home atual (ao vivo) com capturas arquivadas recentes (web.archive.org, 2024-09 e 2024-11) das páginas antigas — nunca de diretório externo. Fonte de cada campo documentada em comentário no topo do arquivo.
+
 ## Decisões pendentes
 
+- Confirmar com a Almeida Equipamentos se existe e-mail institucional próprio. Não encontrado nem na home atual nem em nenhuma captura arquivada da empresa — `/contato` não exibe e-mail para ela (ver `lib/contact-data.ts`).
+- Confirmar se o endereço de São José (Distrito Industrial) usado no bloco Almeida Equipamentos de `/contato` é de fato o endereço atual dela, e não só o herdado da Almeida Ambiental por estarem na mesma cidade — não foi possível reverificar de forma independente (mesma ressalva já feita pela tarefa que criou a página).
+- Confirmar se a linha de Fax (idêntica ao telefone) ainda faz sentido exibir para Almeida Ambiental/Equipamentos, ou se é um canal já obsoleto que pode ser removido de `/contato`.
 - Confirmar número/link oficial do WhatsApp do Grupo Almeida.
 - Confirmar arquivo vetorial oficial da logo do Grupo Almeida — o arquivo atual (`public/brand/logo-grupo-almeida.png`) tem fundo opaco (não transparente), então sobre o header escuro ele é exibido dentro de uma pequena "plaqueta" clara do tamanho da logo. Substituir por uma versão com fundo transparente (idealmente uma variante clara/reversa) resolve isso definitivamente.
 - Confirmar valor oficial do dourado de destaque usado na Home (o valor atual, `#C9A227`, é uma referência inicial da nova direção cromática, assim como o dourado anterior usado por /home2 e /home3).
