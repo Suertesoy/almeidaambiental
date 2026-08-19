@@ -43,8 +43,7 @@ export default function LogisticsEfficiency() {
           Eficiência que aparece no transporte.
         </h2>
         <p className={shared.body}>
-          Compactar melhor significa aproveitar melhor cada coleta. Mais densidade pode representar menos volume
-          armazenado, mais material por transporte e uma operação logística mais eficiente.
+          Quanto maior a densidade, melhor o aproveitamento de espaço, armazenamento e transporte.
         </p>
 
         <div
@@ -68,11 +67,7 @@ export default function LogisticsEfficiency() {
           ))}
         </div>
 
-        <p className={shared.body} style={{ marginTop: "clamp(28px, 4vw, 40px)" }}>
-          Menos volume por unidade de material significa melhor aproveitamento de espaço, armazenamento e
-          transporte.
-        </p>
-        <p className={styles.densityNote}>
+        <p className={styles.densityNote} style={{ marginTop: "clamp(28px, 4vw, 40px)" }}>
           Referência técnica confirmada: o Compactador de Fuso Pöttinger do portfólio Almeida Equipamentos pode
           atingir relação de compactação de até 5:1 (fonte: especificação oficial Pöttinger). Valores variam
           conforme material, equipamento, configuração e operação.

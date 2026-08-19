@@ -4,7 +4,9 @@ import styles from "./equipamentos.module.css";
 import CompanyHero from "../shared/CompanyHero";
 import ProductRotation from "../shared/ProductRotation";
 import EditorialCTA from "../shared/EditorialCTA";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import LogisticsEfficiency from "./LogisticsEfficiency";
+import ProductNav from "./ProductNav";
 import {
   HERO_IMAGE,
   DETALHE_MECANICO_IMAGE,
@@ -13,6 +15,7 @@ import {
   MATERIAL_ASSOCIATIONS,
   PARTNERS,
 } from "../../lib/equipamentos-data";
+import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 const PRODUCT_TONE = [
   shared.toneStone,
@@ -46,7 +49,7 @@ export default function EquipamentosPage() {
         subcopy="Tecnologias internacionais, produção própria e experiência operacional dentro do Grupo Almeida."
         image={HERO_IMAGE}
         primaryCta={{ label: "Conheça as tecnologias", href: "#produtos" }}
-        secondaryCta={{ label: "Encontre a solução para sua operação", href: "/contato" }}
+        secondaryCta={{ label: "Encontre a solução para sua operação", href: CONTACT_ANCHORS.saoJose }}
       />
 
       {/* ---------------- Posicionamento ---------------- */}
@@ -74,17 +77,7 @@ export default function EquipamentosPage() {
       </section>
 
       {/* ---------------- Navegação interna dos seis produtos ---------------- */}
-      <nav className={styles.productNav} aria-label="Tecnologias da Almeida Equipamentos" id="produtos">
-        <ul className={styles.productNavList}>
-          {PRODUCTS.map((product) => (
-            <li key={product.id}>
-              <a className={styles.productNavLink} href={`#${product.id}`}>
-                {product.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <ProductNav products={PRODUCTS} />
 
       {/* ---------------- Seis capítulos de produto ---------------- */}
       {PRODUCTS.map((product, index) => {
@@ -106,9 +99,7 @@ export default function EquipamentosPage() {
                 <div className={shared.duoContent}>
                   <p className={styles.productManufacturer}>{product.manufacturer}</p>
                   <h2 className={styles.productName}>{product.name}</h2>
-                  <p className={shared.headline} style={{ fontSize: "clamp(20px, 1.6vw + 12px, 26px)" }}>
-                    {product.headline}
-                  </p>
+                  <p className={shared.subheading}>{product.headline}</p>
                   <p className={shared.body}>{product.copy}</p>
 
                   <p className={shared.eyebrow}>Ideal para</p>
@@ -134,7 +125,7 @@ export default function EquipamentosPage() {
                   )}
 
                   <div className={shared.ctaRow}>
-                    <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/contato">
+                    <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={CONTACT_ANCHORS.saoJose}>
                       Falar sobre {product.name}
                     </Link>
                   </div>
@@ -170,7 +161,7 @@ export default function EquipamentosPage() {
             ))}
           </div>
           <div className={shared.ctaRow} style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/contato">
+            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={CONTACT_ANCHORS.saoJose}>
               Descrever minha operação
             </Link>
           </div>
@@ -184,24 +175,7 @@ export default function EquipamentosPage() {
           <h2 className={shared.headline}>Tecnologia internacional aplicada à experiência brasileira.</h2>
           <div className={styles.partnersMedia}>
             <img src={FEIRA_IMAGE.src} alt={FEIRA_IMAGE.alt} loading="lazy" decoding="async" />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                bottom: 10,
-                padding: "4px 10px",
-                background: "rgba(8, 10, 8, 0.62)",
-                color: "var(--color-background)",
-                fontFamily: "var(--font-inter), var(--font-body)",
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                borderRadius: 3,
-              }}
-            >
-              Imagem ilustrativa
-            </span>
+            <IllustrativeBadge />
           </div>
           <p className={shared.body}>
             A presença histórica do Grupo Almeida em contato com tecnologias europeias — incluindo a feira IFAT, em
@@ -231,7 +205,7 @@ export default function EquipamentosPage() {
             quem também vive a operação que orienta cada recomendação.
           </p>
           <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-ambiental">
+            <Link className={shared.btnEditorial} href="/almeida-ambiental">
               Conheça a Almeida Ambiental
             </Link>
           </div>
@@ -241,7 +215,7 @@ export default function EquipamentosPage() {
       <EditorialCTA
         headline="A melhor máquina é a que faz sentido para a sua operação."
         body="Conte qual material você processa, o volume aproximado e o espaço disponível. A equipe da Almeida Equipamentos pode orientar a solução mais adequada."
-        cta={{ label: "Falar com a Almeida Equipamentos", href: "/contato" }}
+        cta={{ label: "Falar com a Almeida Equipamentos", href: CONTACT_ANCHORS.saoJose }}
         tone="carvao"
       />
     </div>

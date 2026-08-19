@@ -38,6 +38,16 @@
   border-bottom: 1px solid rgba(21, 21, 15, 0.12);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* Affordance discreta de scroll horizontal: fade nas duas bordas em vez
+     de setas ou carrossel — some sozinho onde a lista já couber inteira. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+  mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
 }
 
 .productNavList {
@@ -74,11 +84,19 @@
   opacity: 1;
 }
 
+.productNavLink[aria-current="true"] {
+  opacity: 1;
+  color: var(--color-gold-aged);
+  border-bottom-color: var(--color-gold-aged);
+}
+
 /* ---------------- Capítulo de produto ---------------- */
 
 .productChapter {
   padding-block: clamp(56px, 9vw, 96px);
-  scroll-margin-top: calc(var(--header-height) + 56px);
+  /* --anchor-offset (header + respiro) + altura da própria barra sticky de
+     produtos (52px de link + borda), para o título nunca ficar coberto. */
+  scroll-margin-top: calc(var(--anchor-offset) + 40px);
 }
 
 .productManufacturer {
