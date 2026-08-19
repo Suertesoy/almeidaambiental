@@ -1,0 +1,71 @@
+/* ==========================================================
+   "Product viewer" ilustrativo de cada tecnologia da Almeida Equipamentos.
+   Hoje: render estático premium + rotação visual sutil (CSS puro). Quando
+   houver vídeo/render 3D oficial, `videoSrc` passa a ser lido pelo mesmo
+   componente (ver ProductRotation.tsx) sem mudar este arquivo nem o layout
+   da página — só a fonte de mídia muda.
+   ========================================================== */
+
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(21, 21, 15, 0.04), rgba(21, 21, 15, 0.08));
+  perspective: 1400px;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: clamp(16px, 4%, 40px);
+}
+
+.image {
+  animation: product-sway 9s ease-in-out infinite;
+  transform-origin: center 62%;
+}
+
+@keyframes product-sway {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+  25% {
+    transform: rotateY(4deg) scale(1.015);
+  }
+  50% {
+    transform: rotateY(0deg) scale(1.03);
+  }
+  75% {
+    transform: rotateY(-4deg) scale(1.015);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image {
+    animation: none;
+  }
+}
+
+.caption {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  padding: 4px 10px;
+  background: rgba(8, 10, 8, 0.6);
+  color: var(--color-background);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  backdrop-filter: blur(2px);
+}

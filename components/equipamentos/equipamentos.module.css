@@ -1,0 +1,181 @@
+/* ==========================================================
+   /almeida-equipamentos — extras exclusivos desta página. Identidade mais
+   técnica/precisa/premium (Seção 51): mais espaço negativo, mais produto,
+   navegação própria dos seis capítulos, tipografia de parceiros em vez de
+   logos não confirmados.
+   ========================================================== */
+
+.page {
+  background: var(--color-stone-warm);
+  overflow-x: clip;
+}
+
+.modalityTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+.modalityTags li {
+  padding: 8px 16px;
+  border: 1px solid rgba(21, 21, 15, 0.24);
+  border-radius: 999px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ---------------- Navegação interna dos seis produtos ---------------- */
+
+.productNav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 10;
+  background: var(--color-stone-warm);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.12);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.productNavList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(4px, 2vw, 8px);
+  padding-inline: clamp(20px, 6vw, 64px);
+  max-width: 1320px;
+  margin-inline: auto;
+}
+
+.productNavList li {
+  flex: none;
+}
+
+.productNavLink {
+  display: inline-flex;
+  align-items: center;
+  height: 52px;
+  padding-inline: 14px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-foreground);
+  opacity: 0.6;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.productNavLink:hover {
+  opacity: 1;
+}
+
+/* ---------------- Capítulo de produto ---------------- */
+
+.productChapter {
+  padding-block: clamp(56px, 9vw, 96px);
+  scroll-margin-top: calc(var(--header-height) + 56px);
+}
+
+.productManufacturer {
+  margin: 0 0 6px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.productName {
+  margin: 0 0 18px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(24px, 1.6vw + 16px, 32px);
+}
+
+.specsList {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ---------------- Qual tecnologia para qual material ---------------- */
+
+.matrixGrid {
+  margin-top: clamp(32px, 5vw, 48px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 720px) {
+  .matrixGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .matrixGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.matrixItem {
+  padding: 20px 0;
+  border-top: 1px solid rgba(247, 246, 241, 0.2);
+}
+
+.matrixMaterial {
+  margin: 0 0 8px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.matrixProducts {
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.72;
+}
+
+/* ---------------- Parcerias internacionais ---------------- */
+
+.partnersMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin-bottom: clamp(32px, 5vw, 48px);
+}
+
+.partnersMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.partnersList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(24px, 5vw, 56px);
+  align-items: baseline;
+}
+
+.partnerName {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(22px, 2vw + 12px, 34px);
+  letter-spacing: -0.01em;
+}
