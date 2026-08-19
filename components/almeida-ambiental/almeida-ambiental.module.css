@@ -22,44 +22,73 @@
 
 /* ---------------- Capacidade e presença ---------------- */
 
-.presenceList {
-  list-style: none;
-  margin: clamp(40px, 6vw, 64px) 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width: 640px) {
-  .presenceList {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .presenceList {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.presenceItem {
-  padding-top: 16px;
-  border-top: 1px solid rgba(247, 246, 241, 0.22);
-}
-
-.presenceCity {
-  margin: 0;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(22px, 1.4vw + 14px, 28px);
-  color: var(--color-gold-aged);
-}
-
 .presenceNote {
-  margin: 24px 0 0;
+  margin: 20px 0 0;
   max-width: 62ch;
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
   opacity: 0.78;
+}
+
+/* ---------------- Mapa regional (RegionalMap.tsx) ---------------- */
+
+.mapFrame {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: clamp(40px, 6vw, 64px) auto 0;
+  border: 1px solid rgba(247, 246, 241, 0.22);
+  border-radius: 4px;
+}
+
+.mapSvg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  display: block;
+}
+
+.mapOutline {
+  fill: rgba(247, 246, 241, 0.05);
+  stroke: rgba(247, 246, 241, 0.28);
+  stroke-width: 0.6;
+}
+
+.mapPoint {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mapDot {
+  fill: var(--color-gold-aged);
+}
+
+.mapDotSaturno {
+  fill: none;
+  stroke: var(--color-background);
+  stroke-width: 0.5;
+  opacity: 0.85;
+}
+
+.mapPointLabel {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 3.6px;
+  font-weight: 600;
+  fill: var(--color-background);
+}
+
+.mapPointNote {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 2.8px;
+  fill: var(--color-background);
+  opacity: 0.62;
+}
+
+.mapCaption {
+  margin: 16px 0 0;
+  text-align: center;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  color: var(--color-background);
+  opacity: 0.6;
 }

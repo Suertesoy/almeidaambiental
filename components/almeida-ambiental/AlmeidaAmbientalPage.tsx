@@ -4,15 +4,9 @@ import styles from "./almeida-ambiental.module.css";
 import CompanyHero from "../shared/CompanyHero";
 import MaterialGrid from "../shared/MaterialGrid";
 import EditorialCTA from "../shared/EditorialCTA";
-import {
-  HERO_IMAGE,
-  POSITIONING_IMAGE,
-  MATERIALS_IMAGE,
-  PILLARS,
-  MATERIALS,
-  FLOW_STEPS,
-  PRESENCE_LOCATIONS,
-} from "../../lib/almeida-ambiental-data";
+import RegionalMap from "./RegionalMap";
+import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, MATERIALS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
+import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 const PILLAR_TONE = [shared.toneStone, shared.toneStoneAlt, shared.toneStone];
 const PILLAR_SIDE = [shared.duoMediaRight, shared.duoMediaLeft, shared.duoMediaRight];
@@ -34,7 +28,7 @@ export default function AlmeidaAmbientalPage() {
         lede="Desde 1985, a Almeida Ambiental transforma coleta, triagem, processamento e destinação em uma operação integrada para grandes geradores de resíduos."
         image={HERO_IMAGE}
         primaryCta={{ label: "Conheça nossas soluções", href: "#servicos" }}
-        secondaryCta={{ label: "Fale com a Almeida Ambiental", href: "/contato" }}
+        secondaryCta={{ label: "Fale com a Almeida Ambiental", href: CONTACT_ANCHORS.saoJose }}
       />
 
       {/* ---------------- Posicionamento ---------------- */}
@@ -96,7 +90,7 @@ export default function AlmeidaAmbientalPage() {
             atende diferentes categorias de resíduos e direciona cada uma conforme suas características.
           </p>
           <div style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
-            <MaterialGrid materials={MATERIALS} image={MATERIALS_IMAGE} variant="tags" />
+            <MaterialGrid materials={MATERIALS} image={MATERIALS_IMAGE} variant="editorial" />
           </div>
         </div>
       </section>
@@ -125,13 +119,7 @@ export default function AlmeidaAmbientalPage() {
             A expansão do Grupo Almeida permite aproximar estrutura, logística e conhecimento técnico de diferentes
             regiões do estado.
           </p>
-          <ul className={styles.presenceList}>
-            {PRESENCE_LOCATIONS.map((city) => (
-              <li key={city} className={styles.presenceItem}>
-                <p className={styles.presenceCity}>{city}</p>
-              </li>
-            ))}
-          </ul>
+          <RegionalMap />
           <p className={styles.presenceNote}>
             Em Blumenau e no Vale do Itajaí, essa presença regional se estende através da Saturno Ambiental,
             parte do Grupo Almeida.
@@ -152,7 +140,7 @@ export default function AlmeidaAmbientalPage() {
             parte da operação diária.
           </p>
           <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-equipamentos">
+            <Link className={shared.btnEditorial} href="/almeida-equipamentos">
               Conheça a Almeida Equipamentos
             </Link>
           </div>
@@ -162,7 +150,7 @@ export default function AlmeidaAmbientalPage() {
       <EditorialCTA
         headline="Sua operação gera resíduos. A próxima etapa precisa ser planejada."
         body="Converse com a equipe e entenda qual estrutura faz sentido para seu volume, material e rotina."
-        cta={{ label: "Falar com a Almeida Ambiental", href: "/contato" }}
+        cta={{ label: "Falar com a Almeida Ambiental", href: CONTACT_ANCHORS.saoJose }}
         tone="forest"
       />
     </div>
