@@ -2,6 +2,7 @@
 
 import styles from "./historia.module.css";
 import Highlighted from "./Highlighted";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { useReveal } from "./useReveal";
 import type { TimelineEvent } from "../../lib/historia-data";
 
@@ -47,9 +48,7 @@ export default function TimelineEventRow({ event }: { event: TimelineEvent }) {
             decoding="async"
             style={{ objectPosition: event.image.orientation === "portrait" ? "center 30%" : "center" }}
           />
-          {event.image.sourceType === "illustrative" && (
-            <span className={styles.illustrativeTag}>Imagem ilustrativa</span>
-          )}
+          {event.image.sourceType === "illustrative" && <IllustrativeBadge />}
         </div>
       )}
     </article>

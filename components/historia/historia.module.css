@@ -612,30 +612,6 @@
   display: block;
 }
 
-.illustrativeTag {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  padding: 4px 10px;
-  background: rgba(8, 10, 8, 0.62);
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border-radius: 3px;
-  backdrop-filter: blur(2px);
-}
-
-.illustrativeTagHero {
-  position: absolute;
-  z-index: 2;
-  right: clamp(16px, 4vw, 32px);
-  top: calc(var(--header-height) + 20px);
-  bottom: auto;
-}
-
 /* Evento monumental (2026) — mais peso visual, marca o presente. */
 
 .eventMonumental .eventYear {

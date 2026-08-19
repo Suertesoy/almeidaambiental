@@ -1,5 +1,6 @@
 import styles from "./historia.module.css";
 import { ChevronDownIcon } from "../icons";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { HERO_IMAGE } from "../../lib/historia-data";
 
 /**
@@ -36,7 +37,7 @@ export default function HeroDecades() {
         <ChevronDownIcon />
       </div>
 
-      <span className={`${styles.illustrativeTag} ${styles.illustrativeTagHero}`}>Imagem ilustrativa</span>
+      <IllustrativeBadge position="top-right" />
     </section>
   );
 }
