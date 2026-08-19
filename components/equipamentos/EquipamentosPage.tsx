@@ -213,6 +213,26 @@ export default function EquipamentosPage() {
         </div>
       </section>
 
+      {/* ---------------- Cross-link: Almeida Ambiental ---------------- */}
+      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
+        <div className={shared.container}>
+          <p className={shared.eyebrow}>Tecnologia em operação real</p>
+          <h2 className={shared.headline}>
+            Antes de chegar ao catálogo, cada tecnologia já opera dentro do próprio grupo.
+          </h2>
+          <p className={shared.body}>
+            Os mesmos equipamentos apresentados aqui sustentam a operação diária da Almeida Ambiental — coleta,
+            triagem e trituração em escala real, não em teoria. É essa proximidade entre quem vende a tecnologia e
+            quem também vive a operação que orienta cada recomendação.
+          </p>
+          <div className={shared.ctaRow}>
+            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-ambiental">
+              Conheça a Almeida Ambiental
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <EditorialCTA
         headline="A melhor máquina é a que faz sentido para a sua operação."
         body="Conte qual material você processa, o volume aproximado e o espaço disponível. A equipe da Almeida Equipamentos pode orientar a solução mais adequada."
