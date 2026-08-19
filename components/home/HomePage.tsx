@@ -79,7 +79,7 @@ export default function HomePage() {
                 ambiental.
               </p>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/almeida-ambiental">
+                <Link className={styles.editorialLink} href="/almeida-ambiental">
                   Conheça Almeida Ambiental
                 </Link>
               </div>
@@ -141,7 +141,7 @@ export default function HomePage() {
                 <li>Containers</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-equipamentos">
+                <Link className={styles.editorialLink} href="/almeida-equipamentos">
                   Conheça Almeida Equipamentos
                 </Link>
               </div>
@@ -201,7 +201,7 @@ export default function HomePage() {
                 <li>Consultoria</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
+                <Link className={styles.editorialLink} href="/saturno-ambiental">
                   Conheça Saturno Ambiental
                 </Link>
               </div>

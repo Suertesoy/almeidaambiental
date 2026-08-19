@@ -24,6 +24,9 @@ html:has([data-page="home"]) {
 
 .section {
   padding-block: clamp(64px, 11vw, 112px);
+  /* Âncora do chevron do Hero (#almeida-ambiental) nunca deve ficar
+     escondida atrás do Header fixo. */
+  scroll-margin-top: var(--anchor-offset);
 }
 
 @media (min-width: 1024px) {
@@ -164,6 +167,41 @@ html:has([data-page="home"]) {
 .btn:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Link editorial (texto + seta): para os cross-links "Conheça Almeida
+   Ambiental/Equipamentos/Saturno Ambiental" — não são a conversão
+   principal da Home, então não competem em peso com um .btn. */
+.editorialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.editorialLink::after {
+  content: "→";
+  transition: transform 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorialLink::after {
+    transition: none;
+  }
+}
+
+.editorialLink:hover::after {
+  transform: translateX(3px);
+}
+
+.editorialLink:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
 }
 
 /* ---------------- Hero cinematográfico ---------------- */
