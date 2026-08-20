@@ -452,19 +452,39 @@ html {
   background: var(--color-muted);
 }
 
-/* ---------------- Footer ---------------- */
+/* ---------------- Footer ----------------
+   Checkpoint G (refinamento 2026-08): grid editorial left-aligned (marca ·
+   empresas · links institucionais) no mesmo max-width institucional das
+   páginas de empresa (1320px) — substitui a coluna única centralizada, que
+   ficava alta, sem hierarquia entre Grupo/empresas/CNPJs/links e destoava
+   do resto do sistema visual (ver DECISOES.md). Nenhum dado legal alterado. */
 .site-footer {
   position: relative;
   z-index: 2;
   background: var(--color-background);
   color: var(--color-foreground);
-  padding: 32px 20px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
   border-top: 1px solid rgba(21, 21, 15, 0.08);
+}
+
+.footer-inner {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: clamp(32px, 5vw, 48px) clamp(20px, 6vw, 64px) 24px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  text-align: left;
+}
+
+@media (min-width: 900px) {
+  .footer-grid {
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 2.5fr) minmax(130px, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
 }
 
 .footer-brand {
@@ -474,27 +494,8 @@ html {
   font-size: 22px;
 }
 
-.footer-line {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-/* Bloco institucional das 4 empresas/unidades do grupo — discreto, sem
-   cards verdes: só divisor sutil entre itens no mobile e grid 2×2 a partir
-   de 640px. O Grupo Almeida (acima) não tem CNPJ próprio; cada empresa
-   tem o seu. */
-.footer-companies {
-  width: 100%;
-  max-width: 640px;
-  margin: 2px 0;
-  padding-top: 16px;
-  border-top: 1px solid rgba(21, 21, 15, 0.08);
-}
-
-.footer-companies-heading {
-  margin: 0 0 12px;
+.footer-heading {
+  margin: 0 0 14px;
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -503,19 +504,21 @@ html {
   color: var(--text-muted);
 }
 
+/* Empresas do Grupo — discreto, sem cards: divisor sutil entre itens no
+   mobile, grid 2×2 a partir de 560px. O Grupo Almeida não tem CNPJ próprio;
+   cada empresa/unidade tem o seu. */
 .footer-companies-grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px 20px;
+  gap: 14px 28px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 560px) {
   .footer-companies-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    text-align: left;
   }
 }
 
@@ -529,7 +532,7 @@ html {
   border-top: none;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 560px) {
   .footer-company {
     padding-top: 0;
     border-top: none;
@@ -558,28 +561,55 @@ html {
   color: var(--text-muted);
 }
 
-.footer-nav {
+.footer-links-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
   font-family: var(--font-body);
   font-size: 14px;
 }
 
-.footer-nav a {
+.footer-links-list a {
   color: var(--color-foreground);
   text-decoration: underline;
 }
 
-.footer-nav span[aria-hidden="true"] {
-  opacity: 0.5;
+.footer-links-list span {
+  color: var(--text-secondary);
+}
+
+.footer-bottom {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(21, 21, 15, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 20px;
+}
+
+.footer-line {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .footer-copyright {
-  margin: 8px 0 0;
+  margin: 0;
   font-family: var(--font-body);
   font-size: 12px;
   color: var(--text-muted);
+}
+
+@media (max-width: 639px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }
