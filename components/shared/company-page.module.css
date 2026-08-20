@@ -490,6 +490,25 @@
   }
 }
 
+/* Checkpoint E (Seção 24): mesma família de ícones do processo da Home
+   (components/icons.tsx, PROCESS_STEP_ICONS, por posição) — reconhecimento
+   rápido por ícone somado à numeração já existente, não substituindo-a.
+   Sempre toneForest aqui, então --role-secondary (on-dark), não dourado. */
+.flowIcon {
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 10px;
+  color: var(--role-secondary, var(--text-on-dark-secondary));
+}
+
+@media (min-width: 720px) {
+  .flowIcon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 /* Numeração/índice (01, 02, 03...) é tratada como metadata em accent
    dourado atenuado em todo o site — mesmo papel de .pillarIndex
    (almeida-ambiental), .frentesCompactIndex (saturno) e .indexNumber

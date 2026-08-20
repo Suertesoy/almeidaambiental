@@ -77,13 +77,30 @@
 
 .indexItem {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   padding: 12px 0;
   border-top: 1px solid rgba(21, 21, 15, 0.16);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 14px;
+}
+
+/* Checkpoint E/F (Seções 18/22): ícone reconhecível antes do nome do
+   material — superfície clara nas duas páginas que usam MaterialGrid, então
+   verde profundo/secondary, nunca dourado por padrão (Seção 33). */
+.materialIcon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--role-secondary, var(--text-secondary));
+}
+
+@media (min-width: 1024px) {
+  .materialIcon {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .dark .indexItem {
@@ -126,6 +143,9 @@
 }
 
 .editorialItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 14px 0;
   border-top: 1px solid rgba(21, 21, 15, 0.14);
   font-family: var(--font-playfair), Georgia, serif;

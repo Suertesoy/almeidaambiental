@@ -5,6 +5,7 @@ import CompanyHero from "../shared/CompanyHero";
 import MaterialGrid from "../shared/MaterialGrid";
 import EditorialCTA from "../shared/EditorialCTA";
 import RegionalMap from "./RegionalMap";
+import { PROCESS_STEP_ICONS } from "../icons";
 import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, MATERIALS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
@@ -101,12 +102,16 @@ export default function AlmeidaAmbientalPage() {
           <p className={shared.eyebrow}>Do resíduo ao novo ciclo</p>
           <h2 className={shared.headline}>Diagnóstico, coleta, triagem, trituração e destinação em uma só operação.</h2>
           <ol className={shared.flowRow} style={{ ["--flow-steps" as string]: FLOW_STEPS.length }}>
-            {FLOW_STEPS.map((step, index) => (
-              <li key={step} className={shared.flowStep}>
-                <span className={shared.flowIndex}>{String(index + 1).padStart(2, "0")}</span>
-                <p className={shared.flowLabel}>{step}</p>
-              </li>
-            ))}
+            {FLOW_STEPS.map((step, index) => {
+              const StepIcon = PROCESS_STEP_ICONS[index];
+              return (
+                <li key={step} className={shared.flowStep}>
+                  <StepIcon className={shared.flowIcon} />
+                  <span className={shared.flowIndex}>{String(index + 1).padStart(2, "0")}</span>
+                  <p className={shared.flowLabel}>{step}</p>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </section>
@@ -140,7 +145,7 @@ export default function AlmeidaAmbientalPage() {
             parte da operação diária.
           </p>
           <div className={shared.ctaRow}>
-            <Link className={shared.btnEditorial} href="/almeida-equipamentos">
+            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-equipamentos">
               Conheça a Almeida Equipamentos
             </Link>
           </div>

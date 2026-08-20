@@ -1,5 +1,6 @@
 import styles from "./MaterialGrid.module.css";
 import IllustrativeBadge from "./IllustrativeBadge";
+import { MATERIAL_ICONS } from "../icons";
 import type { EditorialImage } from "../../lib/media";
 
 export type MaterialGridProps = {
@@ -38,22 +39,30 @@ export default function MaterialGrid({ materials, image, variant = "tags", dark 
 
       {variant === "index" && (
         <ul className={styles.indexList}>
-          {materials.map((material, index) => (
-            <li key={material} className={styles.indexItem}>
-              <span className={styles.indexNumber}>{String(index + 1).padStart(2, "0")}</span>
-              <span>{material}</span>
-            </li>
-          ))}
+          {materials.map((material, index) => {
+            const MaterialIcon = MATERIAL_ICONS[material];
+            return (
+              <li key={material} className={styles.indexItem}>
+                {MaterialIcon && <MaterialIcon className={styles.materialIcon} />}
+                <span className={styles.indexNumber}>{String(index + 1).padStart(2, "0")}</span>
+                <span>{material}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
 
       {variant === "editorial" && (
         <ul className={styles.editorialList}>
-          {materials.map((material) => (
-            <li key={material} className={styles.editorialItem}>
-              {material}
-            </li>
-          ))}
+          {materials.map((material) => {
+            const MaterialIcon = MATERIAL_ICONS[material];
+            return (
+              <li key={material} className={styles.editorialItem}>
+                {MaterialIcon && <MaterialIcon className={styles.materialIcon} />}
+                {material}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
