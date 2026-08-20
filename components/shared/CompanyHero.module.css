@@ -39,8 +39,13 @@
   color: var(--color-background);
 }
 
+/* Único eyebrow do site com o accent dourado como padrão (não seletivo):
+   é a identidade da empresa (Almeida Ambiental/Equipamentos/Saturno) no
+   topo de cada página — só 3 instâncias no site inteiro, então não conflita
+   com a regra de "não deixar tudo dourado automaticamente" (Seção 9). */
 .eyebrow {
   margin: 0;
+  color: var(--text-on-dark-accent);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 13px;
@@ -64,23 +69,25 @@
 .lede {
   margin: 20px 0 0;
   max-width: 62ch;
+  color: var(--text-on-dark-secondary);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
   font-size: clamp(15px, 0.3vw + 14px, 18px);
   line-height: 1.62;
+  /* Fundo é fotografia, não superfície plana: o text-shadow (não opacity)
+     é o mecanismo real de legibilidade aqui, por cima do scrim do Hero. */
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-  opacity: 0.94;
 }
 
 .subcopy {
   margin: 10px 0 0;
   max-width: 62ch;
+  color: var(--text-on-dark-muted);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 14px;
   line-height: 1.5;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-  opacity: 0.85;
 }
 
 .ctaRow {

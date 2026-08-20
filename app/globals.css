@@ -50,6 +50,34 @@
      sticky (ex.: nav de produtos da Equipamentos), soma-se a altura dela por
      cima deste valor no próprio módulo. */
   --anchor-offset: calc(var(--header-height) + 16px);
+
+  /* ---- Papéis semânticos de texto (Checkpoint A, refinamento 2026-08) ----
+     Substituem o padrão anterior de "color: inherit + opacity" para criar
+     hierarquia — que achatava tudo à mesma cor-base com transparência
+     diferente. Quatro papéis por superfície, reaproveitando a família
+     verde-floresta/oliva já estabelecida (não tons de cinza neutros) para
+     manter a identidade. Valores verificados por cálculo de luminância
+     relativa (WCAG 2.x) contra as quatro superfícies reais do site —
+     incluindo --color-stone-warm-alt, a mais escura das claras, onde
+     eyebrow/tagRow/specs de Equipamentos e Ambiental efetivamente
+     aparecem — não só contra --color-background:
+       primary   (--color-foreground, já existia)     : 16.9:1 / 18.6:1
+       secondary #3D4741 sobre stone-warm-alt          : 5.67:1
+       muted     #48524C sobre stone-warm-alt          : 4.77:1
+       accent    #5C4816 sobre stone-warm-alt          : 5.11:1
+       on-dark-secondary #CBD5CE sobre forest-deep      : 10.13:1
+       on-dark-muted     #88968D sobre forest-deep      : 4.93:1
+       on-dark-accent (--color-gold-aged) sobre forest  : 6.30:1
+     Todos >= 4.5:1 (texto normal, WCAG AA) no pior caso real de uso. */
+  --text-primary: var(--color-foreground);
+  --text-secondary: #3d4741;
+  --text-muted: #48524c;
+  --text-accent: #5c4816;
+
+  --text-on-dark-primary: var(--color-background);
+  --text-on-dark-secondary: #cbd5ce;
+  --text-on-dark-muted: #88968d;
+  --text-on-dark-accent: var(--color-gold-aged);
 }
 
 @media (min-width: 1024px) {
@@ -439,8 +467,7 @@ html {
   margin: 0;
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--color-foreground);
-  opacity: 0.8;
+  color: var(--text-secondary);
 }
 
 /* Bloco institucional das 4 empresas/unidades do grupo — discreto, sem
@@ -462,8 +489,7 @@ html {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-foreground);
-  opacity: 0.55;
+  color: var(--text-muted);
 }
 
 .footer-companies-grid {
@@ -511,16 +537,14 @@ html {
   margin: 2px 0 0;
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--color-foreground);
-  opacity: 0.7;
+  color: var(--text-secondary);
 }
 
 .footer-company-cnpj {
   margin: 2px 0 0;
   font-family: var(--font-body);
   font-size: 11px;
-  color: var(--color-foreground);
-  opacity: 0.55;
+  color: var(--text-muted);
 }
 
 .footer-nav {
@@ -546,6 +570,5 @@ html {
   margin: 8px 0 0;
   font-family: var(--font-body);
   font-size: 12px;
-  color: var(--color-foreground);
-  opacity: 0.6;
+  color: var(--text-muted);
 }

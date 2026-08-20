@@ -34,32 +34,51 @@
   padding-block: var(--space-section-editorial);
 }
 
+/* Cada tom expõe os papéis de texto como custom properties (--role-*), não
+   só a cor "primary" via `color`. Custom properties atravessam a fronteira
+   de CSS Modules por herança normal do DOM — diferente de nomes de classe,
+   que são únicos por arquivo — então qualquer módulo de página (ex.:
+   equipamentos.module.css) pode ler var(--role-muted) sem importar este
+   arquivo, desde que o elemento esteja dentro de uma seção .toneX. Fora de
+   uma seção .toneX (ex.: diretório de /contato, sobre --color-card), o
+   fallback em cada var(--role-muted, var(--text-muted)) assume o claro. */
+.toneForest,
+.toneCarvao {
+  color: var(--text-on-dark-primary);
+  --role-secondary: var(--text-on-dark-secondary);
+  --role-muted: var(--text-on-dark-muted);
+  --role-accent: var(--text-on-dark-accent);
+}
+
 .toneForest {
   background: var(--color-forest-deep);
-  color: var(--color-background);
 }
 
 .toneCarvao {
   background: var(--color-foreground);
-  color: var(--color-background);
+}
+
+.toneStone,
+.toneStoneAlt {
+  color: var(--text-primary);
+  --role-secondary: var(--text-secondary);
+  --role-muted: var(--text-muted);
+  --role-accent: var(--text-accent);
 }
 
 .toneStone {
   background: var(--color-stone-warm);
-  color: var(--color-foreground);
 }
 
 .toneStoneAlt {
   background: var(--color-stone-warm-alt);
-  color: var(--color-foreground);
 }
 
 /* ---------------- Tipografia editorial ---------------- */
 
 .eyebrow {
   margin: 0 0 10px;
-  color: inherit;
-  opacity: 0.72;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   font-weight: 600;
@@ -67,10 +86,17 @@
   text-transform: uppercase;
 }
 
+/* Modificador seletivo (Seção 9): eyebrows que funcionam como marcador
+   institucional/categórico forte usam o accent dourado atenuado em vez do
+   muted padrão. Aplicado caso a caso pela página, não por padrão — a
+   maioria dos eyebrows continua .eyebrow puro. */
+.eyebrowAccent {
+  color: var(--role-accent, var(--text-accent));
+}
+
 .locationLine {
   margin: 0 0 14px;
-  color: inherit;
-  opacity: 0.72;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
   font-weight: 600;
@@ -122,8 +148,7 @@
 .body {
   margin: 0 0 20px;
   max-width: 56ch;
-  color: inherit;
-  opacity: 0.88;
+  color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
   font-size: clamp(15px, 0.3vw + 14px, 18px);
@@ -314,10 +339,10 @@
   list-style: none;
   margin: 0 0 24px;
   padding: 0;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 13px;
-  opacity: 0.75;
 }
 
 .tagRow li:not(:last-child)::after {
@@ -395,13 +420,18 @@
   }
 }
 
+/* Numeração/índice (01, 02, 03...) é tratada como metadata em accent
+   dourado atenuado em todo o site — mesmo papel de .pillarIndex
+   (almeida-ambiental), .frentesCompactIndex (saturno) e .indexNumber
+   (MaterialGrid), para que "número = metadata categórica" seja um padrão
+   reconhecível, não uma cor por seção. */
 .flowIndex {
   display: block;
   margin-bottom: 8px;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: 16px;
-  opacity: 0.6;
+  color: var(--role-accent, var(--text-accent));
 }
 
 .flowLabel {

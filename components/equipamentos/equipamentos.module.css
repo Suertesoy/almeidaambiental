@@ -73,19 +73,17 @@
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 13px;
-  color: var(--color-foreground);
-  opacity: 0.6;
+  color: var(--text-muted);
   text-decoration: none;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
 }
 
 .productNavLink:hover {
-  opacity: 1;
+  color: var(--text-secondary);
 }
 
 .productNavLink[aria-current="true"] {
-  opacity: 1;
   color: var(--color-gold-aged);
   border-bottom-color: var(--color-gold-aged);
 }
@@ -101,10 +99,10 @@
 
 .productManufacturer {
   margin: 0 0 6px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  opacity: 0.6;
 }
 
 .productName {
@@ -122,9 +120,9 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.75;
 }
 
 /* ---------------- Eficiência que aparece no transporte ---------------- */
@@ -237,10 +235,10 @@
 .densityNote {
   margin: 16px 0 0;
   max-width: 62ch;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   line-height: 1.6;
-  opacity: 0.68;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -292,9 +290,9 @@
 
 .matrixProducts {
   margin: 0;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.72;
 }
 
 /* ---------------- Parcerias internacionais ---------------- */

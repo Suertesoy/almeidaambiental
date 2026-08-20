@@ -51,7 +51,7 @@ export default function SaturnoPage() {
       {/* ---------------- Três frentes compartilhadas, tratamento compacto ---------------- */}
       <section id="frentes" className={`${shared.sectionCompact} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
-          <p className={shared.eyebrow}>Serviços</p>
+          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Serviços</p>
           <h2 className={shared.headline}>Gestão de resíduos com linguagem própria da região.</h2>
           <div className={styles.frentesCompactGrid}>
             {COMPACT_FRENTES.map((frente, index) => (
@@ -73,7 +73,7 @@ export default function SaturnoPage() {
               <img src={CARTONAGEM.image!.src} alt={CARTONAGEM.image!.alt} loading="lazy" decoding="async" />
             </div>
             <div className={shared.duoContent}>
-              <p className={shared.eyebrow}>{CARTONAGEM.eyebrow}</p>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{CARTONAGEM.eyebrow}</p>
               <h2 className={shared.headline}>{CARTONAGEM.headline}</h2>
               <p className={shared.body}>{CARTONAGEM.copy}</p>
               {CARTONAGEM.tags && (
@@ -98,7 +98,7 @@ export default function SaturnoPage() {
         <div className={shared.container}>
           <div className={`${shared.duo} ${shared.duoMediaRight}`}>
             <div className={shared.duoContent}>
-              <p className={shared.eyebrow}>{GESTAO_AMBIENTAL.eyebrow}</p>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
               <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
               <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
               {GESTAO_AMBIENTAL.tags && (

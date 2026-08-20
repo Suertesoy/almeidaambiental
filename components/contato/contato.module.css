@@ -68,12 +68,15 @@
   outline-offset: 4px;
 }
 
+/* Mesmo papel de numeração-como-metadata das demais páginas (Seção 30) —
+   .directory está sempre sobre --color-card (fora de uma seção .toneX), daí
+   o fallback ser o único valor usado na prática aqui. */
 .directoryIndex {
   flex: none;
+  color: var(--role-accent, var(--text-accent));
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: 15px;
-  opacity: 0.45;
 }
 
 .directoryText {
@@ -91,9 +94,9 @@
 }
 
 .directorySubtitle {
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.62;
 }
 
 .directoryCta {
@@ -125,9 +128,9 @@
 
 .cnpjLine {
   margin: 12px 0 0;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.6;
 }
 
 .channels {
@@ -157,20 +160,20 @@
 .channelLabel {
   display: block;
   margin-bottom: 10px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.6;
 }
 
 .channelAddress {
   margin: 0 0 12px;
+  color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-size: 15px;
   line-height: 1.6;
-  opacity: 0.92;
 }
 
 .channelLink {
@@ -215,12 +218,12 @@
 }
 
 .channelRowLabel {
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.6;
 }
 
 .channelRowNumber {
@@ -234,10 +237,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 13px;
-  opacity: 0.8;
 }
 
 .channelRowAction svg {
@@ -249,8 +252,8 @@
 .channelNote {
   margin: 16px 0 0;
   max-width: 48ch;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   line-height: 1.5;
-  opacity: 0.62;
 }

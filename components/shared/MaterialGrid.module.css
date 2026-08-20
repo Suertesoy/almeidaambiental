@@ -79,11 +79,12 @@
   border-top-color: rgba(247, 246, 241, 0.22);
 }
 
+/* Mesmo papel de numeração-como-metadata do restante do site (Seção 30). */
 .indexNumber {
+  color: var(--role-accent, var(--text-accent));
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: 13px;
-  opacity: 0.5;
 }
 
 /* variant "editorial": lista tipográfica em duas colunas, sem numeração e

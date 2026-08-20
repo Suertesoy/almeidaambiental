@@ -28,7 +28,7 @@ export default function ContatoPage() {
       <section className={`${shared.sectionCompact} ${shared.toneForest}`}>
         <div className={shared.container}>
           <Reveal>
-            <p className={shared.eyebrow}>Contato</p>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Contato</p>
             <h1 className={styles.heroTitle}>Encontre o canal certo para sua operação.</h1>
             <p className={`${shared.body} ${styles.heroLede}`}>
               Atendimento direto para São José, Araquari / Joinville e Blumenau.

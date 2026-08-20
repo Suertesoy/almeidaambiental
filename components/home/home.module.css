@@ -35,24 +35,39 @@ html:has([data-page="home"]) {
   }
 }
 
+/* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
+   (ver comentário lá): cada tom expõe os papéis de texto como custom
+   properties, que atravessam a fronteira de CSS Modules por herança do DOM. */
+.toneForest,
+.toneCarvao {
+  color: var(--text-on-dark-primary);
+  --role-secondary: var(--text-on-dark-secondary);
+  --role-muted: var(--text-on-dark-muted);
+  --role-accent: var(--text-on-dark-accent);
+}
+
 .toneForest {
   background: var(--color-forest-deep);
-  color: var(--color-background);
 }
 
 .toneCarvao {
   background: var(--color-foreground);
-  color: var(--color-background);
+}
+
+.toneStone,
+.toneStoneAlt {
+  color: var(--text-primary);
+  --role-secondary: var(--text-secondary);
+  --role-muted: var(--text-muted);
+  --role-accent: var(--text-accent);
 }
 
 .toneStone {
   background: var(--color-stone-warm);
-  color: var(--color-foreground);
 }
 
 .toneStoneAlt {
   background: var(--color-stone-warm-alt);
-  color: var(--color-foreground);
 }
 
 /* ---------------- Tipografia editorial ----------------
@@ -63,8 +78,7 @@ html:has([data-page="home"]) {
 
 .eyebrow {
   margin: 0 0 10px;
-  color: inherit;
-  opacity: 0.72;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   font-weight: 600;
@@ -72,10 +86,17 @@ html:has([data-page="home"]) {
   text-transform: uppercase;
 }
 
+/* Seletivo (Seção 9): só o eyebrow de "Impacto Positivo · 2025" usa o
+   accent — as seis seções de empresa já carregam destaque dourado na
+   própria headline (.gold em palavras como DESTINO/EFICIÊNCIA/TECNOLOGIA),
+   então manter o eyebrow delas em muted evita dourado em toda a página. */
+.eyebrowAccent {
+  color: var(--role-accent, var(--text-accent));
+}
+
 .locationLine {
   margin: 0 0 14px;
-  color: inherit;
-  opacity: 0.72;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
   font-weight: 600;
@@ -102,8 +123,7 @@ html:has([data-page="home"]) {
 .body {
   margin: 0 0 20px;
   max-width: 56ch;
-  color: inherit;
-  opacity: 0.88;
+  color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
   font-size: clamp(15px, 0.3vw + 14px, 18px);
@@ -459,7 +479,7 @@ html:has([data-page="home"]) {
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: 16px;
-  opacity: 0.6;
+  color: var(--role-accent, var(--text-accent));
 }
 
 .processLabel {
@@ -478,10 +498,10 @@ html:has([data-page="home"]) {
   list-style: none;
   margin: 0 0 24px;
   padding: 0;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
   font-size: 13px;
-  opacity: 0.75;
 }
 
 .tagRow li:not(:last-child)::after {
@@ -531,9 +551,9 @@ html:has([data-page="home"]) {
 
 .metricLabel {
   margin-top: 10px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.78;
 }
 
 /* ---------------- Manifesto final ---------------- */

@@ -171,7 +171,7 @@ export default function EquipamentosPage() {
       {/* ---------------- Parcerias internacionais ---------------- */}
       <section className={`${shared.section} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <p className={shared.eyebrow}>Parcerias internacionais</p>
+          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Parcerias internacionais</p>
           <h2 className={shared.headline}>Tecnologia internacional aplicada à experiência brasileira.</h2>
           <div className={styles.partnersMedia}>
             <img src={FEIRA_IMAGE.src} alt={FEIRA_IMAGE.alt} loading="lazy" decoding="async" />
@@ -195,7 +195,7 @@ export default function EquipamentosPage() {
       {/* ---------------- Cross-link: Almeida Ambiental ---------------- */}
       <section className={`${shared.section} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
-          <p className={shared.eyebrow}>Tecnologia em operação real</p>
+          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Tecnologia em operação real</p>
           <h2 className={shared.headline}>
             Antes de chegar ao catálogo, cada tecnologia já opera dentro do próprio grupo.
           </h2>

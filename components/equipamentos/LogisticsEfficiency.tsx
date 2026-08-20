@@ -38,7 +38,7 @@ export default function LogisticsEfficiency() {
       aria-labelledby="densidade-heading"
     >
       <div className={shared.container}>
-        <p className={`${shared.eyebrow} ${shared.gold}`}>Eficiência logística</p>
+        <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Eficiência logística</p>
         <h2 id="densidade-heading" className={shared.headline}>
           Eficiência que aparece no transporte.
         </h2>
