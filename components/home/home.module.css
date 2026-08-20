@@ -505,34 +505,59 @@ html:has([data-page="home"]) {
 
 /* ---------------- Etapas do processo (Almeida Ambiental) ---------------- */
 
+/* Mobile (Checkpoint A, refinamento 2026-08-20): grid de 2 colunas — a
+   maioria das etapas ocupa a faixa inteira (grid-column: 1 / -1, uma por
+   linha), exceto Trituração e Descaracterização (4ª e 5ª etapa, mesma fase
+   de processamento — Seção 6 da tarefa), que ficam lado a lado na mesma
+   linha via grid-column: span 1. Sem mudança de DOM: só posicionamento CSS
+   por nth-child, resetado a `auto` em ≥720px onde as 6 etapas voltam a ser
+   colunas únicas em sequência. */
 .processRow {
   list-style: none;
-  margin: clamp(40px, 6vw, 64px) 0 0;
+  margin: clamp(32px, 5vw, 64px) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+}
+
+.processStep {
+  grid-column: 1 / -1;
+}
+
+.processStep:nth-child(4),
+.processStep:nth-child(5) {
+  grid-column: span 1;
 }
 
 @media (min-width: 720px) {
   .processRow {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .processStep,
+  .processStep:nth-child(4),
+  .processStep:nth-child(5) {
+    grid-column: auto;
   }
 }
 
-/* Checkpoint B (Seção 12): hierarquia ícone → nome → número. O número
-   deixou de abrir o bloco (era o primeiro elemento, maior peso visual do
-   que o nome da etapa) e virou metadata discreta ao final. */
+/* Checkpoint B (Seção 12, rodada anterior): hierarquia ícone → nome →
+   número — número como metadata discreta ao final, nunca abrindo o bloco.
+   Checkpoint A (Seção 3-5, esta rodada): mobile centralizado e compacto —
+   ícone e nome centralizados, número removido visualmente (mantido no DOM,
+   Seção 3 da tarefa), sem virar card (sem fundo, sem bolinha). */
 .processStep {
-  padding: 18px 16px;
+  padding: 12px 6px;
   border-top: 1px solid rgba(21, 21, 15, 0.18);
+  text-align: center;
 }
 
 .processIcon {
   display: block;
-  width: 28px;
-  height: 28px;
-  margin-bottom: 12px;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 8px;
   color: var(--role-secondary, var(--text-secondary));
 }
 
@@ -540,18 +565,39 @@ html:has([data-page="home"]) {
   margin: 0;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
   color: inherit;
 }
 
 .processIndex {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--role-accent, var(--text-accent));
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .processStep {
+    padding: 18px 16px;
+    text-align: left;
+  }
+
+  .processIcon {
+    width: 28px;
+    height: 28px;
+    margin: 0 0 12px;
+  }
+
+  .processLabel {
+    font-size: 16px;
+  }
+
+  .processIndex {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-inter), var(--font-body);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--role-accent, var(--text-accent));
+  }
 }
 
 @media (min-width: 1024px) {

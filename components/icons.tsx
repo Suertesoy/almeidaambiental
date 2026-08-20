@@ -115,27 +115,47 @@ export function ProcessTrituracaoIcon({ className }: FunctionalIconProps) {
   );
 }
 
-/* Usado como "Descaracterização" (Home) e "Destinação" (Almeida Ambiental)
-   — mesma posição (5ª etapa), mesmo conceito de saída controlada, mesmo
-   ícone (Seção 12/24 da tarefa: uma família, não dois sistemas). */
-export function ProcessDestinacaoIcon({ className }: FunctionalIconProps) {
+/* Descaracterização: documento (canto dobrado) que se transforma em tiras
+   picotadas abaixo de uma linha — leitura de "shredder", nunca um pin de
+   localização (a etapa anterior a esta usava um pin, semanticamente errado
+   aqui: ver Seção 7 da tarefa de refinamento mobile). Distinta da engrenagem
+   de Trituração (processo mecânico) mesmo sendo a fase seguinte do mesmo
+   bloco de processamento. */
+export function ProcessDescaracterizacaoIcon({ className }: FunctionalIconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 3c3.3 0 6 2.6 6 6 0 4.5-6 12-6 12S6 13.5 6 9c0-3.4 2.7-6 6-6Z" {...iconStroke} />
-      <path d="M9.3 9.2 11.2 11l3.5-3.6" {...iconStroke} />
+      <path d="M7 3h7l4 4v3" {...iconStroke} />
+      <path d="M14 3v4h4" {...iconStroke} />
+      <path d="M4 13h16" {...iconStroke} />
+      <path d="M6.5 13v7M10 13v7M13.5 13v7M17 13v7" {...iconStroke} />
     </svg>
   );
 }
 
-/** Ordem fixa (Diagnóstico, Coleta, Triagem, Trituração, Destinação/
- *  Descaracterização) — reaproveitada por posição, não por texto do label,
- *  porque Home e Almeida Ambiental usam labels ligeiramente diferentes para
- *  a mesma 5ª etapa conceitual. */
+/* Destinação: seta chegando a um ponto final (fim de linha) — etapa de
+   saída/entrega, distinta do pin de localização usado anteriormente (que
+   confundia "destino" com "endereço"). Última etapa do fluxo, sempre a 6ª
+   posição. */
+export function ProcessDestinacaoIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 12h13" {...iconStroke} />
+      <path d="M11 7l5 5-5 5" {...iconStroke} />
+      <path d="M21 5v14" {...iconStroke} />
+    </svg>
+  );
+}
+
+/** Ordem fixa das seis etapas do fluxo operacional (Diagnóstico, Coleta,
+ *  Triagem, Trituração, Descaracterização, Destinação) — reaproveitada por
+ *  posição, não por texto do label, porque Home e Almeida Ambiental podem
+ *  usar labels ligeiramente diferentes para a mesma etapa conceitual. */
 export const PROCESS_STEP_ICONS = [
   ProcessDiagnosticoIcon,
   ProcessColetaIcon,
   ProcessTriagemIcon,
   ProcessTrituracaoIcon,
+  ProcessDescaracterizacaoIcon,
   ProcessDestinacaoIcon,
 ] as const;
 
@@ -276,10 +296,25 @@ function MaterialVolumeContinuoIcon({ className }: FunctionalIconProps) {
   );
 }
 
+function MaterialTexteisIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 6c2 1.6 4 1.6 6 0s4-1.6 6 0 4 1.6 6 0" {...iconStroke} />
+      <path d="M4 12c2 1.6 4 1.6 6 0s4-1.6 6 0 4 1.6 6 0" {...iconStroke} />
+      <path d="M4 18c2 1.6 4 1.6 6 0s4-1.6 6 0 4 1.6 6 0" {...iconStroke} />
+    </svg>
+  );
+}
+
 /** Uma chave por material — mesmo texto exato usado em lib/materials.ts
  *  (Almeida Ambiental/Saturno) e lib/equipamentos-data.ts
  *  (MATERIAL_ASSOCIATIONS). Ausência de chave é esperada para materiais
- *  ainda não mapeados; o consumidor decide o que fazer (ver MaterialGrid). */
+ *  ainda não mapeados; o consumidor decide o que fazer (ver MaterialGrid).
+ *  As chaves abaixo depois de Grandes volumes contínuos são variantes de
+ *  texto usadas só em "Ideal para" da Almeida Equipamentos (Checkpoint C,
+ *  refinamento 2026-08-20) — sempre apontando para o MESMO ícone do
+ *  material equivalente já usado no resto do site (Seção 12 da tarefa: não
+ *  criar símbolo novo para o mesmo material com nome ligeiramente diferente). */
 export const MATERIAL_ICONS: Record<string, (props: FunctionalIconProps) => ReactElement> = {
   "Papelão": MaterialPapelaoIcon,
   "Papel branco": MaterialPapelBrancoIcon,
@@ -293,6 +328,132 @@ export const MATERIAL_ICONS: Record<string, (props: FunctionalIconProps) => Reac
   "Alumínio": MaterialAluminioIcon,
   "Ferro": MaterialFerroIcon,
   "Resíduo orgânico": MaterialResiduoOrganicoIcon,
+  "Papel": MaterialPapelBrancoIcon,
+  "Plásticos": MaterialPlasticoIcon,
+  "Copos plásticos": MaterialPlasticoIcon,
+  "Garrafas PET": MaterialPlasticoIcon,
+  "Embalagens Tetra Pak": MaterialTetraPakIcon,
+  "Lodos específicos": MaterialResiduoUmidoIcon,
+  "Operações de grande volume": MaterialVolumeContinuoIcon,
+  "Têxteis": MaterialTexteisIcon,
   "Resíduos úmidos": MaterialResiduoUmidoIcon,
   "Grandes volumes contínuos": MaterialVolumeContinuoIcon,
+};
+
+/* ---------------- Benefícios de equipamento (Almeida Equipamentos) ----------------
+   Checkpoint C (refinamento mobile 2026-08-20, Seção 13 da tarefa): substitui
+   bullets genéricos da lista "Benefícios" nas fichas de produto por ícones
+   pequenos que quebram a massa textual. Um ícone por conceito (não por
+   produto) — vários textos de benefício diferentes, quando expressam a
+   mesma ideia (ex. "Redução de volume" e "Formato vertical compacto"),
+   reaproveitam o mesmo ícone. */
+
+function BenefitDensityIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3 21 8l-9 5-9-5Z" {...iconStroke} />
+      <path d="M3 12l9 5 9-5" {...iconStroke} />
+      <path d="M3 16l9 5 9-5" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitShrinkIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitFeedInIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 9 12 5l9 4" {...iconStroke} />
+      <path d="M3 9v9l9 4 9-4V9" {...iconStroke} />
+      <path d="M12 5v13" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitCheckIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" {...iconStroke} />
+      <path d="M8.4 12.4 11 15l4.6-6" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitContainerIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 8 12 4l8 4v9l-8 4-8-4Z" {...iconStroke} />
+      <path d="M4 8l8 4 8-4" {...iconStroke} />
+      <rect x="9.5" y="12.5" width="5" height="4" rx="0.6" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitFactoryIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 21V11l5 3.2V11l5 3.2V8l5 3.2V21Z" {...iconStroke} />
+      <path d="M3 21h18" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitUnloadIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 4h9v9H4Z" {...iconStroke} />
+      <path d="M13 13 20 20M20 20v-5.5M20 20h-5.5" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitShieldIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3 19 6v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6Z" {...iconStroke} />
+    </svg>
+  );
+}
+
+function BenefitLoopIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 12a8 8 0 0 1 14-5.3" {...iconStroke} />
+      <path d="M20 12a8 8 0 0 1-14 5.3" {...iconStroke} />
+      <path d="M18 3.7v4h-4M6 20.3v-4h4" {...iconStroke} />
+    </svg>
+  );
+}
+
+/** Uma chave por texto exato de benefício em lib/equipamentos-data.ts
+ *  (PRODUCTS[].benefits) — vários textos apontam para o mesmo ícone quando
+ *  expressam o mesmo conceito. ProcessColetaIcon (caminhão) é reaproveitado
+ *  aqui para ganho logístico/transporte, mesma leitura visual já usada no
+ *  fluxo operacional. */
+export const BENEFIT_ICONS: Record<string, (props: FunctionalIconProps) => ReactElement> = {
+  "Maior densidade de carga": BenefitDensityIcon,
+  "Fardos de alta densidade": BenefitDensityIcon,
+  "Redução de volume": BenefitShrinkIcon,
+  "Redução de peso para transporte": BenefitShrinkIcon,
+  "Baixo requisito de espaço": BenefitShrinkIcon,
+  "Formato vertical compacto": BenefitShrinkIcon,
+  "Processo compacto e robusto": BenefitShrinkIcon,
+  "Alimentação de grandes materiais": BenefitFeedInIcon,
+  "Ganho logístico": ProcessColetaIcon,
+  "Menos manipulação antes do transporte": ProcessColetaIcon,
+  "Operação prática": BenefitCheckIcon,
+  "Armazenamento e compactação integrados": BenefitContainerIcon,
+  "Estrutura fechada": BenefitContainerIcon,
+  "Contenção adequada ao material": BenefitContainerIcon,
+  "Produção própria do Grupo Almeida": BenefitFactoryIcon,
+  "Geometria pensada para descarregamento": BenefitUnloadIcon,
+  "Acabamento industrial resistente": BenefitShieldIcon,
+  "Processamento contínuo": BenefitLoopIcon,
+  "Preparação para reciclagem": BenefitLoopIcon,
 };

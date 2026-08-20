@@ -24,7 +24,7 @@ const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.web
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
-const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização"];
+const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),

@@ -423,25 +423,51 @@
 
 /* ---------------- Fluxo horizontal/vertical (ex.: Diagnóstico → Coleta → ...) ---------------- */
 
+/* Mobile (Checkpoint A, refinamento 2026-08-20): grid de 2 colunas — a
+   maioria das etapas ocupa a faixa inteira (grid-column: 1 / -1, uma por
+   linha), exceto Trituração e Descaracterização (4ª e 5ª etapa, mesma fase
+   de processamento — Seção 6 da tarefa), lado a lado via grid-column: span
+   1. Resetado a `auto` em ≥720px, onde --flow-steps (6, ver
+   AlmeidaAmbientalPage.tsx) volta a abrir uma coluna por etapa em sequência. */
 .flowRow {
   list-style: none;
-  margin: clamp(40px, 6vw, 64px) 0 0;
+  margin: clamp(32px, 5vw, 64px) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+}
+
+.flowStep {
+  grid-column: 1 / -1;
+}
+
+.flowStep:nth-child(4),
+.flowStep:nth-child(5) {
+  grid-column: span 1;
 }
 
 @media (min-width: 720px) {
   .flowRow {
-    grid-template-columns: repeat(var(--flow-steps, 5), 1fr);
+    grid-template-columns: repeat(var(--flow-steps, 6), 1fr);
+  }
+
+  .flowStep,
+  .flowStep:nth-child(4),
+  .flowStep:nth-child(5) {
+    grid-column: auto;
   }
 }
 
+/* Sem conector de bolinha/linha (removido nesta rodada — Seção 4 da tarefa
+   pede linguagem editorial limpa, sem decoração de infográfico): só o
+   border-top já comunica divisor entre estágios, no mobile e no desktop.
+   Mobile centralizado e compacto (Seção 3-5); número removido visualmente
+   (mantido no DOM, reaparece em ≥720px — mesmo padrão de home.module.css). */
 .flowStep {
-  position: relative;
-  padding: 18px 16px 18px 28px;
+  padding: 12px 6px;
   border-top: 1px solid rgba(21, 21, 15, 0.18);
+  text-align: center;
 }
 
 .toneForest .flowStep,
@@ -449,56 +475,22 @@
   border-top-color: rgba(247, 246, 241, 0.22);
 }
 
-/* Conector vertical entre etapas — só no empilhamento mobile, onde a
-   sequência precisa ficar clara sem virar infográfico corporativo. No
-   grid horizontal (≥720px) o border-top + índice numerado já bastam. */
-.flowStep::before {
-  content: "";
-  position: absolute;
-  left: 4px;
-  top: 26px;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-.flowStep:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 33px;
-  bottom: -16px;
-  width: 1px;
-  background: rgba(21, 21, 15, 0.18);
-}
-
-.toneForest .flowStep:not(:last-child)::after,
-.toneCarvao .flowStep:not(:last-child)::after {
-  background: rgba(247, 246, 241, 0.22);
-}
-
 @media (min-width: 720px) {
   .flowStep {
-    padding-left: 16px;
-  }
-
-  .flowStep::before,
-  .flowStep::after {
-    display: none;
+    padding: 18px 16px;
+    text-align: left;
   }
 }
 
-/* Checkpoint E (Seção 24): mesma família de ícones do processo da Home
-   (components/icons.tsx, PROCESS_STEP_ICONS, por posição) — reconhecimento
-   rápido por ícone somado à numeração já existente, não substituindo-a.
-   Sempre toneForest aqui, então --role-secondary (on-dark), não dourado. */
+/* Checkpoint E (Seção 24, rodada anterior): mesma família de ícones do
+   processo da Home (components/icons.tsx, PROCESS_STEP_ICONS, por
+   posição). Sempre toneForest aqui, então --role-secondary (on-dark), não
+   dourado. */
 .flowIcon {
   display: block;
   width: 26px;
   height: 26px;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
   color: var(--role-secondary, var(--text-on-dark-secondary));
 }
 
@@ -506,6 +498,7 @@
   .flowIcon {
     width: 28px;
     height: 28px;
+    margin: 0 0 10px;
   }
 }
 
@@ -513,14 +506,21 @@
    dourado atenuado em todo o site — mesmo papel de .pillarIndex
    (almeida-ambiental), .frentesCompactIndex (saturno) e .indexNumber
    (MaterialGrid), para que "número = metadata categórica" seja um padrão
-   reconhecível, não uma cor por seção. */
+   reconhecível, não uma cor por seção. Oculto no mobile (Seção 3 da
+   tarefa): ícone + ordem vertical já comunicam progressão sem número. */
 .flowIndex {
-  display: block;
+  display: none;
   margin-bottom: 8px;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: 16px;
   color: var(--role-accent, var(--text-accent));
+}
+
+@media (min-width: 720px) {
+  .flowIndex {
+    display: block;
+  }
 }
 
 .flowLabel {
