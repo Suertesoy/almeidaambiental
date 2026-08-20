@@ -63,14 +63,20 @@ export default function LogisticsEfficiency() {
               </div>
               <p className={styles.densityBarLabel}>{stage.label}</p>
               <p className={styles.densityBarTag}>{stage.density}</p>
+              {/* Checkpoint C (Seção 16): "até 5:1" vira anotação do gráfico,
+                  ligada visualmente só à barra de material compactado — o
+                  * remete à nota técnica abaixo, que mantém o número preso
+                  ao Compactador de Fuso (ver comentário em
+                  lib/equipamentos-data.ts sobre por que as três barras não
+                  têm um número comparável entre si). */}
+              {stage.id === "compactado" && <p className={styles.densityBarRatio}>até 5:1*</p>}
             </div>
           ))}
         </div>
 
-        <p className={styles.densityNote} style={{ marginTop: "clamp(28px, 4vw, 40px)" }}>
-          Referência técnica confirmada: o Compactador de Fuso Pöttinger do portfólio Almeida Equipamentos pode
-          atingir relação de compactação de até 5:1 (fonte: especificação oficial Pöttinger). Valores variam
-          conforme material, equipamento, configuração e operação.
+        <p className={styles.densityNote}>
+          * Referência técnica do Compactador de Fuso Pöttinger. A relação varia conforme material, equipamento,
+          configuração e operação.
         </p>
       </div>
     </section>

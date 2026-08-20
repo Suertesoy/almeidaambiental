@@ -7,6 +7,7 @@ import EditorialCTA from "../shared/EditorialCTA";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductNav from "./ProductNav";
+import { MATERIAL_ICONS } from "../icons";
 import {
   HERO_IMAGE,
   DETALHE_MECANICO_IMAGE,
@@ -159,17 +160,23 @@ export default function EquipamentosPage() {
             isso, a escolha começa entendendo a operação.
           </p>
           <div className={styles.matrixGrid}>
-            {MATERIAL_ASSOCIATIONS.map((assoc) => (
-              <div key={assoc.material} className={styles.matrixItem}>
-                <p className={styles.matrixMaterial}>{assoc.material}</p>
-                <p className={styles.matrixProducts}>
-                  {assoc.products
-                    .map((id) => PRODUCTS.find((product) => product.id === id)?.name)
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-              </div>
-            ))}
+            {MATERIAL_ASSOCIATIONS.map((assoc) => {
+              const MaterialIcon = MATERIAL_ICONS[assoc.material];
+              return (
+                <div key={assoc.material} className={styles.matrixItem}>
+                  <div className={styles.matrixHead}>
+                    {MaterialIcon && <MaterialIcon className={styles.matrixIcon} />}
+                    <p className={styles.matrixMaterial}>{assoc.material}</p>
+                  </div>
+                  <p className={styles.matrixProducts}>
+                    {assoc.products
+                      .map((id) => PRODUCTS.find((product) => product.id === id)?.name)
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                </div>
+              );
+            })}
           </div>
           <div className={shared.ctaRow} style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
             <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={CONTACT_ANCHORS.saoJose}>
@@ -216,7 +223,7 @@ export default function EquipamentosPage() {
             quem também vive a operação que orienta cada recomendação.
           </p>
           <div className={shared.ctaRow}>
-            <Link className={shared.btnEditorial} href="/almeida-ambiental">
+            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-ambiental">
               Conheça a Almeida Ambiental
             </Link>
           </div>
