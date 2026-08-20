@@ -161,38 +161,9 @@
   min-width: 0;
 }
 
-/* Lista real (Seção 23): um item por linha, marcador discreto — não mais
-   pílulas separadas por ponto correndo em bloco, que no mobile quebravam
-   com um "·" solto no meio da linha. */
-.technicalList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.technicalList li {
-  position: relative;
-  padding-left: 14px;
-}
-
-.technicalList li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: currentColor;
-  opacity: 0.55;
-}
+/* .technicalList (lista real, um item por linha) mudou para
+   company-page.module.css — reaproveitada também pela Saturno (Seção 37).
+   Ver shared.technicalList. */
 
 .specsList {
   list-style: none;

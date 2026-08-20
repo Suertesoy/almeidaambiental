@@ -386,6 +386,41 @@
   opacity: 0.6;
 }
 
+/* Lista real (Seções 23/37): um item por linha, marcador discreto — para
+   listas de apoio mais longas ou técnicas (specs de produto, itens de
+   Gestão Ambiental), onde .tagRow (pílulas separadas por ponto, correndo
+   em bloco) quebraria de forma confusa no mobile — um "·" solto no meio
+   da linha em vez de estrutura clara. */
+.technicalList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.technicalList li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.technicalList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
 /* ---------------- Fluxo horizontal/vertical (ex.: Diagnóstico → Coleta → ...) ---------------- */
 
 .flowRow {

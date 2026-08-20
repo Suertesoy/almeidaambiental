@@ -67,6 +67,17 @@
   max-width: 46ch;
 }
 
+/* Divisor sutil separando a lista técnica da Gestão Ambiental (Seção 37)
+   do corpo conceitual acima — mesma lógica de .pillarHighlights
+   (almeida-ambiental), mas cor de borda para fundo escuro: esta seção é
+   sempre toneForest. */
+.gestaoTagsList {
+  margin-top: var(--gap-body-support);
+  margin-bottom: var(--gap-body-support);
+  padding-top: 16px;
+  border-top: 1px solid rgba(247, 246, 241, 0.22);
+}
+
 /* ---------------- Saturno + Grupo Almeida ---------------- */
 
 .groupBadge {

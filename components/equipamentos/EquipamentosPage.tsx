@@ -110,7 +110,7 @@ export default function EquipamentosPage() {
                   <div className={styles.technicalBlock}>
                     <div className={styles.technicalGroup}>
                       <p className={shared.eyebrow}>Ideal para</p>
-                      <ul className={styles.technicalList}>
+                      <ul className={shared.technicalList}>
                         {product.idealFor.map((item) => (
                           <li key={item}>{item}</li>
                         ))}
@@ -119,7 +119,7 @@ export default function EquipamentosPage() {
 
                     <div className={styles.technicalGroup}>
                       <p className={shared.eyebrow}>Benefícios</p>
-                      <ul className={styles.technicalList}>
+                      <ul className={shared.technicalList}>
                         {product.benefits.map((benefit) => (
                           <li key={benefit}>{benefit}</li>
                         ))}

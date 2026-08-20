@@ -101,8 +101,11 @@ export default function SaturnoPage() {
               <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
               <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
               <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
+              {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
+                  como lista real e estruturada — divisor + um item por
+                  linha, não parágrafo contínuo nem pílulas soltas. */}
               {GESTAO_AMBIENTAL.tags && (
-                <ul className={shared.tagRow}>
+                <ul className={`${shared.technicalList} ${styles.gestaoTagsList}`}>
                   {GESTAO_AMBIENTAL.tags.map((tag) => (
                     <li key={tag}>{tag}</li>
                   ))}
