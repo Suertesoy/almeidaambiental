@@ -50,6 +50,15 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
 
 16. **Rota `/contato` (2026-08-19).** Diretório institucional das três empresas (não formulário) — Almeida Ambiental, Almeida Equipamentos e Saturno Ambiental, cada uma com endereço, telefone, WhatsApp e e-mail quando publicados. O site antigo (`https://www.almeidaambiental.com.br/`) mudou de forma: hoje é uma página de manutenção só com telefone/WhatsApp por unidade, e as antigas páginas `/ambiental/contatos/`, `/equipamentos/contatos/` e `/saturno/contatos/` retornam 404. Os dados publicados em `lib/contact-data.ts` vêm da combinação dessa home atual (ao vivo) com capturas arquivadas recentes (web.archive.org, 2024-09 e 2024-11) das páginas antigas — nunca de diretório externo. Fonte de cada campo documentada em comentário no topo do arquivo.
 
+## Sistema visual — hierarquia por cor e spacing
+
+17. **Papéis semânticos de texto e spacing substituem opacity (2026-08-20).** Refinamento de composição responsiva (auditoria sobre navegação real, mobile e desktop) trocou o padrão anterior de hierarquia textual por `color: inherit` + `opacity` por papéis explícitos, reaproveitados pela Home e pelas páginas de empresa:
+    - **Cor de texto:** `--text-primary/secondary/muted/accent` (superfícies claras) e `--text-on-dark-primary/secondary/muted/accent` (superfícies escuras), definidos em `app/globals.css`. Regra geral do sistema: hierarquia textual usa cor explícita, não opacidade sobre a cor-base — `opacity` continua reservado a estados de interação (hover/disabled) e elementos decorativos, não a hierarquia de conteúdo.
+    - **Spacing intra-bloco:** `--gap-eyebrow-title`, `--gap-title-body`, `--gap-body-support`, `--gap-support-cta` — poucos papéis reutilizáveis (relação eyebrow→título, título→corpo, corpo→bloco de apoio, bloco de apoio→CTA), não um token por seção.
+    - **Botões no mobile:** CTAs apresentados visualmente como botão ocupam 100% do content container que já envolve o texto acima deles (não um container novo) abaixo de ~640px; links editoriais (cross-links de conteúdo, não a conversão principal da seção) ficam fora dessa regra e preservam largura de conteúdo.
+
+    Consumido por `components/shared`, `components/home` e pelas páginas de Almeida Ambiental, Almeida Equipamentos, Saturno e Contato. `/historia` e `/home2`/`/home3`/`/home4` não foram alterados e não consomem este sistema.
+
 ## Decisões pendentes
 
 - Confirmar com a Almeida Equipamentos se existe e-mail institucional próprio. Não encontrado nem na home atual nem em nenhuma captura arquivada da empresa — `/contato` não exibe e-mail para ela (ver `lib/contact-data.ts`).
