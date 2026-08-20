@@ -129,6 +129,26 @@
   background: rgba(247, 246, 241, 0.12);
 }
 
+/* Botões como ação (Checkpoint B, Seção 12): no Hero mobile, os dois CTAs
+   (quando ambos existem) empilham com a mesma largura, ocupando o
+   .content que já envolve eyebrow/título/lede. */
+@media (max-width: 639px) {
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    height: auto;
+    min-height: 52px;
+    padding-block: 14px;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
 .btn:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 2px;

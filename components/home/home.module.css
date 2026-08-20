@@ -189,6 +189,38 @@ html:has([data-page="home"]) {
   outline-offset: 2px;
 }
 
+/* Botões como ação (Checkpoint B, Seção 12/47): no mobile, CTAs que se
+   apresentam como botão ocupam 100% do .container que já envolve o texto
+   acima deles. .editorialLink fica de fora (Seção 13). */
+@media (max-width: 639px) {
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    height: auto;
+    min-height: 52px;
+    padding-block: 14px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .editorialLink {
+    align-self: flex-start;
+  }
+
+  .manifesto .ctaRow {
+    align-items: center;
+  }
+
+  .manifesto .editorialLink,
+  .manifesto .btn {
+    align-self: center;
+  }
+}
+
 /* Link editorial (texto + seta): para os cross-links "Conheça Almeida
    Ambiental/Equipamentos/Saturno Ambiental" — não são a conversão
    principal da Home, então não competem em peso com um .btn. */
@@ -333,6 +365,15 @@ html:has([data-page="home"]) {
 .heroCta:focus-visible {
   outline: 3px solid var(--color-background);
   outline-offset: 2px;
+}
+
+/* Botão como ação (Checkpoint B, Seção 47): ocupa a largura do
+   .heroContent que já envolve eyebrow/headline acima dele. */
+@media (max-width: 639px) {
+  .heroCta {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .heroScrollHint {
