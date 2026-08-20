@@ -99,30 +99,41 @@ export default function EquipamentosPage() {
                 <div className={shared.duoContent}>
                   <p className={styles.productManufacturer}>{product.manufacturer}</p>
                   <h2 className={styles.productName}>{product.name}</h2>
-                  <p className={shared.subheading}>{product.headline}</p>
+                  <p className={styles.productPromise}>{product.headline}</p>
                   <p className={shared.body}>{product.copy}</p>
 
-                  <p className={shared.eyebrow}>Ideal para</p>
-                  <ul className={shared.tagRow}>
-                    {product.idealFor.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  {/* Bloco técnico (Seção 23): Ideal para / Benefícios / specs
+                      agrupados em área de apoio visualmente distinta —
+                      divisor superior, fundo tonal sutil, 2 colunas no
+                      desktop. Listas reais (uma linha por item), não mais
+                      pílulas separadas por ponto correndo em bloco. */}
+                  <div className={styles.technicalBlock}>
+                    <div className={styles.technicalGroup}>
+                      <p className={shared.eyebrow}>Ideal para</p>
+                      <ul className={styles.technicalList}>
+                        {product.idealFor.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  <p className={shared.eyebrow}>Benefícios</p>
-                  <ul className={shared.tagRow}>
-                    {product.benefits.map((benefit) => (
-                      <li key={benefit}>{benefit}</li>
-                    ))}
-                  </ul>
+                    <div className={styles.technicalGroup}>
+                      <p className={shared.eyebrow}>Benefícios</p>
+                      <ul className={styles.technicalList}>
+                        {product.benefits.map((benefit) => (
+                          <li key={benefit}>{benefit}</li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  {product.confirmedSpecs && (
-                    <ul className={styles.specsList}>
-                      {product.confirmedSpecs.map((spec) => (
-                        <li key={spec}>{spec}</li>
-                      ))}
-                    </ul>
-                  )}
+                    {product.confirmedSpecs && (
+                      <ul className={`${styles.specsList} ${styles.specsListSpan}`}>
+                        {product.confirmedSpecs.map((spec) => (
+                          <li key={spec}>{spec}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
                   <div className={shared.ctaRow}>
                     <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={CONTACT_ANCHORS.saoJose}>
