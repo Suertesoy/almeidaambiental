@@ -152,7 +152,7 @@ export default function SaturnoPage() {
             construídos pela marca no Vale do Itajaí.
           </p>
           <div className={shared.ctaRow}>
-            <Link className={shared.btnEditorial} href="/historia">
+            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/historia">
               Conheça o Grupo Almeida
             </Link>
           </div>

@@ -134,7 +134,7 @@ export default function ContatoPage() {
             <Link className={`${shared.btn} ${shared.btnSolidGold}`} href="/">
               Voltar para a Home
             </Link>
-            <Link className={shared.btnEditorial} href="/historia">
+            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/historia">
               Conheça nossa história
             </Link>
           </div>
