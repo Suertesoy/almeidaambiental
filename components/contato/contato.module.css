@@ -30,8 +30,12 @@
   max-width: 56ch;
 }
 
-/* ---------------- Diretório rápido ---------------- */
-
+/* ---------------- Diretório rápido ----------------
+   Checkpoint E (refinamento mobile 2026-08-20): cada unidade era um único
+   link (linha inteira + "Ver contatos →") — a seta como affordance
+   principal de uma ação real (Seção 19/31 da tarefa: ação que "pede para
+   ver a unidade" precisa parecer botão). O bloco de texto deixou de ser
+   clicável; só o botão "Ver unidade" é link, evitando affordance dupla. */
 .directory {
   background: var(--color-card);
   border-bottom: 1px solid rgba(21, 21, 15, 0.08);
@@ -40,32 +44,27 @@
 .directoryList {
   list-style: none;
   margin: 0;
-  padding: 0 clamp(20px, 6vw, 64px);
+  padding: clamp(8px, 2vw, 16px) clamp(20px, 6vw, 64px);
   max-width: 1320px;
   margin-inline: auto;
 }
 
-.directoryRow {
+.directoryItem {
   display: flex;
   align-items: center;
   gap: clamp(16px, 3vw, 28px);
-  padding: 18px 0;
+  padding: 20px 0;
   border-top: 1px solid rgba(21, 21, 15, 0.1);
-  text-decoration: none;
-  color: inherit;
 }
 
-.directoryList li:first-child .directoryRow {
+.directoryList li:first-child .directoryItem {
   border-top: none;
 }
 
-.directoryRow:hover {
-  opacity: 0.72;
-}
-
-.directoryRow:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 4px;
+@media (max-width: 639px) {
+  .directoryItem {
+    flex-wrap: wrap;
+  }
 }
 
 /* Mesmo papel de numeração-como-metadata das demais páginas (Seção 30) —
@@ -99,16 +98,21 @@
   font-size: 13px;
 }
 
-.directoryCta {
+.directoryAction {
   flex: none;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
 }
 
-/* ---------------- Bloco regional ---------------- */
+@media (max-width: 639px) {
+  .directoryAction {
+    order: 1;
+  }
+}
 
+/* ---------------- Bloco regional ----------------
+   Cada localidade segue "qual unidade → onde fica → como falar/chegar"
+   (Seção 18-20 da tarefa): identidade (eyebrow/headline/descrição/CNPJ) →
+   Localização → Canais de contato, ao lado do mapa editorial + Maps/Waze
+   no desktop, abaixo no mobile. */
 .regionSection {
   scroll-margin-top: var(--anchor-offset);
 }
@@ -121,8 +125,15 @@
 
 @media (min-width: 1024px) {
   .regionGrid {
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: 6fr 5fr;
     align-items: start;
+  }
+
+  /* Araquari/Joinville não tem endereço/mapa validado (Seção 24 da tarefa)
+     — sem essa segunda coluna, a informação ocupa a largura inteira em vez
+     de deixar metade da seção vazia. */
+  .regionInfoFull {
+    grid-column: 1 / -1;
   }
 }
 
@@ -133,33 +144,24 @@
   font-size: 13px;
 }
 
-.channels {
-  display: flex;
-  flex-direction: column;
-}
-
-.channel,
-.channelRow {
-  padding: 18px 0;
+/* Um .infoBlock por grupo de informação (Localização, Canais de contato) —
+   divisor + label uppercase muted, mesmo papel de metadata usado em todo o
+   site (.eyebrow). styles.infoBlockDark troca a cor do divisor nos blocos
+   sobre fundo escuro (Blumenau, shared.toneForest) — módulos CSS diferentes
+   não deixam encadear seletores de company-page.module.css aqui. */
+.infoBlock {
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid rgba(21, 21, 15, 0.14);
 }
 
-/* Aplicado via styles.channelsDark (JS) nos blocos sobre fundo escuro
-   (Blumenau usa shared.toneForest) — módulos CSS diferentes não deixam
-   encadear seletores de company-page.module.css aqui. */
-.channelsDark .channel,
-.channelsDark .channelRow {
+.infoBlockDark {
   border-top-color: rgba(247, 246, 241, 0.22);
 }
 
-.channels > *:first-child {
-  padding-top: 0;
-  border-top: none;
-}
-
-.channelLabel {
+.infoLabel {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
@@ -169,55 +171,32 @@
 }
 
 .channelAddress {
-  margin: 0 0 12px;
+  margin: 0;
   color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-size: 15px;
   line-height: 1.6;
 }
 
-.channelLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.channelLink:focus-visible {
-  outline: 3px solid currentColor;
-  outline-offset: 4px;
-}
-
-/* Cada canal (Atendimento/Logística/Administrativo/Telefone/WhatsApp) é um
-   único link cobrindo o bloco inteiro — alvo de toque grande, número em
-   sans serif (nunca a serifada editorial, para leitura rápida e sem
-   ambiguidade), ação explícita abaixo. */
-.channelRow {
+/* Cada canal (Atendimento/Logística/Administrativo/Telefone/WhatsApp) tem
+   affordance de botão real (Seção 21/23/31: "não quero ações importantes
+   apresentadas apenas como texto + seta") — label do canal acima, número
+   ainda visível como informação abaixo do botão (Seção 23), nunca como a
+   própria ação clicável. */
+.channelActions {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-height: 44px;
-  justify-content: center;
-  text-decoration: none;
-  color: inherit;
+  gap: 20px;
 }
 
-.channelRow:hover {
-  opacity: 0.78;
+.channelAction {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 }
 
-.channelRow:focus-visible {
-  outline: 3px solid currentColor;
-  outline-offset: 4px;
-}
-
-.channelRowLabel {
+.channelActionLabel {
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
@@ -226,27 +205,34 @@
   text-transform: uppercase;
 }
 
-.channelRowNumber {
+.channelActionNumber {
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: clamp(19px, 1.2vw + 14px, 23px);
+  font-size: 14px;
   letter-spacing: 0.01em;
-}
-
-.channelRowAction {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
 }
 
-.channelRowAction svg {
-  width: 16px;
-  height: 16px;
-  flex: none;
+/* Exceção consciente à paleta institucional (Seção 21 da tarefa): verde
+   tradicional da marca WhatsApp, pelo valor de reconhecimento imediato da
+   plataforma. Restrita a esta página — não um token global novo. composes
+   importa a classe já hasheada de .btn (layout/altura/radius/largura 100%
+   no mobile), só a cor muda aqui. */
+.btnWhatsApp {
+  composes: btn from "../shared/company-page.module.css";
+  background: #25d366;
+  border-color: #25d366;
+  color: #ffffff;
+}
+
+.btnWhatsApp:hover {
+  background: #1fb958;
+  border-color: #1fb958;
+}
+
+.btnWhatsApp:focus-visible {
+  outline: 3px solid #128c42;
+  outline-offset: 2px;
 }
 
 .channelNote {
@@ -256,4 +242,34 @@
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
   line-height: 1.5;
+}
+
+/* ---------------- Mapa editorial + ações ----------------
+   Imagem estática ilustrativa (Seção 24-27 da tarefa: recorte regional
+   abstrato, não uma captura de mapa real) + Google Maps/Waze como ação
+   real logo abaixo, usando o endereço já validado em lib/contact-data.ts. */
+.regionMap {
+  display: flex;
+  flex-direction: column;
+}
+
+.mapFrame {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-muted);
+}
+
+.mapFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mapActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
 }
