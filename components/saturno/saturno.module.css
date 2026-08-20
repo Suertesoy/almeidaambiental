@@ -12,6 +12,26 @@
   overflow-x: clip;
 }
 
+/* ---------------- Posicionamento (headline lateral no desktop) ---------------- */
+
+.positioningGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .positioningGrid {
+    grid-template-columns: 5fr 7fr;
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.positioningCopy p:last-child {
+  margin-bottom: 0;
+}
+
 .frentesCompactGrid {
   margin-top: clamp(40px, 6vw, 56px);
   display: grid;

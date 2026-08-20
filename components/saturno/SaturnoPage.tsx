@@ -33,18 +33,25 @@ export default function SaturnoPage() {
       />
 
       {/* ---------------- Posicionamento ---------------- */}
+      {/* Única das três posicionamento (Ambiental/Equipamentos têm imagem em
+          duo) sem fotografia própria — no desktop, "headline lateral" evita
+          que a seção vire uma coluna estreita perdida em 1440px (Seção 43). */}
       <section className={`${shared.section} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
-          <p className={shared.body}>
-            A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
-            identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento,
-            cartonagem e serviços técnicos ambientais.
-          </p>
-          <p className={shared.body}>
-            <strong>Desde 2022, a Saturno integra o Grupo Almeida</strong>, ampliando a presença do grupo no Vale do
-            Itajaí.
-          </p>
+          <div className={styles.positioningGrid}>
+            <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
+            <div className={styles.positioningCopy}>
+              <p className={shared.body}>
+                A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
+                identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento,
+                cartonagem e serviços técnicos ambientais.
+              </p>
+              <p className={shared.body}>
+                <strong>Desde 2022, a Saturno integra o Grupo Almeida</strong>, ampliando a presença do grupo no Vale do
+                Itajaí.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

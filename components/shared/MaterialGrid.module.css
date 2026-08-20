@@ -61,6 +61,17 @@
 @media (min-width: 560px) {
   .indexList {
     grid-template-columns: 1fr 1fr;
+    column-gap: clamp(24px, 4vw, 40px);
+  }
+}
+
+/* Mesmo raciocínio do .editorialList (Seção 32/Checkpoint H): a partir de
+   onde a coluna de materiais (7fr dentro de .layout) tem largura real, evita
+   que a lista fique presa em 2 colunas com metade do espaço disponível
+   sobrando à direita. */
+@media (min-width: 1024px) {
+  .indexList {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
