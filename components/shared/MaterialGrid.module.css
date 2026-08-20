@@ -104,6 +104,16 @@
   }
 }
 
+/* Seção 32: até 4 colunas no desktop. .layout já reserva a coluna da
+   imagem (5fr) ao lado desta lista (7fr) — 4 colunas só a partir de onde a
+   lista realmente tem largura confortável para "Documentos sigilosos" sem
+   quebrar de forma apertada. */
+@media (min-width: 1200px) {
+  .editorialList {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .editorialItem {
   padding: 14px 0;
   border-top: 1px solid rgba(21, 21, 15, 0.14);

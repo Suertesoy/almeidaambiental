@@ -14,6 +14,16 @@
    .flowIndex (company-page.module.css), .frentesCompactIndex (saturno) e
    .indexNumber (MaterialGrid): "número = metadata categórica" reconhecível
    em todo o site (Seção 30). */
+/* Separa os benefícios do pilar (highlights) do corpo conceitual acima
+   (Seção 31) — divisor sutil, sem virar card. As três seções de pilar são
+   sempre claras (toneStone/toneStoneAlt), então a cor do divisor não
+   precisa de variante escura aqui. */
+.pillarHighlights {
+  margin-top: var(--gap-body-support);
+  padding-top: 16px;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
 .pillarIndex {
   display: block;
   margin-bottom: 12px;

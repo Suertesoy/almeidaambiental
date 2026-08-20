@@ -67,7 +67,7 @@ export default function AlmeidaAmbientalPage() {
                   <h2 className={shared.headline}>{pillar.headline}</h2>
                   <p className={shared.body}>{pillar.copy}</p>
                   {pillar.highlights.length > 0 && (
-                    <ul className={shared.tagRow}>
+                    <ul className={`${shared.tagRow} ${styles.pillarHighlights}`}>
                       {pillar.highlights.map((highlight) => (
                         <li key={highlight}>{highlight}</li>
                       ))}
