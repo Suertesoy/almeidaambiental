@@ -59,6 +59,12 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
 
     Consumido por `components/shared`, `components/home` e pelas páginas de Almeida Ambiental, Almeida Equipamentos, Saturno e Contato. `/historia` e `/home2`/`/home3`/`/home4` não foram alterados e não consomem este sistema.
 
+## Sistema visual — botões e iconografia funcional
+
+18. **Hierarquia de três papéis para CTAs e iconografia funcional única (2026-08-20).** Rodada de refinamento visual sobre validação humana do Preview consolidou dois sistemas que já existiam parcialmente (fragmentados entre `home.module.css`, `company-page.module.css` e `CompanyHero.module.css`) em regras explícitas:
+    - **Botões:** todo CTA que encerra uma seção e pede uma ação explícita do visitante usa `.btn` + um modificador de tom (`.btnSolidGold`/`.btnPrimary` para a ação principal do contexto, `.btnOutlineOnLight`/`.btnOutlineOnDark`/`.btnSecondary` para ação secundária) — nunca texto + seta sozinho. O link editorial (`.btnEditorial`/`.editorialLink`, texto + seta) continua existindo como terceiro papel, reservado a navegação textual realmente secundária (cross-links dentro de texto corrido, Footer) — não para CTAs que fecham uma seção.
+    - **Iconografia funcional:** `components/icons.tsx` ganhou um conjunto único de ícones de linha (`PROCESS_STEP_ICONS`, por posição — 5 etapas; `MATERIAL_ICONS`, por nome exato de material) para apoiar escaneabilidade de processo/material/categoria técnica — nunca decoração. Mesmo viewBox, mesmo stroke, sem preenchimento colorido, sem bolinha decorativa, sem emoji. Reaproveitado por Home (processo), Almeida Ambiental (processo + 12 materiais), Almeida Equipamentos (6 categorias de material) e Saturno (12 materiais) — o mesmo material usa sempre o mesmo ícone entre páginas. Cor do ícone segue o papel semântico de texto da superfície (`--role-secondary` sobre clara ou escura), dourado reservado a números/metadata, não a ícones por padrão.
+
 ## Decisões pendentes
 
 - Confirmar com a Almeida Equipamentos se existe e-mail institucional próprio. Não encontrado nem na home atual nem em nenhuma captura arquivada da empresa — `/contato` não exibe e-mail para ela (ver `lib/contact-data.ts`).
