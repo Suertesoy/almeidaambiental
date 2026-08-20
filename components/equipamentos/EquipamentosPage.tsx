@@ -7,7 +7,7 @@ import EditorialCTA from "../shared/EditorialCTA";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductNav from "./ProductNav";
-import { MATERIAL_ICONS } from "../icons";
+import { MATERIAL_ICONS, BENEFIT_ICONS } from "../icons";
 import {
   HERO_IMAGE,
   DETALHE_MECANICO_IMAGE,
@@ -111,19 +111,31 @@ export default function EquipamentosPage() {
                   <div className={styles.technicalBlock}>
                     <div className={styles.technicalGroup}>
                       <p className={shared.eyebrow}>Ideal para</p>
-                      <ul className={shared.technicalList}>
-                        {product.idealFor.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
+                      <ul className={styles.iconList}>
+                        {product.idealFor.map((item) => {
+                          const ItemIcon = MATERIAL_ICONS[item];
+                          return (
+                            <li key={item} className={styles.iconListItem}>
+                              {ItemIcon ? <ItemIcon /> : <span className={styles.iconPlaceholder} aria-hidden="true" />}
+                              <span>{item}</span>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
 
                     <div className={styles.technicalGroup}>
                       <p className={shared.eyebrow}>Benefícios</p>
-                      <ul className={shared.technicalList}>
-                        {product.benefits.map((benefit) => (
-                          <li key={benefit}>{benefit}</li>
-                        ))}
+                      <ul className={styles.iconList}>
+                        {product.benefits.map((benefit) => {
+                          const BenefitIcon = BENEFIT_ICONS[benefit];
+                          return (
+                            <li key={benefit} className={styles.iconListItem}>
+                              {BenefitIcon ? <BenefitIcon /> : <span className={styles.iconPlaceholder} aria-hidden="true" />}
+                              <span>{benefit}</span>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
 
