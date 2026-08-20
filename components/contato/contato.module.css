@@ -1,13 +1,17 @@
 /* ==========================================================
-   /contato — diretório institucional por região/operação do Grupo Almeida.
-   Reaproveita as primitivas de components/shared/company-page.module.css
-   (container, tons de seção, tipografia, CTA final) — este arquivo só soma
-   o que é exclusivo desta página: hero curto, diretório rápido e os blocos
-   regionais (endereço/CNPJ/canais).
+   /contato — reconstrução da arquitetura visual (2026-08-20). Uma única
+   superfície clara contínua (--color-stone-warm) para diretório + as três
+   unidades — a cor só muda para marcar mudança de função da página (Hero
+   escuro → conteúdo operacional claro → CTA terminal escuro), nunca por
+   empresa. Reaproveita as primitivas de
+   components/shared/company-page.module.css (container, tons de seção,
+   tipografia, botões, CTA final) — este arquivo só soma o que é exclusivo
+   desta página: hero curto, diretório compacto e a grade de cada unidade
+   (identidade/CNPJ/localização+mapa/canais).
    ========================================================== */
 
 .page {
-  background: var(--color-background);
+  background: var(--color-stone-warm);
   overflow-x: clip;
 }
 
@@ -30,173 +34,219 @@
   max-width: 56ch;
 }
 
-/* ---------------- Diretório rápido ----------------
-   Checkpoint E (refinamento mobile 2026-08-20): cada unidade era um único
-   link (linha inteira + "Ver contatos →") — a seta como affordance
-   principal de uma ação real (Seção 19/31 da tarefa: ação que "pede para
-   ver a unidade" precisa parecer botão). O bloco de texto deixou de ser
-   clicável; só o botão "Ver unidade" é link, evitando affordance dupla. */
-.directory {
-  background: var(--color-card);
-  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
+/* ---------------- Diretório compacto ----------------
+   Reconstrução: três controles compactos e clicáveis (não hyperlink de
+   texto simples, não botões de 90px) — pílulas horizontais, uma linha no
+   desktop, scroll horizontal no mobile em vez de empilhar três blocos
+   altos. Sem numeração 01/02/03 (não acrescentava informação real). */
+.directoryNav {
+  padding-block: clamp(20px, 4vw, 32px);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.1);
 }
 
-.directoryList {
+.directoryChips {
+  display: flex;
+  gap: 10px;
   list-style: none;
   margin: 0;
-  padding: clamp(8px, 2vw, 16px) clamp(20px, 6vw, 64px);
-  max-width: 1320px;
-  margin-inline: auto;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-.directoryItem {
-  display: flex;
-  align-items: center;
-  gap: clamp(16px, 3vw, 28px);
-  padding: 20px 0;
-  border-top: 1px solid rgba(21, 21, 15, 0.1);
+.directoryChips::-webkit-scrollbar {
+  display: none;
 }
 
-.directoryList li:first-child .directoryItem {
-  border-top: none;
-}
-
-@media (max-width: 639px) {
-  .directoryItem {
+@media (min-width: 640px) {
+  .directoryChips {
     flex-wrap: wrap;
+    overflow-x: visible;
   }
 }
 
-/* Mesmo papel de numeração-como-metadata das demais páginas (Seção 30) —
-   .directory está sempre sobre --color-card (fora de uma seção .toneX), daí
-   o fallback ser o único valor usado na prática aqui. */
-.directoryIndex {
+.directoryChip {
   flex: none;
-  color: var(--role-accent, var(--text-accent));
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.directoryText {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.directoryTitle {
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(19px, 1.2vw + 14px, 24px);
-}
-
-.directorySubtitle {
-  color: var(--role-muted, var(--text-muted));
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding-inline: 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(21, 21, 15, 0.26);
+  color: var(--text-primary);
   font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.directoryAction {
-  flex: none;
+.directoryChip:hover {
+  background: rgba(21, 21, 15, 0.06);
+  border-color: rgba(21, 21, 15, 0.4);
 }
 
-@media (max-width: 639px) {
-  .directoryAction {
-    order: 1;
-  }
+.directoryChip:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
-/* ---------------- Bloco regional ----------------
-   Cada localidade segue "qual unidade → onde fica → como falar/chegar"
-   (Seção 18-20 da tarefa): identidade (eyebrow/headline/descrição/CNPJ) →
-   Localização → Canais de contato, ao lado do mapa editorial + Maps/Waze
-   no desktop, abaixo no mobile. */
-.regionSection {
+/* ---------------- Bloco de unidade ----------------
+   Cada localidade segue "qual unidade → onde fica → como chego lá → como
+   falo com ela", sempre na mesma ordem: identidade → CNPJ (metadata
+   recuada) → localização (endereço + Google Maps real + ações Maps/Waze) →
+   canais de contato. Sem alternância de fundo por unidade — só spacing e
+   divisor separam um bloco do próximo. */
+.unitBlock {
   scroll-margin-top: var(--anchor-offset);
 }
 
-.regionGrid {
+.unitBlock + .unitBlock {
+  border-top: 1px solid rgba(21, 21, 15, 0.12);
+}
+
+/* Grid nomeado (não dois wrappers de coluna): identidade, CNPJ, localização
+   e canais são quatro itens diretos do grid porque a ordem mobile exigida
+   (identidade → CNPJ → localização → canais) intercala com o agrupamento
+   de colunas do desktop (esquerda: identidade+CNPJ+canais · direita:
+   localização) — só grid-template-areas por breakpoint resolve as duas
+   ordens com a mesma árvore DOM, sem duplicar conteúdo. */
+.unitGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(32px, 6vw, 56px);
+  grid-template-areas:
+    "identity"
+    "cnpj"
+    "location"
+    "channels";
+  row-gap: clamp(28px, 5vw, 40px);
+}
+
+.unitGridNoLocation {
+  grid-template-areas:
+    "identity"
+    "cnpj"
+    "channels";
+}
+
+.unitIdentity {
+  grid-area: identity;
+}
+
+.unitCnpj {
+  grid-area: cnpj;
+}
+
+.unitLocation {
+  grid-area: location;
+}
+
+.unitChannels {
+  grid-area: channels;
 }
 
 @media (min-width: 1024px) {
-  .regionGrid {
-    grid-template-columns: 6fr 5fr;
+  .unitGrid {
+    grid-template-columns: 6fr 7fr;
+    column-gap: clamp(40px, 5vw, 64px);
+    row-gap: 0;
     align-items: start;
+    grid-template-areas:
+      "identity location"
+      "cnpj     location"
+      "channels location";
   }
 
-  /* Araquari/Joinville não tem endereço/mapa validado (Seção 24 da tarefa)
-     — sem essa segunda coluna, a informação ocupa a largura inteira em vez
-     de deixar metade da seção vazia. */
-  .regionInfoFull {
-    grid-column: 1 / -1;
+  .unitGridNoLocation {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "identity"
+      "cnpj"
+      "channels";
+  }
+
+  .unitCnpj {
+    margin-top: 20px;
+  }
+
+  .unitChannels {
+    margin-top: 28px;
   }
 }
 
-.cnpjLine {
-  margin: 12px 0 0;
-  color: var(--role-muted, var(--text-muted));
+/* CNPJ é metadata legal secundária (Seção 14 da tarefa) — recuada, nunca
+   entre a descrição e uma ação principal. */
+.unitCnpj {
+  margin: 0;
+  color: var(--text-muted);
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
 }
 
-/* Um .infoBlock por grupo de informação (Localização, Canais de contato) —
-   divisor + label uppercase muted, mesmo papel de metadata usado em todo o
-   site (.eyebrow). styles.infoBlockDark troca a cor do divisor nos blocos
-   sobre fundo escuro (Blumenau, shared.toneForest) — módulos CSS diferentes
-   não deixam encadear seletores de company-page.module.css aqui. */
-.infoBlock {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(21, 21, 15, 0.14);
-}
-
-.infoBlockDark {
-  border-top-color: rgba(247, 246, 241, 0.22);
-}
-
-.infoLabel {
-  display: block;
-  margin-bottom: 12px;
+.unitNote {
+  margin: 12px 0 0;
+  max-width: 48ch;
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.channelAddress {
-  margin: 0;
+/* ---------------- Localização + Google Maps real ---------------- */
+
+.addressText {
+  margin: 0 0 16px;
   color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-size: 15px;
   line-height: 1.6;
 }
 
-/* Cada canal (Atendimento/Logística/Administrativo/Telefone/WhatsApp) tem
-   affordance de botão real (Seção 21/23/31: "não quero ações importantes
-   apresentadas apenas como texto + seta") — label do canal acima, número
-   ainda visível como informação abaixo do botão (Seção 23), nunca como a
-   própria ação clicável. */
-.channelActions {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.mapFrame {
+  width: 100%;
+  height: 280px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--color-muted);
 }
 
-.channelAction {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+@media (min-width: 640px) {
+  .mapFrame {
+    height: 320px;
+  }
 }
 
-.channelActionLabel {
+@media (min-width: 1024px) {
+  .mapFrame {
+    height: 380px;
+  }
+}
+
+.mapFrame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.mapActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* ---------------- Canais de contato ----------------
+   Um único label de grupo (Seção 13 da tarefa: reduzir níveis uppercase
+   concorrentes) — dentro dele, cada canal usa peso/proximidade para
+   hierarquia (nome do canal em destaque, "tipo · número" como meta muted,
+   uma única ação como botão). Número nunca duplicado como link azul
+   separado abaixo do botão (Seção 3/11 da tarefa). */
+.channelGroupLabel {
+  display: block;
+  margin-bottom: 16px;
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
@@ -205,15 +255,39 @@
   text-transform: uppercase;
 }
 
-.channelActionNumber {
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.01em;
-  color: var(--role-muted, var(--text-muted));
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Exceção consciente à paleta institucional (Seção 21 da tarefa): verde
+.channelRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.channelText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.channelName {
+  color: var(--role-secondary, var(--text-primary));
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.channelMeta {
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+}
+
+/* Exceção consciente à paleta institucional (Seção 12 da tarefa): verde
    tradicional da marca WhatsApp, pelo valor de reconhecimento imediato da
    plataforma. Restrita a esta página — não um token global novo. composes
    importa a classe já hasheada de .btn (layout/altura/radius/largura 100%
@@ -233,43 +307,4 @@
 .btnWhatsApp:focus-visible {
   outline: 3px solid #128c42;
   outline-offset: 2px;
-}
-
-.channelNote {
-  margin: 16px 0 0;
-  max-width: 48ch;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* ---------------- Mapa editorial + ações ----------------
-   Imagem estática ilustrativa (Seção 24-27 da tarefa: recorte regional
-   abstrato, não uma captura de mapa real) + Google Maps/Waze como ação
-   real logo abaixo, usando o endereço já validado em lib/contact-data.ts. */
-.regionMap {
-  display: flex;
-  flex-direction: column;
-}
-
-.mapFrame {
-  position: relative;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  border-radius: 4px;
-  background: var(--color-muted);
-}
-
-.mapFrame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mapActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
 }

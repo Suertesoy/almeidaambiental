@@ -11,6 +11,18 @@
  * Estrutura por região/operação (não mais por empresa) — São José reúne
  * Almeida Ambiental (matriz) e Almeida Equipamentos (mesma estrutura, sem
  * canal próprio); Araquari/Joinville e Blumenau são blocos independentes.
+ *
+ * Reconstrução de arquitetura visual (2026-08-20): os mapas passaram de
+ * ilustrações editoriais estáticas (Magnific/MCP) para o Google Maps real,
+ * incorporado via iframe sem chave/API (`output=embed` — mesmo mecanismo
+ * gratuito por trás do "Incorporar um mapa" do Google Maps, sem Maps Embed
+ * API, sem billing). O endereço de Araquari, antes não publicado por falta
+ * de validação independente, foi confirmado batendo nome, CNPJ e endereço
+ * contra o cadastro público da Receita Federal (CNPJ 04.910.399/0002-80,
+ * situação ATIVA, fantasia "ALMEIDA AMBIENTAL", logradouro "RUA ANTONIO
+ * AMORIM", número 890, bairro "PORTO GRANDE", município ARAQUARI/SC, CEP
+ * 89245-000 — consulta via receitaws.com.br em 2026-08-20) — mesmo
+ * endereço apontado pela tarefa, agora com fonte oficial independente.
  */
 
 export type Channel = {
@@ -20,14 +32,6 @@ export type Channel = {
   action: "whatsapp" | "call";
 };
 
-/** Imagem de mapa editorial estática (Checkpoint E, refinamento mobile
- *  2026-08-20) — recorte regional abstrato, não uma captura de Google
- *  Maps: sem nomes de rua inventados, sem coordenadas de precisão falsa.
- *  Ver Seções 24-27 da tarefa. Gerada via Magnific/MCP, mesmo princípio de
- *  `EditorialImage` (lib/media.ts) mas fora do domínio de página de
- *  empresa — por isso um tipo local em vez de reaproveitar `img()`. */
-export type RegionMapImage = { src: string; alt: string };
-
 export type RegionContact = {
   id: "sao-jose" | "araquari-joinville" | "blumenau";
   eyebrow: string;
@@ -36,9 +40,13 @@ export type RegionContact = {
   cnpjLabel: string;
   cnpj: string;
   addressLines?: string[];
+  /** Link externo "Abrir no Google Maps" (busca por nome + endereço). */
   mapHref?: string;
+  /** Link externo "Abrir no Waze". */
   wazeHref?: string;
-  mapImage?: RegionMapImage;
+  /** Google Maps real incorporado (iframe, sem chave/API). */
+  mapEmbedSrc?: string;
+  mapEmbedTitle?: string;
   channels: Channel[];
   /** Mensagem pré-preenchida dos botões de WhatsApp desta região (Seção 22
    *  da tarefa) — contextualiza empresa/unidade sempre que o próprio CTA
@@ -50,6 +58,8 @@ export type RegionContact = {
 
 const mapsQuery = (query: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 const wazeQuery = (query: string) => `https://waze.com/ul?q=${encodeURIComponent(query)}&navigate=yes`;
+/** Embed keyless do Google Maps (sem Maps Embed API, sem chave, sem billing). */
+const mapsEmbed = (query: string) => `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
 
 export const REGIONS: RegionContact[] = [
   {
@@ -64,12 +74,10 @@ export const REGIONS: RegionContact[] = [
       "Rua Governador José Boabaid — Distrito Industrial",
       "São José, SC — CEP 88104-760",
     ],
-    mapHref: mapsQuery("Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
+    mapHref: mapsQuery("Almeida Ambiental, Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
     wazeHref: wazeQuery("Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
-    mapImage: {
-      src: "/contato/mapa-sao-jose.webp",
-      alt: "Ilustração editorial abstrata da região de São José, SC, com pin institucional indicando a matriz do Grupo Almeida",
-    },
+    mapEmbedSrc: mapsEmbed("Almeida Ambiental, Rua Governador José Boabaid, Distrito Industrial, São José, SC, 88104-760"),
+    mapEmbedTitle: "Mapa — Almeida Ambiental, São José, SC",
     channels: [
       { label: "Atendimento", display: "(48) 3259-4444", href: "https://wa.me/554832594444", action: "whatsapp" },
       { label: "Logística", display: "(48) 99946-6066", href: "https://wa.me/5548999466066", action: "whatsapp" },
@@ -84,6 +92,16 @@ export const REGIONS: RegionContact[] = [
     description: "Atendimento da unidade de Araquari / Joinville.",
     cnpjLabel: "CNPJ Almeida Ambiental",
     cnpj: "04.910.399/0002-80",
+    addressLines: ["Rua Antonio Amorim, 890 — Porto Grande", "Araquari, SC — CEP 89245-000"],
+    // Sem "Almeida Ambiental" na query (diferente de São José/Blumenau): o
+    // nome fantasia aqui casa com mais de um resultado no geocoder do Maps
+    // (inclusive uma filial perto de Joinville), o que abria o embed numa
+    // vista regional ambígua em vez do endereço exato. O endereço sozinho —
+    // já validado contra o cadastro da Receita Federal — resolve preciso.
+    mapHref: mapsQuery("Rua Antonio Amorim, 890, Porto Grande, Araquari, SC, 89245-000"),
+    wazeHref: wazeQuery("Rua Antonio Amorim, 890, Porto Grande, Araquari, SC, 89245-000"),
+    mapEmbedSrc: mapsEmbed("Rua Antonio Amorim, 890, Porto Grande, Araquari, SC, 89245-000"),
+    mapEmbedTitle: "Mapa — Almeida Ambiental, Araquari, SC",
     channels: [
       { label: "Administrativo", display: "(47) 99949-6299", href: "https://wa.me/5547999496299", action: "whatsapp" },
     ],
@@ -98,12 +116,10 @@ export const REGIONS: RegionContact[] = [
     cnpjLabel: "CNPJ Saturno Ambiental",
     cnpj: "02.111.538/0001-07",
     addressLines: ["Rua Marechal Rondon, 510 — Salto Norte", "Blumenau, SC — CEP 89065-200"],
-    mapHref: mapsQuery("Rua Marechal Rondon, 510, Salto Norte, Blumenau, SC, 89065-200"),
+    mapHref: mapsQuery("Saturno Ambiental, Rua Marechal Rondon, 510, Salto Norte, Blumenau, SC, 89065-200"),
     wazeHref: wazeQuery("Rua Marechal Rondon, 510, Salto Norte, Blumenau, SC, 89065-200"),
-    mapImage: {
-      src: "/contato/mapa-blumenau.webp",
-      alt: "Ilustração editorial abstrata da região do Vale do Itajaí, Blumenau, SC, com pin institucional indicando a Saturno Ambiental",
-    },
+    mapEmbedSrc: mapsEmbed("Saturno Ambiental, Rua Marechal Rondon, 510, Salto Norte, Blumenau, SC, 89065-200"),
+    mapEmbedTitle: "Mapa — Saturno Ambiental, Blumenau, SC",
     channels: [
       { label: "Telefone", display: "(47) 3323-8441", href: "tel:+554733238441", action: "call" },
       { label: "WhatsApp", display: "(48) 98464-9289", href: "https://wa.me/5548984649289", action: "whatsapp" },

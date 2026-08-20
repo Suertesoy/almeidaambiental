@@ -2,36 +2,38 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./contato.module.css";
 import Reveal from "../shared/Reveal";
-import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { PhoneIcon, WhatsAppIcon } from "../icons";
-import { REGIONS } from "../../lib/contact-data";
-
-const SECTION_TONE = [shared.toneStone, shared.toneStoneAlt, shared.toneForest];
-const SECTION_DARK = [false, false, true];
+import { REGIONS, type Channel } from "../../lib/contact-data";
 
 const DIRECTORY = [
-  { id: "sao-jose", index: "01", title: "São José", subtitle: "Matriz · Almeida Ambiental · Almeida Equipamentos" },
-  { id: "araquari-joinville", index: "02", title: "Araquari / Joinville", subtitle: "Almeida Ambiental" },
-  { id: "blumenau", index: "03", title: "Blumenau", subtitle: "Saturno Ambiental" },
+  { id: "sao-jose", title: "São José" },
+  { id: "araquari-joinville", title: "Araquari / Joinville" },
+  { id: "blumenau", title: "Blumenau" },
 ];
 
 const withMessage = (href: string, message: string) => `${href}?text=${encodeURIComponent(message)}`;
 
+function channelCopy(channel: Channel) {
+  const typeLabel = channel.action === "whatsapp" ? "WhatsApp" : "Telefone";
+  const meta = channel.label === typeLabel ? channel.display : `${typeLabel} · ${channel.display}`;
+  const cta =
+    channel.action === "call" ? "Ligar" : channel.label === "WhatsApp" ? "Falar pelo WhatsApp" : `Falar com ${channel.label}`;
+  return { meta, cta };
+}
+
 /**
- * /contato — diretório institucional organizado por operação/região: Hero
- * curto → diretório rápido (unidade → botão "Ver unidade") → São José →
- * Araquari / Joinville → Blumenau → fechamento curto.
- *
- * Reestruturação Checkpoint E (refinamento mobile 2026-08-20): cada
- * localidade responde em sequência "qual unidade / onde fica / como falar
- * ou chegar" (Seção 18-20 da tarefa) — identidade (eyebrow/headline/
- * descrição/CNPJ) → Localização (endereço) → Canais de contato (WhatsApp e
- * Ligar como botões reais, não hyperlink) → mapa editorial estático +
- * Google Maps/Waze. Substitui o bloco anterior (.channelRow como único
- * link cobrindo texto+ação), que apresentava toda ação de contato como
- * hyperlink sem affordance de botão. Dados oficiais centralizados em
- * lib/contact-data.ts — sem fax, sem e-mail (nenhum dos dois faz parte dos
- * canais fornecidos para esta reconstrução).
+ * /contato — reconstrução da arquitetura visual (2026-08-20): a página
+ * inteira responde a uma única sequência (Qual unidade? → Onde fica? →
+ * Como chego lá? → Como falo com ela?), não mais um mosaico de mini
+ * landing pages por empresa. Hero escuro → diretório compacto → São José /
+ * Araquari-Joinville / Blumenau sobre a MESMA superfície clara contínua
+ * (--color-stone-warm, sem alternância cream/verde por unidade) → CTA
+ * terminal escuro. Cada unidade segue a mesma gramática (identidade → CNPJ
+ * recuado → localização com Google Maps real → ações Maps/Waze → canais de
+ * contato), sem reordenar por empresa. Mapas ilustrativos (Magnific)
+ * removidos; Google Maps real via iframe keyless (`output=embed`, sem
+ * chave/API — ver lib/contact-data.ts). Dados oficiais em
+ * lib/contact-data.ts — sem fax, sem e-mail.
  */
 export default function ContatoPage() {
   return (
@@ -49,112 +51,104 @@ export default function ContatoPage() {
         </div>
       </section>
 
-      {/* ---------------- Diretório rápido ---------------- */}
-      <nav className={styles.directory} aria-label="Diretório rápido">
-        <ol className={styles.directoryList}>
-          {DIRECTORY.map((item) => (
-            <li key={item.id} className={styles.directoryItem}>
-              <span className={styles.directoryIndex}>{item.index}</span>
-              <span className={styles.directoryText}>
-                <span className={styles.directoryTitle}>{item.title}</span>
-                <span className={styles.directorySubtitle}>{item.subtitle}</span>
-              </span>
-              <a className={`${shared.btn} ${shared.btnOutlineOnLight} ${styles.directoryAction}`} href={`#${item.id}`}>
-                Ver unidade
-              </a>
-            </li>
-          ))}
-        </ol>
+      {/* ---------------- Diretório compacto ---------------- */}
+      <nav className={`${shared.sectionCompact} ${shared.toneStone} ${styles.directoryNav}`} aria-label="Diretório de unidades">
+        <div className={shared.container}>
+          <ul className={styles.directoryChips}>
+            {DIRECTORY.map((item) => (
+              <li key={item.id}>
+                <a className={styles.directoryChip} href={`#${item.id}`}>
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
 
-      {/* ---------------- Blocos regionais ---------------- */}
-      {REGIONS.map((region, index) => {
-        const dark = SECTION_DARK[index];
-        const outlineBtn = dark ? shared.btnOutlineOnDark : shared.btnOutlineOnLight;
+      {/* ---------------- Unidades ---------------- */}
+      {REGIONS.map((region) => {
+        const hasLocation = Boolean(region.addressLines && region.addressLines.length > 0);
 
         return (
-          <section
-            key={region.id}
-            id={region.id}
-            className={`${shared.section} ${SECTION_TONE[index]} ${styles.regionSection}`}
-          >
+          <section key={region.id} id={region.id} className={`${shared.section} ${shared.toneStone} ${styles.unitBlock}`}>
             <div className={shared.container}>
               <Reveal>
-                <div className={styles.regionGrid}>
-                  <div className={`${styles.regionInfo} ${!region.mapImage ? styles.regionInfoFull : ""}`}>
+                <div className={`${styles.unitGrid} ${!hasLocation ? styles.unitGridNoLocation : ""}`}>
+                  <div className={styles.unitIdentity}>
                     <p className={shared.eyebrow}>{region.eyebrow}</p>
                     <h2 className={shared.headline}>{region.headline}</h2>
                     <p className={shared.body}>{region.description}</p>
-                    <p className={styles.cnpjLine}>
-                      {region.cnpjLabel}: {region.cnpj}
-                    </p>
-
-                    {region.addressLines && (
-                      <div className={`${styles.infoBlock} ${dark ? styles.infoBlockDark : ""}`}>
-                        <span className={styles.infoLabel}>Localização</span>
-                        <p className={styles.channelAddress}>
-                          {region.addressLines.map((line, lineIndex) => (
-                            <span key={line}>
-                              {line}
-                              {lineIndex < region.addressLines!.length - 1 && <br />}
-                            </span>
-                          ))}
-                        </p>
-                      </div>
-                    )}
-
-                    <div className={`${styles.infoBlock} ${dark ? styles.infoBlockDark : ""}`}>
-                      <span className={styles.infoLabel}>Canais de contato</span>
-                      <div className={styles.channelActions}>
-                        {region.channels.map((channel) => (
-                          <div key={channel.href} className={styles.channelAction}>
-                            <span className={styles.channelActionLabel}>{channel.label}</span>
-                            <a
-                              className={
-                                channel.action === "whatsapp"
-                                  ? `${shared.btn} ${styles.btnWhatsApp}`
-                                  : `${shared.btn} ${outlineBtn}`
-                              }
-                              href={
-                                channel.action === "whatsapp"
-                                  ? withMessage(channel.href, region.whatsappMessage)
-                                  : channel.href
-                              }
-                              target={channel.action === "whatsapp" ? "_blank" : undefined}
-                              rel={channel.action === "whatsapp" ? "noopener noreferrer" : undefined}
-                            >
-                              {channel.action === "whatsapp" ? <WhatsAppIcon /> : <PhoneIcon />}
-                              {channel.action === "whatsapp" ? "Falar pelo WhatsApp" : "Ligar"}
-                            </a>
-                            <span className={styles.channelActionNumber}>{channel.display}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {region.note && <p className={styles.channelNote}>{region.note}</p>}
+                    {region.note && <p className={styles.unitNote}>{region.note}</p>}
                   </div>
 
-                  {region.mapImage && (
-                    <div className={styles.regionMap}>
-                      <div className={styles.mapFrame}>
-                        <img src={region.mapImage.src} alt={region.mapImage.alt} loading="lazy" decoding="async" />
-                        <IllustrativeBadge />
-                      </div>
+                  <p className={styles.unitCnpj}>
+                    {region.cnpjLabel}: {region.cnpj}
+                  </p>
+
+                  {hasLocation && (
+                    <div className={styles.unitLocation}>
+                      <p className={styles.addressText}>
+                        {region.addressLines!.map((line, lineIndex) => (
+                          <span key={line}>
+                            {line}
+                            {lineIndex < region.addressLines!.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+
+                      {region.mapEmbedSrc && (
+                        <div className={styles.mapFrame}>
+                          <iframe
+                            src={region.mapEmbedSrc}
+                            title={region.mapEmbedTitle ?? `Mapa — ${region.headline}`}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                          />
+                        </div>
+                      )}
+
                       <div className={styles.mapActions}>
                         {region.mapHref && (
-                          <a className={`${shared.btn} ${outlineBtn}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
+                          <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
                             Abrir no Google Maps
                           </a>
                         )}
                         {region.wazeHref && (
-                          <a className={`${shared.btn} ${outlineBtn}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
+                          <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
                             Abrir no Waze
                           </a>
                         )}
                       </div>
                     </div>
                   )}
+
+                  <div className={styles.unitChannels}>
+                    <span className={styles.channelGroupLabel}>Canais de contato</span>
+                    <div className={styles.channelList}>
+                      {region.channels.map((channel) => {
+                        const { meta, cta } = channelCopy(channel);
+                        const isWhatsApp = channel.action === "whatsapp";
+                        return (
+                          <div key={channel.href} className={styles.channelRow}>
+                            <div className={styles.channelText}>
+                              <span className={styles.channelName}>{channel.label}</span>
+                              <span className={styles.channelMeta}>{meta}</span>
+                            </div>
+                            <a
+                              className={isWhatsApp ? `${shared.btn} ${styles.btnWhatsApp}` : `${shared.btn} ${shared.btnOutlineOnLight}`}
+                              href={isWhatsApp ? withMessage(channel.href, region.whatsappMessage) : channel.href}
+                              target={isWhatsApp ? "_blank" : undefined}
+                              rel={isWhatsApp ? "noopener noreferrer" : undefined}
+                            >
+                              {isWhatsApp ? <WhatsAppIcon /> : <PhoneIcon />}
+                              {cta}
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               </Reveal>
             </div>
