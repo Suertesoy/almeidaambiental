@@ -412,16 +412,22 @@ html {
   outline-offset: 2px;
 }
 
-/* ---------------- Menu ---------------- */
+/* ---------------- Menu ----------------
+   Checkpoint B (refinamento mobile 2026-08-20): o painel usa o mesmo verde
+   institucional profundo do Header (--color-forest-deep, mesmo token, não
+   um segundo tom criado à parte) em vez de um fundo claro — a ruptura
+   visual identificada no celular real era exatamente essa quebra de
+   continuidade entre Header escuro e menu aberto branco. Texto off-white,
+   divisores discretos, hover/accent em dourado atenuado. */
 .menu-panel {
   position: fixed;
   top: var(--header-height);
   left: 0;
   right: 0;
-  background: var(--color-card);
+  background: var(--color-forest-deep);
   z-index: 45;
-  border-bottom: 1px solid rgba(21, 21, 15, 0.08);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(247, 246, 241, 0.14);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   max-height: calc(100svh - var(--header-height));
   max-height: calc(100dvh - var(--header-height));
   overflow-y: auto;
@@ -436,7 +442,7 @@ html {
 }
 
 .menu-item + .menu-item {
-  border-top: 1px solid var(--color-muted);
+  border-top: 1px solid rgba(247, 246, 241, 0.14);
 }
 
 .menu-link {
@@ -444,12 +450,14 @@ html {
   padding: 18px 20px;
   font-family: var(--font-display);
   font-size: 18px;
-  color: var(--color-foreground);
+  color: var(--color-background);
   text-decoration: none;
 }
 
-.menu-link:hover {
-  background: var(--color-muted);
+.menu-link:hover,
+.menu-link:focus-visible {
+  background: rgba(247, 246, 241, 0.08);
+  color: var(--color-gold-aged);
 }
 
 /* ---------------- Footer ----------------
