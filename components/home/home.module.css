@@ -486,6 +486,15 @@ html:has([data-page="home"]) {
   aspect-ratio: 16 / 10;
 }
 
+/* Checkpoint B: a terceira dobra usava .duoMediaTall (3/4, retrato) dentro
+   de uma coluna .duoMediaWide (7fr) — width alto x aspect-ratio retrato
+   produzia uma imagem ~930px de altura em 1440px, muito acima da segunda
+   dobra (paisagem, coluna estreita). Paisagem 4:3 na coluna padrão de
+   .duoMediaLeft (5fr) resolve a causa real, não só o sintoma. */
+.duoMedia4x3 {
+  aspect-ratio: 4 / 3;
+}
+
 .duoMediaTall {
   aspect-ratio: 3 / 4;
 }
@@ -511,25 +520,45 @@ html:has([data-page="home"]) {
   }
 }
 
+/* Checkpoint B (Seção 12): hierarquia ícone → nome → número. O número
+   deixou de abrir o bloco (era o primeiro elemento, maior peso visual do
+   que o nome da etapa) e virou metadata discreta ao final. */
 .processStep {
   padding: 18px 16px;
   border-top: 1px solid rgba(21, 21, 15, 0.18);
 }
 
-.processIndex {
+.processIcon {
   display: block;
-  margin-bottom: 8px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--role-accent, var(--text-accent));
+  width: 28px;
+  height: 28px;
+  margin-bottom: 12px;
+  color: var(--role-secondary, var(--text-secondary));
 }
 
 .processLabel {
   margin: 0;
   font-family: var(--font-inter), var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  color: inherit;
+}
+
+.processIndex {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--role-accent, var(--text-accent));
+}
+
+@media (min-width: 1024px) {
+  .processIcon {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 /* ---------------- Apoio (tags separadas por ponto) ---------------- */

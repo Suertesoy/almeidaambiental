@@ -8,9 +8,16 @@ import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
+import { PROCESS_STEP_ICONS } from "../icons";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
-const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-logistica-editorial.webp";
+/* Substituída nesta rodada (Checkpoint B): a imagem anterior
+   (ambiental-logistica-editorial.webp, caminhões estacionados em vista
+   aérea) tinha baixa qualidade e não comunicava operação integrada. Gerada
+   via Magnific/MCP em 4:3 (1760x1328, reamostrada para 1440x1080) —
+   arquivo novo e independente porque o antigo continua em uso por
+   /home4 (fora de escopo desta tarefa). */
+const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
 const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.webp";
@@ -62,11 +69,11 @@ export default function HomePage() {
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
       <section className={`${styles.section} ${styles.toneStone}`}>
         <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaWide}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaTall}`}>
+          <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
+            <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
               <SectionMedia
                 imageSrc={IMG_AMBIENTAL_PROCESSO}
-                alt="Triagem e processamento de resíduos na Almeida Ambiental"
+                alt="Operação integrada de recebimento, triagem e processamento de resíduos na Almeida Ambiental"
                 objectPosition="center"
               />
             </div>
@@ -79,7 +86,7 @@ export default function HomePage() {
                 ambiental.
               </p>
               <div className={styles.ctaRow}>
-                <Link className={styles.editorialLink} href="/almeida-ambiental">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/almeida-ambiental">
                   Conheça Almeida Ambiental
                 </Link>
               </div>
@@ -88,12 +95,16 @@ export default function HomePage() {
 
           <Reveal>
             <ol className={styles.processRow}>
-              {PROCESS_STEPS.map((step, index) => (
-                <li key={step} className={styles.processStep}>
-                  <span className={styles.processIndex}>{String(index + 1).padStart(2, "0")}</span>
-                  <p className={styles.processLabel}>{step}</p>
-                </li>
-              ))}
+              {PROCESS_STEPS.map((step, index) => {
+                const StepIcon = PROCESS_STEP_ICONS[index];
+                return (
+                  <li key={step} className={styles.processStep}>
+                    <StepIcon className={styles.processIcon} />
+                    <p className={styles.processLabel}>{step}</p>
+                    <span className={styles.processIndex}>{String(index + 1).padStart(2, "0")}</span>
+                  </li>
+                );
+              })}
             </ol>
           </Reveal>
         </div>
@@ -141,7 +152,7 @@ export default function HomePage() {
                 <li>Containers</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={styles.editorialLink} href="/almeida-equipamentos">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-equipamentos">
                   Conheça Almeida Equipamentos
                 </Link>
               </div>
@@ -201,7 +212,7 @@ export default function HomePage() {
                 <li>Consultoria</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={styles.editorialLink} href="/saturno-ambiental">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
                   Conheça Saturno Ambiental
                 </Link>
               </div>
