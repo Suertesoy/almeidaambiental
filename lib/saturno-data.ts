@@ -40,7 +40,7 @@ export const MATERIALS_IMAGE = img(
 );
 
 export type Frente = {
-  id: "coleta" | "triagem" | "trituracao" | "cartonagem" | "gestao-ambiental";
+  id: "coleta" | "triagem" | "trituracao" | "destinacao" | "cartonagem" | "gestao-ambiental";
   eyebrow: string;
   headline: string;
   copy: string;
@@ -67,6 +67,12 @@ export const FRENTES: Frente[] = [
     eyebrow: "Trituração e Descaracterização",
     headline: "Segurança e descaracterização quando o material exige.",
     copy: "Materiais sigilosos e determinados resíduos podem exigir descaracterização antes da destinação. A Saturno dispõe de soluções de processamento para preparar esses materiais de maneira mais segura e eficiente.",
+  },
+  {
+    id: "destinacao",
+    eyebrow: "Destinação",
+    headline: "O ciclo se completa com o encaminhamento correto.",
+    copy: "Depois de classificado e processado, cada material segue para a destinação adequada, de acordo com sua composição — fechando a cadeia iniciada na coleta.",
   },
   {
     id: "cartonagem",

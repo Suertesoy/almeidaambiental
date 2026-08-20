@@ -41,8 +41,10 @@
 
 @media (min-width: 768px) {
   .frentesCompactGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(32px, 4vw, 56px);
+    /* 4 colunas (era 3) — Destinação entra como 4ª frente compacta desde
+       2026-08-20, mesma grade, sem novo componente. */
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(24px, 3vw, 40px);
   }
 }
 

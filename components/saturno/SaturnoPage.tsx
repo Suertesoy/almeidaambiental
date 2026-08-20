@@ -7,7 +7,9 @@ import EditorialCTA from "../shared/EditorialCTA";
 import { HERO_IMAGE, FRENTES, MATERIALS, MATERIALS_IMAGE } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
-const COMPACT_FRENTES = FRENTES.filter((f) => f.id === "coleta" || f.id === "triagem" || f.id === "trituracao");
+const COMPACT_FRENTES = FRENTES.filter(
+  (f) => f.id === "coleta" || f.id === "triagem" || f.id === "trituracao" || f.id === "destinacao"
+);
 const CARTONAGEM = FRENTES.find((f) => f.id === "cartonagem")!;
 const GESTAO_AMBIENTAL = FRENTES.find((f) => f.id === "gestao-ambiental")!;
 
@@ -55,7 +57,12 @@ export default function SaturnoPage() {
         </div>
       </section>
 
-      {/* ---------------- Três frentes compartilhadas, tratamento compacto ---------------- */}
+      {/* ---------------- Frentes compartilhadas, tratamento compacto ----------------
+          Coleta, Triagem, Trituração/Descaracterização e Destinação — a
+          sequência do processo operacional não deve terminar em
+          Trituração/Descaracterização (correção 2026-08-20, pedido explícito
+          do responsável do projeto). Cartonagem e Gestão Ambiental continuam
+          como capítulos próprios abaixo, fora desta grade compacta. */}
       <section id="frentes" className={`${shared.sectionCompact} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Serviços</p>
