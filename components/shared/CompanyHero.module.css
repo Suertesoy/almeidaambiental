@@ -94,7 +94,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 32px;
+  margin-top: var(--gap-support-cta);
 }
 
 .btn {

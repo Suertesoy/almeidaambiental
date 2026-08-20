@@ -78,6 +78,17 @@
   --text-on-dark-secondary: #cbd5ce;
   --text-on-dark-muted: #88968d;
   --text-on-dark-accent: var(--color-gold-aged);
+
+  /* ---- Spacing intra-bloco (Checkpoint C) ----
+     Os valores já eram, na prática, quase todos estes — este bloco só os
+     nomeia para reuso consistente. A exceção real era --gap-support-cta:
+     .ctaRow usava margin-top: 4px em company-page.module.css e
+     home.module.css, fazendo o CTA colar no bloco técnico/specs anterior
+     em vez de fechar o raciocínio com respiro (Seção 17). */
+  --gap-eyebrow-title: 10px;
+  --gap-title-body: 20px;
+  --gap-body-support: 24px;
+  --gap-support-cta: 32px;
 }
 
 @media (min-width: 1024px) {
