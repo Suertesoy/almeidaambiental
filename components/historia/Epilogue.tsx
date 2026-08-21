@@ -18,7 +18,8 @@ export default function Epilogue() {
       <div className={styles.container}>
         <p className={styles.epilogueEyebrow}>1985 → 2026</p>
         <h2 id="epilogue-heading" className={styles.epilogueHeadline}>
-          O que começou em 300 m² hoje conecta cinco unidades em Santa Catarina.
+          O que começou em <span className={styles.nowrapUnit}>300 m²</span> hoje conecta cinco unidades em Santa
+          Catarina.
         </h2>
 
         <div ref={ref} className={`${styles.statsGrid} ${active ? styles.statsGridActive : ""}`}>

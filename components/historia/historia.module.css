@@ -805,6 +805,12 @@
   text-wrap: balance;
 }
 
+/* "300 m²" nunca pode quebrar entre o número e a unidade (só essa dupla,
+   não a headline inteira — o resto continua livre para balancear). */
+.nowrapUnit {
+  white-space: nowrap;
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

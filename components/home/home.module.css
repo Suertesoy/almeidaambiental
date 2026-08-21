@@ -505,19 +505,15 @@ html:has([data-page="home"]) {
 
 /* ---------------- Etapas do processo (Almeida Ambiental) ---------------- */
 
-/* Mobile (Checkpoint A, refinamento 2026-08-20): grid de 2 colunas — a
-   maioria das etapas ocupa a faixa inteira (grid-column: 1 / -1, uma por
-   linha), exceto Trituração e Descaracterização (4ª e 5ª etapa, mesma fase
-   de processamento — Seção 6 da tarefa), que ficam lado a lado na mesma
-   linha via grid-column: span 1. Sem mudança de DOM: só posicionamento CSS
-   por nth-child, resetado a `auto` em ≥720px onde as 6 etapas voltam a ser
-   colunas únicas em sequência. */
+/* Mobile: cada etapa ocupa a faixa inteira (uma por linha, sem exceção de
+   posição) — grid de 1 coluna abre para 6 colunas em ≥720px, onde as
+   etapas voltam a ser uma sequência horizontal. */
 .processRow {
   list-style: none;
   margin: clamp(32px, 5vw, 64px) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 12px;
 }
 
@@ -525,19 +521,12 @@ html:has([data-page="home"]) {
   grid-column: 1 / -1;
 }
 
-.processStep:nth-child(4),
-.processStep:nth-child(5) {
-  grid-column: span 1;
-}
-
 @media (min-width: 720px) {
   .processRow {
     grid-template-columns: repeat(6, 1fr);
   }
 
-  .processStep,
-  .processStep:nth-child(4),
-  .processStep:nth-child(5) {
+  .processStep {
     grid-column: auto;
   }
 }

@@ -423,18 +423,16 @@
 
 /* ---------------- Fluxo horizontal/vertical (ex.: Diagnóstico → Coleta → ...) ---------------- */
 
-/* Mobile (Checkpoint A, refinamento 2026-08-20): grid de 2 colunas — a
-   maioria das etapas ocupa a faixa inteira (grid-column: 1 / -1, uma por
-   linha), exceto Trituração e Descaracterização (4ª e 5ª etapa, mesma fase
-   de processamento — Seção 6 da tarefa), lado a lado via grid-column: span
-   1. Resetado a `auto` em ≥720px, onde --flow-steps (6, ver
-   AlmeidaAmbientalPage.tsx) volta a abrir uma coluna por etapa em sequência. */
+/* Mobile: cada etapa ocupa a faixa inteira (uma por linha, sem exceção de
+   posição) — grid de 1 coluna abre para --flow-steps colunas em ≥720px
+   (6, ver AlmeidaAmbientalPage.tsx), onde as etapas voltam a ser uma
+   sequência horizontal. */
 .flowRow {
   list-style: none;
   margin: clamp(32px, 5vw, 64px) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 12px;
 }
 
@@ -442,19 +440,12 @@
   grid-column: 1 / -1;
 }
 
-.flowStep:nth-child(4),
-.flowStep:nth-child(5) {
-  grid-column: span 1;
-}
-
 @media (min-width: 720px) {
   .flowRow {
     grid-template-columns: repeat(var(--flow-steps, 6), 1fr);
   }
 
-  .flowStep,
-  .flowStep:nth-child(4),
-  .flowStep:nth-child(5) {
+  .flowStep {
     grid-column: auto;
   }
 }
