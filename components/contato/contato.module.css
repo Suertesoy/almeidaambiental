@@ -15,7 +15,28 @@
   overflow-x: clip;
 }
 
-/* ---------------- Hero ---------------- */
+/* ---------------- Hero ----------------
+   Correção cirúrgica desktop (2026-08-20): o Hero usa shared.sectionCompact,
+   cujo padding-top é clamp(40px, 7vw, 72px) — satura em 72px a partir de
+   ~1029px de viewport. --header-height (app/globals.css) sobe de 56px para
+   80px exatamente no mesmo breakpoint (min-width:1024px). Como esta
+   <section> começa em y=0 (o Header é position:fixed, sobrepõe o fluxo do
+   documento em vez de empurrá-lo — não há padding-top compensatório em
+   nenhum ancestral), o padding-top da própria section é o único respiro
+   entre o Header e o eyebrow. 72px < 80px: o Header cobria os 8px
+   superiores do eyebrow "Contato" em qualquer viewport ≥1024px. Corrigido
+   ancorando o padding-top do Hero a --header-height (não um valor solto,
+   não overflow escondido) só a partir de 1024px — sectionCompact continua
+   inalterado para as demais páginas/Heroes. Fora de escopo desta correção
+   (pedido explícito): o Hero mobile permanece exatamente como estava. */
+.heroSection {
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    padding-top: calc(var(--header-height) + 40px);
+  }
+}
 
 .heroTitle {
   margin: 12px 0 0;

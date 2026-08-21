@@ -39,7 +39,7 @@ export default function ContatoPage() {
   return (
     <div className={styles.page} data-page="contato">
       {/* ---------------- Hero ---------------- */}
-      <section className={`${shared.sectionCompact} ${shared.toneForest}`}>
+      <section className={`${shared.sectionCompact} ${shared.toneForest} ${styles.heroSection}`}>
         <div className={shared.container}>
           <Reveal>
             <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Contato</p>
