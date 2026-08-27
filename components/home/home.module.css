@@ -534,96 +534,218 @@ html:has([data-page="home"]) {
   }
 }
 
-/* ---------------- Etapas do processo (Almeida Ambiental) ---------------- */
-
-/* Mobile: cada etapa ocupa a faixa inteira (uma por linha, sem exceção de
-   posição) — grid de 1 coluna abre para 6 colunas em ≥720px, onde as
-   etapas voltam a ser uma sequência horizontal. */
-.processRow {
-  list-style: none;
-  margin: clamp(32px, 5vw, 64px) 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 12px;
+/* Símbolo editorial atrás da composição de processo — canto inferior
+   esquerdo (varia da direita usada por Equipamentos/Impacto só por
+   composição), parcialmente cortado. */
+.processWatermark {
+  bottom: -10%;
+  left: -6%;
+  width: clamp(260px, 30vw, 420px);
 }
 
-.processStep {
-  grid-column: 1 / -1;
-}
-
-@media (min-width: 720px) {
-  .processRow {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .processStep {
-    grid-column: auto;
+@media (max-width: 767px) {
+  .processWatermark {
+    bottom: -4%;
+    left: -22%;
+    width: 58vw;
   }
 }
 
-/* Checkpoint B (Seção 12, rodada anterior): hierarquia ícone → nome →
-   número — número como metadata discreta ao final, nunca abrindo o bloco.
-   Checkpoint A (Seção 3-5, esta rodada): mobile centralizado e compacto —
-   ícone e nome centralizados, número removido visualmente (mantido no DOM,
-   Seção 3 da tarefa), sem virar card (sem fundo, sem bolinha). */
-.processStep {
-  padding: 12px 6px;
-  border-top: 1px solid rgba(21, 21, 15, 0.18);
-  text-align: center;
+/* ---------------- Etapas do processo (Almeida Ambiental) ----------------
+   Composição única: uma espinha institucional contínua (verde floresta)
+   com pequenos ramos perpendiculares marcando cada uma das seis etapas —
+   linguagem de esquema de processo industrial, não uma timeline de
+   bolinhas numeradas. Duas composições por breakpoint, alternadas via
+   display:none (sem JS, sem risco de hydration mismatch): mobile/tablet
+   (<1024px) usa espinha vertical com etapas em pares alternando
+   esquerda/direita; desktop (≥1024px) usa espinha horizontal com ramos
+   alternando acima/abaixo. As duas SVGs usam viewBox 0 0 100 100 +
+   preserveAspectRatio="none": x/y viram percentuais literais do
+   container, então o path decorativo e o grid de conteúdo real
+   permanecem sincronizados em qualquer largura sem recálculo por
+   breakpoint. Breakpoint único em 1024px (mesmo ponto em que .duo muda de
+   coluna) — 768px tablet fica do lado compacto/vertical, mais seguro para
+   "Descaracterização". */
+
+.processFlow {
+  position: relative;
+  margin-top: clamp(40px, 6vw, 72px);
 }
 
-.processIcon {
-  display: block;
-  width: 26px;
-  height: 26px;
-  margin: 0 auto 8px;
-  color: var(--role-secondary, var(--text-secondary));
+.processPath {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.processLabel {
-  margin: 0;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 700;
-  font-size: 15px;
-  color: inherit;
-}
-
-.processIndex {
+.processPathDesktop {
   display: none;
 }
 
-@media (min-width: 720px) {
-  .processStep {
-    padding: 18px 16px;
-    text-align: left;
+.processSpine {
+  fill: none;
+  stroke: var(--color-forest-deep);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.85;
+}
+
+.processStub {
+  stroke: var(--color-forest-deep);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.5;
+}
+
+.processSteps {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: clamp(20px, 6vw, 32px);
+  row-gap: clamp(20px, 4vw, 28px);
+}
+
+.processStep {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.processStep:nth-child(1) { grid-column: 1; grid-row: 1; }
+.processStep:nth-child(2) { grid-column: 2; grid-row: 1; }
+.processStep:nth-child(3) { grid-column: 1; grid-row: 2; }
+.processStep:nth-child(4) { grid-column: 2; grid-row: 2; }
+.processStep:nth-child(5) { grid-column: 1; grid-row: 3; }
+.processStep:nth-child(6) { grid-column: 2; grid-row: 3; }
+
+/* Ícone sempre colado na espinha central, nome sempre se afastando dela
+   — mesma regra nos dois eixos (mobile: horizontal; desktop: vertical). */
+.stepUp {
+  justify-content: flex-end;
+}
+
+.stepUp .processIcon {
+  order: 2;
+}
+
+.stepUp .processLabel {
+  order: 1;
+  text-align: right;
+}
+
+.stepDown {
+  justify-content: flex-start;
+}
+
+.stepDown .processLabel {
+  text-align: left;
+}
+
+.processIcon {
+  flex-shrink: 0;
+  display: block;
+  width: 22px;
+  height: 22px;
+  color: var(--role-secondary, var(--text-secondary));
+  transition: color 200ms ease;
+}
+
+.processLabel {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25;
+  color: inherit;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .processStep:hover .processIcon {
+    color: var(--color-forest-deep);
   }
 
-  .processIcon {
-    width: 28px;
-    height: 28px;
-    margin: 0 0 12px;
-  }
-
-  .processLabel {
-    font-size: 16px;
-  }
-
-  .processIndex {
-    display: block;
-    margin-top: 6px;
-    font-family: var(--font-inter), var(--font-body);
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--role-accent, var(--text-accent));
+  .processStep:hover .processLabel {
+    border-color: var(--color-gold-aged);
   }
 }
 
 @media (min-width: 1024px) {
+  .processFlow {
+    height: clamp(240px, 20vw, 300px);
+    margin-top: clamp(56px, 6vw, 96px);
+  }
+
+  .processPathMobile {
+    display: none;
+  }
+
+  .processPathDesktop {
+    display: block;
+  }
+
+  .processSteps {
+    height: 100%;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 12px;
+    row-gap: 0;
+  }
+
+  .processStep:nth-child(1),
+  .processStep:nth-child(2),
+  .processStep:nth-child(3),
+  .processStep:nth-child(4),
+  .processStep:nth-child(5),
+  .processStep:nth-child(6) {
+    grid-row: 1;
+    grid-column: auto;
+  }
+
+  .processStep {
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .stepUp {
+    justify-content: flex-start;
+    padding-top: 20%;
+  }
+
+  .stepDown {
+    justify-content: flex-end;
+    padding-bottom: 20%;
+  }
+
+  .stepUp .processLabel,
+  .stepDown .processLabel {
+    text-align: center;
+  }
+
   .processIcon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .processLabel {
+    font-size: 16px;
   }
 }
 

@@ -27,6 +27,16 @@ const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
 const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
 
+/* Composição do "espinha + ramos" do bloco de processo (ver home.module.css,
+   comentário em `.processFlow`). Coordenadas em viewBox 0 0 100 100 —
+   percentuais literais do container, por isso funcionam com
+   preserveAspectRatio="none" em qualquer largura sem recálculo. */
+const PROCESS_NODE_X = [8.33, 25, 41.67, 58.33, 75, 91.67];
+const PROCESS_DESKTOP_SPINE_D =
+  "M 2 50 L 8.33 50 C 13.9 40 19.4 40 25 50 C 30.6 60 36.1 60 41.67 50 C 47.2 40 52.8 40 58.33 50 C 63.9 60 69.4 60 75 50 C 80.6 40 86.1 40 91.67 50 L 98 50";
+const PROCESS_MOBILE_SPINE_D = "M 50 3 L 50 17 C 44 25 44 42 50 50 C 56 58 56 75 50 83 L 50 97";
+const PROCESS_MOBILE_ROW_Y = [17, 50, 83];
+
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
  * sem scroll snap, sem interceptação de wheel, sem vídeo sincronizado ao
@@ -68,7 +78,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section className={`${styles.section} ${styles.toneStone}`}>
+      <section className={`${styles.section} ${styles.toneStone} ${styles.watermarkSurface}`}>
+        <BrandWatermark mode="light" className={styles.processWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
@@ -94,15 +105,50 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal>
-            <ol className={styles.processRow}>
+          <Reveal className={styles.processFlow}>
+            <svg
+              className={`${styles.processPath} ${styles.processPathDesktop}`}
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path className={styles.processSpine} d={PROCESS_DESKTOP_SPINE_D} />
+              {PROCESS_NODE_X.map((x, index) => (
+                <line
+                  key={x}
+                  className={styles.processStub}
+                  x1={x}
+                  y1={50}
+                  x2={x}
+                  y2={index % 2 === 0 ? 32 : 68}
+                />
+              ))}
+            </svg>
+            <svg
+              className={`${styles.processPath} ${styles.processPathMobile}`}
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path className={styles.processSpine} d={PROCESS_MOBILE_SPINE_D} />
+              {PROCESS_MOBILE_ROW_Y.map((y) => (
+                <g key={y}>
+                  <line className={styles.processStub} x1={50} y1={y} x2={38} y2={y} />
+                  <line className={styles.processStub} x1={50} y1={y} x2={62} y2={y} />
+                </g>
+              ))}
+            </svg>
+
+            <ol className={styles.processSteps}>
               {PROCESS_STEPS.map((step, index) => {
                 const StepIcon = PROCESS_STEP_ICONS[index];
                 return (
-                  <li key={step} className={styles.processStep}>
+                  <li
+                    key={step}
+                    className={`${styles.processStep} ${index % 2 === 0 ? styles.stepUp : styles.stepDown}`}
+                  >
                     <StepIcon className={styles.processIcon} />
                     <p className={styles.processLabel}>{step}</p>
-                    <span className={styles.processIndex}>{String(index + 1).padStart(2, "0")}</span>
                   </li>
                 );
               })}
