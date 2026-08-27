@@ -17,14 +17,12 @@ export default function Header() {
   return (
     <>
       <header className="site-header">
-        {/* Desktop (>=1024px): inalterado, exceto os assets de marca (logo e
-            bandeiras), agora reais — baixados do Figma (design/GUIA_MONTAGEM_FIGMA.md)
-            e versionados em public/brand/. */}
+        {/* Desktop (>=1024px): assinatura vetorial branca (identidade oficial,
+            ver DECISOES.md) direto sobre o verde floresta do Header — sem
+            plaqueta própria. */}
         <div className="desktop-only header-inner">
           <Link href="/" className="logo-link" aria-label="Grupo Almeida — página inicial">
-            <span className="logo-plate">
-              <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="logo-image" />
-            </span>
+            <img src="/brand/logo-grupo-almeida-white.png" alt="Grupo Almeida" className="logo-image" />
           </Link>
 
           <div className="header-right">
@@ -50,16 +48,13 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile (<1024px): fiel ao Figma (65px, logo com marca real, toggle
-            PT/EN com bandeiras reais em pill, hambúrguer de 3 traços).
-            Assets baixados do Figma (design/GUIA_MONTAGEM_FIGMA.md) e
-            versionados em public/brand/. Mesmo estado/lógica de menuOpen do
-            bloco acima. */}
+        {/* Mobile (<1024px): mesma assinatura vetorial branca do desktop,
+            direto sobre o verde floresta, sem plaqueta. Toggle PT/EN com
+            bandeiras reais em pill, hambúrguer de 3 traços. Mesmo
+            estado/lógica de menuOpen do bloco acima. */}
         <div className="mobile-fidelity mf-header-inner">
           <Link href="/" className="mf-logo" aria-label="Grupo Almeida — página inicial">
-            <span className="mf-logo-plate">
-              <img src="/brand/logo-grupo-almeida.png" alt="Grupo Almeida" className="mf-logo-image" />
-            </span>
+            <img src="/brand/logo-grupo-almeida-white.png" alt="Grupo Almeida" className="mf-logo-image" />
           </Link>
 
           <div className="mf-header-right">

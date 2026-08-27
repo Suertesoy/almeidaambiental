@@ -6,6 +6,7 @@ import styles from "./home.module.css";
 import Hero from "./Hero";
 import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
+import BrandWatermark from "../shared/BrandWatermark";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 import { PROCESS_STEP_ICONS } from "../icons";
@@ -111,7 +112,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt}`}>
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.watermarkSurface}`}>
+        <BrandWatermark mode="light" className={styles.equipamentosWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
@@ -222,7 +224,11 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Impacto positivo 2025 ---------------- */}
-      <section className={`${styles.section} ${styles.toneCarvao}`} ref={impactoRef}>
+      <section
+        className={`${styles.section} ${styles.toneCarvao} ${styles.watermarkSurface}`}
+        ref={impactoRef}
+      >
+        <BrandWatermark mode="dark" className={styles.impactWatermark} />
         <div className={styles.container}>
           <Reveal className={styles.impactHead}>
             <p className={styles.eyebrow}>Impacto Positivo · 2025</p>

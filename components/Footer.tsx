@@ -23,7 +23,11 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-grid">
           <div className="footer-col footer-col-brand">
-            <p className="footer-brand">Grupo Almeida</p>
+            <img
+              src="/brand/logo-grupo-almeida-dark.png"
+              alt="Grupo Almeida"
+              className="footer-brand-logo"
+            />
           </div>
 
           <div className="footer-col footer-col-companies">

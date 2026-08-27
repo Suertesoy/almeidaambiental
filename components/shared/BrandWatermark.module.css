@@ -1,0 +1,39 @@
+/* ==========================================================
+   Símbolo do Grupo Almeida como elemento editorial de fundo.
+   Base aqui é só o essencial de "carimbo decorativo": posição,
+   ausência de interação e opacidade por modo/breakpoint. Tamanho e
+   posição final (top/right/bottom/left, width) vêm de uma classe extra
+   por instância, definida no módulo CSS de quem consome — a mesma
+   primitiva serve a três composições visuais diferentes.
+   ========================================================== */
+/* Sem `width` aqui de propósito: a instância (classe passada via
+   `className`, definida no módulo de quem consome) sempre define a
+   largura. Duas classes de módulos CSS diferentes com a mesma
+   especificidade disputam por ordem de injeção do bundler — deixar
+   `width` só na instância evita essa disputa silenciosa. */
+.watermark {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.dark {
+  opacity: 0.05;
+}
+
+.light {
+  opacity: 0.06;
+}
+
+@media (max-width: 767px) {
+  .dark {
+    opacity: 0.035;
+  }
+
+  .light {
+    opacity: 0.04;
+  }
+}

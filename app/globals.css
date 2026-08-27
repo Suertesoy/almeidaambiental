@@ -209,32 +209,12 @@ html {
   text-decoration: none;
 }
 
-/* O arquivo de logo atual (public/brand/logo-grupo-almeida.png) é
-   exportado sobre fundo opaco --color-background (#f7f6f1), não
-   transparente — sobre o header escuro ficaria ilegível ou viraria um
-   retângulo sólido com filtro. Solução provisória: uma pequena "plaqueta"
-   na mesma cor de fundo do arquivo, do tamanho da logo — sem costura
-   visível, sem virar barra clara inteira. Substituir por um arquivo
-   vetorial com fundo transparente quando o cliente confirmar (ver
-   DECISOES.md, pendências). */
-.logo-plate,
-.mf-logo-plate {
-  display: inline-flex;
-  align-items: center;
-  background: var(--color-background);
-  border-radius: 6px;
-}
-
-.logo-plate {
-  padding: 8px 14px;
-}
-
-.mf-logo-plate {
-  padding: 5px 9px;
-}
-
+/* Assinatura oficial (public/brand/logo-grupo-almeida-white.png, fundo
+   transparente) direto sobre o verde floresta do Header — a "plaqueta"
+   provisória que existia por causa do PNG antigo com fundo opaco deixou
+   de ser necessária (ver DECISOES.md). */
 .logo-image {
-  height: 30px;
+  height: 38px;
   width: auto;
   display: block;
 }
@@ -318,9 +298,9 @@ html {
 }
 
 .mf-logo-image {
-  /* Reduzido de 44px — dentro de um header de 56px, uma logo de 44px + o
-     padding da plaqueta praticamente preenchia a barra inteira. */
-  height: 26px;
+  /* Sem plaqueta, a assinatura pode ocupar mais altura útil do header de
+     56px do que a versão antiga (26px) sem ficar apertada. */
+  height: 32px;
   width: auto;
   display: block;
 }
@@ -495,11 +475,12 @@ html {
   }
 }
 
-.footer-brand {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
+/* Assinatura vetorial oficial (ver DECISOES.md) — versão escura, porque o
+   Footer é uma superfície clara (--color-background); a branca some aqui. */
+.footer-brand-logo {
+  height: 34px;
+  width: auto;
+  display: block;
 }
 
 .footer-heading {

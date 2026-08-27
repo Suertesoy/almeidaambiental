@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./company-page.module.css";
+import BrandWatermark from "./BrandWatermark";
 
 export type EditorialCTAProps = {
   eyebrow?: string;
@@ -20,6 +21,7 @@ export default function EditorialCTA({ eyebrow, headline, body, cta, tone = "for
 
   return (
     <section className={`${styles.section} ${toneClass} ${styles.finalCta}`}>
+      <BrandWatermark mode="dark" className={styles.finalCtaWatermark} />
       <div className={styles.container}>
         {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
         <h2 className={styles.finalCtaHeadline}>{headline}</h2>

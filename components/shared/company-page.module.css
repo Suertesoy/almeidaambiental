@@ -524,11 +524,34 @@
 /* ---------------- CTA editorial final ---------------- */
 
 .finalCta {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
   text-align: center;
 }
 
 .finalCta .container {
+  position: relative;
+  z-index: 1;
   max-width: 760px;
+}
+
+/* Símbolo como assinatura arquitetônica da superfície — grande, à direita,
+   parcialmente cortado pela borda da seção. Nunca centralizado, nunca atrás
+   do botão especificamente (ancorado mais alto que o CTA). */
+.finalCtaWatermark {
+  top: 8%;
+  right: clamp(-72px, -7vw, -32px);
+  width: clamp(280px, 32vw, 460px);
+}
+
+@media (max-width: 767px) {
+  .finalCtaWatermark {
+    top: auto;
+    bottom: -8%;
+    right: -18%;
+    width: 62vw;
+  }
 }
 
 .finalCtaHeadline {
