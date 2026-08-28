@@ -535,23 +535,26 @@ html:has([data-page="home"]) {
   }
 }
 
-/* Par "atravessando seções" nº1 (superfícies claras, mesmo lado/largura em
-   ambas para o corte parecer um único símbolo contínuo — ver Seção 9 da
-   tarefa): metade de cima em .processWatermark (fim da seção de processo),
-   metade de baixo em .equipamentosWatermark (início da seção seguinte).
-   Ajustado depois da rota estar pronta (Seção 12): lado direito, atrás da
-   metade inferior do percurso, para não competir com as estações. */
+/* Símbolo editorial da seção Almeida Ambiental / capacidade operacional
+   (superfície clara, toneStone) — escala arquitetônica, muito maior que os
+   outros usos do símbolo nesta Home: agora que as 6 etapas não têm mais
+   linha/rota conectando-as, o símbolo grande entrando pela lateral direita
+   é o elemento que une visualmente o bloco. Entra pelo lado direito e
+   ocupa parte do centro-inferior da seção, atrás da composição das
+   etapas; cortado pelo overflow:hidden de .watermarkSurface tanto à
+   direita quanto embaixo, de propósito — uma fração relevante da forma
+   (não só uma lasca no canto) permanece legível. */
 .processWatermark {
-  right: -8%;
-  bottom: calc(-1 * clamp(180px, 21vw, 302px));
-  width: clamp(380px, 44vw, 640px);
+  right: -12%;
+  bottom: -6%;
+  width: clamp(480px, 48vw, 760px);
 }
 
 @media (max-width: 767px) {
   .processWatermark {
-    right: -18%;
-    bottom: calc(-1 * clamp(140px, 34vw, 220px));
-    width: clamp(260px, 78vw, 420px);
+    right: -22%;
+    bottom: -4%;
+    width: clamp(300px, 92vw, 420px);
   }
 }
 
@@ -610,81 +613,24 @@ html:has([data-page="home"]) {
 }
 
 /* ---------------- Etapas do processo (Almeida Ambiental) ----------------
-   Rota operacional serpenteada — um único percurso SVG (cotovelos de raio
-   amplo, nunca hastes perpendiculares soltas) organiza as seis estações
-   diretamente sobre o traçado. Ordem semântica das etapas continua sendo a
-   do <ol> (Diagnóstico…Destinação, ver PROCESS_STEPS em HomePage.tsx); a
-   ORDEM VISUAL é só CSS Grid (nth-child abaixo), nunca reordena o DOM.
-   Duas composições por breakpoint, alternadas via display:none (sem JS,
-   sem hydration mismatch):
-   - Desktop (≥1024px): grade 3 colunas × 2 linhas. Linha 1
-     esquerda→direita (Diagnóstico, Coleta, Triagem), a rota dobra à
-     direita, linha 2 direita→esquerda (Trituração, Descaracterização,
-     Destinação).
-   - Mobile/tablet (<1024px): grade 2 colunas × 3 linhas — mesma lógica,
-     serpenteando mais uma vez (dobra à direita, depois à esquerda).
-   As duas SVGs usam viewBox 0 0 100 100 + preserveAspectRatio="none": x/y
-   viram percentuais literais do container, e os waypoints do path
-   coincidem com o centro de cada célula do grid (mesmas frações), então
-   path decorativo e estações reais permanecem sincronizados em qualquer
-   largura sem recálculo. Breakpoint único em 1024px (mesmo ponto em que
-   .duo muda de coluna) — 768px tablet fica do lado compacto, mais seguro
-   para "Descaracterização". */
+   Composição editorial, não infográfico: as 6 etapas são apresentadas
+   pelo próprio título da seção ("Eficiência em cada etapa do processo"),
+   sem linha, seta, cotovelo ou qualquer elemento desenhado ligando uma
+   etapa à outra. Ordem semântica e ordem visual são sempre a mesma leitura
+   natural (ver PROCESS_STEPS em HomePage.tsx) — grid puro por
+   grid-auto-flow: row, nunca reposicionado via nth-child.
+   - Desktop (≥1024px): grade 3 colunas × 2 linhas.
+   - Mobile/tablet (<1024px): grade 2 colunas × 3 linhas.
+   O ritmo "desenhado à mão" que evita a leitura de dashboard vem de dois
+   recursos discretos e fixos por posição (nunca aleatórios):
+   1) pequeno deslocamento vertical (translateY) por etapa;
+   2) em duas etapas do desktop, o ícone se desloca lateralmente em
+      relação ao nome (translateX só no ícone) — o restante do sistema
+      mantém ícone centrado acima do nome. */
 
-.processFlow {
+.processComposition {
   position: relative;
   margin-top: clamp(40px, 6vw, 72px);
-  height: clamp(360px, 34vw, 460px);
-}
-
-.processPath {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.processPathDesktop {
-  display: none;
-}
-
-/* Percurso principal — mais espesso que uma linha de diagrama genérica,
-   cotovelos de raio amplo (ver PROCESS_*_ROUTE_D), linguagem de tubulação
-   industrial/planta técnica. */
-.processRoute {
-  fill: none;
-  stroke: var(--color-forest-deep);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.92;
-}
-
-/* Segunda linha sutil por baixo do percurso principal — profundidade e
-   acabamento técnico, nunca um segundo percurso concorrente. */
-.processRouteShadow {
-  fill: none;
-  stroke: var(--color-forest-deep);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.16;
-}
-
-/* No máximo 2 indicadores direcionais por composição — a direção deve ser
-   percebida, não explicada em cada etapa. */
-.processChevron {
-  fill: none;
-  stroke: var(--color-forest-deep);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  opacity: 0.75;
 }
 
 .processSteps {
@@ -695,56 +641,55 @@ html:has([data-page="home"]) {
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  height: 100%;
+  row-gap: clamp(20px, 4vw, 32px);
+  column-gap: clamp(16px, 4vw, 40px);
 }
 
-/* Mobile/tablet — serpente 2×3 (ver comentário acima para a ordem visual). */
-.processStep:nth-child(1) { grid-column: 1; grid-row: 1; }
-.processStep:nth-child(2) { grid-column: 2; grid-row: 1; }
-.processStep:nth-child(3) { grid-column: 2; grid-row: 2; }
-.processStep:nth-child(4) { grid-column: 1; grid-row: 2; }
-.processStep:nth-child(5) { grid-column: 1; grid-row: 3; }
-.processStep:nth-child(6) { grid-column: 2; grid-row: 3; }
-
-/* Estação = ícone + nome + relação espacial com a rota. Sem caixa, sem
-   fundo, sem borda, sem sombra: só a rota organiza visualmente o
-   conjunto. Nome sempre acima, ícone sempre pousado sobre o traçado
-   (mesma leitura do esquema técnico de referência da tarefa). */
+/* Estação = ícone + nome, sem caixa, sem fundo, sem borda, sem sombra.
+   Ícone percebido primeiro (ordem do DOM), nome imediatamente depois. */
 .processStep {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 100%;
+  justify-content: flex-start;
+  gap: 10px;
   min-width: 0;
   text-align: center;
 }
 
+/* Leve assimetria vertical entre os elementos de cada dupla mobile —
+   nunca o bastante para comprometer a ordem de leitura. */
+.processStep:nth-child(2) { transform: translateY(10px); }
+.processStep:nth-child(3) { transform: translateY(-8px); }
+.processStep:nth-child(4) { transform: translateY(6px); }
+.processStep:nth-child(6) { transform: translateY(-10px); }
+
+.processIcon {
+  flex-shrink: 0;
+  display: block;
+  color: var(--role-secondary, var(--text-secondary));
+  transition: color 200ms ease;
+}
+
+.processStep:nth-child(1) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
+.processStep:nth-child(2) .processIcon { width: clamp(36px, 9vw, 42px); height: clamp(36px, 9vw, 42px); }
+.processStep:nth-child(3) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
+.processStep:nth-child(4) .processIcon { width: clamp(38px, 9.5vw, 44px); height: clamp(38px, 9.5vw, 44px); }
+.processStep:nth-child(5) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
+.processStep:nth-child(6) .processIcon { width: clamp(36px, 9vw, 42px); height: clamp(36px, 9vw, 42px); }
+
 .processLabel {
-  order: 1;
   min-width: 0;
   margin: 0;
   font-family: var(--font-inter), var(--font-body);
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 16px;
   line-height: 1.25;
   color: inherit;
   overflow-wrap: break-word;
   hyphens: auto;
   border-bottom: 1.5px solid transparent;
   transition: border-color 200ms ease;
-}
-
-.processIcon {
-  order: 2;
-  flex-shrink: 0;
-  display: block;
-  width: 30px;
-  height: 30px;
-  color: var(--role-secondary, var(--text-secondary));
-  transition: color 200ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -758,47 +703,40 @@ html:has([data-page="home"]) {
 }
 
 @media (min-width: 1024px) {
-  .processFlow {
-    height: clamp(320px, 22vw, 400px);
+  .processComposition {
     margin-top: clamp(56px, 6vw, 96px);
-  }
-
-  .processPathMobile {
-    display: none;
-  }
-
-  .processPathDesktop {
-    display: block;
   }
 
   .processSteps {
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    row-gap: clamp(32px, 4.5vw, 48px);
+    column-gap: clamp(32px, 4vw, 64px);
   }
 
-  /* Desktop — serpente 3×2: linha 1 esquerda→direita, dobra à direita,
-     linha 2 direita→esquerda. */
-  .processStep:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .processStep:nth-child(2) { grid-column: 2; grid-row: 1; }
-  .processStep:nth-child(3) { grid-column: 3; grid-row: 1; }
-  .processStep:nth-child(4) { grid-column: 3; grid-row: 2; }
-  .processStep:nth-child(5) { grid-column: 2; grid-row: 2; }
-  .processStep:nth-child(6) { grid-column: 1; grid-row: 2; }
+  /* Ritmo editorial desktop — deslocamento vertical discreto por etapa,
+     dentro de aproximadamente 16 a 32px, nunca simétrico entre colunas. */
+  .processStep:nth-child(1) { transform: none; }
+  .processStep:nth-child(2) { transform: translateY(-20px); }
+  .processStep:nth-child(3) { transform: translateY(16px); }
+  .processStep:nth-child(4) { transform: translateY(24px); }
+  .processStep:nth-child(5) { transform: translateY(-16px); }
+  .processStep:nth-child(6) { transform: translateY(-8px); }
 
-  .processIcon {
-    width: 42px;
-    height: 42px;
-  }
+  .processStep:nth-child(1) .processIcon { width: clamp(46px, 3vw, 48px); height: clamp(46px, 3vw, 48px); }
+  .processStep:nth-child(2) .processIcon { width: clamp(46px, 3.6vw, 54px); height: clamp(46px, 3.6vw, 54px); }
+  .processStep:nth-child(3) .processIcon { width: clamp(46px, 3.2vw, 50px); height: clamp(46px, 3.2vw, 50px); }
+  .processStep:nth-child(4) .processIcon { width: clamp(46px, 4vw, 58px); height: clamp(46px, 4vw, 58px); }
+  .processStep:nth-child(5) .processIcon { width: clamp(46px, 3vw, 48px); height: clamp(46px, 3vw, 48px); }
+  .processStep:nth-child(6) .processIcon { width: clamp(46px, 3.4vw, 52px); height: clamp(46px, 3.4vw, 52px); }
+
+  /* Ícone deslocado lateralmente em relação ao nome em duas etapas — a
+     única variação de relação ícone/nome do sistema, para não parecer
+     seis experimentos diferentes. */
+  .processStep:nth-child(2) .processIcon { transform: translateX(-12px); }
+  .processStep:nth-child(5) .processIcon { transform: translateX(12px); }
 
   .processLabel {
-    font-size: 18px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .processIcon {
-    width: 46px;
-    height: 46px;
+    font-size: 19px;
   }
 }
 

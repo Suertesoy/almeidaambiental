@@ -25,34 +25,12 @@ const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.web
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
+/* Composição editorial das 6 etapas (ver home.module.css, comentário em
+   `.processComposition`) — sem linha, seta ou rota conectando as estações.
+   Ordem semântica e ordem visual são sempre a mesma (natural, sem
+   serpente): grid 3×2 no desktop, 2×3 no mobile, ambos por ordem direta do
+   DOM (grid-auto-flow: row), nunca via nth-child de reposicionamento. */
 const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
-
-/* Rota serpenteada do bloco de processo (ver home.module.css, comentário em
-   `.processFlow`). Coordenadas em viewBox 0 0 100 100 — percentuais
-   literais do container, por isso funcionam com preserveAspectRatio="none"
-   em qualquer largura sem recálculo. Ordem semântica das 6 etapas
-   (Diagnóstico…Destinação) é sempre a do <ol>/PROCESS_STEPS; a rota
-   reorganiza a ORDEM VISUAL via grid-column/grid-row em CSS (ver
-   .processSteps nth-child), nunca reordenando o DOM.
-   Desktop: 3 colunas × 2 linhas — linha 1 esquerda→direita (Diagnóstico,
-   Coleta, Triagem), dobra à direita, linha 2 direita→esquerda (Trituração,
-   Descaracterização, Destinação).
-   Mobile/tablet: 2 colunas × 3 linhas — linha 1 esquerda→direita
-   (Diagnóstico, Coleta), dobra à direita, linha 2 direita→esquerda
-   (Triagem, Trituração), dobra à esquerda, linha 3 esquerda→direita
-   (Descaracterização, Destinação). */
-const PROCESS_DESKTOP_ROUTE_D =
-  "M 10.67 25 L 16.67 25 L 74.33 25 Q 83.33 25 83.33 34 L 83.33 66 Q 83.33 75 74.33 75 L 16.67 75 L 10.67 75";
-const PROCESS_DESKTOP_CHEVRONS = [
-  { d: "M 64.67 22.5 L 68.67 25 L 64.67 27.5" },
-  { d: "M 35.33 77.5 L 31.33 75 L 35.33 72.5" },
-];
-const PROCESS_MOBILE_ROUTE_D =
-  "M 25 16.67 L 67 16.67 Q 75 16.67 75 24.67 L 75 42 Q 75 50 67 50 L 33 50 Q 25 50 25 58 L 25 75.33 Q 25 83.33 33 83.33 L 75 83.33";
-const PROCESS_MOBILE_CHEVRONS = [
-  { d: "M 47.5 14.67 L 51.5 16.67 L 47.5 18.67" },
-  { d: "M 47.5 81.33 L 51.5 83.33 L 47.5 85.33" },
-];
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
@@ -126,39 +104,14 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal className={styles.processFlow}>
-            <svg
-              className={`${styles.processPath} ${styles.processPathDesktop}`}
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <path className={styles.processRouteShadow} d={PROCESS_DESKTOP_ROUTE_D} transform="translate(1.5, 1.8)" />
-              <path className={styles.processRoute} d={PROCESS_DESKTOP_ROUTE_D} />
-              {PROCESS_DESKTOP_CHEVRONS.map((c) => (
-                <path key={c.d} className={styles.processChevron} d={c.d} />
-              ))}
-            </svg>
-            <svg
-              className={`${styles.processPath} ${styles.processPathMobile}`}
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <path className={styles.processRouteShadow} d={PROCESS_MOBILE_ROUTE_D} transform="translate(1.5, 1.8)" />
-              <path className={styles.processRoute} d={PROCESS_MOBILE_ROUTE_D} />
-              {PROCESS_MOBILE_CHEVRONS.map((c) => (
-                <path key={c.d} className={styles.processChevron} d={c.d} />
-              ))}
-            </svg>
-
+          <Reveal className={styles.processComposition}>
             <ol className={styles.processSteps}>
               {PROCESS_STEPS.map((step, index) => {
                 const StepIcon = PROCESS_STEP_ICONS[index];
                 return (
                   <li key={step} className={styles.processStep}>
-                    <p className={styles.processLabel}>{step}</p>
                     <StepIcon className={styles.processIcon} />
+                    <p className={styles.processLabel}>{step}</p>
                   </li>
                 );
               })}
