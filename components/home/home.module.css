@@ -517,59 +517,124 @@ html:has([data-page="home"]) {
   aspect-ratio: 1 / 1;
 }
 
-/* Símbolo editorial da seção Almeida Equipamentos (superfície clara,
-   toneStoneAlt) — canto inferior direito, longe da fotografia (que fica à
-   esquerda em .duoMediaLeft), parcialmente cortado pela borda da seção. */
-.equipamentosWatermark {
-  bottom: -10%;
-  right: -6%;
-  width: clamp(220px, 26vw, 360px);
+/* Símbolo editorial da seção Almeida Ambiental / apresentação (superfície
+   escura, toneForest) — grande, entrando pela lateral esquerda, atrás do
+   eyebrow/headline/body (opacidade do BrandWatermark já é baixa o
+   suficiente para não comprometer a leitura). */
+.apresentacaoWatermark {
+  top: 6%;
+  left: -20%;
+  width: clamp(340px, 40vw, 600px);
 }
 
 @media (max-width: 767px) {
-  .equipamentosWatermark {
-    bottom: -6%;
-    right: -20%;
-    width: 56vw;
+  .apresentacaoWatermark {
+    top: 28%;
+    left: -34%;
+    width: clamp(260px, 80vw, 420px);
   }
 }
 
-/* Símbolo editorial atrás da composição de processo — canto inferior
-   esquerdo (varia da direita usada por Equipamentos/Impacto só por
-   composição), parcialmente cortado. */
+/* Par "atravessando seções" nº1 (superfícies claras, mesmo lado/largura em
+   ambas para o corte parecer um único símbolo contínuo — ver Seção 9 da
+   tarefa): metade de cima em .processWatermark (fim da seção de processo),
+   metade de baixo em .equipamentosWatermark (início da seção seguinte).
+   Ajustado depois da rota estar pronta (Seção 12): lado direito, atrás da
+   metade inferior do percurso, para não competir com as estações. */
 .processWatermark {
-  bottom: -10%;
-  left: -6%;
-  width: clamp(260px, 30vw, 420px);
+  right: -8%;
+  bottom: calc(-1 * clamp(180px, 21vw, 302px));
+  width: clamp(380px, 44vw, 640px);
 }
 
 @media (max-width: 767px) {
   .processWatermark {
-    bottom: -4%;
-    left: -22%;
-    width: 58vw;
+    right: -18%;
+    bottom: calc(-1 * clamp(140px, 34vw, 220px));
+    width: clamp(260px, 78vw, 420px);
+  }
+}
+
+/* Símbolo editorial da seção Almeida Equipamentos (superfície clara,
+   toneStoneAlt) — metade de baixo do par que atravessa a seção anterior
+   (ver .processWatermark), continuando atrás do texto (duoContent fica à
+   direita em .duoMediaLeft). */
+.equipamentosWatermark {
+  right: -8%;
+  top: calc(-1 * clamp(180px, 21vw, 302px));
+  width: clamp(380px, 44vw, 640px);
+}
+
+@media (max-width: 767px) {
+  .equipamentosWatermark {
+    right: -18%;
+    top: calc(-1 * clamp(140px, 34vw, 220px));
+    width: clamp(260px, 78vw, 420px);
+  }
+}
+
+/* Símbolo editorial da seção Saturno Ambiental / presença regional
+   (superfície clara, toneStone) — quase inteiro visível, atrás do bloco de
+   texto esparso desta seção (eyebrow + local + headline, sem body/CTA). */
+.saturnoPresencaWatermark {
+  top: 8%;
+  left: 2%;
+  width: clamp(300px, 32vw, 460px);
+}
+
+@media (max-width: 767px) {
+  .saturnoPresencaWatermark {
+    top: 12%;
+    left: -8%;
+    width: clamp(260px, 66vw, 380px);
+  }
+}
+
+/* Par "atravessando seções" nº2 (superfícies escuras, mesmo lado/largura
+   em ambas): metade de cima em .saturnoAtuacaoWatermark (fim da seção
+   Saturno/atuação), metade de baixo em .impactWatermark (início do
+   Impacto Positivo). Lado esquerdo — o par nº1 usa o lado direito, para
+   variar a composição ao longo da Home. */
+.saturnoAtuacaoWatermark {
+  left: -10%;
+  bottom: calc(-1 * clamp(160px, 19vw, 280px));
+  width: clamp(340px, 40vw, 580px);
+}
+
+@media (max-width: 767px) {
+  .saturnoAtuacaoWatermark {
+    left: -20%;
+    bottom: calc(-1 * clamp(120px, 30vw, 200px));
+    width: clamp(240px, 72vw, 380px);
   }
 }
 
 /* ---------------- Etapas do processo (Almeida Ambiental) ----------------
-   Composição única: uma espinha institucional contínua (verde floresta)
-   com pequenos ramos perpendiculares marcando cada uma das seis etapas —
-   linguagem de esquema de processo industrial, não uma timeline de
-   bolinhas numeradas. Duas composições por breakpoint, alternadas via
-   display:none (sem JS, sem risco de hydration mismatch): mobile/tablet
-   (<1024px) usa espinha vertical com etapas em pares alternando
-   esquerda/direita; desktop (≥1024px) usa espinha horizontal com ramos
-   alternando acima/abaixo. As duas SVGs usam viewBox 0 0 100 100 +
-   preserveAspectRatio="none": x/y viram percentuais literais do
-   container, então o path decorativo e o grid de conteúdo real
-   permanecem sincronizados em qualquer largura sem recálculo por
-   breakpoint. Breakpoint único em 1024px (mesmo ponto em que .duo muda de
-   coluna) — 768px tablet fica do lado compacto/vertical, mais seguro para
-   "Descaracterização". */
+   Rota operacional serpenteada — um único percurso SVG (cotovelos de raio
+   amplo, nunca hastes perpendiculares soltas) organiza as seis estações
+   diretamente sobre o traçado. Ordem semântica das etapas continua sendo a
+   do <ol> (Diagnóstico…Destinação, ver PROCESS_STEPS em HomePage.tsx); a
+   ORDEM VISUAL é só CSS Grid (nth-child abaixo), nunca reordena o DOM.
+   Duas composições por breakpoint, alternadas via display:none (sem JS,
+   sem hydration mismatch):
+   - Desktop (≥1024px): grade 3 colunas × 2 linhas. Linha 1
+     esquerda→direita (Diagnóstico, Coleta, Triagem), a rota dobra à
+     direita, linha 2 direita→esquerda (Trituração, Descaracterização,
+     Destinação).
+   - Mobile/tablet (<1024px): grade 2 colunas × 3 linhas — mesma lógica,
+     serpenteando mais uma vez (dobra à direita, depois à esquerda).
+   As duas SVGs usam viewBox 0 0 100 100 + preserveAspectRatio="none": x/y
+   viram percentuais literais do container, e os waypoints do path
+   coincidem com o centro de cada célula do grid (mesmas frações), então
+   path decorativo e estações reais permanecem sincronizados em qualquer
+   largura sem recálculo. Breakpoint único em 1024px (mesmo ponto em que
+   .duo muda de coluna) — 768px tablet fica do lado compacto, mais seguro
+   para "Descaracterização". */
 
 .processFlow {
   position: relative;
   margin-top: clamp(40px, 6vw, 72px);
+  height: clamp(360px, 34vw, 460px);
 }
 
 .processPath {
@@ -585,21 +650,41 @@ html:has([data-page="home"]) {
   display: none;
 }
 
-.processSpine {
+/* Percurso principal — mais espesso que uma linha de diagrama genérica,
+   cotovelos de raio amplo (ver PROCESS_*_ROUTE_D), linguagem de tubulação
+   industrial/planta técnica. */
+.processRoute {
   fill: none;
   stroke: var(--color-forest-deep);
-  stroke-width: 1.5;
+  stroke-width: 2.2;
   stroke-linecap: round;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
-.processStub {
+/* Segunda linha sutil por baixo do percurso principal — profundidade e
+   acabamento técnico, nunca um segundo percurso concorrente. */
+.processRouteShadow {
+  fill: none;
   stroke: var(--color-forest-deep);
-  stroke-width: 1.3;
+  stroke-width: 2.2;
   stroke-linecap: round;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
-  opacity: 0.5;
+  opacity: 0.16;
+}
+
+/* No máximo 2 indicadores direcionais por composição — a direção deve ser
+   percebida, não explicada em cada etapa. */
+.processChevron {
+  fill: none;
+  stroke: var(--color-forest-deep);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.75;
 }
 
 .processSteps {
@@ -609,70 +694,57 @@ html:has([data-page="home"]) {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: clamp(20px, 6vw, 32px);
-  row-gap: clamp(20px, 4vw, 28px);
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  height: 100%;
 }
 
-.processStep {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
+/* Mobile/tablet — serpente 2×3 (ver comentário acima para a ordem visual). */
 .processStep:nth-child(1) { grid-column: 1; grid-row: 1; }
 .processStep:nth-child(2) { grid-column: 2; grid-row: 1; }
-.processStep:nth-child(3) { grid-column: 1; grid-row: 2; }
-.processStep:nth-child(4) { grid-column: 2; grid-row: 2; }
+.processStep:nth-child(3) { grid-column: 2; grid-row: 2; }
+.processStep:nth-child(4) { grid-column: 1; grid-row: 2; }
 .processStep:nth-child(5) { grid-column: 1; grid-row: 3; }
 .processStep:nth-child(6) { grid-column: 2; grid-row: 3; }
 
-/* Ícone sempre colado na espinha central, nome sempre se afastando dela
-   — mesma regra nos dois eixos (mobile: horizontal; desktop: vertical). */
-.stepUp {
-  justify-content: flex-end;
-}
-
-.stepUp .processIcon {
-  order: 2;
-}
-
-.stepUp .processLabel {
-  order: 1;
-  text-align: right;
-}
-
-.stepDown {
-  justify-content: flex-start;
-}
-
-.stepDown .processLabel {
-  text-align: left;
-}
-
-.processIcon {
-  flex-shrink: 0;
-  display: block;
-  width: 22px;
-  height: 22px;
-  color: var(--role-secondary, var(--text-secondary));
-  transition: color 200ms ease;
+/* Estação = ícone + nome + relação espacial com a rota. Sem caixa, sem
+   fundo, sem borda, sem sombra: só a rota organiza visualmente o
+   conjunto. Nome sempre acima, ícone sempre pousado sobre o traçado
+   (mesma leitura do esquema técnico de referência da tarefa). */
+.processStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  min-width: 0;
+  text-align: center;
 }
 
 .processLabel {
+  order: 1;
   min-width: 0;
   margin: 0;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.25;
   color: inherit;
   overflow-wrap: break-word;
   hyphens: auto;
   border-bottom: 1.5px solid transparent;
   transition: border-color 200ms ease;
+}
+
+.processIcon {
+  order: 2;
+  flex-shrink: 0;
+  display: block;
+  width: 30px;
+  height: 30px;
+  color: var(--role-secondary, var(--text-secondary));
+  transition: color 200ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -687,7 +759,7 @@ html:has([data-page="home"]) {
 
 @media (min-width: 1024px) {
   .processFlow {
-    height: clamp(240px, 20vw, 300px);
+    height: clamp(320px, 22vw, 400px);
     margin-top: clamp(56px, 6vw, 96px);
   }
 
@@ -700,52 +772,33 @@ html:has([data-page="home"]) {
   }
 
   .processSteps {
-    height: 100%;
-    grid-template-columns: repeat(6, 1fr);
-    column-gap: 12px;
-    row-gap: 0;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
 
-  .processStep:nth-child(1),
-  .processStep:nth-child(2),
-  .processStep:nth-child(3),
-  .processStep:nth-child(4),
-  .processStep:nth-child(5),
-  .processStep:nth-child(6) {
-    grid-row: 1;
-    grid-column: auto;
-  }
-
-  .processStep {
-    height: 100%;
-    flex-direction: column;
-    justify-content: center;
-    gap: 12px;
-    text-align: center;
-  }
-
-  .stepUp {
-    justify-content: flex-start;
-    padding-top: 20%;
-  }
-
-  .stepDown {
-    justify-content: flex-end;
-    padding-bottom: 20%;
-  }
-
-  .stepUp .processLabel,
-  .stepDown .processLabel {
-    text-align: center;
-  }
+  /* Desktop — serpente 3×2: linha 1 esquerda→direita, dobra à direita,
+     linha 2 direita→esquerda. */
+  .processStep:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .processStep:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .processStep:nth-child(3) { grid-column: 3; grid-row: 1; }
+  .processStep:nth-child(4) { grid-column: 3; grid-row: 2; }
+  .processStep:nth-child(5) { grid-column: 2; grid-row: 2; }
+  .processStep:nth-child(6) { grid-column: 1; grid-row: 2; }
 
   .processIcon {
-    width: 30px;
-    height: 30px;
+    width: 42px;
+    height: 42px;
   }
 
   .processLabel {
-    font-size: 16px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .processIcon {
+    width: 46px;
+    height: 46px;
   }
 }
 
@@ -816,19 +869,21 @@ html:has([data-page="home"]) {
   font-size: 13px;
 }
 
-/* Símbolo editorial da seção Impacto Positivo — único, grande, deslocado
-   para o canto inferior direito da seção (nunca atrás de cada métrica). */
+/* Símbolo editorial da seção Impacto Positivo — metade de baixo do par que
+   atravessa a seção anterior (ver .saturnoAtuacaoWatermark), lado
+   esquerdo, atrás do headline/grid de métricas (nunca atrás de cada
+   métrica individual). */
 .impactWatermark {
-  bottom: -14%;
-  right: -4%;
-  width: clamp(260px, 30vw, 420px);
+  left: -10%;
+  top: calc(-1 * clamp(160px, 19vw, 280px));
+  width: clamp(340px, 40vw, 580px);
 }
 
 @media (max-width: 767px) {
   .impactWatermark {
-    bottom: -8%;
-    right: -22%;
-    width: 60vw;
+    left: -20%;
+    top: calc(-1 * clamp(120px, 30vw, 200px));
+    width: clamp(240px, 72vw, 380px);
   }
 }
 

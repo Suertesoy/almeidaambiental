@@ -27,15 +27,32 @@ const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
 const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
 
-/* Composição do "espinha + ramos" do bloco de processo (ver home.module.css,
-   comentário em `.processFlow`). Coordenadas em viewBox 0 0 100 100 —
-   percentuais literais do container, por isso funcionam com
-   preserveAspectRatio="none" em qualquer largura sem recálculo. */
-const PROCESS_NODE_X = [8.33, 25, 41.67, 58.33, 75, 91.67];
-const PROCESS_DESKTOP_SPINE_D =
-  "M 2 50 L 8.33 50 C 13.9 40 19.4 40 25 50 C 30.6 60 36.1 60 41.67 50 C 47.2 40 52.8 40 58.33 50 C 63.9 60 69.4 60 75 50 C 80.6 40 86.1 40 91.67 50 L 98 50";
-const PROCESS_MOBILE_SPINE_D = "M 50 3 L 50 17 C 44 25 44 42 50 50 C 56 58 56 75 50 83 L 50 97";
-const PROCESS_MOBILE_ROW_Y = [17, 50, 83];
+/* Rota serpenteada do bloco de processo (ver home.module.css, comentário em
+   `.processFlow`). Coordenadas em viewBox 0 0 100 100 — percentuais
+   literais do container, por isso funcionam com preserveAspectRatio="none"
+   em qualquer largura sem recálculo. Ordem semântica das 6 etapas
+   (Diagnóstico…Destinação) é sempre a do <ol>/PROCESS_STEPS; a rota
+   reorganiza a ORDEM VISUAL via grid-column/grid-row em CSS (ver
+   .processSteps nth-child), nunca reordenando o DOM.
+   Desktop: 3 colunas × 2 linhas — linha 1 esquerda→direita (Diagnóstico,
+   Coleta, Triagem), dobra à direita, linha 2 direita→esquerda (Trituração,
+   Descaracterização, Destinação).
+   Mobile/tablet: 2 colunas × 3 linhas — linha 1 esquerda→direita
+   (Diagnóstico, Coleta), dobra à direita, linha 2 direita→esquerda
+   (Triagem, Trituração), dobra à esquerda, linha 3 esquerda→direita
+   (Descaracterização, Destinação). */
+const PROCESS_DESKTOP_ROUTE_D =
+  "M 10.67 25 L 16.67 25 L 74.33 25 Q 83.33 25 83.33 34 L 83.33 66 Q 83.33 75 74.33 75 L 16.67 75 L 10.67 75";
+const PROCESS_DESKTOP_CHEVRONS = [
+  { d: "M 64.67 22.5 L 68.67 25 L 64.67 27.5" },
+  { d: "M 35.33 77.5 L 31.33 75 L 35.33 72.5" },
+];
+const PROCESS_MOBILE_ROUTE_D =
+  "M 25 16.67 L 67 16.67 Q 75 16.67 75 24.67 L 75 42 Q 75 50 67 50 L 33 50 Q 25 50 25 58 L 25 75.33 Q 25 83.33 33 83.33 L 75 83.33";
+const PROCESS_MOBILE_CHEVRONS = [
+  { d: "M 47.5 14.67 L 51.5 16.67 L 47.5 18.67" },
+  { d: "M 47.5 81.33 L 51.5 83.33 L 47.5 85.33" },
+];
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
@@ -52,7 +69,11 @@ export default function HomePage() {
       <Hero />
 
       {/* ---------------- Almeida Ambiental / apresentação ---------------- */}
-      <section id="almeida-ambiental" className={`${styles.section} ${styles.toneForest}`}>
+      <section
+        id="almeida-ambiental"
+        className={`${styles.section} ${styles.toneForest} ${styles.watermarkSurface}`}
+      >
+        <BrandWatermark mode="dark" className={styles.apresentacaoWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
             <div className={styles.duoContent}>
@@ -112,16 +133,10 @@ export default function HomePage() {
               preserveAspectRatio="none"
               aria-hidden="true"
             >
-              <path className={styles.processSpine} d={PROCESS_DESKTOP_SPINE_D} />
-              {PROCESS_NODE_X.map((x, index) => (
-                <line
-                  key={x}
-                  className={styles.processStub}
-                  x1={x}
-                  y1={50}
-                  x2={x}
-                  y2={index % 2 === 0 ? 32 : 68}
-                />
+              <path className={styles.processRouteShadow} d={PROCESS_DESKTOP_ROUTE_D} transform="translate(1.5, 1.8)" />
+              <path className={styles.processRoute} d={PROCESS_DESKTOP_ROUTE_D} />
+              {PROCESS_DESKTOP_CHEVRONS.map((c) => (
+                <path key={c.d} className={styles.processChevron} d={c.d} />
               ))}
             </svg>
             <svg
@@ -130,12 +145,10 @@ export default function HomePage() {
               preserveAspectRatio="none"
               aria-hidden="true"
             >
-              <path className={styles.processSpine} d={PROCESS_MOBILE_SPINE_D} />
-              {PROCESS_MOBILE_ROW_Y.map((y) => (
-                <g key={y}>
-                  <line className={styles.processStub} x1={50} y1={y} x2={38} y2={y} />
-                  <line className={styles.processStub} x1={50} y1={y} x2={62} y2={y} />
-                </g>
+              <path className={styles.processRouteShadow} d={PROCESS_MOBILE_ROUTE_D} transform="translate(1.5, 1.8)" />
+              <path className={styles.processRoute} d={PROCESS_MOBILE_ROUTE_D} />
+              {PROCESS_MOBILE_CHEVRONS.map((c) => (
+                <path key={c.d} className={styles.processChevron} d={c.d} />
               ))}
             </svg>
 
@@ -143,12 +156,9 @@ export default function HomePage() {
               {PROCESS_STEPS.map((step, index) => {
                 const StepIcon = PROCESS_STEP_ICONS[index];
                 return (
-                  <li
-                    key={step}
-                    className={`${styles.processStep} ${index % 2 === 0 ? styles.stepUp : styles.stepDown}`}
-                  >
-                    <StepIcon className={styles.processIcon} />
+                  <li key={step} className={styles.processStep}>
                     <p className={styles.processLabel}>{step}</p>
+                    <StepIcon className={styles.processIcon} />
                   </li>
                 );
               })}
@@ -217,7 +227,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / presença regional ---------------- */}
-      <section className={`${styles.section} ${styles.toneStone}`}>
+      <section className={`${styles.section} ${styles.toneStone} ${styles.watermarkSurface}`}>
+        <BrandWatermark mode="light" className={styles.saturnoPresencaWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
@@ -237,7 +248,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / atuação ---------------- */}
-      <section className={`${styles.section} ${styles.toneForest}`}>
+      <section className={`${styles.section} ${styles.toneForest} ${styles.watermarkSurface}`}>
+        <BrandWatermark mode="dark" className={styles.saturnoAtuacaoWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
