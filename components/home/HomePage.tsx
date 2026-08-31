@@ -197,13 +197,13 @@ export default function HomePage() {
       <section
         className={`${styles.section} ${styles.toneStone} ${styles.fadeFromStoneAlt} ${styles.watermarkSurface}`}
       >
-        <BrandWatermark mode="light" className={styles.saturnoPresencaWatermark} />
+        <BrandWatermark mode="dark" className={styles.saturnoPresencaWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
               <BrandMark
                 brand={BRANDS["saturno-ambiental"]}
-                variant="original"
+                variant="branca"
                 className={styles.eyebrowMark}
               />
               <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
@@ -224,7 +224,7 @@ export default function HomePage() {
       <section
         className={`${styles.section} ${styles.toneStone} ${styles.fadeToCarvao} ${styles.watermarkSurface}`}
       >
-        <BrandWatermark mode="light" className={styles.saturnoAtuacaoWatermark} />
+        <BrandWatermark mode="dark" className={styles.saturnoAtuacaoWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
@@ -247,7 +247,7 @@ export default function HomePage() {
                 <li>Consultoria</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/saturno-ambiental">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
                   Conheça Saturno Ambiental
                 </Link>
               </div>
@@ -300,7 +300,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Manifesto final ---------------- */}
-      <section className={`${styles.section} ${styles.toneCarvao} ${styles.manifesto}`}>
+      <section className={`${styles.section} ${styles.toneCarvao} ${styles.fadeToForest} ${styles.manifesto}`}>
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>

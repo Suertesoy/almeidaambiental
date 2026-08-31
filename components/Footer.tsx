@@ -25,7 +25,7 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-grid">
           <div className="footer-col footer-col-brand">
-            <BrandMark brand={BRANDS["grupo-almeida"]} variant="preta" className="footer-brand-logo" />
+            <BrandMark brand={BRANDS["grupo-almeida"]} variant="branca" className="footer-brand-logo" />
           </div>
 
           <div className="footer-col footer-col-companies">

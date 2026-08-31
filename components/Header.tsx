@@ -8,10 +8,12 @@ import BrandMark from "./shared/BrandMark";
 import { BRANDS, BRAND_ORDER, getActiveBrandId } from "../lib/brands";
 
 /**
- * Itens do menu expandido (Seção 5/6): os quatro primeiros são marcas
- * (logo oficial, não texto digitado) na ordem Grupo Almeida → Ambiental →
- * Equipamentos → Saturno; Contato continua texto porque não representa
- * uma empresa/marca do grupo.
+ * Itens do menu expandido (Seção 5/6, refinado no item 15 da rodada de
+ * refinamento visual): os quatro primeiros são marcas — logo oficial +
+ * nome por extenso lado a lado (ver .menu-link-brand/.menu-brand-name em
+ * globals.css) — na ordem Grupo Almeida → Ambiental → Equipamentos →
+ * Saturno; Contato continua só texto porque não representa uma
+ * empresa/marca do grupo.
  */
 const MENU_ITEMS = [
   ...BRAND_ORDER.map((id) => ({ kind: "brand" as const, brand: BRANDS[id] })),
@@ -110,6 +112,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                 >
                   <BrandMark brand={item.brand} variant="branca" className="menu-brand-logo" />
+                  <span className="menu-brand-name">{item.brand.name}</span>
                 </Link>
               </li>
             ) : (
