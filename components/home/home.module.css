@@ -13,6 +13,18 @@ html:has([data-page="home"]) {
 .page {
   background: var(--color-background);
   overflow-x: clip;
+  /* Altura da faixa de transição cromática entre empresas — deliberadamente
+     igual ao padding-block de .section (mesma variável), nunca um valor
+     independente: assim a transição fica sempre contida no respiro que já
+     existe acima/abaixo do conteúdo real, sem risco de sobrepor headline,
+     ícones do processo, tags ou CTA em nenhuma combinação de viewport. */
+  --section-pad-block: clamp(64px, 11vw, 112px);
+}
+
+@media (min-width: 1024px) {
+  .page {
+    --section-pad-block: clamp(96px, 8vw, 140px);
+  }
 }
 
 .container {
@@ -23,16 +35,10 @@ html:has([data-page="home"]) {
 }
 
 .section {
-  padding-block: clamp(64px, 11vw, 112px);
+  padding-block: var(--section-pad-block);
   /* Âncora do chevron do Hero (#almeida-ambiental) nunca deve ficar
      escondida atrás do Header fixo. */
   scroll-margin-top: var(--anchor-offset);
-}
-
-@media (min-width: 1024px) {
-  .section {
-    padding-block: clamp(96px, 8vw, 140px);
-  }
 }
 
 /* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
@@ -68,6 +74,84 @@ html:has([data-page="home"]) {
 
 .toneStoneAlt {
   background: var(--color-stone-warm-alt);
+}
+
+/* ---------------- Continuidade cromática entre duplas ----------------
+   Cada empresa ocupa UMA superfície cromática ao longo das suas duas
+   dobras (mesmo tom em .toneX acima, repetido nas duas sections — sem
+   alternância clara/escura no meio da própria empresa: ver mapeamento de
+   classes em HomePage.tsx). A transição entre empresas é dividida em duas
+   metades que se encontram exatamente na borda do DOM entre as sections:
+
+   - .fadeTo*  (cauda da 2ª dobra de quem sai) evolui do tom próprio até a
+     cor de encontro, inteiramente dentro do seu próprio padding-bottom.
+   - .fadeFrom* (cabeça da 1ª dobra de quem entra) completa a evolução da
+     cor de encontro até o tom próprio, inteiramente dentro do seu próprio
+     padding-top.
+
+   Como as duas metades usam a MESMA cor de encontro e a MESMA altura
+   (--section-pad-block), a emenda entre as duas sections é matematicamente
+   contínua — nunca sobrepõe conteúdo real, porque nunca ultrapassa o
+   padding que já existia.
+
+   A cor de encontro é a mistura RGB 50/50 dos dois tokens institucionais
+   adjacentes (não uma cor nova), calculada uma vez e escrita como literal:
+   o parser CSS desta versão do Next/Turbopack rejeita custom properties
+   extras dentro de .page (ver histórico do arquivo) — #72786b
+   (forest-deep+stone-warm-alt), #d3cdbe (stone-warm-alt+stone-warm),
+   #77746b (stone-warm+foreground). */
+.fadeToStoneAlt {
+  background: linear-gradient(
+    180deg,
+    var(--color-forest-deep) 0%,
+    var(--color-forest-deep) calc(100% - var(--section-pad-block)),
+    #72786b 100%
+  );
+}
+
+.fadeToStone {
+  background: linear-gradient(
+    180deg,
+    var(--color-stone-warm-alt) 0%,
+    var(--color-stone-warm-alt) calc(100% - var(--section-pad-block)),
+    #d3cdbe 100%
+  );
+}
+
+.fadeToCarvao {
+  background: linear-gradient(
+    180deg,
+    var(--color-stone-warm) 0%,
+    var(--color-stone-warm) calc(100% - var(--section-pad-block)),
+    #77746b 100%
+  );
+}
+
+.fadeFromForest {
+  background: linear-gradient(
+    180deg,
+    #72786b 0%,
+    var(--color-stone-warm-alt) var(--section-pad-block),
+    var(--color-stone-warm-alt) 100%
+  );
+}
+
+.fadeFromStoneAlt {
+  background: linear-gradient(
+    180deg,
+    #d3cdbe 0%,
+    var(--color-stone-warm) var(--section-pad-block),
+    var(--color-stone-warm) 100%
+  );
+}
+
+.fadeFromStone {
+  background: linear-gradient(
+    180deg,
+    #77746b 0%,
+    var(--color-foreground) var(--section-pad-block),
+    var(--color-foreground) 100%
+  );
 }
 
 /* Superfície que hospeda o símbolo editorial de fundo (BrandWatermark):
@@ -523,15 +607,15 @@ html:has([data-page="home"]) {
    suficiente para não comprometer a leitura). */
 .apresentacaoWatermark {
   top: 6%;
-  left: -20%;
-  width: clamp(340px, 40vw, 600px);
+  left: -8%;
+  width: clamp(360px, 44vw, 640px);
 }
 
 @media (max-width: 767px) {
   .apresentacaoWatermark {
     top: 28%;
-    left: -34%;
-    width: clamp(260px, 80vw, 420px);
+    left: -18%;
+    width: clamp(280px, 74vw, 440px);
   }
 }
 
@@ -545,16 +629,16 @@ html:has([data-page="home"]) {
    direita quanto embaixo, de propósito — uma fração relevante da forma
    (não só uma lasca no canto) permanece legível. */
 .processWatermark {
-  right: -12%;
-  bottom: -6%;
-  width: clamp(480px, 48vw, 760px);
+  right: -6%;
+  bottom: -4%;
+  width: clamp(460px, 46vw, 720px);
 }
 
 @media (max-width: 767px) {
   .processWatermark {
-    right: -22%;
-    bottom: -4%;
-    width: clamp(300px, 92vw, 420px);
+    right: -12%;
+    bottom: -3%;
+    width: clamp(300px, 84vw, 440px);
   }
 }
 
@@ -563,16 +647,16 @@ html:has([data-page="home"]) {
    (ver .processWatermark), continuando atrás do texto (duoContent fica à
    direita em .duoMediaLeft). */
 .equipamentosWatermark {
-  right: -8%;
-  top: calc(-1 * clamp(180px, 21vw, 302px));
-  width: clamp(380px, 44vw, 640px);
+  right: -4%;
+  top: calc(-1 * clamp(160px, 19vw, 280px));
+  width: clamp(360px, 42vw, 600px);
 }
 
 @media (max-width: 767px) {
   .equipamentosWatermark {
-    right: -18%;
-    top: calc(-1 * clamp(140px, 34vw, 220px));
-    width: clamp(260px, 78vw, 420px);
+    right: -10%;
+    top: calc(-1 * clamp(120px, 28vw, 200px));
+    width: clamp(260px, 70vw, 420px);
   }
 }
 
@@ -581,34 +665,37 @@ html:has([data-page="home"]) {
    texto esparso desta seção (eyebrow + local + headline, sem body/CTA). */
 .saturnoPresencaWatermark {
   top: 8%;
-  left: 2%;
-  width: clamp(300px, 32vw, 460px);
+  left: 8%;
+  width: clamp(320px, 34vw, 480px);
 }
 
 @media (max-width: 767px) {
   .saturnoPresencaWatermark {
     top: 12%;
-    left: -8%;
-    width: clamp(260px, 66vw, 380px);
+    left: -2%;
+    width: clamp(260px, 60vw, 380px);
   }
 }
 
-/* Par "atravessando seções" nº2 (superfícies escuras, mesmo lado/largura
-   em ambas): metade de cima em .saturnoAtuacaoWatermark (fim da seção
-   Saturno/atuação), metade de baixo em .impactWatermark (início do
-   Impacto Positivo). Lado esquerdo — o par nº1 usa o lado direito, para
-   variar a composição ao longo da Home. */
+/* Símbolo editorial da seção Saturno Ambiental / atuação — esta seção
+   passou a compartilhar o tom claro (toneStone) da dobra anterior e só
+   escurece para carvão no fim (.fadeToCarvao), por isso o símbolo trocou
+   para o modo colorido (ver HomePage.tsx). Ancorado no lado esquerdo,
+   atrás da coluna de mídia estreita (.duoMediaNarrow), com uma fração
+   discreta tocando a faixa de transição no rodapé da seção — sem
+   atravessar para a próxima seção (que já é escura; um símbolo colorido
+   ali perderia contraste). */
 .saturnoAtuacaoWatermark {
-  left: -10%;
-  bottom: calc(-1 * clamp(160px, 19vw, 280px));
-  width: clamp(340px, 40vw, 580px);
+  left: -4%;
+  bottom: 2%;
+  width: clamp(300px, 36vw, 520px);
 }
 
 @media (max-width: 767px) {
   .saturnoAtuacaoWatermark {
-    left: -20%;
-    bottom: calc(-1 * clamp(120px, 30vw, 200px));
-    width: clamp(240px, 72vw, 380px);
+    left: -10%;
+    bottom: 4%;
+    width: clamp(240px, 64vw, 380px);
   }
 }
 
@@ -693,8 +780,11 @@ html:has([data-page="home"]) {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  /* Papel semântico em vez de cor fixa (Checkpoint anterior de tokens):
+     esta seção passou a usar toneForest (fundo escuro), então um verde
+     escuro fixo no hover ficaria invisível sobre o próprio fundo. */
   .processStep:hover .processIcon {
-    color: var(--color-forest-deep);
+    color: var(--role-accent, var(--text-accent));
   }
 
   .processStep:hover .processLabel {
@@ -807,21 +897,22 @@ html:has([data-page="home"]) {
   font-size: 13px;
 }
 
-/* Símbolo editorial da seção Impacto Positivo — metade de baixo do par que
-   atravessa a seção anterior (ver .saturnoAtuacaoWatermark), lado
-   esquerdo, atrás do headline/grid de métricas (nunca atrás de cada
+/* Símbolo editorial da seção Impacto Positivo — a seção anterior
+   (Saturno/atuação) já termina em carvão (.fadeToCarvao), então este
+   símbolo entra pelo topo como continuação natural daquela transição.
+   Lado esquerdo, atrás do headline/grid de métricas (nunca atrás de cada
    métrica individual). */
 .impactWatermark {
-  left: -10%;
-  top: calc(-1 * clamp(160px, 19vw, 280px));
-  width: clamp(340px, 40vw, 580px);
+  left: -4%;
+  top: calc(-1 * clamp(140px, 17vw, 240px));
+  width: clamp(300px, 36vw, 520px);
 }
 
 @media (max-width: 767px) {
   .impactWatermark {
-    left: -20%;
-    top: calc(-1 * clamp(120px, 30vw, 200px));
-    width: clamp(240px, 72vw, 380px);
+    left: -10%;
+    top: calc(-1 * clamp(100px, 24vw, 180px));
+    width: clamp(240px, 64vw, 380px);
   }
 }
 

@@ -77,8 +77,10 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section className={`${styles.section} ${styles.toneStone} ${styles.watermarkSurface}`}>
-        <BrandWatermark mode="light" className={styles.processWatermark} />
+      <section
+        className={`${styles.section} ${styles.toneForest} ${styles.fadeToStoneAlt} ${styles.watermarkSurface}`}
+      >
+        <BrandWatermark mode="dark" className={styles.processWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
@@ -97,7 +99,7 @@ export default function HomePage() {
                 ambiental.
               </p>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/almeida-ambiental">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-ambiental">
                   Conheça Almeida Ambiental
                 </Link>
               </div>
@@ -121,7 +123,9 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.watermarkSurface}`}>
+      <section
+        className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeFromForest} ${styles.watermarkSurface}`}
+      >
         <BrandWatermark mode="light" className={styles.equipamentosWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
@@ -145,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Equipamentos / engenharia ---------------- */}
-      <section className={`${styles.section} ${styles.toneCarvao}`}>
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeToStone}`}>
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoMediaNarrow}`}>
             <div className={styles.duoContent}>
@@ -163,7 +167,7 @@ export default function HomePage() {
                 <li>Containers</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-equipamentos">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/almeida-equipamentos">
                   Conheça Almeida Equipamentos
                 </Link>
               </div>
@@ -180,7 +184,9 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / presença regional ---------------- */}
-      <section className={`${styles.section} ${styles.toneStone} ${styles.watermarkSurface}`}>
+      <section
+        className={`${styles.section} ${styles.toneStone} ${styles.fadeFromStoneAlt} ${styles.watermarkSurface}`}
+      >
         <BrandWatermark mode="light" className={styles.saturnoPresencaWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
@@ -201,8 +207,10 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / atuação ---------------- */}
-      <section className={`${styles.section} ${styles.toneForest} ${styles.watermarkSurface}`}>
-        <BrandWatermark mode="dark" className={styles.saturnoAtuacaoWatermark} />
+      <section
+        className={`${styles.section} ${styles.toneStone} ${styles.fadeToCarvao} ${styles.watermarkSurface}`}
+      >
+        <BrandWatermark mode="light" className={styles.saturnoAtuacaoWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
@@ -225,7 +233,7 @@ export default function HomePage() {
                 <li>Consultoria</li>
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
+                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/saturno-ambiental">
                   Conheça Saturno Ambiental
                 </Link>
               </div>
@@ -236,7 +244,7 @@ export default function HomePage() {
 
       {/* ---------------- Impacto positivo 2025 ---------------- */}
       <section
-        className={`${styles.section} ${styles.toneCarvao} ${styles.watermarkSurface}`}
+        className={`${styles.section} ${styles.toneCarvao} ${styles.fadeFromStone} ${styles.watermarkSurface}`}
         ref={impactoRef}
       >
         <BrandWatermark mode="dark" className={styles.impactWatermark} />
@@ -278,7 +286,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Manifesto final ---------------- */}
-      <section className={`${styles.section} ${styles.toneForest} ${styles.manifesto}`}>
+      <section className={`${styles.section} ${styles.toneCarvao} ${styles.manifesto}`}>
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>
