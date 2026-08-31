@@ -7,6 +7,8 @@ import Hero from "./Hero";
 import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import BrandWatermark from "../shared/BrandWatermark";
+import BrandMark from "../shared/BrandMark";
+import { BRANDS } from "../../lib/brands";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 import { PROCESS_STEP_ICONS } from "../icons";
@@ -55,7 +57,11 @@ export default function HomePage() {
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
             <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Almeida Ambiental</p>
+              <BrandMark
+                brand={BRANDS["almeida-ambiental"]}
+                variant="branca"
+                className={styles.eyebrowMark}
+              />
               <h2 className={styles.headline}>
                 RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
               </h2>
@@ -137,7 +143,11 @@ export default function HomePage() {
               />
             </div>
             <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Almeida Equipamentos</p>
+              <BrandMark
+                brand={BRANDS["almeida-equipamentos"]}
+                variant="original"
+                className={styles.eyebrowMark}
+              />
               <h2 className={styles.headline}>TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO</h2>
               <p className={styles.body}>
                 Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
@@ -191,7 +201,11 @@ export default function HomePage() {
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Saturno Ambiental</p>
+              <BrandMark
+                brand={BRANDS["saturno-ambiental"]}
+                variant="original"
+                className={styles.eyebrowMark}
+              />
               <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
               <h2 className={styles.headline}>EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.</h2>
             </div>

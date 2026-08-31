@@ -1,28 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { CloseIcon, HamburgerIcon } from "./icons";
+import BrandMark from "./shared/BrandMark";
+import { BRANDS, BRAND_ORDER, getActiveBrandId } from "../lib/brands";
 
+/**
+ * Itens do menu expandido (Seção 5/6): os quatro primeiros são marcas
+ * (logo oficial, não texto digitado) na ordem Grupo Almeida → Ambiental →
+ * Equipamentos → Saturno; Contato continua texto porque não representa
+ * uma empresa/marca do grupo.
+ */
 const MENU_ITEMS = [
-  { label: "Almeida Ambiental", href: "/almeida-ambiental" },
-  { label: "Almeida Equipamentos", href: "/almeida-equipamentos" },
-  { label: "Saturno Ambiental", href: "/saturno-ambiental" },
-  { label: "Contato", href: "/contato" },
+  ...BRAND_ORDER.map((id) => ({ kind: "brand" as const, brand: BRANDS[id] })),
+  { kind: "text" as const, label: "Contato", href: "/contato" },
 ];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname() || "/";
+  const activeBrandId = getActiveBrandId(pathname);
+  const activeBrand = BRANDS[activeBrandId];
 
   return (
     <>
       <header className="site-header">
-        {/* Desktop (>=1024px): assinatura vetorial branca (identidade oficial,
-            ver DECISOES.md) direto sobre o verde floresta do Header — sem
-            plaqueta própria. */}
+        {/* Desktop (>=1024px): a logo do header passa a representar a
+            empresa/página atual (Seção 3/4, ver lib/brands.ts), não mais
+            fixamente o Grupo Almeida — sempre a variante branca porque o
+            header é escuro (verde floresta) em qualquer contexto. */}
         <div className="desktop-only header-inner">
-          <Link href="/" className="logo-link" aria-label="Grupo Almeida — página inicial">
-            <img src="/brand/logo-grupo-almeida-white.png" alt="Grupo Almeida" className="logo-image" />
+          <Link href={activeBrand.href} className="logo-link">
+            <BrandMark brand={activeBrand} variant="branca" className="logo-image" />
           </Link>
 
           <div className="header-right">
@@ -48,13 +59,11 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile (<1024px): mesma assinatura vetorial branca do desktop,
-            direto sobre o verde floresta, sem plaqueta. Toggle PT/EN com
-            bandeiras reais em pill, hambúrguer de 3 traços. Mesmo
-            estado/lógica de menuOpen do bloco acima. */}
+        {/* Mobile (<1024px): mesma lógica contextual do bloco desktop
+            acima, mesmo estado/toggle de menuOpen. */}
         <div className="mobile-fidelity mf-header-inner">
-          <Link href="/" className="mf-logo" aria-label="Grupo Almeida — página inicial">
-            <img src="/brand/logo-grupo-almeida-white.png" alt="Grupo Almeida" className="mf-logo-image" />
+          <Link href={activeBrand.href} className="mf-logo">
+            <BrandMark brand={activeBrand} variant="branca" className="mf-logo-image" />
           </Link>
 
           <div className="mf-header-right">
@@ -91,13 +100,26 @@ export default function Header() {
 
       <nav id="site-menu" className="menu-panel" aria-label="Menu principal" hidden={!menuOpen}>
         <ul className="menu-list">
-          {MENU_ITEMS.map((item) => (
-            <li key={item.href} className="menu-item">
-              <Link href={item.href} className="menu-link" onClick={() => setMenuOpen(false)}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
+          {MENU_ITEMS.map((item) =>
+            item.kind === "brand" ? (
+              <li key={item.brand.id} className="menu-item">
+                <Link
+                  href={item.brand.href}
+                  className="menu-link menu-link-brand"
+                  aria-current={item.brand.id === activeBrandId ? "page" : undefined}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <BrandMark brand={item.brand} variant="branca" className="menu-brand-logo" />
+                </Link>
+              </li>
+            ) : (
+              <li key={item.href} className="menu-item">
+                <Link href={item.href} className="menu-link" onClick={() => setMenuOpen(false)}>
+                  {item.label}
+                </Link>
+              </li>
+            )
+          )}
         </ul>
       </nav>
     </>

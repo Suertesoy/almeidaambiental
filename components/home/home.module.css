@@ -68,8 +68,13 @@ html:has([data-page="home"]) {
   --role-accent: var(--text-accent);
 }
 
+/* Seção 13/16 da rodada de identidade: Saturno Ambiental usa
+   --color-stone-olive (não --color-stone-warm — ver derivação em
+   globals.css) para ficar perceptivelmente distinta de Almeida
+   Equipamentos (.toneStoneAlt, abaixo) durante o scroll; antes as duas
+   diferiam só em luminosidade (~6pp), quase imperceptível. */
 .toneStone {
-  background: var(--color-stone-warm);
+  background: var(--color-stone-olive);
 }
 
 .toneStoneAlt {
@@ -98,8 +103,14 @@ html:has([data-page="home"]) {
    adjacentes (não uma cor nova), calculada uma vez e escrita como literal:
    o parser CSS desta versão do Next/Turbopack rejeita custom properties
    extras dentro de .page (ver histórico do arquivo) — #72786b
-   (forest-deep+stone-warm-alt), #d3cdbe (stone-warm-alt+stone-warm),
-   #77746b (stone-warm+foreground). */
+   (forest-deep+stone-warm-alt), #77746b (stone-olive+foreground).
+   Seção 13-16 (rodada de identidade): Saturno passou a usar
+   --color-stone-olive em vez de --color-stone-warm (ver .toneStone e a
+   derivação em globals.css), então as duas emendas que tocam o tom da
+   Saturno foram recalculadas com o novo par — #cecebb
+   (stone-warm-alt+stone-olive, era #d3cdbe) e #727669
+   (stone-olive+foreground, era #77746b). O mecanismo (duas metades de
+   --section-pad-block cada, uma por section) não mudou — só o alvo. */
 .fadeToStoneAlt {
   background: linear-gradient(
     180deg,
@@ -114,16 +125,16 @@ html:has([data-page="home"]) {
     180deg,
     var(--color-stone-warm-alt) 0%,
     var(--color-stone-warm-alt) calc(100% - var(--section-pad-block)),
-    #d3cdbe 100%
+    #cecebb 100%
   );
 }
 
 .fadeToCarvao {
   background: linear-gradient(
     180deg,
-    var(--color-stone-warm) 0%,
-    var(--color-stone-warm) calc(100% - var(--section-pad-block)),
-    #77746b 100%
+    var(--color-stone-olive) 0%,
+    var(--color-stone-olive) calc(100% - var(--section-pad-block)),
+    #727669 100%
   );
 }
 
@@ -139,16 +150,16 @@ html:has([data-page="home"]) {
 .fadeFromStoneAlt {
   background: linear-gradient(
     180deg,
-    #d3cdbe 0%,
-    var(--color-stone-warm) var(--section-pad-block),
-    var(--color-stone-warm) 100%
+    #cecebb 0%,
+    var(--color-stone-olive) var(--section-pad-block),
+    var(--color-stone-olive) 100%
   );
 }
 
 .fadeFromStone {
   background: linear-gradient(
     180deg,
-    #77746b 0%,
+    #727669 0%,
     var(--color-foreground) var(--section-pad-block),
     var(--color-foreground) 100%
   );
@@ -190,6 +201,19 @@ html:has([data-page="home"]) {
    então manter o eyebrow delas em muted evita dourado em toda a página. */
 .eyebrowAccent {
   color: var(--role-accent, var(--text-accent));
+}
+
+/* Seção 10-12 da rodada de identidade: assinatura de entrada da primeira
+   dobra de cada empresa (Ambiental/Equipamentos/Saturno) — substitui o
+   eyebrow textual só nessa dobra (a segunda mantém .eyebrow em texto, ver
+   HomePage.tsx). Altura óptica fixa por clamp, largura automática (a logo
+   nunca é esticada); funciona como assinatura institucional, por isso
+   fica bem abaixo da escala da headline. */
+.eyebrowMark {
+  display: block;
+  height: clamp(28px, 3vw, 40px);
+  width: auto;
+  margin: 0 0 16px;
 }
 
 .locationLine {

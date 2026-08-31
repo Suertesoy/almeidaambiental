@@ -1,4 +1,6 @@
 import Link from "next/link";
+import BrandMark from "./shared/BrandMark";
+import { BRANDS } from "../lib/brands";
 
 /** O Grupo Almeida é marca/grupo institucional, sem CNPJ próprio — só as
  *  quatro empresas/unidades abaixo têm CNPJ. Não inventar razão social,
@@ -23,11 +25,7 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-grid">
           <div className="footer-col footer-col-brand">
-            <img
-              src="/brand/logo-grupo-almeida-dark.png"
-              alt="Grupo Almeida"
-              className="footer-brand-logo"
-            />
+            <BrandMark brand={BRANDS["grupo-almeida"]} variant="preta" className="footer-brand-logo" />
           </div>
 
           <div className="footer-col footer-col-companies">

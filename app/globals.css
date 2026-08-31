@@ -25,6 +25,20 @@
   --color-forest-deep: #172922;
   --color-stone-warm: #d8d3c7;
   --color-stone-warm-alt: #cdc6b4;
+  /* Rodada de identidade visual — Seção 13/14: as logos oficiais das
+     quatro marcas (public/brand/logos/) compartilham a mesma paleta de
+     símbolo (#7A991E/#A3CC51/#D0E68A + #373332), então não existe "cor da
+     Equipamentos" vs. "cor da Saturno" para herdar direto de um logo.
+     --color-stone-olive deriva do verde institucional #7A991E do símbolo
+     (mesmo hue, ~75-80°), levado à luminosidade/saturação da família
+     stone-warm (L~80%, S~20%, igual ordem de grandeza de --color-stone-warm
+     e --color-stone-warm-alt) — não é a cor saturada do símbolo aplicada
+     como fundo, é uma superfície editorial derivada dela. Usado só pela
+     Home (.toneStone em home.module.css) para diferenciar a superfície da
+     Saturno Ambiental da superfície da Almeida Equipamentos
+     (--color-stone-warm-alt, inalterada); não substitui --color-stone-warm,
+     que /saturno-ambiental, /contato, /historia etc. continuam usando. */
+  --color-stone-olive: #cfd6c2;
   /* PROVISÓRIO — dourado envelhecido, aguardando validação oficial do
      cliente (não documentar como cor oficial da marca). */
   --color-gold-aged: #c9a227;
@@ -209,10 +223,13 @@ html {
   text-decoration: none;
 }
 
-/* Assinatura oficial (public/brand/logo-grupo-almeida-white.png, fundo
-   transparente) direto sobre o verde floresta do Header — a "plaqueta"
-   provisória que existia por causa do PNG antigo com fundo opaco deixou
-   de ser necessária (ver DECISOES.md). */
+/* Assinatura oficial (público/brand/logos/*-branca.svg, fundo transparente)
+   direto sobre o verde floresta do Header, sem plaqueta. A partir da
+   rodada de identidade contextual (Seção 3/4, ver lib/brands.ts), a marca
+   exibida muda por rota — Grupo Almeida / Almeida Ambiental / Almeida
+   Equipamentos / Saturno Ambiental compartilham o mesmo viewBox de
+   lockup (~2.54:1), então altura fixa + largura automática nunca causa
+   layout shift ao trocar de página. */
 .logo-image {
   height: 38px;
   width: auto;
@@ -438,6 +455,35 @@ html {
 .menu-link:focus-visible {
   background: rgba(247, 246, 241, 0.08);
   color: var(--color-gold-aged);
+}
+
+/* Seção 5/7/8 da rodada de identidade: os quatro primeiros itens do menu
+   (Grupo Almeida, Ambiental, Equipamentos, Saturno) passam a exibir a
+   logo oficial da marca em vez do nome digitado — mesma linha/padding do
+   .menu-link de texto, sem caixa, fundo ou label abaixo da logo. Peso
+   visual consistente entre marcas de proporções diferentes vem de uma
+   altura óptica comum com largura automática, não de larguras iguais. */
+.menu-link-brand {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+}
+
+.menu-brand-logo {
+  height: clamp(20px, 3.4vw, 26px);
+  width: auto;
+  display: block;
+  opacity: 0.82;
+  transition: opacity 150ms ease;
+}
+
+/* Estado ativo discreto (Seção 8): opacidade plena na marca da página
+   atual, sem alterar a logo em si e sem caixa colorida atrás dela.
+   aria-current="page" carrega o mesmo sinal para leitor de tela. */
+.menu-link-brand:hover .menu-brand-logo,
+.menu-link-brand:focus-visible .menu-brand-logo,
+.menu-link-brand[aria-current="page"] .menu-brand-logo {
+  opacity: 1;
 }
 
 /* ---------------- Footer ----------------
