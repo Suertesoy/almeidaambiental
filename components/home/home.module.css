@@ -83,13 +83,20 @@ html:has([data-page="home"]) {
    --text-on-dark-primary (não --text-on-dark-secondary/-muted, que ficam
    abaixo de 4.5:1 contra #4e6b24: verificado por luminância relativa,
    4.04:1 e 1.97:1) para manter todo o texto real desta dobra (eyebrow,
-   corpo, tags, local) em conformidade AA. */
+   corpo, tags, local) em conformidade AA.
+   Rodada de refinamento visual (tom institucional): --color-primary
+   (#4e6b24) aplicado como superfície grande de duas dobras inteiras ficava
+   saturado e amarelado demais. Substituído por --color-saturno-deep
+   (#40552d, ver globals.css) — token de superfície dedicado, não altera
+   --color-primary nas outras páginas — mais escuro e menos saturado,
+   luminância ainda mais baixa (contraste de --text-on-dark-primary sobe de
+   5.62:1 para 7.59:1, folga maior sobre o mínimo AA). */
 .toneStone {
   color: var(--text-on-dark-primary);
   --role-secondary: var(--text-on-dark-primary);
   --role-muted: var(--text-on-dark-primary);
   --role-accent: var(--text-on-dark-primary);
-  background: var(--color-primary);
+  background: var(--color-saturno-deep);
 }
 
 /* ---------------- Continuidade cromática entre duplas ----------------
@@ -123,7 +130,13 @@ html:has([data-page="home"]) {
    recalculadas com o novo par — #8e996c (stone-warm-alt+color-primary, era
    #cecebb) e #32401a (color-primary+foreground, era #727669). O mecanismo
    (duas metades de --section-pad-block cada, uma por section) não mudou —
-   só o alvo. */
+   só o alvo.
+   Rodada de refinamento visual (tom institucional): Saturno passou de
+   --color-primary para --color-saturno-deep (#40552d, ver .toneStone e
+   globals.css) — mesmo hue, mais escuro e menos saturado. As duas emendas
+   foram recalculadas de novo com o par atual — #878e71
+   (stone-warm-alt+saturno-deep, era #8e996c) e #2b351e
+   (saturno-deep+foreground, era #32401a). Mecanismo inalterado. */
 .fadeToStoneAlt {
   background: linear-gradient(
     180deg,
@@ -138,16 +151,16 @@ html:has([data-page="home"]) {
     180deg,
     var(--color-stone-warm-alt) 0%,
     var(--color-stone-warm-alt) calc(100% - var(--section-pad-block)),
-    #8e996c 100%
+    #878e71 100%
   );
 }
 
 .fadeToCarvao {
   background: linear-gradient(
     180deg,
-    var(--color-primary) 0%,
-    var(--color-primary) calc(100% - var(--section-pad-block)),
-    #32401a 100%
+    var(--color-saturno-deep) 0%,
+    var(--color-saturno-deep) calc(100% - var(--section-pad-block)),
+    #2b351e 100%
   );
 }
 
@@ -163,16 +176,16 @@ html:has([data-page="home"]) {
 .fadeFromStoneAlt {
   background: linear-gradient(
     180deg,
-    #8e996c 0%,
-    var(--color-primary) var(--section-pad-block),
-    var(--color-primary) 100%
+    #878e71 0%,
+    var(--color-saturno-deep) var(--section-pad-block),
+    var(--color-saturno-deep) 100%
   );
 }
 
 .fadeFromStone {
   background: linear-gradient(
     180deg,
-    #32401a 0%,
+    #2b351e 0%,
     var(--color-foreground) var(--section-pad-block),
     var(--color-foreground) 100%
   );

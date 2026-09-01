@@ -39,6 +39,15 @@
      (--color-stone-warm-alt, inalterada); não substitui --color-stone-warm,
      que /saturno-ambiental, /contato, /historia etc. continuam usando. */
   --color-stone-olive: #cfd6c2;
+  /* Rodada de refinamento visual (tom institucional da Saturno): --color-primary
+     (#4e6b24) aplicado como superfície grande de duas dobras inteiras ficava
+     saturado e amarelado demais — mais agressivo que o resto do site. Token
+     de superfície dedicado (não substitui --color-primary, que CTAs/detalhes
+     em outras páginas continuam usando) — mesmo hue oliva (~85°), porém mais
+     escuro e menos saturado, ainda claramente distinto de --color-forest-deep
+     (~157°, Almeida Ambiental). Usado só por .toneStone em home.module.css
+     (dobras 6/7, Saturno Ambiental). */
+  --color-saturno-deep: #40552d;
   /* PROVISÓRIO — dourado envelhecido, aguardando validação oficial do
      cliente (não documentar como cor oficial da marca). */
   --color-gold-aged: #c9a227;
