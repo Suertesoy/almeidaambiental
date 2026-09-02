@@ -11,7 +11,6 @@ import BrandMark from "../shared/BrandMark";
 import { BRANDS } from "../../lib/brands";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
-import { PROCESS_STEP_ICONS } from "../icons";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
 /* Substituída nesta rodada (Checkpoint B): a imagem anterior
@@ -21,17 +20,27 @@ const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica
    arquivo novo e independente porque o antigo continua em uso por
    /home4 (fora de escopo desta tarefa). */
 const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
+/* Narrativa visual contínua das 6 etapas (substitui o grid de ícones —
+   ver histórico do arquivo): duas fotografias diferentes, não um crop uma
+   da outra — desktop panorâmica (leitura esquerda→direita) e mobile em
+   retrato (leitura de cima→baixo), cada uma já composta para a sua
+   direção de leitura. Geradas via Magnific/MCP (Nano Banana Pro,
+   imagen-nano-banana-2), 21:9 4K e 4:5 2K reamostradas para 2600×1103 e
+   1600×1986. */
+const IMG_AMBIENTAL_NARRATIVA_DESKTOP =
+  "/images/home-variants/ambiental/ambiental-narrativa-operacao-desktop.webp";
+const IMG_AMBIENTAL_NARRATIVA_MOBILE =
+  "/images/home-variants/ambiental/ambiental-narrativa-operacao-mobile.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
 const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.webp";
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
-/* Composição editorial das 6 etapas (ver home.module.css, comentário em
-   `.processComposition`) — sem linha, seta ou rota conectando as estações.
-   Ordem semântica e ordem visual são sempre a mesma (natural, sem
-   serpente): grid 3×2 no desktop, 2×3 no mobile, ambos por ordem direta do
-   DOM (grid-auto-flow: row), nunca via nth-child de reposicionamento. */
+/* Nomes das 6 etapas — sempre HTML, nunca rasterizados dentro da imagem
+   narrativa (ver `.processNarrative` em home.module.css). Ordem também
+   define a posição de cada legenda sobre a fotografia (nth-child em
+   `.narrativeStep`), então a ordem deste array é geometria, não só texto. */
 const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
 
 /**
@@ -112,18 +121,27 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal className={styles.processComposition}>
-            <ol className={styles.processSteps}>
-              {PROCESS_STEPS.map((step, index) => {
-                const StepIcon = PROCESS_STEP_ICONS[index];
-                return (
-                  <li key={step} className={styles.processStep}>
-                    <StepIcon className={styles.processIcon} />
-                    <p className={styles.processLabel}>{step}</p>
+          <Reveal className={styles.processNarrative}>
+            <div className={styles.narrativeMedia}>
+              <picture>
+                <source media="(max-width: 767px)" srcSet={IMG_AMBIENTAL_NARRATIVA_MOBILE} />
+                <img
+                  src={IMG_AMBIENTAL_NARRATIVA_DESKTOP}
+                  alt="Operação contínua da Almeida Ambiental: do diagnóstico do resíduo até a destinação final, em uma única cena industrial"
+                  className={styles.narrativeImage}
+                  loading="lazy"
+                />
+              </picture>
+              <div className={styles.narrativeScrim} aria-hidden="true" />
+              <ol className={styles.narrativeSteps}>
+                {PROCESS_STEPS.map((step) => (
+                  <li key={step} className={styles.narrativeStep}>
+                    <span className={styles.narrativeMarker} aria-hidden="true" />
+                    <span className={styles.narrativeLabel}>{step}</span>
                   </li>
-                );
-              })}
-            </ol>
+                ))}
+              </ol>
+            </div>
           </Reveal>
         </div>
       </section>

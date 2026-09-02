@@ -136,13 +136,25 @@ html:has([data-page="home"]) {
    globals.css) — mesmo hue, mais escuro e menos saturado. As duas emendas
    foram recalculadas de novo com o par atual — #878e71
    (stone-warm-alt+saturno-deep, era #8e996c) e #2b351e
-   (saturno-deep+foreground, era #32401a). Mecanismo inalterado. */
+   (saturno-deep+foreground, era #32401a). Mecanismo inalterado.
+
+   Rodada de redesenho da narrativa (Ambiental→Equipamentos, item 4 da
+   tarefa): a mistura RGB 50/50 direta (forest-deep+stone-warm-alt =
+   #72786b) lida como névoa — baixa saturação, sem identidade de nenhuma
+   das duas marcas, espalhada por todo o padding-block (até 140px). Troca
+   por transição em dois tempos, mais curta e deliberada: metade do
+   padding-block permanece na cor sólida da própria seção (nunca começa a
+   mudar antes disso), depois passa por um verde salvia escuro
+   (#3d4d38 — ainda claramente verde, não cinza, ~35% mais claro que
+   forest-deep) antes de encontrar a cor de emenda (#8a8f79, mistura de
+   #3d4d38+stone-warm-alt — mais quente/oliva que o #72786b anterior). */
 .fadeToStoneAlt {
   background: linear-gradient(
     180deg,
     var(--color-forest-deep) 0%,
-    var(--color-forest-deep) calc(100% - var(--section-pad-block)),
-    #72786b 100%
+    var(--color-forest-deep) calc(100% - var(--section-pad-block) * 0.5),
+    #3d4d38 calc(100% - var(--section-pad-block) * 0.16),
+    #8a8f79 100%
   );
 }
 
@@ -164,11 +176,15 @@ html:has([data-page="home"]) {
   );
 }
 
+/* Metade espelhada de .fadeToStoneAlt (ver comentário lá) — mesmas duas
+   cores intermediárias, mesma fração de --section-pad-block, só o sentido
+   inverte (aqui é a cabeça da seção, não a cauda). */
 .fadeFromForest {
   background: linear-gradient(
     180deg,
-    #72786b 0%,
-    var(--color-stone-warm-alt) var(--section-pad-block),
+    #8a8f79 0%,
+    #3d4d38 calc(var(--section-pad-block) * 0.16),
+    var(--color-stone-warm-alt) calc(var(--section-pad-block) * 0.5),
     var(--color-stone-warm-alt) 100%
   );
 }
@@ -706,25 +722,29 @@ html:has([data-page="home"]) {
 }
 
 /* Símbolo editorial da seção Almeida Ambiental / capacidade operacional
-   (superfície clara, toneStone) — escala arquitetônica, muito maior que os
-   outros usos do símbolo nesta Home: agora que as 6 etapas não têm mais
-   linha/rota conectando-as, o símbolo grande entrando pela lateral direita
-   é o elemento que une visualmente o bloco. Entra pelo lado direito e
-   ocupa parte do centro-inferior da seção, atrás da composição das
-   etapas; cortado pelo overflow:hidden de .watermarkSurface tanto à
-   direita quanto embaixo, de propósito — uma fração relevante da forma
-   (não só uma lasca no canto) permanece legível. */
+   (superfície clara, toneForest). Rodada de redesenho da narrativa visual:
+   com a fotografia panorâmica agora como elemento principal da seção
+   (hierarquia: narrativa > etapas > identidade > transição — ver tarefa),
+   o símbolo deixa de precisar de escala arquitetônica para "seniorar"
+   visualmente o bloco sozinho — passa a atuar só como textura de marca.
+   Corte inferior por -bottom negativo (bug: base do desenho cortada de
+   forma acidental pela borda da própria section) removido: bottom passa a
+   positivo, o símbolo inteiro cabe dentro da safe area da seção. Ainda
+   deslocado para a direita (nunca centralizado) e mais próximo do centro
+   que antes, com uma fração deliberada tocando a faixa de transição
+   verde→stone no rodapé (.fadeToStoneAlt) — textura atravessando duas
+   superfícies, não um segundo protagonista. */
 .processWatermark {
-  right: -6%;
-  bottom: -4%;
-  width: clamp(460px, 46vw, 720px);
+  right: 4%;
+  bottom: 3%;
+  width: clamp(380px, 38vw, 600px);
 }
 
 @media (max-width: 767px) {
   .processWatermark {
-    right: -12%;
-    bottom: -3%;
-    width: clamp(300px, 84vw, 440px);
+    right: 2%;
+    bottom: 4%;
+    width: clamp(240px, 62vw, 360px);
   }
 }
 
@@ -792,134 +812,162 @@ html:has([data-page="home"]) {
   }
 }
 
-/* ---------------- Etapas do processo (Almeida Ambiental) ----------------
-   Composição editorial, não infográfico: as 6 etapas são apresentadas
-   pelo próprio título da seção ("Eficiência em cada etapa do processo"),
-   sem linha, seta, cotovelo ou qualquer elemento desenhado ligando uma
-   etapa à outra. Ordem semântica e ordem visual são sempre a mesma leitura
-   natural (ver PROCESS_STEPS em HomePage.tsx) — grid puro por
-   grid-auto-flow: row, nunca reposicionado via nth-child.
-   - Desktop (≥1024px): grade 3 colunas × 2 linhas.
-   - Mobile/tablet (<1024px): grade 2 colunas × 3 linhas.
-   O ritmo "desenhado à mão" que evita a leitura de dashboard vem de dois
-   recursos discretos e fixos por posição (nunca aleatórios):
-   1) pequeno deslocamento vertical (translateY) por etapa;
-   2) em duas etapas do desktop, o ícone se desloca lateralmente em
-      relação ao nome (translateX só no ícone) — o restante do sistema
-      mantém ícone centrado acima do nome. */
+/* ---------------- Narrativa visual do processo (Almeida Ambiental) ----------------
+   Substitui o antigo grid de 6 ícones flutuantes (histórico do arquivo)
+   por uma única fotografia narrativa contínua da operação — arte
+   diferente para cada direção de leitura, nunca a mesma imagem cortada:
+   desktop panorâmica ~21:9 (leitura esquerda→direita, troca via <picture>
+   em HomePage.tsx) e mobile em retrato ~4:5 (leitura de cima→baixo). Os
+   nomes das 6 etapas continuam em HTML (PROCESS_STEPS), sobrepostos como
+   legendas editoriais discretas — sem cartão, sem círculo, sem ícone; só
+   um pequeno traço (`.narrativeMarker`) e o nome, com text-shadow (mesmo
+   recurso do heroHeadline sobre vídeo) garantindo leitura sobre a foto
+   independente do que está atrás. Breakpoint em 768px, não 1024px (padrão
+   do resto do arquivo): é exatamente onde a arte muda no <picture>, então
+   a posição das legendas precisa trocar no mesmo ponto que a imagem,
+   nunca antes nem depois. */
 
-.processComposition {
-  position: relative;
+.processNarrative {
   margin-top: clamp(40px, 6vw, 72px);
 }
 
-.processSteps {
+.narrativeMedia {
   position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+
+.narrativeImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Scrim para legibilidade das legendas — não um tratamento decorativo:
+   mobile escurece a faixa esquerda (onde as legendas ficam ancoradas),
+   desktop escurece a faixa inferior (onde as legendas ficam alinhadas). */
+.narrativeScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(10, 16, 13, 0.5) 0%, rgba(10, 16, 13, 0.14) 42%, transparent 62%);
+  pointer-events: none;
+}
+
+.narrativeSteps {
+  position: absolute;
+  inset: 0;
   z-index: 1;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: clamp(20px, 4vw, 32px);
-  column-gap: clamp(16px, 4vw, 40px);
 }
 
-/* Estação = ícone + nome, sem caixa, sem fundo, sem borda, sem sombra.
-   Ícone percebido primeiro (ordem do DOM), nome imediatamente depois. */
-.processStep {
+.narrativeStep {
+  position: absolute;
+  left: 6%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  min-width: 0;
-  text-align: center;
+  gap: 8px;
+  max-width: 44%;
 }
 
-/* Leve assimetria vertical entre os elementos de cada dupla mobile —
-   nunca o bastante para comprometer a ordem de leitura. */
-.processStep:nth-child(2) { transform: translateY(10px); }
-.processStep:nth-child(3) { transform: translateY(-8px); }
-.processStep:nth-child(4) { transform: translateY(6px); }
-.processStep:nth-child(6) { transform: translateY(-10px); }
-
-.processIcon {
+.narrativeMarker {
   flex-shrink: 0;
-  display: block;
-  color: var(--role-secondary, var(--text-secondary));
-  transition: color 200ms ease;
+  width: 14px;
+  height: 1.5px;
+  background: var(--color-gold-aged);
 }
 
-.processStep:nth-child(1) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
-.processStep:nth-child(2) .processIcon { width: clamp(36px, 9vw, 42px); height: clamp(36px, 9vw, 42px); }
-.processStep:nth-child(3) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
-.processStep:nth-child(4) .processIcon { width: clamp(38px, 9.5vw, 44px); height: clamp(38px, 9.5vw, 44px); }
-.processStep:nth-child(5) .processIcon { width: clamp(34px, 8vw, 38px); height: clamp(34px, 8vw, 38px); }
-.processStep:nth-child(6) .processIcon { width: clamp(36px, 9vw, 42px); height: clamp(36px, 9vw, 42px); }
-
-.processLabel {
-  min-width: 0;
+.narrativeLabel {
   margin: 0;
+  color: var(--color-background);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 16px;
-  line-height: 1.25;
-  color: inherit;
-  overflow-wrap: break-word;
-  hyphens: auto;
-  border-bottom: 1.5px solid transparent;
-  transition: border-color 200ms ease;
+  font-size: 13px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55), 0 3px 12px rgba(0, 0, 0, 0.4);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  /* Papel semântico em vez de cor fixa (Checkpoint anterior de tokens):
-     esta seção passou a usar toneForest (fundo escuro), então um verde
-     escuro fixo no hover ficaria invisível sobre o próprio fundo. */
-  .processStep:hover .processIcon {
-    color: var(--role-accent, var(--text-accent));
+/* Posição vertical de cada legenda — mapeada ao ponto correspondente na
+   fotografia mobile (ver comentário de IMG_AMBIENTAL_NARRATIVA_MOBILE em
+   HomePage.tsx), não um espaçamento uniforme. */
+.narrativeStep:nth-child(1) { top: 8%; }
+.narrativeStep:nth-child(2) { top: 30%; }
+.narrativeStep:nth-child(3) { top: 54%; }
+.narrativeStep:nth-child(4) { top: 63%; }
+.narrativeStep:nth-child(5) { top: 72%; }
+.narrativeStep:nth-child(6) { top: 90%; }
+
+@media (min-width: 768px) {
+  .narrativeMedia {
+    aspect-ratio: 21 / 9;
   }
 
-  .processStep:hover .processLabel {
-    border-color: var(--color-gold-aged);
-  }
-}
-
-@media (min-width: 1024px) {
-  .processComposition {
-    margin-top: clamp(56px, 6vw, 96px);
+  .narrativeScrim {
+    background: linear-gradient(180deg, transparent 55%, rgba(10, 16, 13, 0.6) 100%);
   }
 
-  .processSteps {
-    grid-template-columns: repeat(3, 1fr);
-    row-gap: clamp(32px, 4.5vw, 48px);
-    column-gap: clamp(32px, 4vw, 64px);
+  .narrativeStep {
+    top: auto;
+    bottom: clamp(20px, 3vw, 32px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: 180px;
   }
 
-  /* Ritmo editorial desktop — deslocamento vertical discreto por etapa,
-     dentro de aproximadamente 16 a 32px, nunca simétrico entre colunas. */
-  .processStep:nth-child(1) { transform: none; }
-  .processStep:nth-child(2) { transform: translateY(-20px); }
-  .processStep:nth-child(3) { transform: translateY(16px); }
-  .processStep:nth-child(4) { transform: translateY(24px); }
-  .processStep:nth-child(5) { transform: translateY(-16px); }
-  .processStep:nth-child(6) { transform: translateY(-8px); }
+  .narrativeMarker {
+    width: 1.5px;
+    height: 14px;
+  }
 
-  .processStep:nth-child(1) .processIcon { width: clamp(46px, 3vw, 48px); height: clamp(46px, 3vw, 48px); }
-  .processStep:nth-child(2) .processIcon { width: clamp(46px, 3.6vw, 54px); height: clamp(46px, 3.6vw, 54px); }
-  .processStep:nth-child(3) .processIcon { width: clamp(46px, 3.2vw, 50px); height: clamp(46px, 3.2vw, 50px); }
-  .processStep:nth-child(4) .processIcon { width: clamp(46px, 4vw, 58px); height: clamp(46px, 4vw, 58px); }
-  .processStep:nth-child(5) .processIcon { width: clamp(46px, 3vw, 48px); height: clamp(46px, 3vw, 48px); }
-  .processStep:nth-child(6) .processIcon { width: clamp(46px, 3.4vw, 52px); height: clamp(46px, 3.4vw, 52px); }
+  .narrativeLabel {
+    font-size: 15px;
+  }
 
-  /* Ícone deslocado lateralmente em relação ao nome em duas etapas — a
-     única variação de relação ícone/nome do sistema, para não parecer
-     seis experimentos diferentes. */
-  .processStep:nth-child(2) .processIcon { transform: translateX(-12px); }
-  .processStep:nth-child(5) .processIcon { transform: translateX(12px); }
+  /* Posição horizontal de cada legenda — mapeada ao ponto correspondente
+     na fotografia desktop. A primeira e a última ancoram na própria
+     borda (sem centralizar) para nunca vazar do quadro; as do meio
+     centralizam sobre o ponto via translateX. */
+  .narrativeStep:nth-child(1) {
+    left: 5%;
+  }
 
-  .processLabel {
-    font-size: 19px;
+  .narrativeStep:nth-child(2) {
+    left: 27%;
+    align-items: center;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  .narrativeStep:nth-child(3) {
+    left: 47%;
+    align-items: center;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  .narrativeStep:nth-child(4) {
+    left: 62%;
+    align-items: center;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  .narrativeStep:nth-child(5) {
+    left: 74%;
+    align-items: center;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  .narrativeStep:nth-child(6) {
+    left: 95%;
+    align-items: flex-end;
+    text-align: right;
+    transform: translateX(-100%);
   }
 }
 
