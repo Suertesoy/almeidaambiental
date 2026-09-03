@@ -138,26 +138,15 @@ html:has([data-page="home"]) {
    (stone-warm-alt+saturno-deep, era #8e996c) e #2b351e
    (saturno-deep+foreground, era #32401a). Mecanismo inalterado.
 
-   Rodada de redesenho da narrativa (Ambiental→Equipamentos, item 4 da
-   tarefa): a mistura RGB 50/50 direta (forest-deep+stone-warm-alt =
-   #72786b) lida como névoa — baixa saturação, sem identidade de nenhuma
-   das duas marcas, espalhada por todo o padding-block (até 140px). Troca
-   por transição em dois tempos, mais curta e deliberada: metade do
-   padding-block permanece na cor sólida da própria seção (nunca começa a
-   mudar antes disso), depois passa por um verde salvia escuro
-   (#3d4d38 — ainda claramente verde, não cinza, ~35% mais claro que
-   forest-deep) antes de encontrar a cor de emenda (#8a8f79, mistura de
-   #3d4d38+stone-warm-alt — mais quente/oliva que o #72786b anterior). */
-.fadeToStoneAlt {
-  background: linear-gradient(
-    180deg,
-    var(--color-forest-deep) 0%,
-    var(--color-forest-deep) calc(100% - var(--section-pad-block) * 0.5),
-    #3d4d38 calc(100% - var(--section-pad-block) * 0.16),
-    #8a8f79 100%
-  );
-}
-
+   Exceção deliberada — Ambiental→Equipamentos (item 6 da rodada de
+   redesenho dos cards de processo): esta emenda NÃO usa mais o mecanismo
+   .fadeTo(X) / .fadeFrom(X) acima. A mistura RGB 50/50 (#72786b) e depois a
+   transição em dois tempos (#3d4d38→#8a8f79) liam como névoa borrada, não
+   como decisão gráfica — ver histórico do arquivo. As duas sections agora
+   ficam cor sólida (.toneForest / .toneStoneAlt, sem gradiente algum) e a
+   emenda entre elas é a superfície quente dos próprios cards do grid de
+   processo (.processCard, mesmo tom de .toneStoneAlt), não um efeito de
+   fundo — ver comentário em .processGrid. */
 .fadeToStone {
   background: linear-gradient(
     180deg,
@@ -173,19 +162,6 @@ html:has([data-page="home"]) {
     var(--color-saturno-deep) 0%,
     var(--color-saturno-deep) calc(100% - var(--section-pad-block)),
     #2b351e 100%
-  );
-}
-
-/* Metade espelhada de .fadeToStoneAlt (ver comentário lá) — mesmas duas
-   cores intermediárias, mesma fração de --section-pad-block, só o sentido
-   inverte (aqui é a cabeça da seção, não a cauda). */
-.fadeFromForest {
-  background: linear-gradient(
-    180deg,
-    #8a8f79 0%,
-    #3d4d38 calc(var(--section-pad-block) * 0.16),
-    var(--color-stone-warm-alt) calc(var(--section-pad-block) * 0.5),
-    var(--color-stone-warm-alt) 100%
   );
 }
 
@@ -721,42 +697,19 @@ html:has([data-page="home"]) {
   }
 }
 
-/* Símbolo editorial da seção Almeida Ambiental / capacidade operacional
-   (superfície clara, toneForest). Rodada de redesenho da narrativa visual:
-   com a fotografia panorâmica agora como elemento principal da seção
-   (hierarquia: narrativa > etapas > identidade > transição — ver tarefa),
-   o símbolo deixa de precisar de escala arquitetônica para "seniorar"
-   visualmente o bloco sozinho — passa a atuar só como textura de marca.
-   Corte inferior por -bottom negativo (bug: base do desenho cortada de
-   forma acidental pela borda da própria section) removido: bottom passa a
-   positivo, o símbolo inteiro cabe dentro da safe area da seção. Ainda
-   deslocado para a direita (nunca centralizado) e mais próximo do centro
-   que antes, com uma fração deliberada tocando a faixa de transição
-   verde→stone no rodapé (.fadeToStoneAlt) — textura atravessando duas
-   superfícies, não um segundo protagonista. */
-.processWatermark {
-  right: 4%;
-  bottom: 3%;
-  width: clamp(380px, 38vw, 600px);
-}
-
-@media (max-width: 767px) {
-  .processWatermark {
-    right: 2%;
-    bottom: 4%;
-    width: clamp(240px, 62vw, 360px);
-  }
-}
+/* A seção Almeida Ambiental / capacidade operacional (toneForest) ficou
+   sem marca d'água nesta rodada dos cards de processo (ver .processGrid) —
+   o grid de seis renders já é protagonista suficiente; símbolo de fundo
+   competiria com eles em vez de reforçar a marca. */
 
 /* Símbolo editorial da seção Almeida Equipamentos (superfície clara,
    toneStoneAlt). Rodada de refinamento visual (item 4): antes ficava do
-   mesmo lado (direita) que .processWatermark, empilhada logo abaixo dela, e
+   mesmo lado (direita) que a seção anterior, empilhada logo abaixo dela, e
    com top negativo tão grande que em telas largas mais da metade do
    símbolo era cortada pela borda superior da própria section (~274px de
    corte em 1440px, medido) — lido como amputação, não como composição.
-   Passa para o lado ESQUERDO (alternância com .processWatermark, que
-   permanece à direita — regra 4) com top positivo e largura recalibrada
-   para caber inteira dentro da altura real da section (medido via
+   Passa para o lado ESQUERDO com top positivo e largura recalibrada para
+   caber inteira dentro da altura real da section (medido via
    getBoundingClientRect), sem depender de corte vertical algum; o corte
    lateral esquerdo continua deliberado. */
 .equipamentosWatermark {
@@ -812,163 +765,76 @@ html:has([data-page="home"]) {
   }
 }
 
-/* ---------------- Narrativa visual do processo (Almeida Ambiental) ----------------
-   Substitui o antigo grid de 6 ícones flutuantes (histórico do arquivo)
-   por uma única fotografia narrativa contínua da operação — arte
-   diferente para cada direção de leitura, nunca a mesma imagem cortada:
-   desktop panorâmica ~21:9 (leitura esquerda→direita, troca via <picture>
-   em HomePage.tsx) e mobile em retrato ~4:5 (leitura de cima→baixo). Os
-   nomes das 6 etapas continuam em HTML (PROCESS_STEPS), sobrepostos como
-   legendas editoriais discretas — sem cartão, sem círculo, sem ícone; só
-   um pequeno traço (`.narrativeMarker`) e o nome, com text-shadow (mesmo
-   recurso do heroHeadline sobre vídeo) garantindo leitura sobre a foto
-   independente do que está atrás. Breakpoint em 768px, não 1024px (padrão
-   do resto do arquivo): é exatamente onde a arte muda no <picture>, então
-   a posição das legendas precisa trocar no mesmo ponto que a imagem,
-   nunca antes nem depois. */
+/* ---------------- Grid de processo (Almeida Ambiental) ----------------
+   Substitui a fotografia panorâmica narrativa (histórico do arquivo): uma
+   cena realista de galpão/operação lia como fotografia das instalações
+   reais da Almeida, mas era inteiramente gerada por IA — problema
+   conceitual, não só estético. Os seis renders 3D conceituais
+   (PROCESS_STEPS em HomePage.tsx) substituem por ilustração de FUNÇÃO, não
+   de instalação. Sem números — a ordem espacial do grid já comunica
+   sequência (regra da tarefa).
 
-.processNarrative {
+   Gap de 2px (não um gutter tradicional) é deliberado: com o fundo
+   .toneForest aparecendo nas frestas, os seis cards leem como uma única
+   peça reticulada — "um conjunto", não seis produtos soltos — sem recorrer
+   a uma timeline com linha/setas.
+
+   .processCard usa --color-stone-warm-alt, o MESMO token de fundo da
+   seção seguinte (.toneStoneAlt, Almeida Equipamentos) — não uma cor nova.
+   É essa superfície quente que faz o papel de ponte entre o verde sólido
+   desta seção e o stone sólido da próxima (ver comentário sobre a exceção
+   Ambiental→Equipamentos junto de .fadeToStone mais acima): o grid inteiro fica contido
+   dentro da seção verde, mas sua última fileira já "antecipa" visualmente
+   o tom da seção seguinte, então o corte reto entre as duas sections lê
+   como decisão gráfica, não como um degradê borrado cortado ao meio. */
+
+.processGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
   margin-top: clamp(40px, 6vw, 72px);
 }
 
-.narrativeMedia {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
+@media (min-width: 640px) {
+  .processGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.narrativeImage {
+@media (min-width: 1024px) {
+  .processGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.processCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-stone-warm-alt);
+}
+
+.processCardMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.processCardMedia img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Scrim para legibilidade das legendas — não um tratamento decorativo:
-   mobile escurece a faixa esquerda (onde as legendas ficam ancoradas),
-   desktop escurece a faixa inferior (onde as legendas ficam alinhadas). */
-.narrativeScrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(10, 16, 13, 0.5) 0%, rgba(10, 16, 13, 0.14) 42%, transparent 62%);
-  pointer-events: none;
-}
-
-.narrativeSteps {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  list-style: none;
+.processCardLabel {
   margin: 0;
-  padding: 0;
-}
-
-.narrativeStep {
-  position: absolute;
-  left: 6%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 44%;
-}
-
-.narrativeMarker {
-  flex-shrink: 0;
-  width: 14px;
-  height: 1.5px;
-  background: var(--color-gold-aged);
-}
-
-.narrativeLabel {
-  margin: 0;
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55), 0 3px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Posição vertical de cada legenda — mapeada ao ponto correspondente na
-   fotografia mobile (ver comentário de IMG_AMBIENTAL_NARRATIVA_MOBILE em
-   HomePage.tsx), não um espaçamento uniforme. */
-.narrativeStep:nth-child(1) { top: 8%; }
-.narrativeStep:nth-child(2) { top: 30%; }
-.narrativeStep:nth-child(3) { top: 54%; }
-.narrativeStep:nth-child(4) { top: 63%; }
-.narrativeStep:nth-child(5) { top: 72%; }
-.narrativeStep:nth-child(6) { top: 90%; }
-
-@media (min-width: 768px) {
-  .narrativeMedia {
-    aspect-ratio: 21 / 9;
-  }
-
-  .narrativeScrim {
-    background: linear-gradient(180deg, transparent 55%, rgba(10, 16, 13, 0.6) 100%);
-  }
-
-  .narrativeStep {
-    top: auto;
-    bottom: clamp(20px, 3vw, 32px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    max-width: 180px;
-  }
-
-  .narrativeMarker {
-    width: 1.5px;
-    height: 14px;
-  }
-
-  .narrativeLabel {
-    font-size: 15px;
-  }
-
-  /* Posição horizontal de cada legenda — mapeada ao ponto correspondente
-     na fotografia desktop. A primeira e a última ancoram na própria
-     borda (sem centralizar) para nunca vazar do quadro; as do meio
-     centralizam sobre o ponto via translateX. */
-  .narrativeStep:nth-child(1) {
-    left: 5%;
-  }
-
-  .narrativeStep:nth-child(2) {
-    left: 27%;
-    align-items: center;
-    text-align: center;
-    transform: translateX(-50%);
-  }
-
-  .narrativeStep:nth-child(3) {
-    left: 47%;
-    align-items: center;
-    text-align: center;
-    transform: translateX(-50%);
-  }
-
-  .narrativeStep:nth-child(4) {
-    left: 62%;
-    align-items: center;
-    text-align: center;
-    transform: translateX(-50%);
-  }
-
-  .narrativeStep:nth-child(5) {
-    left: 74%;
-    align-items: center;
-    text-align: center;
-    transform: translateX(-50%);
-  }
-
-  .narrativeStep:nth-child(6) {
-    left: 95%;
-    align-items: flex-end;
-    text-align: right;
-    transform: translateX(-100%);
-  }
+  padding: 14px clamp(16px, 2vw, 24px) 18px;
+  color: var(--color-foreground);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(17px, 1vw + 13px, 21px);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 /* ---------------- Apoio (tags separadas por ponto) ---------------- */

@@ -20,28 +20,33 @@ const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica
    arquivo novo e independente porque o antigo continua em uso por
    /home4 (fora de escopo desta tarefa). */
 const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
-/* Narrativa visual contínua das 6 etapas (substitui o grid de ícones —
-   ver histórico do arquivo): duas fotografias diferentes, não um crop uma
-   da outra — desktop panorâmica (leitura esquerda→direita) e mobile em
-   retrato (leitura de cima→baixo), cada uma já composta para a sua
-   direção de leitura. Geradas via Magnific/MCP (Nano Banana Pro,
-   imagen-nano-banana-2), 21:9 4K e 4:5 2K reamostradas para 2600×1103 e
-   1600×1986. */
-const IMG_AMBIENTAL_NARRATIVA_DESKTOP =
-  "/images/home-variants/ambiental/ambiental-narrativa-operacao-desktop.webp";
-const IMG_AMBIENTAL_NARRATIVA_MOBILE =
-  "/images/home-variants/ambiental/ambiental-narrativa-operacao-mobile.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
 const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.webp";
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
-/* Nomes das 6 etapas — sempre HTML, nunca rasterizados dentro da imagem
-   narrativa (ver `.processNarrative` em home.module.css). Ordem também
-   define a posição de cada legenda sobre a fotografia (nth-child em
-   `.narrativeStep`), então a ordem deste array é geometria, não só texto. */
-const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
+/* Substitui a narrativa fotográfica panorâmica (histórico do arquivo): uma
+   fotografia realista de galpão/operação sugeria instalações e processos
+   reais da Almeida Ambiental que nunca existiram como fotografados — a IA
+   estava inventando a empresa, não ilustrando o conceito. Os seis cards
+   abaixo usam renders 3D conceituais e abstratos (sem pessoas, fachadas,
+   veículos ou maquinário identificável) gerados via Magnific/MCP
+   (Seedream 5 Pro, mesma referência de estilo entre os seis para formar
+   uma família visual única), 4:3 1200×900. Nome da etapa sempre em HTML,
+   nunca rasterizado na imagem. Ordem = ordem de leitura do grid (regra:
+   Diagnóstico→Coleta→Triagem / Trituração→Descaracterização→Destinação). */
+const PROCESS_STEPS = [
+  { name: "Diagnóstico", image: "/images/home-variants/ambiental/processo/processo-diagnostico.webp" },
+  { name: "Coleta", image: "/images/home-variants/ambiental/processo/processo-coleta.webp" },
+  { name: "Triagem", image: "/images/home-variants/ambiental/processo/processo-triagem.webp" },
+  { name: "Trituração", image: "/images/home-variants/ambiental/processo/processo-trituracao.webp" },
+  {
+    name: "Descaracterização",
+    image: "/images/home-variants/ambiental/processo/processo-descaracterizacao.webp",
+  },
+  { name: "Destinação", image: "/images/home-variants/ambiental/processo/processo-destinacao.webp" },
+];
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
@@ -92,10 +97,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneForest} ${styles.fadeToStoneAlt} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.processWatermark} />
+      <section className={`${styles.section} ${styles.toneForest}`}>
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
@@ -121,35 +123,21 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal className={styles.processNarrative}>
-            <div className={styles.narrativeMedia}>
-              <picture>
-                <source media="(max-width: 767px)" srcSet={IMG_AMBIENTAL_NARRATIVA_MOBILE} />
-                <img
-                  src={IMG_AMBIENTAL_NARRATIVA_DESKTOP}
-                  alt="Operação contínua da Almeida Ambiental: do diagnóstico do resíduo até a destinação final, em uma única cena industrial"
-                  className={styles.narrativeImage}
-                  loading="lazy"
-                />
-              </picture>
-              <div className={styles.narrativeScrim} aria-hidden="true" />
-              <ol className={styles.narrativeSteps}>
-                {PROCESS_STEPS.map((step) => (
-                  <li key={step} className={styles.narrativeStep}>
-                    <span className={styles.narrativeMarker} aria-hidden="true" />
-                    <span className={styles.narrativeLabel}>{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+          <Reveal className={styles.processGrid}>
+            {PROCESS_STEPS.map((step) => (
+              <div key={step.name} className={styles.processCard}>
+                <div className={styles.processCardMedia}>
+                  <img src={step.image} alt={step.name} loading="lazy" />
+                </div>
+                <p className={styles.processCardLabel}>{step.name}</p>
+              </div>
+            ))}
           </Reveal>
         </div>
       </section>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeFromForest} ${styles.watermarkSurface}`}
-      >
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.watermarkSurface}`}>
         <BrandWatermark mode="light" className={styles.equipamentosWatermark} />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
