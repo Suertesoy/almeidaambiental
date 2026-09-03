@@ -1,0 +1,344 @@
+/* ==========================================================
+   Detalhe do equipamento — a segunda etapa da revelação progressiva.
+
+   Implementado sobre o <dialog> nativo: o navegador já entrega gestão de
+   foco, fechamento por Escape, inertização do fundo e camada superior sem
+   nenhuma biblioteca. No mobile ocupa a tela inteira; a partir de 1024px
+   vira um painel largo com galeria à esquerda e conteúdo à direita — nunca
+   um celular gigante no meio do desktop.
+   ========================================================== */
+
+.dialog {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--color-stone-warm);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background: rgba(9, 16, 13, 0.76);
+}
+
+@media (min-width: 1024px) {
+  .dialog {
+    width: min(1120px, 92vw);
+    height: min(88vh, 940px);
+    max-height: 88vh;
+    margin: auto;
+    border-radius: 4px;
+  }
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------------- Barra superior ---------------- */
+
+.bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px 12px clamp(16px, 5vw, 32px);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.16);
+  background: var(--color-stone-warm);
+}
+
+.barLabel {
+  min-width: 0;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(21, 21, 15, 0.24);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: rgba(21, 21, 15, 0.06);
+}
+
+.close:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------- Corpo rolável ---------------- */
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 5vw, 40px);
+  padding: clamp(20px, 5vw, 32px) clamp(16px, 5vw, 32px) clamp(40px, 8vw, 56px);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 6fr 6fr;
+    gap: 48px;
+    align-items: start;
+  }
+}
+
+.info {
+  min-width: 0;
+}
+
+.manufacturer {
+  margin: 0 0 6px;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0 0 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(26px, 1.8vw + 18px, 36px);
+  line-height: 1.1;
+}
+
+.summary {
+  margin: 0 0 24px;
+  max-width: 46ch;
+  color: var(--text-secondary);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(17px, 0.8vw + 14px, 20px);
+  line-height: 1.35;
+}
+
+.blockTitle {
+  margin: 0 0 8px;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.block {
+  margin-bottom: 26px;
+}
+
+.blockBody {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--text-secondary);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.iconList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.iconListItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.iconListItem svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  color: var(--text-muted);
+}
+
+.iconDot {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin-inline: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+/* ---------------- Accordions de especificação ---------------- */
+
+.accordion {
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+.accordion:last-of-type {
+  border-bottom: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+.accordionSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.accordionSummary::-webkit-details-marker {
+  display: none;
+}
+
+.accordionSummary::after {
+  content: "+";
+  flex: none;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.accordion[open] > .accordionSummary::after {
+  content: "–";
+}
+
+.accordionSummary:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.accordionBody {
+  padding: 0 0 18px;
+}
+
+.specList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.specList li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.specList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.specNote {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+/* ---------------- Ação única ---------------- */
+
+.ctaRow {
+  margin-top: 32px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 24px;
+  border: 1px solid var(--color-gold-aged);
+  border-radius: 4px;
+  background: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cta:hover {
+  opacity: 0.9;
+}
+
+.cta:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.cta svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+@media (min-width: 640px) {
+  .cta {
+    width: auto;
+  }
+}

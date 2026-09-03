@@ -6,9 +6,11 @@ import styles from "./home.module.css";
 import Hero from "./Hero";
 import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
-import BrandWatermark from "../shared/BrandWatermark";
+import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
+import ProcessSteps from "../shared/ProcessSteps";
 import { BRANDS } from "../../lib/brands";
+import { FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 
@@ -26,33 +28,26 @@ const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.web
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
-/* Substitui a narrativa fotográfica panorâmica (histórico do arquivo): uma
-   fotografia realista de galpão/operação sugeria instalações e processos
-   reais da Almeida Ambiental que nunca existiram como fotografados — a IA
-   estava inventando a empresa, não ilustrando o conceito. Os seis cards
-   abaixo usam renders 3D conceituais e abstratos (sem pessoas, fachadas,
-   veículos ou maquinário identificável) gerados via Magnific/MCP
-   (Seedream 5 Pro, mesma referência de estilo entre os seis para formar
-   uma família visual única), 4:3 1200×900. Nome da etapa sempre em HTML,
-   nunca rasterizado na imagem. Ordem = ordem de leitura do grid (regra:
-   Diagnóstico→Coleta→Triagem / Trituração→Descaracterização→Destinação). */
-const PROCESS_STEPS = [
-  { name: "Diagnóstico", image: "/images/home-variants/ambiental/processo/processo-diagnostico.webp" },
-  { name: "Coleta", image: "/images/home-variants/ambiental/processo/processo-coleta.webp" },
-  { name: "Triagem", image: "/images/home-variants/ambiental/processo/processo-triagem.webp" },
-  { name: "Trituração", image: "/images/home-variants/ambiental/processo/processo-trituracao.webp" },
-  {
-    name: "Descaracterização",
-    image: "/images/home-variants/ambiental/processo/processo-descaracterizacao.webp",
-  },
-  { name: "Destinação", image: "/images/home-variants/ambiental/processo/processo-destinacao.webp" },
-];
+/* As seis etapas vêm de lib/almeida-ambiental-data.ts (FLOW_STEPS) — mesma
+   fonte usada pela página /almeida-ambiental, para que a sequência não
+   possa divergir entre as duas. Só o nome da etapa: não existe frase curta
+   validada por etapa no conteúdo aprovado, e o componente não inventa uma. */
+const PROCESS_STEPS = FLOW_STEPS.map((name) => ({ name }));
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
  * sem scroll snap, sem interceptação de wheel, sem vídeo sincronizado ao
  * scroll. O único elemento fixo na tela é o Header (ver components/Header.tsx
  * e app/globals.css); o vídeo institucional vive só no Hero (Hero.tsx).
+ *
+ * Rodada de refino editorial: as superfícies terminam em corte reto (nenhum
+ * gradiente de transição entre seções) e as quatro trocas de território —
+ * Grupo → Ambiental → Equipamentos → Saturno → Impacto — são costuradas
+ * pelo símbolo oficial atravessando a linha de corte, alternando de lado a
+ * cada fronteira (esquerda / direita / esquerda / direita). Uma fronteira é
+ * declarada em duas seções adjacentes com o mesmo id; a única exceção é
+ * "grupo-ambiental", cuja metade de saída cairia por cima do vídeo do Hero
+ * — ali o símbolo emerge da borda superior da dobra 2 em vez de atravessar.
  */
 export default function HomePage() {
   const impactoRef = useRef<HTMLDivElement>(null);
@@ -65,9 +60,9 @@ export default function HomePage() {
       {/* ---------------- Almeida Ambiental / apresentação ---------------- */}
       <section
         id="almeida-ambiental"
-        className={`${styles.section} ${styles.toneForest} ${styles.watermarkSurface}`}
+        className={`${styles.section} ${styles.toneForest} ${boundarySurface}`}
       >
-        <BrandWatermark mode="dark" className={styles.apresentacaoWatermark} />
+        <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
             <div className={styles.duoContent}>
@@ -97,7 +92,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section className={`${styles.section} ${styles.toneForest}`}>
+      <section className={`${styles.section} ${styles.toneForest} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
@@ -123,22 +119,13 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <Reveal className={styles.processGrid}>
-            {PROCESS_STEPS.map((step) => (
-              <div key={step.name} className={styles.processCard}>
-                <div className={styles.processCardMedia}>
-                  <img src={step.image} alt={step.name} loading="lazy" />
-                </div>
-                <p className={styles.processCardLabel}>{step.name}</p>
-              </div>
-            ))}
-          </Reveal>
+          <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
         </div>
       </section>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.watermarkSurface}`}>
-        <BrandWatermark mode="light" className={styles.equipamentosWatermark} />
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
@@ -165,7 +152,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Almeida Equipamentos / engenharia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeToStone}`}>
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="equipamentos-saturno" half="leaving" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoMediaNarrow}`}>
             <div className={styles.duoContent}>
@@ -200,10 +188,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / presença regional ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStone} ${styles.fadeFromStoneAlt} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.saturnoPresencaWatermark} />
+      <section className={`${styles.section} ${styles.toneStone} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
@@ -227,10 +213,8 @@ export default function HomePage() {
       </section>
 
       {/* ---------------- Saturno Ambiental / atuação ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStone} ${styles.fadeToCarvao} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.saturnoAtuacaoWatermark} />
+      <section className={`${styles.section} ${styles.toneStone} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
@@ -264,10 +248,10 @@ export default function HomePage() {
 
       {/* ---------------- Impacto positivo 2025 ---------------- */}
       <section
-        className={`${styles.section} ${styles.toneCarvao} ${styles.fadeFromStone} ${styles.watermarkSurface}`}
+        className={`${styles.section} ${styles.toneCarvao} ${boundarySurface}`}
         ref={impactoRef}
       >
-        <BrandWatermark mode="dark" className={styles.impactWatermark} />
+        <BrandBoundaryMark boundary="saturno-impacto" half="entering" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={styles.impactHead}>
             <p className={styles.eyebrow}>Impacto Positivo · 2025</p>
@@ -305,8 +289,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Manifesto final ---------------- */}
-      <section className={`${styles.section} ${styles.toneCarvao} ${styles.fadeToForest} ${styles.manifesto}`}>
+      {/* ---------------- Manifesto final ----------------
+          Fecha em carvão contra o verde floresta do Footer, em corte reto
+          (o antigo .fadeToForest foi removido). Sem fronteira aqui: é o
+          mesmo território do bloco de Impacto, não uma troca de empresa. */}
+      <section className={`${styles.section} ${styles.toneCarvao} ${styles.manifesto}`}>
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>

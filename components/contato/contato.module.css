@@ -226,11 +226,37 @@
 }
 
 .mapFrame {
+  position: relative;
   width: 100%;
   height: 280px;
   border-radius: 4px;
   overflow: hidden;
   background: var(--color-muted);
+}
+
+/* ---------------- Mapa no mobile: localizador, não superfície de gesto ----
+   Um iframe do Google Maps consome o arrasto vertical do dedo para
+   deslocar o próprio mapa. No toque, isso prende a rolagem da página
+   exatamente no meio da leitura de cada unidade — a pessoa passa o dedo
+   sobre o mapa esperando continuar descendo e a página trava.
+
+   A correção acontece toda no CSS, sem JavaScript e sem envolver o iframe
+   numa camada de "toque para ativar": abaixo de 768px o mapa deixa de
+   receber eventos de ponteiro, então o gesto atravessa para a página e a
+   rolagem é a normal. Nada é escondido — o mapa continua visível e no
+   mesmo lugar, cumprindo o papel que realmente tem no mobile (mostrar
+   ONDE a unidade fica). A interação de verdade — arrastar, aproximar,
+   traçar rota — já existe logo abaixo em "Abrir no Google Maps" e "Abrir
+   no Waze", que entregam o aplicativo nativo do aparelho, melhor que o
+   mapa embutido em qualquer caso.
+
+   Acima de 768px (mouse/trackpad, onde o gesto de rolagem da página e a
+   manipulação do mapa não competem pelo mesmo movimento) o iframe segue
+   totalmente interativo. */
+@media (max-width: 767px) {
+  .mapFrame iframe {
+    pointer-events: none;
+  }
 }
 
 @media (min-width: 640px) {

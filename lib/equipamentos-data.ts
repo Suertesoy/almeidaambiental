@@ -16,18 +16,36 @@
  */
 
 import { img } from "./media";
+import type { EditorialImage, EditorialVideo } from "./media";
 
 export type Product = {
   id: string;
   name: string;
   manufacturer: string;
+  /** Frase curta de descoberta: o que o equipamento resolve, em uma linha. */
   headline: string;
+  /** "Para que serve" — texto de aprofundamento, não de descoberta. */
   copy: string;
+  /** "Onde faz sentido" — materiais e contextos de aplicação. */
   idealFor: string[];
+  /** "Principais benefícios". */
   benefits: string[];
   /** Só specs confirmadas em fonte oficial — nunca aproximação inventada. */
   confirmedSpecs?: string[];
-  image: ReturnType<typeof img>;
+  /** Imagem principal do equipamento. */
+  image: EditorialImage;
+  /**
+   * Campos preparados para a captação real (rodada de refino editorial).
+   * Enquanto estiverem ausentes, NADA é renderizado no lugar deles — sem
+   * placeholder, sem "vídeo em breve", sem moldura vazia. Quando os assets
+   * chegarem, basta preencher aqui: o explorador de catálogo já os consome
+   * sem nenhuma mudança de interface.
+   *
+   * gallery — fotos adicionais e detalhes, exibidas depois da principal.
+   * video   — vídeo de funcionamento do equipamento (nunca autoplay com som).
+   */
+  gallery?: EditorialImage[];
+  video?: EditorialVideo;
 };
 
 export const PRODUCTS: Product[] = [

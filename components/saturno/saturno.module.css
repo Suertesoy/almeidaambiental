@@ -12,7 +12,12 @@
   overflow-x: clip;
 }
 
-/* ---------------- Posicionamento (headline lateral no desktop) ---------------- */
+/* ---------------- Headline lateral no desktop ----------------
+   Usada pelo posicionamento e, desde a rodada de refino editorial, também
+   pela Gestão Ambiental — que perdeu a fotografia ilustrativa e passou a
+   precisar exatamente da mesma gramática: título à esquerda, corpo e lista
+   técnica na coluna larga. Uma primitiva, duas seções, nenhuma variante
+   nova. */
 
 .positioningGrid {
   display: grid;
@@ -98,6 +103,35 @@
   margin-bottom: var(--gap-body-support);
   padding-top: 16px;
   border-top: 1px solid rgba(247, 246, 241, 0.22);
+}
+
+/* A fotografia ilustrativa que dividia esta seção saiu (ver SaturnoPage.tsx):
+   os oito itens de escopo herdaram a largura inteira da coluna de conteúdo.
+   Em coluna única eles viravam uma tira alta e estreita de oito linhas, então
+   a partir de 768px a lista quebra em duas colunas — a informação passa a
+   caber num relance, que é o que uma lista de escopo precisa fazer.
+
+   Seletor composto de propósito: `.technicalList` (company-page.module.css)
+   declara `display: flex` com a mesma especificidade. Duas classes de módulos
+   diferentes empatadas resolvem por ordem de injeção do bundler, que não é
+   estável entre dev e build — 0-2-0 aqui vence sempre. */
+.gestaoTagsList.gestaoTagsColumns {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: clamp(24px, 4vw, 48px);
+  row-gap: 6px;
+}
+
+@media (min-width: 768px) {
+  .gestaoTagsList.gestaoTagsColumns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Mesmo respiro que separava a headline da grade de materiais quando ela
+   ainda vinha acompanhada de imagem — antes um style inline na página. */
+.materialsBlock {
+  margin-top: clamp(32px, 5vw, 48px);
 }
 
 /* ---------------- Saturno + Grupo Almeida ---------------- */

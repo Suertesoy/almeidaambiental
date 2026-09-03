@@ -1,0 +1,257 @@
+/* ==========================================================
+   Explorador de catálogo técnico da Almeida Equipamentos.
+
+   Substitui os seis capítulos de produto (uma seção inteira por
+   equipamento, com bloco técnico e specs despejados na primeira leitura) e
+   a barra sticky de navegação entre eles.
+
+   A lógica agora é de revelação progressiva:
+     1. descubro o equipamento (imagem + nome + uma frase),
+     2. escolho aprofundar,
+     3. só então vejo galeria, aplicação, benefícios e specs.
+
+   Não é e-commerce: nenhum preço, carrinho, quantidade, favorito ou
+   badge promocional existe aqui — e uma única ação por equipamento.
+
+   Um só DOM para os dois breakpoints. No mobile cada item é um cartão com
+   imagem grande; a partir de 1024px os mesmos itens viram a coluna
+   esquerda de um master-detail e a imagem grande passa para o palco à
+   direita. Nada é duplicado só para mudar de layout.
+   ========================================================== */
+
+.explorer {
+  margin-top: clamp(32px, 5vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .explorer {
+    grid-template-columns: 5fr 7fr;
+    gap: clamp(40px, 4vw, 72px);
+    align-items: start;
+  }
+}
+
+.master {
+  min-width: 0;
+}
+
+/* ---------------- Bloco do item selecionado (só desktop) ---------------- */
+
+.selected {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .selected {
+    display: block;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(21, 21, 15, 0.16);
+  }
+}
+
+.selectedManufacturer {
+  margin: 0 0 6px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selectedName {
+  margin: 0 0 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(24px, 1.6vw + 16px, 32px);
+  line-height: 1.1;
+}
+
+.selectedSummary {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.selectedCta {
+  margin-top: 22px;
+}
+
+/* Transição curta e funcional ao trocar de equipamento — nunca um efeito
+   de entrada chamativo. */
+.swap {
+  animation: explorer-swap 200ms ease-out both;
+}
+
+@keyframes explorer-swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ---------------- Lista de equipamentos ---------------- */
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.itemButton {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 24px 0 32px;
+  border: 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.itemButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Imagem de descoberta: grande, o equipamento inteiro, sem specs por perto.
+   `contain` porque os renders de produto vêm isolados em fundo neutro —
+   cortar o equipamento seria pior que deixar respiro em volta. */
+.cardMedia {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 18px;
+  overflow: hidden;
+  background: rgba(21, 21, 15, 0.05);
+}
+
+.cardMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(12px, 4%, 32px);
+}
+
+.itemManufacturer {
+  display: block;
+  margin: 0 0 4px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.itemName {
+  display: block;
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(21px, 1.2vw + 15px, 26px);
+  line-height: 1.15;
+}
+
+.itemSummary {
+  display: block;
+  margin: 8px 0 0;
+  max-width: 42ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.itemCue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.itemCue::after {
+  content: "→";
+}
+
+@media (min-width: 1024px) {
+  .cardMedia,
+  .itemSummary,
+  .itemCue {
+    display: none;
+  }
+
+  .itemButton {
+    padding: 16px 0;
+  }
+
+  .itemName {
+    font-size: 19px;
+    transition: color 160ms ease;
+  }
+
+  .itemButton:hover .itemName {
+    color: var(--color-gold-aged);
+  }
+
+  .itemButton[aria-current="true"] {
+    border-top-color: var(--color-gold-aged);
+  }
+
+  .itemButton[aria-current="true"] .itemName {
+    color: var(--color-gold-aged);
+  }
+}
+
+/* ---------------- Palco (desktop) ---------------- */
+
+.stage {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    display: block;
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
+}
+
+.stageMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: rgba(21, 21, 15, 0.05);
+}
+
+.stageMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(20px, 4%, 56px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap {
+    animation: none;
+  }
+
+  .itemName {
+    transition: none;
+  }
+}

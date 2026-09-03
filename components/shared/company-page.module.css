@@ -58,6 +58,22 @@
   background: var(--color-foreground);
 }
 
+/* Superfície escura própria da Saturno Ambiental — o MESMO token que ela já
+   ocupa na Home (--color-saturno-deep, ver home.module.css/.toneStone), para
+   que o território da empresa tenha a mesma cor nas duas pontas do site.
+   Como esta superfície é mais clara que forest-deep/carvão, os papéis
+   secundário/muted usam --text-on-dark-primary: --text-on-dark-secondary e
+   --text-on-dark-muted ficam em 4,04:1 e 1,97:1 contra #40552d, abaixo do
+   mínimo AA para texto normal (mesma verificação registrada em
+   home.module.css). */
+.toneSaturno {
+  color: var(--text-on-dark-primary);
+  --role-secondary: var(--text-on-dark-primary);
+  --role-muted: var(--text-on-dark-primary);
+  --role-accent: var(--text-on-dark-primary);
+  background: var(--color-saturno-deep);
+}
+
 .toneStone,
 .toneStoneAlt {
   color: var(--text-primary);
@@ -421,105 +437,12 @@
   opacity: 0.55;
 }
 
-/* ---------------- Fluxo horizontal/vertical (ex.: Diagnóstico → Coleta → ...) ---------------- */
-
-/* Mobile: cada etapa ocupa a faixa inteira (uma por linha, sem exceção de
-   posição) — grid de 1 coluna abre para --flow-steps colunas em ≥720px
-   (6, ver AlmeidaAmbientalPage.tsx), onde as etapas voltam a ser uma
-   sequência horizontal. */
-.flowRow {
-  list-style: none;
-  margin: clamp(32px, 5vw, 64px) 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 12px;
-}
-
-.flowStep {
-  grid-column: 1 / -1;
-}
-
-@media (min-width: 720px) {
-  .flowRow {
-    grid-template-columns: repeat(var(--flow-steps, 6), 1fr);
-  }
-
-  .flowStep {
-    grid-column: auto;
-  }
-}
-
-/* Sem conector de bolinha/linha (removido nesta rodada — Seção 4 da tarefa
-   pede linguagem editorial limpa, sem decoração de infográfico): só o
-   border-top já comunica divisor entre estágios, no mobile e no desktop.
-   Mobile centralizado e compacto (Seção 3-5); número removido visualmente
-   (mantido no DOM, reaparece em ≥720px — mesmo padrão de home.module.css). */
-.flowStep {
-  padding: 12px 6px;
-  border-top: 1px solid rgba(21, 21, 15, 0.18);
-  text-align: center;
-}
-
-.toneForest .flowStep,
-.toneCarvao .flowStep {
-  border-top-color: rgba(247, 246, 241, 0.22);
-}
-
-@media (min-width: 720px) {
-  .flowStep {
-    padding: 18px 16px;
-    text-align: left;
-  }
-}
-
-/* Checkpoint E (Seção 24, rodada anterior): mesma família de ícones do
-   processo da Home (components/icons.tsx, PROCESS_STEP_ICONS, por
-   posição). Sempre toneForest aqui, então --role-secondary (on-dark), não
-   dourado. */
-.flowIcon {
-  display: block;
-  width: 26px;
-  height: 26px;
-  margin: 0 auto 10px;
-  color: var(--role-secondary, var(--text-on-dark-secondary));
-}
-
-@media (min-width: 720px) {
-  .flowIcon {
-    width: 28px;
-    height: 28px;
-    margin: 0 0 10px;
-  }
-}
-
-/* Numeração/índice (01, 02, 03...) é tratada como metadata em accent
-   dourado atenuado em todo o site — mesmo papel de .pillarIndex
-   (almeida-ambiental), .frentesCompactIndex (saturno) e .indexNumber
-   (MaterialGrid), para que "número = metadata categórica" seja um padrão
-   reconhecível, não uma cor por seção. Oculto no mobile (Seção 3 da
-   tarefa): ícone + ordem vertical já comunicam progressão sem número. */
-.flowIndex {
-  display: none;
-  margin-bottom: 8px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--role-accent, var(--text-accent));
-}
-
-@media (min-width: 720px) {
-  .flowIndex {
-    display: block;
-  }
-}
-
-.flowLabel {
-  margin: 0;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-}
+/* As primitivas de fluxo de etapas (.flowRow/.flowStep/.flowIcon/
+   .flowIndex/.flowLabel) foram removidas nesta rodada: as seis etapas da
+   operação passaram a ser um componente próprio, com trilho horizontal no
+   mobile e as seis etapas simultâneas no desktop — ver
+   components/shared/ProcessSteps.tsx. A numeração 01/02/... também saiu: a
+   ordem já comunica a sequência. */
 
 /* ---------------- CTA editorial final ---------------- */
 

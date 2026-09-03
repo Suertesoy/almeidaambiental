@@ -11,6 +11,14 @@
   }
 }
 
+/* Sem imagem, a lista de materiais assume a largura inteira em vez de ficar
+   presa na coluna de 7fr com um vão vazio ao lado. */
+@media (min-width: 960px) {
+  .layoutNoMedia {
+    grid-template-columns: 1fr;
+  }
+}
+
 .media {
   position: relative;
   width: 100%;

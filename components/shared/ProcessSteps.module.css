@@ -1,0 +1,147 @@
+/* ==========================================================
+   ProcessSteps — as seis etapas da operação da Almeida Ambiental como
+   LISTA VISUAL, não como seis peças de destaque.
+
+   Substitui o grid de seis renders 3D (um card grande por etapa, seis
+   telas verticais no mobile). A informação aqui é simples e o objetivo é
+   "bater o olho e entender o que eles fazem": nome da etapa, um ícone
+   funcional mínimo (mesma família de components/icons.tsx já usada pelo
+   resto do site) e uma linha contínua costurando a sequência. Sem número —
+   a própria ordem comunica a sequência. Sem imagem dentro do item.
+
+   Mobile: trilho horizontal com ~1,5 item por viewport, então a próxima
+   etapa aparece parcialmente e o gesto horizontal fica óbvio sem dots,
+   setas ou carrossel automático. O scroll é o nativo do navegador (nunca
+   escondido), então a rolagem vertical da página nunca é capturada.
+
+   Desktop: as seis etapas simultâneas, compactas — 3×2 em larguras
+   intermediárias, seis colunas a partir de 1024px.
+
+   A linha e o marcador usam `currentColor` em pseudo-elementos: herdam a
+   cor de texto da superfície (clara ou escura) sem precisar de uma
+   variante por tom, e a opacidade fica isolada no pseudo-elemento, nunca
+   sobre o texto.
+   ========================================================== */
+
+.scroller {
+  margin-top: clamp(32px, 5vw, 56px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  /* Barra fina e discreta — visível, nunca escondida (a affordance de
+     continuidade horizontal é o próximo item aparecendo pela metade, mas o
+     scroll continua sendo um scroll de verdade). */
+  scrollbar-width: thin;
+  scrollbar-color: currentColor transparent;
+}
+
+.scroller:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 6px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  /* Sem gap: o border/linha de cada item precisa encostar no do vizinho
+     para ler como um traço contínuo. O respiro entre etapas vem do
+     padding interno do item. */
+  gap: 0;
+}
+
+.step {
+  position: relative;
+  flex: 0 0 66%;
+  min-width: 0;
+  scroll-snap-align: start;
+  padding: 18px 20px 4px 0;
+}
+
+/* Linha contínua: cada item pinta o seu trecho, encostado no do vizinho. */
+.step::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+/* Marcador editorial: um tique vertical curto descendo da linha no início
+   de cada etapa — não uma bolinha de infográfico. */
+.step::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 7px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 10px;
+  color: var(--role-muted, var(--text-muted));
+}
+
+.name {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  letter-spacing: 0.005em;
+}
+
+/* Frase curta opcional — só aparece quando existe conteúdo validado para
+   a etapa; o componente nunca inventa uma. */
+.note {
+  margin: 6px 0 0;
+  max-width: 28ch;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+/* ---------------- Desktop: as seis etapas de uma vez ---------------- */
+
+@media (min-width: 720px) {
+  .scroller {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .step {
+    flex: none;
+    padding: 18px 24px 8px 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .step {
+    padding-right: 16px;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+}

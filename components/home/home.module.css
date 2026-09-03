@@ -13,11 +13,10 @@ html:has([data-page="home"]) {
 .page {
   background: var(--color-background);
   overflow-x: clip;
-  /* Altura da faixa de transição cromática entre empresas — deliberadamente
-     igual ao padding-block de .section (mesma variável), nunca um valor
-     independente: assim a transição fica sempre contida no respiro que já
-     existe acima/abaixo do conteúdo real, sem risco de sobrepor headline,
-     ícones do processo, tags ou CTA em nenhuma combinação de viewport. */
+  /* Ritmo vertical das seções da Home. Era também a altura das faixas de
+     transição cromática entre empresas; essas faixas não existem mais (ver
+     "Fronteira entre territórios" abaixo), então hoje isto é só o
+     padding-block real de .section. */
   --section-pad-block: clamp(64px, 11vw, 112px);
 }
 
@@ -99,120 +98,21 @@ html:has([data-page="home"]) {
   background: var(--color-saturno-deep);
 }
 
-/* ---------------- Continuidade cromática entre duplas ----------------
-   Cada empresa ocupa UMA superfície cromática ao longo das suas duas
-   dobras (mesmo tom em .toneX acima, repetido nas duas sections — sem
-   alternância clara/escura no meio da própria empresa: ver mapeamento de
-   classes em HomePage.tsx). A transição entre empresas é dividida em duas
-   metades que se encontram exatamente na borda do DOM entre as sections:
+/* ---------------- Fronteira entre territórios ----------------
+   Os gradientes de transição entre seções (.fadeToStone / .fadeToCarvao /
+   .fadeFromStoneAlt / .fadeFromStone / .fadeToForest) foram REMOVIDOS nesta
+   rodada. Cada empresa ocupa uma superfície cromática sólida ao longo das
+   suas duas dobras e a mudança para o território seguinte acontece em corte
+   reto — verde floresta CORTE pedra, pedra CORTE oliva profundo, oliva
+   profundo CORTE carvão, carvão CORTE verde floresta do Footer. O contraste
+   é a decisão; suavizar a emenda apagava exatamente o que ela comunica.
 
-   - .fadeTo*  (cauda da 2ª dobra de quem sai) evolui do tom próprio até a
-     cor de encontro, inteiramente dentro do seu próprio padding-bottom.
-   - .fadeFrom* (cabeça da 1ª dobra de quem entra) completa a evolução da
-     cor de encontro até o tom próprio, inteiramente dentro do seu próprio
-     padding-top.
+   Quem costura os dois territórios agora é o símbolo oficial atravessando a
+   linha de corte (components/shared/BrandBoundaryMark.tsx), aplicado só nas
+   quatro fronteiras narrativas desta página — não em toda dobra.
 
-   Como as duas metades usam a MESMA cor de encontro e a MESMA altura
-   (--section-pad-block), a emenda entre as duas sections é matematicamente
-   contínua — nunca sobrepõe conteúdo real, porque nunca ultrapassa o
-   padding que já existia.
-
-   A cor de encontro é a mistura RGB 50/50 dos dois tokens institucionais
-   adjacentes (não uma cor nova), calculada uma vez e escrita como literal:
-   o parser CSS desta versão do Next/Turbopack rejeita custom properties
-   extras dentro de .page (ver histórico do arquivo) — #72786b
-   (forest-deep+stone-warm-alt).
-   Rodada de refinamento visual (item 10/11): Saturno passou de
-   --color-stone-olive para --color-primary (ver .toneStone acima), um salto
-   de luminância muito maior que o par anterior — de propósito, a transição
-   5→6 (Equipamentos→Saturno) precisa ser uma das mudanças cromáticas mais
-   perceptíveis da Home. As duas emendas que tocam o tom da Saturno foram
-   recalculadas com o novo par — #8e996c (stone-warm-alt+color-primary, era
-   #cecebb) e #32401a (color-primary+foreground, era #727669). O mecanismo
-   (duas metades de --section-pad-block cada, uma por section) não mudou —
-   só o alvo.
-   Rodada de refinamento visual (tom institucional): Saturno passou de
-   --color-primary para --color-saturno-deep (#40552d, ver .toneStone e
-   globals.css) — mesmo hue, mais escuro e menos saturado. As duas emendas
-   foram recalculadas de novo com o par atual — #878e71
-   (stone-warm-alt+saturno-deep, era #8e996c) e #2b351e
-   (saturno-deep+foreground, era #32401a). Mecanismo inalterado.
-
-   Exceção deliberada — Ambiental→Equipamentos (item 6 da rodada de
-   redesenho dos cards de processo): esta emenda NÃO usa mais o mecanismo
-   .fadeTo(X) / .fadeFrom(X) acima. A mistura RGB 50/50 (#72786b) e depois a
-   transição em dois tempos (#3d4d38→#8a8f79) liam como névoa borrada, não
-   como decisão gráfica — ver histórico do arquivo. As duas sections agora
-   ficam cor sólida (.toneForest / .toneStoneAlt, sem gradiente algum) e a
-   emenda entre elas é a superfície quente dos próprios cards do grid de
-   processo (.processCard, mesmo tom de .toneStoneAlt), não um efeito de
-   fundo — ver comentário em .processGrid. */
-.fadeToStone {
-  background: linear-gradient(
-    180deg,
-    var(--color-stone-warm-alt) 0%,
-    var(--color-stone-warm-alt) calc(100% - var(--section-pad-block)),
-    #878e71 100%
-  );
-}
-
-.fadeToCarvao {
-  background: linear-gradient(
-    180deg,
-    var(--color-saturno-deep) 0%,
-    var(--color-saturno-deep) calc(100% - var(--section-pad-block)),
-    #2b351e 100%
-  );
-}
-
-.fadeFromStoneAlt {
-  background: linear-gradient(
-    180deg,
-    #878e71 0%,
-    var(--color-saturno-deep) var(--section-pad-block),
-    var(--color-saturno-deep) 100%
-  );
-}
-
-.fadeFromStone {
-  background: linear-gradient(
-    180deg,
-    #2b351e 0%,
-    var(--color-foreground) var(--section-pad-block),
-    var(--color-foreground) 100%
-  );
-}
-
-/* Continuidade dobra 9 → Footer (item 14): o Footer (fora de .page, em
-   globals.css) passa a reutilizar --color-forest-deep — o mesmo token do
-   Header/menu (item 12) — então, ao contrário dos pares .fadeTo(X)/.fadeFrom(X)
-   acima (dois lados que dividem --section-pad-block ao meio), aqui só a
-   dobra 9 precisa evoluir: ela sai do carvão que já usa (.toneCarvao) e
-   chega em --color-forest-deep sólido dentro do próprio padding-bottom: a
-   última linha de pixels da dobra 9 já é a cor exata do Footer, então a
-   emenda é contínua sem o Footer precisar de gradiente próprio. */
-.fadeToForest {
-  background: linear-gradient(
-    180deg,
-    var(--color-foreground) 0%,
-    var(--color-foreground) calc(100% - var(--section-pad-block)),
-    var(--color-forest-deep) 100%
-  );
-}
-
-/* Superfície que hospeda o símbolo editorial de fundo (BrandWatermark):
-   contém o corte do símbolo sem gerar scroll horizontal e garante que o
-   conteúdo real (.container) sempre pinte por cima dele. */
-.watermarkSurface {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.watermarkSurface > .container {
-  position: relative;
-  z-index: 1;
-}
+   Por isso .page/--section-pad-block deixou de ter função cromática: ele
+   segue existindo apenas como o padding-block real de .section. */
 
 /* ---------------- Tipografia editorial ----------------
    Playfair (display) só em headlines/números/manifesto; Inter (corpo) em
@@ -458,17 +358,23 @@ html:has([data-page="home"]) {
    seguinte (flat toneForest) é matematicamente contínua, sem faixa curta
    colada no fim do vídeo. Ainda apoia a leitura de headline/CTA/scroll hint
    (mais escuro que o scrim anterior nessa região, nunca mais claro). */
+/* Scrim de LEGIBILIDADE sobre o vídeo — não é transição de seção. Antes
+   chegava a --color-forest-deep sólido em 0% justamente para dissolver a
+   emenda com a dobra seguinte; essa função foi removida nesta rodada, então
+   o gradiente volta a fazer só o que precisa fazer: apoiar a leitura de
+   eyebrow/headline/CTA sobre a imagem em movimento. O vídeo termina em corte
+   reto contra o verde floresta da primeira dobra, e é o símbolo da fronteira
+   "grupo-ambiental" que costura as duas superfícies. */
 .heroScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    var(--color-forest-deep) 0%,
-    rgba(23, 41, 34, 0.86) 10%,
-    rgba(23, 41, 34, 0.6) 26%,
-    rgba(23, 41, 34, 0.3) 46%,
-    rgba(23, 41, 34, 0.1) 66%,
-    rgba(23, 41, 34, 0) 84%
+    rgba(9, 16, 13, 0.78) 0%,
+    rgba(9, 16, 13, 0.62) 18%,
+    rgba(9, 16, 13, 0.34) 42%,
+    rgba(9, 16, 13, 0.12) 64%,
+    rgba(9, 16, 13, 0) 84%
   );
   pointer-events: none;
 }
@@ -673,169 +579,23 @@ html:has([data-page="home"]) {
   aspect-ratio: 1 / 1;
 }
 
-/* Símbolo editorial da seção Almeida Ambiental / apresentação (superfície
-   escura, toneForest) — grande, entrando pela lateral esquerda, atrás do
-   eyebrow/headline/body (opacidade do BrandWatermark já é baixa o
-   suficiente para não comprometer a leitura). Corte à esquerda é
-   deliberado (entra pela borda do viewport); largura/topo calibrados
-   (medido via getBoundingClientRect em 768–1920px) para a altura do símbolo
-   nunca ultrapassar a altura real desta seção — sem isso, em telas ≥1440px
-   a base do símbolo era cortada de forma acidental pela borda inferior da
-   própria section (até ~108px de corte), lida como erro de posicionamento
-   em vez de decisão editorial. */
-.apresentacaoWatermark {
-  top: 4%;
-  left: -8%;
-  width: clamp(340px, 40vw, 480px);
-}
+/* As marcas d'água posicionais desta página (.apresentacaoWatermark,
+   .equipamentosWatermark, .saturnoPresencaWatermark, .saturnoAtuacaoWatermark
+   e .impactWatermark) foram removidas nesta rodada. O símbolo deixou de ser
+   um carimbo por seção e passou a marcar exclusivamente as quatro fronteiras
+   narrativas da Home, atravessando o corte entre superfícies — ver
+   components/shared/BrandBoundaryMark.tsx e lib/brand-boundaries.ts. Isso
+   também resolve a competição entre símbolo e texto longo no mobile
+   apontada pela auditoria: no celular a marca aparece como fragmento na
+   extremidade, na faixa de respiro entre duas seções, nunca atrás de um
+   parágrafo. */
 
-@media (max-width: 767px) {
-  .apresentacaoWatermark {
-    top: 28%;
-    left: -18%;
-    width: clamp(280px, 74vw, 440px);
-  }
-}
-
-/* A seção Almeida Ambiental / capacidade operacional (toneForest) ficou
-   sem marca d'água nesta rodada dos cards de processo (ver .processGrid) —
-   o grid de seis renders já é protagonista suficiente; símbolo de fundo
-   competiria com eles em vez de reforçar a marca. */
-
-/* Símbolo editorial da seção Almeida Equipamentos (superfície clara,
-   toneStoneAlt). Rodada de refinamento visual (item 4): antes ficava do
-   mesmo lado (direita) que a seção anterior, empilhada logo abaixo dela, e
-   com top negativo tão grande que em telas largas mais da metade do
-   símbolo era cortada pela borda superior da própria section (~274px de
-   corte em 1440px, medido) — lido como amputação, não como composição.
-   Passa para o lado ESQUERDO com top positivo e largura recalibrada para
-   caber inteira dentro da altura real da section (medido via
-   getBoundingClientRect), sem depender de corte vertical algum; o corte
-   lateral esquerdo continua deliberado. */
-.equipamentosWatermark {
-  left: -4%;
-  top: 3%;
-  width: clamp(320px, 36vw, 500px);
-}
-
-@media (max-width: 767px) {
-  .equipamentosWatermark {
-    left: -10%;
-    top: 4%;
-    width: clamp(260px, 70vw, 420px);
-  }
-}
-
-/* Símbolo editorial da seção Saturno Ambiental / presença regional
-   (superfície clara, toneStone) — quase inteiro visível, atrás do bloco de
-   texto esparso desta seção (eyebrow + local + headline, sem body/CTA). */
-.saturnoPresencaWatermark {
-  top: 8%;
-  left: 8%;
-  width: clamp(320px, 34vw, 480px);
-}
-
-@media (max-width: 767px) {
-  .saturnoPresencaWatermark {
-    top: 12%;
-    left: -2%;
-    width: clamp(260px, 60vw, 380px);
-  }
-}
-
-/* Símbolo editorial da seção Saturno Ambiental / atuação — esta seção
-   passou a compartilhar o tom claro (toneStone) da dobra anterior e só
-   escurece para carvão no fim (.fadeToCarvao), por isso o símbolo trocou
-   para o modo colorido (ver HomePage.tsx). Ancorado no lado esquerdo,
-   atrás da coluna de mídia estreita (.duoMediaNarrow), com uma fração
-   discreta tocando a faixa de transição no rodapé da seção — sem
-   atravessar para a próxima seção (que já é escura; um símbolo colorido
-   ali perderia contraste). */
-.saturnoAtuacaoWatermark {
-  left: -4%;
-  bottom: 2%;
-  width: clamp(300px, 36vw, 520px);
-}
-
-@media (max-width: 767px) {
-  .saturnoAtuacaoWatermark {
-    left: -10%;
-    bottom: 4%;
-    width: clamp(240px, 64vw, 380px);
-  }
-}
-
-/* ---------------- Grid de processo (Almeida Ambiental) ----------------
-   Substitui a fotografia panorâmica narrativa (histórico do arquivo): uma
-   cena realista de galpão/operação lia como fotografia das instalações
-   reais da Almeida, mas era inteiramente gerada por IA — problema
-   conceitual, não só estético. Os seis renders 3D conceituais
-   (PROCESS_STEPS em HomePage.tsx) substituem por ilustração de FUNÇÃO, não
-   de instalação. Sem números — a ordem espacial do grid já comunica
-   sequência (regra da tarefa).
-
-   Gap de 2px (não um gutter tradicional) é deliberado: com o fundo
-   .toneForest aparecendo nas frestas, os seis cards leem como uma única
-   peça reticulada — "um conjunto", não seis produtos soltos — sem recorrer
-   a uma timeline com linha/setas.
-
-   .processCard usa --color-stone-warm-alt, o MESMO token de fundo da
-   seção seguinte (.toneStoneAlt, Almeida Equipamentos) — não uma cor nova.
-   É essa superfície quente que faz o papel de ponte entre o verde sólido
-   desta seção e o stone sólido da próxima (ver comentário sobre a exceção
-   Ambiental→Equipamentos junto de .fadeToStone mais acima): o grid inteiro fica contido
-   dentro da seção verde, mas sua última fileira já "antecipa" visualmente
-   o tom da seção seguinte, então o corte reto entre as duas sections lê
-   como decisão gráfica, não como um degradê borrado cortado ao meio. */
-
-.processGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2px;
-  margin-top: clamp(40px, 6vw, 72px);
-}
-
-@media (min-width: 640px) {
-  .processGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .processGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.processCard {
-  display: flex;
-  flex-direction: column;
-  background: var(--color-stone-warm-alt);
-}
-
-.processCardMedia {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-}
-
-.processCardMedia img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.processCardLabel {
-  margin: 0;
-  padding: 14px clamp(16px, 2vw, 24px) 18px;
-  color: var(--color-foreground);
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(17px, 1vw + 13px, 21px);
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-}
+/* As seis etapas do processo deixaram de ser um grid de seis cards com
+   render 3D (.processGrid/.processCard/.processCardMedia/.processCardLabel,
+   removidos). A informação é simples e precisa ser lida de relance, não
+   virar exposição visual: ver components/shared/ProcessSteps.tsx — trilho
+   horizontal no mobile, seis etapas simultâneas no desktop, sem imagem
+   dentro do item e sem número. */
 
 /* ---------------- Apoio (tags separadas por ponto) ---------------- */
 
@@ -902,30 +662,6 @@ html:has([data-page="home"]) {
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-}
-
-/* Símbolo editorial da seção Impacto Positivo. Rodada de refinamento visual
-   (item 5): antes ficava do lado esquerdo, mesmo lado de
-   .saturnoAtuacaoWatermark logo acima (dobra 7 → 8), as duas empilhadas —
-   e com top negativo tão grande que em telas largas mais da metade do
-   símbolo era cortada pela borda superior da própria section (~240px de
-   corte em 1440px, medido). Passa para o lado DIREITO (alternância com
-   .saturnoAtuacaoWatermark, que permanece à esquerda — regra 5) com top
-   positivo e largura recalibrada para caber inteira dentro da altura real
-   da section, sem depender de corte vertical algum; atrás do
-   headline/grid de métricas (nunca atrás de cada métrica individual). */
-.impactWatermark {
-  right: -4%;
-  top: 3%;
-  width: clamp(300px, 34vw, 480px);
-}
-
-@media (max-width: 767px) {
-  .impactWatermark {
-    right: -10%;
-    top: 4%;
-    width: clamp(240px, 64vw, 380px);
-  }
 }
 
 /* ---------------- Manifesto final ---------------- */

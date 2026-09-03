@@ -4,7 +4,8 @@ import styles from "./saturno.module.css";
 import CompanyHero from "../shared/CompanyHero";
 import MaterialGrid from "../shared/MaterialGrid";
 import EditorialCTA from "../shared/EditorialCTA";
-import { HERO_IMAGE, FRENTES, MATERIALS, MATERIALS_IMAGE } from "../../lib/saturno-data";
+import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
+import { FRENTES, MATERIALS, HERO_META } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 const COMPACT_FRENTES = FRENTES.filter(
@@ -21,6 +22,21 @@ const GESTAO_AMBIENTAL = FRENTES.find((f) => f.id === "gestao-ambiental")!;
  * materiais → Saturno + Grupo Almeida → CTA final. Não copia a arquitetura
  * da Almeida Ambiental: onde ela é operacional/logística, a Saturno é
  * regional/consultiva.
+ *
+ * Rodada de refino editorial — território sem fotografia: não há captação
+ * prevista da instalação atual da Saturno, e o prédio de hoje não
+ * representa o padrão que o Grupo está construindo. As imagens geradas que
+ * afirmavam sede, linha de triagem e equipe saíram (ver o cabeçalho de
+ * lib/saturno-data.ts) e não foram trocadas por outras: fotografar a
+ * Almeida e chamar de Saturno seria o mesmo erro com outro arquivo.
+ *
+ * O que ficou no lugar não é ausência — é a direção da página: Hero
+ * tipográfico sobre a superfície própria da marca (--color-saturno-deep, a
+ * MESMA cor que a Saturno já ocupa na Home, não uma cor por página), uma
+ * faixa de metadados validados, o símbolo atravessando a fronteira
+ * "saturno-territorio" e, daí para baixo, geometria, espaçamento e
+ * conteúdo. A única fotografia da página é a Cartonagem, porque mostra
+ * material — caixas de papelão — e não uma instalação.
  */
 export default function SaturnoPage() {
   return (
@@ -29,16 +45,20 @@ export default function SaturnoPage() {
         eyebrow="Saturno Ambiental · Grupo Almeida"
         title="Presença regional, experiência compartilhada."
         lede="Em Blumenau e no Vale do Itajaí, a Saturno Ambiental reúne serviços de gestão de resíduos, estrutura operacional e soluções ambientais conectadas à experiência do Grupo Almeida."
-        image={HERO_IMAGE}
+        surface="saturno"
+        meta={HERO_META}
+        boundary={{ id: "saturno-territorio", surface: "onDark" }}
         primaryCta={{ label: "Conheça nossas soluções", href: "#frentes" }}
         secondaryCta={{ label: "Falar com a Saturno Ambiental", href: CONTACT_ANCHORS.blumenau }}
       />
 
       {/* ---------------- Posicionamento ---------------- */}
-      {/* Única das três posicionamento (Ambiental/Equipamentos têm imagem em
-          duo) sem fotografia própria — no desktop, "headline lateral" evita
-          que a seção vire uma coluna estreita perdida em 1440px (Seção 43). */}
-      <section className={`${shared.section} ${shared.toneStone}`}>
+      {/* Metade de entrada da fronteira aberta no Hero: o oliva profundo da
+          Saturno termina em corte reto contra a pedra clara e o símbolo
+          atravessa a linha. No desktop, "headline lateral" evita que a
+          seção vire uma coluna estreita perdida em 1440px (Seção 43). */}
+      <section className={`${shared.section} ${shared.toneStone} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onLight" />
         <div className={shared.container}>
           <div className={styles.positioningGrid}>
             <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
@@ -107,19 +127,28 @@ export default function SaturnoPage() {
         </div>
       </section>
 
-      {/* ---------------- Gestão Ambiental (exclusiva, frente consultiva) ---------------- */}
+      {/* ---------------- Gestão Ambiental (exclusiva, frente consultiva) ----------------
+          Era um duo com a fotografia de um "profissional analisando planta"
+          que nunca existiu. Serviço técnico não se prova com a foto de
+          alguém segurando papel: o que este bloco tem de concreto são os
+          oito itens de escopo, e é a eles que a seção dá o espaço agora —
+          headline lateral no desktop (mesma gramática do posicionamento) e
+          a lista técnica ocupando a coluna larga em vez de dividir espaço
+          com uma imagem ilustrativa. */}
       <section className={`${shared.sectionEditorial} ${shared.toneForest}`}>
         <div className={shared.container}>
-          <div className={`${shared.duo} ${shared.duoMediaRight}`}>
-            <div className={shared.duoContent}>
+          <div className={styles.positioningGrid}>
+            <div>
               <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
               <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
+            </div>
+            <div className={styles.positioningCopy}>
               <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
               {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
                   como lista real e estruturada — divisor + um item por
                   linha, não parágrafo contínuo nem pílulas soltas. */}
               {GESTAO_AMBIENTAL.tags && (
-                <ul className={`${shared.technicalList} ${styles.gestaoTagsList}`}>
+                <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
                   {GESTAO_AMBIENTAL.tags.map((tag) => (
                     <li key={tag}>{tag}</li>
                   ))}
@@ -131,19 +160,21 @@ export default function SaturnoPage() {
                 </Link>
               </div>
             </div>
-            <div className={`${shared.duoMedia} ${shared.duoMediaTall}`}>
-              <img src={GESTAO_AMBIENTAL.image!.src} alt={GESTAO_AMBIENTAL.image!.alt} loading="lazy" decoding="async" />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- Materiais ---------------- */}
+      {/* ---------------- Materiais ----------------
+          Sem a foto de linha de triagem (removida): a variante "index" já é
+          uma lista numerada em colunas, ou seja, o material aparece por
+          nome e quantidade de linhas — informação — em vez de aparecer como
+          uma esteira genérica que não é a da Saturno. Sem imagem,
+          MaterialGrid assume a largura inteira (.layoutNoMedia). */}
       <section className={`${shared.section} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>Materiais que fazem parte da operação.</h2>
-          <div style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
-            <MaterialGrid materials={MATERIALS} image={MATERIALS_IMAGE} variant="index" />
+          <div className={styles.materialsBlock}>
+            <MaterialGrid materials={MATERIALS} variant="index" />
           </div>
         </div>
       </section>

@@ -5,7 +5,10 @@ import type { EditorialImage } from "../../lib/media";
 
 export type MaterialGridProps = {
   materials: string[];
-  image: EditorialImage;
+  /** Opcional: sem imagem, a lista ocupa a largura inteira. A ausência de
+   *  fotografia é uma decisão de composição válida — nunca se preenche o
+   *  espaço com uma imagem que não representa a empresa daquela página. */
+  image?: EditorialImage;
   /** "tags" = pílulas soltas (mosaico, hoje sem uso — mantido por
    *  compatibilidade); "index" = lista numerada em colunas (Saturno);
    *  "editorial" = lista tipográfica em duas colunas, sem numeração/pill
@@ -23,11 +26,13 @@ export type MaterialGridProps = {
  */
 export default function MaterialGrid({ materials, image, variant = "tags", dark = false }: MaterialGridProps) {
   return (
-    <div className={`${styles.layout} ${dark ? styles.dark : ""}`}>
-      <div className={styles.media}>
-        <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
-        {image.sourceType !== "archive" && <IllustrativeBadge />}
-      </div>
+    <div className={`${styles.layout} ${image ? "" : styles.layoutNoMedia} ${dark ? styles.dark : ""}`}>
+      {image && (
+        <div className={styles.media}>
+          <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+          {image.sourceType !== "archive" && <IllustrativeBadge />}
+        </div>
+      )}
 
       {variant === "tags" && (
         <ul className={styles.tagsList}>
