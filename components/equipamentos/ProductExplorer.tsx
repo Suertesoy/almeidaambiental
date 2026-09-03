@@ -43,6 +43,8 @@ export default function ProductExplorer() {
     triggerRef.current = null;
   }, []);
 
+  const selectedIndex = PRODUCTS.findIndex((product) => product.id === selected.id);
+
   const handleItemClick = (product: Product, event: React.MouseEvent<HTMLButtonElement>) => {
     setSelected(product);
     const isDesktop =
@@ -93,6 +95,21 @@ export default function ProductExplorer() {
                   <span className={styles.itemManufacturer}>{product.manufacturer}</span>
                   <span className={styles.itemName}>{product.name}</span>
                   <span className={styles.itemSummary}>{product.headline}</span>
+                  {/* Faixa de informações confirmadas — só existe quando o
+                      equipamento realmente tem spec validada em fonte
+                      oficial do fabricante (ver lib/equipamentos-data.ts).
+                      Sem dado, nenhuma faixa é renderizada: nada de linha
+                      vazia nem de número aproximado para emparelhar os
+                      cartões. */}
+                  {product.confirmedSpecs && product.confirmedSpecs.length > 0 && (
+                    <span className={styles.itemSpecs}>
+                      {product.confirmedSpecs.map((spec) => (
+                        <span key={spec} className={styles.itemSpec}>
+                          {spec}
+                        </span>
+                      ))}
+                    </span>
+                  )}
                   <span className={styles.itemCue}>Ver detalhes</span>
                 </button>
               </li>
@@ -100,16 +117,33 @@ export default function ProductExplorer() {
           </ul>
         </div>
 
+        {/* Palco: vitrine técnica, não um cartão com a imagem dentro.
+            O estúdio é o do PRÓPRIO render — ver o comentário em
+            product-explorer.module.css. Por cima dele vêm as marcas de
+            canto de desenho técnico e a metadata do equipamento.
+            aria-hidden porque tudo aqui duplica, em forma visual, o que o
+            bloco .selected já anuncia como texto. */}
         <div className={styles.stage} aria-hidden="true">
           <div className={styles.stageMedia}>
+            <span className={`${styles.stageTick} ${styles.tickTl}`} />
+            <span className={`${styles.stageTick} ${styles.tickTr}`} />
+            <span className={`${styles.stageTick} ${styles.tickBl}`} />
+            <span className={`${styles.stageTick} ${styles.tickBr}`} />
+
             <img
               key={selected.id}
-              className={styles.swap}
+              className={`${styles.stageProduct} ${styles.swap}`}
               src={selected.image.src}
               alt=""
               loading="lazy"
               decoding="async"
             />
+
+            <span className={styles.stageIndex}>
+              {String(selectedIndex + 1).padStart(2, "0")}
+              <span className={styles.stageIndexTotal}>/ {String(PRODUCTS.length).padStart(2, "0")}</span>
+            </span>
+            <span className={styles.stageManufacturer}>{selected.manufacturer}</span>
           </div>
         </div>
       </div>

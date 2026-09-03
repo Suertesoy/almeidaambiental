@@ -1,12 +1,14 @@
 import Link from "next/link";
 import styles from "./CompanyHero.module.css";
 import IllustrativeBadge from "./IllustrativeBadge";
+import MaterialSurface from "./MaterialSurface";
 import BrandBoundaryMark, {
   boundarySurface,
   type BrandBoundarySurface,
 } from "./BrandBoundaryMark";
 import type { EditorialImage } from "../../lib/media";
 import type { BrandBoundaryId } from "../../lib/brand-boundaries";
+import type { MaterialSurfaceId } from "../../lib/material-surfaces";
 
 export type CompanyHeroCta = {
   label: string;
@@ -27,6 +29,17 @@ export type CompanyHeroProps = {
   image?: EditorialImage;
   /** Superfície do Hero tipográfico. Ignorada quando existe fotografia. */
   surface?: "forest" | "saturno";
+  /**
+   * Camada de materialidade atrás do Hero tipográfico (ver
+   * components/shared/MaterialSurface.tsx).
+   *
+   * Só se aplica ao Hero SEM fotografia, e a razão é conceitual: quando a
+   * empresa não tem imagem que a represente, a alternativa honesta é
+   * matéria — papel, fibra, cartonagem — e não uma cena inventada. Um Hero
+   * que já tem fotografia da operação não precisa de textura por trás, e
+   * empilhar as duas só sujaria a leitura da imagem real.
+   */
+  material?: MaterialSurfaceId;
   /** Metadados curtos e validados, exibidos só no Hero tipográfico. */
   meta?: string[];
   /** Metade de saída de uma fronteira de território ancorada neste Hero. */
@@ -55,6 +68,7 @@ export default function CompanyHero({
   subcopy,
   image,
   surface = "forest",
+  material,
   meta,
   boundary,
   primaryCta,
@@ -72,6 +86,11 @@ export default function CompanyHero({
       }
       aria-label={eyebrow}
     >
+      {/* Ordem de pintura: materialidade (data-layer="background", z-index 0)
+          → símbolo de fronteira (z-index 0, pintado depois) → conteúdo
+          (z-index 1). Ver BrandBoundaryMark.module.css. */}
+      {editorial && material && <MaterialSurface surface={material} />}
+
       {boundary && <BrandBoundaryMark boundary={boundary.id} half="leaving" surface={boundary.surface} />}
 
       {image && (

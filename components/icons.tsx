@@ -309,7 +309,7 @@ function MaterialTexteisIcon({ className }: FunctionalIconProps) {
 /** Uma chave por material — mesmo texto exato usado em lib/materials.ts
  *  (Almeida Ambiental/Saturno) e lib/equipamentos-data.ts
  *  (MATERIAL_ASSOCIATIONS). Ausência de chave é esperada para materiais
- *  ainda não mapeados; o consumidor decide o que fazer (ver MaterialGrid).
+ *  ainda não mapeados; o consumidor decide o que fazer (ver MaterialAtlas).
  *  As chaves abaixo depois de Grandes volumes contínuos são variantes de
  *  texto usadas só em "Ideal para" da Almeida Equipamentos (Checkpoint C,
  *  refinamento 2026-08-20) — sempre apontando para o MESMO ícone do

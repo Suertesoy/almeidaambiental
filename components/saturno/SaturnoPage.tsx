@@ -2,10 +2,11 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./saturno.module.css";
 import CompanyHero from "../shared/CompanyHero";
-import MaterialGrid from "../shared/MaterialGrid";
+import MaterialAtlas from "../shared/MaterialAtlas";
 import EditorialCTA from "../shared/EditorialCTA";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
-import { FRENTES, MATERIALS, HERO_META } from "../../lib/saturno-data";
+import MaterialSurface from "../shared/MaterialSurface";
+import { FRENTES, HERO_META } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 const COMPACT_FRENTES = FRENTES.filter(
@@ -46,6 +47,7 @@ export default function SaturnoPage() {
         title="Presença regional, experiência compartilhada."
         lede="Em Blumenau e no Vale do Itajaí, a Saturno Ambiental reúne serviços de gestão de resíduos, estrutura operacional e soluções ambientais conectadas à experiência do Grupo Almeida."
         surface="saturno"
+        material="saturno-hero"
         meta={HERO_META}
         boundary={{ id: "saturno-territorio", surface: "onDark" }}
         primaryCta={{ label: "Conheça nossas soluções", href: "#frentes" }}
@@ -169,18 +171,24 @@ export default function SaturnoPage() {
           uma lista numerada em colunas, ou seja, o material aparece por
           nome e quantidade de linhas — informação — em vez de aparecer como
           uma esteira genérica que não é a da Saturno. Sem imagem,
-          MaterialGrid assume a largura inteira (.layoutNoMedia). */}
+          MaterialAtlas assume a largura inteira (.atlasNoMedia). */}
       <section className={`${shared.section} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>Materiais que fazem parte da operação.</h2>
           <div className={styles.materialsBlock}>
-            <MaterialGrid materials={MATERIALS} variant="index" />
+            <MaterialAtlas />
           </div>
         </div>
       </section>
 
-      {/* ---------------- Saturno + Grupo Almeida ---------------- */}
-      <section className={`${shared.section} ${shared.toneCarvao}`}>
+      {/* ---------------- Saturno + Grupo Almeida ----------------
+          Segunda e ÚLTIMA imagem conceitual da página (Seção 17 da rodada).
+          Este capítulo de fechamento era superfície de carvão inteiramente
+          chapada com uma headline e um parágrafo por cima — o momento certo
+          para a materialidade da marca entrar, e longe o bastante da
+          fotografia real de cartonagem para não competir com ela. */}
+      <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
+        <MaterialSurface surface="saturno-fluxo" />
         <div className={shared.container}>
           <span className={styles.groupBadge}>Saturno Ambiental · Grupo Almeida</span>
           <h2 className={shared.headline}>Uma marca regional conectada a uma estrutura maior.</h2>

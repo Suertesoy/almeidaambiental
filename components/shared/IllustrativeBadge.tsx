@@ -11,7 +11,7 @@ const POSITION_CLASS: Record<Position, string> = {
 /**
  * Microlegenda única para sinalizar imagem/visualização não fotográfica.
  * Substitui as 4 implementações duplicadas que existiam antes (CompanyHero,
- * MaterialGrid, ProductRotation, e um <span style={{...}}> cru dentro de
+ * MaterialAtlas, ProductRotation, e um <span style={{...}}> cru dentro de
  * EquipamentosPage) — mesmo texto configurável, mesma escala discreta em
  * todo o site.
  */

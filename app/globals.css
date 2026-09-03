@@ -172,6 +172,18 @@ video {
   display: block;
 }
 
+/* <picture> nunca deve criar caixa própria.
+   Ele entrou no site como wrapper de composição alternativa de mobile
+   (SectionMedia, MaterialSurface, MaterialAtlas): o slot que define
+   proporção, recorte e object-fit continua sendo o contêiner de layout, e
+   a <img> precisa continuar se comportando como filha direta dele. Sem
+   isto, um wrapper inline de altura automática apareceria no meio e
+   `height: 100%` da imagem passaria a resolver contra ele — a mídia
+   colapsaria em qualquer slot com aspect-ratio. */
+picture {
+  display: contents;
+}
+
 button {
   font-family: inherit;
 }

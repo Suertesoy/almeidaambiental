@@ -27,7 +27,10 @@
 
 @media (min-width: 1024px) {
   .explorer {
-    grid-template-columns: 5fr 7fr;
+    /* 4/8 e não 5/7: a crítica da rodada era "lista à esquerda + card
+       comum à direita". A lista é índice, não conteúdo — ela precisa do
+       espaço de um índice, e o palco precisa do espaço de uma vitrine. */
+    grid-template-columns: 4fr 8fr;
     gap: clamp(40px, 4vw, 72px);
     align-items: start;
   }
@@ -124,8 +127,9 @@
 }
 
 /* Imagem de descoberta: grande, o equipamento inteiro, sem specs por perto.
-   `contain` porque os renders de produto vêm isolados em fundo neutro —
-   cortar o equipamento seria pior que deixar respiro em volta. */
+   Mesma decisão do palco do desktop (ver o bloco da vitrine abaixo): 4:3 é
+   a proporção nativa dos renders, então `cover` preenche sem cortar nada e
+   sem deixar moldura em volta. */
 .cardMedia {
   display: block;
   position: relative;
@@ -139,8 +143,7 @@
 .cardMedia img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: clamp(12px, 4%, 32px);
+  object-fit: cover;
 }
 
 .itemManufacturer {
@@ -173,6 +176,38 @@
   line-height: 1.55;
 }
 
+/* Faixa de informações confirmadas. Existe só quando o equipamento tem
+   spec validada — ver ProductExplorer.tsx. Tipografia de metadata técnica,
+   nunca de badge promocional: sem fundo colorido, sem pílula, sem ícone. */
+.itemSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(21, 21, 15, 0.14);
+}
+
+.itemSpec {
+  position: relative;
+  padding-left: 13px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.itemSpec::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 7px;
+  height: 1px;
+  background: var(--color-gold-aged);
+}
+
 .itemCue {
   display: inline-flex;
   align-items: center;
@@ -191,6 +226,7 @@
 @media (min-width: 1024px) {
   .cardMedia,
   .itemSummary,
+  .itemSpecs,
   .itemCue {
     display: none;
   }
@@ -231,19 +267,130 @@
   }
 }
 
+/* ---------------- Vitrine técnica ----------------
+   O palco era um retângulo cinza com a imagem dentro — na prática, um
+   card comum ao lado de uma lista, que é exatamente a leitura que a
+   rodada pediu para eliminar.
+
+   O que faz dele uma vitrine e não um card:
+
+     · a imagem preenche o palco inteiro, sem moldura em volta;
+     · marcas de canto — quatro cantoneiras finas, vocabulário de desenho
+       técnico, não moldura decorativa;
+     · metadata impressa — índice e fabricante sobre a própria vitrine,
+       como marcação de prancha.
+
+   Sem borda externa, sem raio, sem sombra: nada que devolva a silhueta de
+   cartão.
+
+   ---------------- O estúdio é o do próprio render ----------------
+   Primeira tentativa: o palco tinha superfície própria (gradiente + linha
+   de horizonte + símbolo ao fundo) e a imagem entrava por cima com
+   `contain` e respiro. Na revisão visual do gate isso ficou pior, não
+   melhor — os renders não são recortados em transparência, cada um traz o
+   seu próprio fundo de estúdio, e a foto virava um retângulo claro
+   flutuando dentro de outro retângulo: exatamente a leitura de "card
+   comum" que o palco deveria eliminar.
+
+   Pior: os fundos dos seis renders não são iguais entre si (amostrados nos
+   cantos superiores: #d2d2d2, #bebebe, #bababa), então nenhuma cor de
+   palco emendaria com todos.
+
+   A solução é deixar de disputar. O palco assume a proporção NATIVA dos
+   renders (1400 × 1056 = 4:3) e a imagem entra com `cover`. Como as
+   proporções batem exatamente, nada é cortado, não sobra moldura, e o
+   fundo infinito que já existe dentro do render passa a SER a superfície
+   da vitrine. O que o site acrescenta por cima é justamente o que o render
+   não tem: as marcas de canto e a metadata técnica.
+
+   O fundo abaixo é só o que aparece enquanto a imagem carrega. */
+
 .stageMedia {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  isolation: isolate;
   background: rgba(21, 21, 15, 0.05);
 }
 
-.stageMedia img {
+/* Cantoneiras de prancha técnica. */
+.stageTick {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  border: 0 solid rgba(21, 21, 15, 0.32);
+  pointer-events: none;
+}
+
+.tickTl {
+  top: 14px;
+  left: 14px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.tickTr {
+  top: 14px;
+  right: 14px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.tickBl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.tickBr {
+  bottom: 14px;
+  right: 14px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.stageProduct {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: clamp(20px, 4%, 56px);
+  object-fit: cover;
+}
+
+.stageIndex {
+  position: absolute;
+  z-index: 2;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: var(--color-gold-aged);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.stageIndexTotal {
+  color: var(--role-muted, var(--text-muted));
+  font-size: 11px;
+}
+
+.stageManufacturer {
+  position: absolute;
+  z-index: 2;
+  bottom: 28px;
+  left: 30px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 @media (prefers-reduced-motion: reduce) {

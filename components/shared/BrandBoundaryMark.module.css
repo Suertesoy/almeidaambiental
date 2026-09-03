@@ -30,7 +30,13 @@
   overflow: hidden;
 }
 
-.surface > *:not(.mark) {
+/* `[data-layer="background"]` é o contrato com MaterialSurface: uma dobra
+   pode ter, além da assinatura de fronteira, uma camada de materialidade
+   atrás do conteúdo. Sem esta exclusão a textura subiria para z-index 1 e
+   cobriria o símbolo da fronteira — a ordem correta de pintura é
+   textura → símbolo de fronteira → conteúdo real. É um atributo, e não uma
+   classe importada, para que os dois componentes não precisem se conhecer. */
+.surface > *:not(.mark):not([data-layer="background"]) {
   position: relative;
   z-index: 1;
 }

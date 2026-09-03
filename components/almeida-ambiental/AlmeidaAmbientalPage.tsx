@@ -2,11 +2,12 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./almeida-ambiental.module.css";
 import CompanyHero from "../shared/CompanyHero";
-import MaterialGrid from "../shared/MaterialGrid";
+import MaterialAtlas from "../shared/MaterialAtlas";
 import EditorialCTA from "../shared/EditorialCTA";
-import RegionalMap from "./RegionalMap";
+import TerritoryMap from "../shared/TerritoryMap";
 import ProcessSteps from "../shared/ProcessSteps";
-import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, MATERIALS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
+import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
+import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 /* Mesma lista de etapas da Home (FLOW_STEPS), mesmo componente de lista
@@ -88,21 +89,28 @@ export default function AlmeidaAmbientalPage() {
       </div>
 
       {/* ---------------- Materiais ---------------- */}
-      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
+      <section className={`${shared.section} ${shared.toneStoneAlt} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="ambiental-processo" half="leaving" surface="onLight" />
         <div className={shared.container}>
           <h2 className={shared.headline}>Diferentes materiais. Diferentes caminhos.</h2>
           <p className={shared.body}>
             A operação evoluiu muito além do papel e papelão que marcaram o início da Almeida. Hoje, a estrutura
             atende diferentes categorias de resíduos e direciona cada uma conforme suas características.
           </p>
-          <div style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
-            <MaterialGrid materials={MATERIALS} image={MATERIALS_IMAGE} variant="editorial" />
+          {/* Material Atlas: a mesma lista validada, agora como composição
+              assimétrica organizada por família de material em vez de grade
+              de doze itens equidistantes. `interimImage` mantém em cena o
+              asset que este bloco já exibia, até que o par próprio do Atlas
+              seja gerado — ver MaterialAtlas.tsx. */}
+          <div className={styles.atlasBlock}>
+            <MaterialAtlas interimImage={MATERIALS_IMAGE} />
           </div>
         </div>
       </section>
 
       {/* ---------------- Do resíduo ao novo ciclo ---------------- */}
-      <section className={`${shared.section} ${shared.toneForest}`}>
+      <section className={`${shared.section} ${shared.toneForest} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="ambiental-processo" half="entering" surface="onDark" />
         <div className={shared.container}>
           <p className={shared.eyebrow}>Do resíduo ao novo ciclo</p>
           <h2 className={shared.headline}>Diagnóstico, coleta, triagem, trituração e destinação em uma só operação.</h2>
@@ -118,7 +126,7 @@ export default function AlmeidaAmbientalPage() {
             A expansão do Grupo Almeida permite aproximar estrutura, logística e conhecimento técnico de diferentes
             regiões do estado.
           </p>
-          <RegionalMap />
+          <TerritoryMap ariaLabel="Mapa de Santa Catarina com as localidades onde a Almeida Ambiental está presente e a presença da Saturno Ambiental em Blumenau" />
           <p className={styles.presenceNote}>
             Em Blumenau e no Vale do Itajaí, essa presença regional se estende através da Saturno Ambiental,
             parte do Grupo Almeida.

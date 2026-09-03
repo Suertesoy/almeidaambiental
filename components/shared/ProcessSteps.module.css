@@ -1,26 +1,30 @@
 /* ==========================================================
-   ProcessSteps — as seis etapas da operação da Almeida Ambiental como
-   LISTA VISUAL, não como seis peças de destaque.
+   PROCESS RIBBON — as seis etapas da operação como UM sistema dividido em
+   seis momentos.
 
-   Substitui o grid de seis renders 3D (um card grande por etapa, seis
-   telas verticais no mobile). A informação aqui é simples e o objetivo é
-   "bater o olho e entender o que eles fazem": nome da etapa, um ícone
-   funcional mínimo (mesma família de components/icons.tsx já usada pelo
-   resto do site) e uma linha contínua costurando a sequência. Sem número —
-   a própria ordem comunica a sequência. Sem imagem dentro do item.
+   A versão anterior desta régua já era compacta e rápida de ler, mas
+   apresentava o processo com o mesmo vocabulário que o site usa para
+   categoria e para serviço: ícone + nome + borda. Nada dizia "isto é uma
+   transformação". Aqui a informação é a mesma; o que entra é identidade —
+   uma microcomposição por etapa (ver o bloco MICRO em ProcessSteps.tsx) e
+   uma linha de percurso que atravessa as seis subindo.
 
-   Mobile: trilho horizontal com ~1,5 item por viewport, então a próxima
-   etapa aparece parcialmente e o gesto horizontal fica óbvio sem dots,
-   setas ou carrossel automático. O scroll é o nativo do navegador (nunca
-   escondido), então a rolagem vertical da página nunca é capturada.
+   Três coisas fazem os segmentos lerem como um sistema e não como cartões:
 
-   Desktop: as seis etapas simultâneas, compactas — 3×2 em larguras
-   intermediárias, seis colunas a partir de 1024px.
+     1. gap: 0 — a régua superior de um segmento encosta na do vizinho.
+     2. Nenhum segmento tem fundo, borda lateral, raio ou sombra. O que
+        separa duas etapas é um tique vertical curto, não uma caixa.
+     3. A linha de percurso sai de um segmento na mesma altura em que entra
+        no seguinte.
 
-   A linha e o marcador usam `currentColor` em pseudo-elementos: herdam a
-   cor de texto da superfície (clara ou escura) sem precisar de uma
-   variante por tom, e a opacidade fica isolada no pseudo-elemento, nunca
-   sobre o texto.
+   Cores: tudo em `currentColor` sobre pseudo-elementos e traços com
+   opacidade própria. A régua herda a cor de texto da superfície que a
+   hospeda (verde floresta na Home, pedra clara na página da empresa) sem
+   precisar de uma variante por tom, e a opacidade fica isolada no traço —
+   nunca sobre o texto.
+
+   Altura útil por segmento: cabeçalho (ícone 22 + nome) + microcomposição
+   de 64px + respiro ≈ 150–170px, dentro da faixa de 180–220px pedida.
    ========================================================== */
 
 .scroller {
@@ -29,9 +33,9 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x proximity;
-  /* Barra fina e discreta — visível, nunca escondida (a affordance de
-     continuidade horizontal é o próximo item aparecendo pela metade, mas o
-     scroll continua sendo um scroll de verdade). */
+  /* Barra fina e discreta — visível, nunca escondida. A affordance de
+     continuidade é o próximo segmento aparecendo pela metade, mas o scroll
+     continua sendo um scroll de verdade. */
   scrollbar-width: thin;
   scrollbar-color: currentColor transparent;
 }
@@ -46,21 +50,27 @@
   margin: 0;
   padding: 0;
   display: flex;
-  /* Sem gap: o border/linha de cada item precisa encostar no do vizinho
-     para ler como um traço contínuo. O respiro entre etapas vem do
-     padding interno do item. */
+  /* Sem gap: a régua de cada segmento precisa encostar na do vizinho para
+     ler como um traço contínuo. O respiro vem do padding interno. */
   gap: 0;
 }
 
 .step {
   position: relative;
-  flex: 0 0 66%;
+  flex: 0 0 66%; /* ≈1,5 segmento visível no mobile */
   min-width: 0;
   scroll-snap-align: start;
-  padding: 18px 20px 4px 0;
+  /* Sem padding lateral AQUI: o respiro entre etapas mora em .head.
+     O segmento inteiro precisa ser a caixa do SVG, senão a linha de
+     percurso termina antes da borda e reabre um vão visível entre uma
+     etapa e a seguinte — que é justamente o que ela existe para fechar. */
+  padding: 18px 0 0;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Linha contínua: cada item pinta o seu trecho, encostado no do vizinho. */
+/* Régua contínua: cada segmento pinta o seu trecho, encostado no do
+   vizinho. */
 .step::before {
   content: "";
   position: absolute;
@@ -70,8 +80,8 @@
   opacity: 0.22;
 }
 
-/* Marcador editorial: um tique vertical curto descendo da linha no início
-   de cada etapa — não uma bolinha de infográfico. */
+/* Marcador editorial: um tique vertical curto descendo da régua no início
+   de cada etapa — não uma bolinha de infográfico, não uma borda de caixa. */
 .step::after {
   content: "";
   position: absolute;
@@ -81,6 +91,16 @@
   height: 7px;
   background: currentColor;
   opacity: 0.5;
+}
+
+/* O cabeçalho cresce para ocupar a folga, então a microcomposição de todos
+   os segmentos fica alinhada na mesma linha de base — é isso que faz a
+   linha de percurso emendar de um segmento para o outro mesmo quando um
+   nome quebra em duas linhas e o vizinho não. */
+.head {
+  flex: 1 0 auto;
+  /* O respiro lateral do texto, que saiu de .step. */
+  padding-right: 20px;
 }
 
 .icon {
@@ -112,7 +132,50 @@
   line-height: 1.45;
 }
 
-/* ---------------- Desktop: as seis etapas de uma vez ---------------- */
+/* ---------------- Microcomposição ---------------- */
+
+.micro {
+  display: block;
+  width: 100%;
+  height: 64px;
+  margin-top: 14px;
+  overflow: visible;
+}
+
+/* Os traços da matéria. Densidade e altura mudam por etapa (ProcessSteps.tsx);
+   a cor e o peso são os mesmos nas seis, senão cada etapa viraria um
+   gráfico próprio em vez de um momento do mesmo sistema. */
+.tick {
+  stroke: currentColor;
+  stroke-width: 1.5;
+  opacity: 0.34;
+}
+
+/* Fardo da última etapa — único momento com massa preenchida: é o material
+   que voltou a ser um volume. */
+.block {
+  fill: currentColor;
+  opacity: 0.2;
+}
+
+.strap {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.42;
+}
+
+/* A linha de percurso é a peça mais forte da composição: é ela que diz que
+   as seis etapas são um caminho só. */
+.flow {
+  stroke: var(--role-accent, var(--text-accent));
+  stroke-width: 1.5;
+  opacity: 0.75;
+}
+
+/* ---------------- Desktop: as seis de uma vez, régua única ----------------
+   Sem etapa intermediária de 3×2: aquela grade quebrava a linha de percurso
+   no fim da primeira fileira, que é exatamente o que faz as seis lerem
+   como um processo único. Seis colunas ou trilho — nada entre os dois. */
 
 @media (min-width: 720px) {
   .scroller {
@@ -122,26 +185,51 @@
 
   .list {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .step {
-    flex: none;
-    padding: 18px 24px 8px 0;
-  }
-}
-
-@media (min-width: 1024px) {
-  .list {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .step {
-    padding-right: 16px;
+    flex: none;
+    padding: 18px 0 0;
+  }
+
+  .head {
+    padding-right: 14px;
+  }
+
+  .name {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .head {
+    padding-right: 20px;
   }
 
   .icon {
     width: 24px;
     height: 24px;
+  }
+
+  .name {
+    font-size: 14px;
+  }
+
+  .micro {
+    height: 72px;
+    margin-top: 22px;
+  }
+}
+
+/* Superfícies claras precisam de um pouco mais de traço para o mesmo peso
+   ótico — o mesmo ajuste por superfície que BrandBoundaryMark faz. */
+@media (prefers-contrast: more) {
+  .tick {
+    opacity: 0.55;
+  }
+
+  .flow {
+    opacity: 1;
   }
 }

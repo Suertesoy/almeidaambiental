@@ -28,7 +28,8 @@ export type BrandBoundaryId =
   | "saturno-impacto"
   /* Páginas internas — só mudanças narrativas de grande importância */
   | "saturno-territorio"
-  | "equipamentos-catalogo";
+  | "equipamentos-catalogo"
+  | "ambiental-processo";
 
 export type BrandBoundary = {
   side: BrandBoundarySide;
@@ -60,5 +61,19 @@ export const BRAND_BOUNDARIES: Record<BrandBoundaryId, BrandBoundary> = {
   "equipamentos-catalogo": {
     side: "right",
     note: "/almeida-equipamentos: posicionamento → catálogo técnico explorável.",
+  },
+  /* Acrescentada na auditoria de fronteiras da rodada de materialidade
+     (Seção 21): /almeida-ambiental era a única página de empresa sem
+     nenhuma assinatura, abaixo da meta de 1 a 3. Esta é a única troca da
+     página que atende aos dois critérios ao mesmo tempo — muda o capítulo
+     narrativo (o QUE a empresa faz → COMO o resíduo atravessa a operação)
+     e muda a superfície de verdade (pedra clara → verde floresta). As
+     outras transições da página alternam entre dois claros ou continuam o
+     mesmo assunto, e receber assinatura ali transformaria a fronteira em
+     pattern decorativo — que é justamente o que a auditoria pediu para
+     evitar. */
+  "ambiental-processo": {
+    side: "left",
+    note: "/almeida-ambiental: materiais (pedra) → o percurso do resíduo (verde floresta).",
   },
 };

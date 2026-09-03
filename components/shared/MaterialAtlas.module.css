@@ -1,0 +1,230 @@
+/* ==========================================================
+   MATERIAL ATLAS
+
+   Composição assimétrica, não grade: uma peça grande de matéria e a lista
+   tipográfica organizada por família ao lado dela.
+
+   Desktop  — ~60% imagem / 40% informação, com a coluna de informação
+              subindo sobre a margem da imagem. É a sobreposição que faz
+              as duas metades lerem como UMA composição em vez de duas
+              caixas lado a lado.
+   Mobile   — imagem grande primeiro, lista compacta depois, famílias em
+              duas colunas quando cabem. Nunca doze cartões altos.
+   Sem asset — a lista assume a largura inteira em colunas próprias. Ver o
+              cabeçalho de MaterialAtlas.tsx: nenhuma imagem é emprestada
+              para preencher o vão.
+   ========================================================== */
+
+.atlas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 5vw, 44px);
+  align-items: start;
+}
+
+/* ---------------- Imagem ---------------- */
+
+.media {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile: 4:5, a composição própria de retrato (não um recorte do
+   desktop — os dois assets são gerados separadamente). */
+.media {
+  aspect-ratio: 4 / 5;
+}
+
+/* ---------------- Índice por família ---------------- */
+
+.index {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 4vw, 30px);
+}
+
+/* Duas colunas de família já a partir de 480px: as famílias têm de 2 a 6
+   itens, então empilhá-las uma sob a outra no celular devolveria justamente
+   a coluna alta e monótona que o Atlas existe para eliminar. */
+@media (min-width: 480px) {
+  .index {
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(20px, 5vw, 40px);
+  }
+}
+
+.family {
+  break-inside: avoid;
+}
+
+.familyLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.28);
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dark .familyLabel {
+  border-bottom-color: rgba(247, 246, 241, 0.32);
+}
+
+/* Contagem como metadata editorial — mesma gramática de numeração que o
+   resto do site usa (serif, discreto, nunca como badge). */
+.familyCount {
+  flex: none;
+  color: var(--role-accent, var(--text-accent));
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.familyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* O item é um botão porque destacar um material na lista é uma ação real,
+   mas não pode PARECER um botão: sem fundo, sem borda, sem raio — só o
+   nome do material sobre a superfície da seção. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.1);
+  background: none;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(15px, 0.7vw + 12px, 18px);
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.dark .item {
+  border-bottom-color: rgba(247, 246, 241, 0.14);
+}
+
+.item:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .item:hover .itemName {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+}
+
+/* Destaque discreto — o material escolhido ganha o acento da superfície e
+   um tique à esquerda. Não muda o tamanho da linha, então a lista inteira
+   não reflui a cada toque. */
+.itemActive {
+  color: var(--role-accent, var(--text-accent));
+  border-bottom-color: currentColor;
+}
+
+.itemActive .itemIcon {
+  color: currentColor;
+  opacity: 1;
+}
+
+.itemIcon {
+  flex: none;
+  width: 19px;
+  height: 19px;
+  color: var(--role-secondary, var(--text-secondary));
+  opacity: 0.75;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.itemName {
+  min-width: 0;
+}
+
+/* ---------------- Desktop ---------------- */
+
+@media (min-width: 960px) {
+  .atlas {
+    /* ~60/40. A imagem é a peça maior de propósito: ela precisa ser lida
+       como matéria, não como thumbnail de apoio ao texto. */
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 0;
+    align-items: center;
+  }
+
+  .media {
+    aspect-ratio: 3 / 2;
+  }
+
+  /* A informação sobe sobre a margem da imagem: é o que costura as duas
+     metades numa composição só. O padding compensa o recuo para que o
+     texto não encoste na imagem. */
+  .index {
+    grid-template-columns: 1fr 1fr;
+    /* `position: relative` aqui não é sobre posicionamento — é sobre ordem
+       de pintura. `.media` é posicionada (precisa disso para ancorar o selo
+       de imagem ilustrativa), e elemento posicionado pinta acima de
+       não-posicionado no mesmo contexto, independentemente da ordem no DOM.
+       Sem esta linha a imagem cobre a faixa que o painel invade, e a
+       sobreposição acontece ao contrário do pretendido: o nome da primeira
+       família fica encostado na borda da fotografia. */
+    position: relative;
+    z-index: 1;
+    margin-left: clamp(-72px, -4vw, -32px);
+    /* O padding à direita não é simetria decorativa: sem ele a contagem de
+       cada família (alinhada à direita por .familyLabel) encosta na borda
+       do painel, e a coluna inteira lê como texto cortado. */
+    padding: clamp(28px, 3vw, 40px) clamp(20px, 2vw, 32px) clamp(28px, 3vw, 40px)
+      clamp(32px, 3.5vw, 48px);
+    background: var(--color-background);
+    row-gap: clamp(22px, 2.2vw, 32px);
+  }
+
+  .dark .index {
+    background: var(--color-forest-deep);
+  }
+
+  /* Sem imagem não existe margem para invadir — a lista volta a ser um
+     bloco normal, alinhado com o resto da seção. */
+  .atlasNoMedia .index {
+    margin-left: 0;
+    padding: 0;
+    background: none;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: clamp(24px, 3vw, 44px);
+  }
+
+  .atlasNoMedia {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1280px) {
+  .index {
+    padding-left: clamp(44px, 4vw, 64px);
+  }
+}

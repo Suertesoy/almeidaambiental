@@ -390,7 +390,23 @@ export const MAP_LOCATIONS: Array<{ name: string; year: number; x: number; y: nu
   { name: "Joinville", year: 2024, x: 58, y: 22 },
 ];
 
-export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição de pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, fotografia documental em preto e branco");
+/**
+ * Abertura de /historia. A imagem é uma RECONSTITUIÇÃO gerada, não um
+ * registro do acervo — não existe fotografia de 1985 do Grupo Almeida no
+ * material aprovado.
+ *
+ * A tela já dizia isso (IllustrativeBadge no canto do Hero, ver
+ * components/historia/HeroDecades.tsx), mas o texto alternativo ainda
+ * terminava em "fotografia documental em preto e branco": quem navega por
+ * leitor de tela — exatamente quem não vê o selo — ouvia a imagem se
+ * apresentar como documento. "Fotografia documental" descrevia o estilo
+ * da imagem e era lido como a natureza dela.
+ *
+ * O preto e branco continua descrito, porque é informação visual real; o
+ * que saiu foi a palavra que transformava uma reconstituição em registro
+ * histórico (Seção 22 da rodada de materialidade).
+ */
+export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição ilustrativa de um pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, em preto e branco");
 
 export const EPILOGUE_STATS = [
   { value: "40+", label: "anos de história" },

@@ -173,6 +173,40 @@ html:has([data-page="home"]) {
   text-wrap: balance;
 }
 
+/* ---------------- Declaração de marca sobre superfície material ----------
+   Dobra sem imagem, onde a própria marca é o assunto: símbolo oficial,
+   região e uma headline maior que a das dobras narrativas. Usada hoje pela
+   Saturno na Home, cuja fotografia de "operação" saiu por afirmar uma
+   instalação que não foi fotografada (ver HomePage.tsx).
+
+   O limite de largura é o que impede a dobra de virar um banner: a
+   tipografia cresce, mas continua ancorada à esquerda, na mesma coluna de
+   leitura do resto da página.
+
+   Esse limite mora na HEADLINE, não no bloco: preso ao bloco, ele
+   quebrava também a linha de localidade ("Blumenau · Vale do / Itajaí"),
+   que é uma linha curta de metadata e não deve quebrar nunca. */
+.brandStatement {
+  max-width: none;
+}
+
+.headlineMonumental {
+  max-width: 16ch;
+  font-size: clamp(38px, 5vw + 12px, 84px);
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+}
+
+.brandStatement .locationLine {
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .headlineMonumental {
+    max-width: 14ch;
+  }
+}
+
 .gold {
   color: var(--color-gold-aged);
 }

@@ -37,6 +37,23 @@
   margin-bottom: 0;
 }
 
+/* ==========================================================
+   Frentes compactas — LINGUAGEM DE PERCURSO, não grade de cartões
+
+   Auditoria visual da rodada de materialidade (Seção 8): estas quatro
+   frentes são Coleta → Triagem → Trituração → Destinação, ou seja,
+   exatamente o mesmo PROCESSO que a Almeida Ambiental apresenta como
+   régua contínua (components/shared/ProcessSteps.tsx). O mesmo conteúdo
+   estava sendo contado em duas linguagens visuais diferentes: percurso
+   numa página, quatro cartões numerados na outra.
+
+   Não é caso de trocar pelo componente da régua — estas frentes têm
+   headline e parágrafo próprios, que a régua não carrega. O que entra é o
+   VOCABULÁRIO do percurso sobre a estrutura que já existe: régua contínua
+   no topo e o tique vertical curto marcando o início de cada etapa. Mesmo
+   desenho de .step em ProcessSteps.module.css, mesma leitura de sequência.
+   ========================================================== */
+
 .frentesCompactGrid {
   margin-top: clamp(40px, 6vw, 56px);
   display: grid;
@@ -47,21 +64,46 @@
 @media (min-width: 768px) {
   .frentesCompactGrid {
     /* 4 colunas (era 3) — Destinação entra como 4ª frente compacta desde
-       2026-08-20, mesma grade, sem novo componente. */
+       2026-08-20, mesma grade, sem novo componente.
+       gap: 0 e o respiro vindo do padding do item: com gap, a régua
+       superior de cada trecho não encostaria na do vizinho e a sequência
+       voltaria a ler como quatro caixas soltas. */
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(24px, 3vw, 40px);
+    gap: 0;
   }
 }
 
 .frentesCompactItem {
+  position: relative;
   padding: 28px 0;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+/* Régua contínua atravessando as quatro frentes. */
+.frentesCompactItem::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+/* Tique de início de etapa — mesmo marcador editorial da régua do
+   processo, não uma borda de caixa. */
+.frentesCompactItem::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 7px;
+  background: currentColor;
+  opacity: 0.5;
 }
 
 @media (min-width: 768px) {
   .frentesCompactItem {
-    padding: 0;
-    border-top: none;
+    padding: 20px clamp(20px, 2.4vw, 36px) 0 0;
   }
 }
 

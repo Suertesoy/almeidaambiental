@@ -1,0 +1,195 @@
+/* ==========================================================
+   MaterialSurface — camada de materialidade de uma dobra âncora.
+
+   Três camadas empilhadas dentro de uma seção que já tem o seu tom:
+
+     1. textura   — a matéria, em mix-blend-mode: luminosity
+     2. véu       — piso de contraste, no MESMO tom da seção
+     3. símbolo   — SVG oficial, grande, baixa opacidade, cortado
+
+   Por que luminosity: a matéria entrega só claro/escuro e o matiz
+   continua sendo o da superfície. Uma fotografia colada continua parecendo
+   uma fotografia colada por mais que se baixe a opacidade dela; uma
+   textura em luminosity vira A PRÓPRIA superfície, com relevo. É esse o
+   princípio "imagem e fundo funcionando como uma coisa só".
+
+   Por que o véu é obrigatório mesmo sem textura: ele fixa o contraste da
+   dobra AGORA. Quando os assets entrarem, a legibilidade do texto não
+   muda junto com eles — a matéria só ocupa a folga que o véu deixou.
+
+   ATENÇÃO ao ajustar --ms-texture: os valores abaixo foram escolhidos de
+   forma conservadora porque nenhuma textura real existia quando esta
+   camada foi construída (Magnific bloqueado). Quando os pares entrarem,
+   revalidar contraste do texto de cada dobra antes de subir a intensidade.
+   ========================================================== */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------------- Tom da superfície ----------------
+   Os mesmos valores dos tokens de globals.css, em canais RGB para que o
+   véu possa variar só o alfa. Mantidos em sincronia manualmente: são
+   quatro superfícies e nenhuma delas muda sem uma decisão de direção de
+   arte explícita. */
+
+.forest {
+  --ms-tone: 23, 41, 34; /* --color-forest-deep #172922 */
+}
+
+.carvao {
+  --ms-tone: 21, 21, 15; /* --color-foreground #15150f */
+}
+
+.saturno {
+  --ms-tone: 64, 85, 45; /* --color-saturno-deep #40552d */
+}
+
+.stoneAlt {
+  --ms-tone: 205, 198, 180; /* --color-stone-warm-alt #cdc6b4 */
+}
+
+/* ---------------- Intensidade ----------------
+   Quanto da matéria atravessa, e qual o piso de opacidade do véu em cada
+   ponto da dobra. O topo e a base são sempre mais fechados que o meio: é
+   onde eyebrow, headline e CTA costumam cair. */
+
+.soft {
+  --ms-texture: 0.26;
+  --ms-veil-top: 0.78;
+  --ms-veil-mid: 0.62;
+  --ms-veil-bottom: 0.76;
+}
+
+.medium {
+  --ms-texture: 0.4;
+  --ms-veil-top: 0.68;
+  --ms-veil-mid: 0.48;
+  --ms-veil-bottom: 0.66;
+}
+
+.strong {
+  --ms-texture: 0.56;
+  --ms-veil-top: 0.58;
+  --ms-veil-mid: 0.34;
+  --ms-veil-bottom: 0.56;
+}
+
+/* ---------------- Textura ---------------- */
+
+/* O elemento <picture> não tem caixa (`display: contents` em globals.css) —
+   quem posiciona é a própria imagem, filha direta de .layer para efeito de
+   layout. `.texture` continua existindo só como gancho para desligar a
+   camada inteira em alto contraste, mais abaixo. */
+.texture img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: luminosity;
+  opacity: var(--ms-texture);
+}
+
+/* ---------------- Véu ---------------- */
+
+.veil {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--ms-tone), var(--ms-veil-top)) 0%,
+    rgba(var(--ms-tone), var(--ms-veil-mid)) 50%,
+    rgba(var(--ms-tone), var(--ms-veil-bottom)) 100%
+  );
+}
+
+/* ---------------- Símbolo ----------------
+   Proporção 1038:981 = o viewBox dos SVGs oficiais em public/brand/ —
+   o mesmo número já usado por BrandBoundaryMark. `bleed` é uma fração da
+   própria altura do símbolo, então translateY em % resolve o corte sem
+   depender de medir o arquivo em runtime. */
+
+.symbol {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  width: calc(var(--ms-symbol-scale) * 100%);
+  height: auto;
+  max-width: none;
+  aspect-ratio: 1038 / 981;
+  transform: translateY(calc(var(--ms-symbol-bleed) * 100%));
+  /* Abaixo da faixa de BrandBoundaryMark (3%–8%) de propósito: o símbolo
+     aqui é MAIOR que o da fronteira, e mesma opacidade em área muito maior
+     resulta em presença muito maior. Verificado na revisão visual do gate:
+     a 7,5% o desenho ampliado deixava de ler como marca e passava a ler
+     como forma solta sobre a superfície. */
+  opacity: 0.04;
+}
+
+.left {
+  left: -5%;
+}
+
+.right {
+  right: -5%;
+}
+
+/* Sobre superfície clara o símbolo colorido pesa mais que o branco sobre
+   escuro — mesma correção que BrandBoundaryMark faz por superfície. */
+.stoneAlt .symbol {
+  opacity: 0.09;
+}
+
+/* ---------------- Mobile ----------------
+   Menos matéria e véu mais fechado: a mesma dobra tem muito mais texto por
+   unidade de área em 390px, e a textura que respira no desktop vira ruído
+   atrás de um parágrafo estreito. O símbolo encolhe e recua para a
+   extremidade — fragmento gráfico na borda, não peça atrás do conteúdo. */
+
+@media (max-width: 767px) {
+  .layer {
+    --ms-texture: 0.3;
+    --ms-veil-top: 0.74;
+    --ms-veil-mid: 0.58;
+    --ms-veil-bottom: 0.72;
+  }
+
+  .strong {
+    --ms-texture: 0.42;
+    --ms-veil-mid: 0.46;
+  }
+
+  .symbol {
+    width: calc(var(--ms-symbol-scale) * 78%);
+    opacity: 0.055;
+  }
+
+  .stoneAlt .symbol {
+    opacity: 0.07;
+  }
+
+  .left {
+    left: -14%;
+  }
+
+  .right {
+    right: -14%;
+  }
+}
+
+/* Alguns navegadores desativam blend modes em modo de alto contraste; o
+   véu sólido já garante o piso, mas sem a textura a dobra fica idêntica à
+   superfície sólida — que é exatamente o comportamento desejado. */
+@media (prefers-contrast: more) {
+  .texture {
+    display: none;
+  }
+}

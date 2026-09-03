@@ -9,10 +9,12 @@ import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
 import ProcessSteps from "../shared/ProcessSteps";
+import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
+import { MATERIAL_IMAGES } from "../../lib/material-surfaces";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
 /* Substituída nesta rodada (Checkpoint B): a imagem anterior
@@ -24,9 +26,29 @@ const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica
 const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
-const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.webp";
 const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
+
+/**
+ * Engenharia da Almeida Equipamentos como PEÇA editorial (Seção 5 da
+ * rodada de materialidade: "a imagem macro de engenharia / aço como grande
+ * elemento editorial"). Não vira MaterialSurface porque a dobra é pedra
+ * clara — véu escuro sobre superfície clara desmontaria o corte sólido de
+ * território entre as empresas. Ver o bloco MATERIAL_IMAGES em
+ * lib/material-surfaces.ts.
+ *
+ * Enquanto o par próprio não existir (Magnific bloqueado), a dobra mantém
+ * em cena o detalhe mecânico que já exibia — nenhuma imagem nova é
+ * emprestada de outra seção para simular a mudança.
+ */
+const ENGENHARIA_ASSET = MATERIAL_IMAGES["equipamentos-engenharia"];
+const ENGENHARIA = {
+  src: ENGENHARIA_ASSET.desktop ?? IMG_EQUIPAMENTOS_ENGENHARIA,
+  mobileSrc: ENGENHARIA_ASSET.mobile ?? undefined,
+  alt: ENGENHARIA_ASSET.desktop
+    ? ENGENHARIA_ASSET.alt
+    : "Detalhe mecânico de equipamento da Almeida Equipamentos",
+};
 
 /* As seis etapas vêm de lib/almeida-ambiental-data.ts (FLOW_STEPS) — mesma
    fonte usada pela página /almeida-ambiental, para que a sequência não
@@ -93,6 +115,10 @@ export default function HomePage() {
 
       {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
       <section className={`${styles.section} ${styles.toneForest} ${boundarySurface}`}>
+        {/* Dobra âncora de materialidade da Almeida Ambiental. A dobra 2
+            continua sólida de propósito: a materialidade só cria ritmo
+            enquanto for alternância — sólida, material, sólida. */}
+        <MaterialSurface surface="ambiental-materia" />
         <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
@@ -178,8 +204,9 @@ export default function HomePage() {
             </div>
             <div className={`${styles.duoMedia} ${styles.duoMediaTall}`}>
               <SectionMedia
-                imageSrc={IMG_EQUIPAMENTOS_ENGENHARIA}
-                alt="Detalhe mecânico de equipamento da Almeida Equipamentos"
+                imageSrc={ENGENHARIA.src}
+                mobileSrc={ENGENHARIA.mobileSrc}
+                alt={ENGENHARIA.alt}
                 objectPosition="center"
               />
             </div>
@@ -187,27 +214,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Saturno Ambiental / presença regional ---------------- */}
+      {/* ---------------- Saturno Ambiental / presença regional ----------------
+          Dobra âncora de materialidade da Saturno (Seção 5 da rodada: "uma
+          das duas dobras deve ganhar a materialidade própria da marca").
+
+          A fotografia que ocupava o slot direito saiu junto, e não por
+          composição: era `saturno-operacao.webp`, uma imagem gerada
+          descrita como "Operação da Saturno Ambiental em Blumenau" — ou
+          seja, afirmava uma instalação que ninguém fotografou. A página
+          /saturno-ambiental já tinha removido exatamente esse tipo de
+          afirmação (ver o cabeçalho de lib/saturno-data.ts) e a Home
+          continuava contradizendo a própria regra.
+
+          Não entrou outra imagem no lugar: o território da Saturno é
+          matéria, tipografia e superfície. A dobra passa a ser a
+          declaração de marca — símbolo oficial, região e headline
+          monumental sobre a superfície material da empresa, a MESMA
+          composição que abre /saturno-ambiental. */}
       <section className={`${styles.section} ${styles.toneStone} ${boundarySurface}`}>
+        <MaterialSurface surface="saturno-hero" />
         <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
         <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
-            <div className={styles.duoContent}>
-              <BrandMark
-                brand={BRANDS["saturno-ambiental"]}
-                variant="branca"
-                className={styles.eyebrowMark}
-              />
-              <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-              <h2 className={styles.headline}>EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.</h2>
-            </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_SATURNO_REGIONAL}
-                alt="Operação da Saturno Ambiental em Blumenau"
-                objectPosition="center 55%"
-              />
-            </div>
+          <Reveal className={styles.brandStatement}>
+            <BrandMark
+              brand={BRANDS["saturno-ambiental"]}
+              variant="branca"
+              className={styles.eyebrowMark}
+            />
+            <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
+            <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
+              EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
+            </h2>
           </Reveal>
         </div>
       </section>
