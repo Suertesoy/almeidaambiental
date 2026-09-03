@@ -4,7 +4,6 @@ import styles from "./almeida-ambiental.module.css";
 import CompanyHero from "../shared/CompanyHero";
 import MaterialAtlas from "../shared/MaterialAtlas";
 import EditorialCTA from "../shared/EditorialCTA";
-import TerritoryMap from "../shared/TerritoryMap";
 import ProcessSteps from "../shared/ProcessSteps";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
@@ -115,22 +114,6 @@ export default function AlmeidaAmbientalPage() {
           <p className={shared.eyebrow}>Do resíduo ao novo ciclo</p>
           <h2 className={shared.headline}>Diagnóstico, coleta, triagem, trituração e destinação em uma só operação.</h2>
           <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
-        </div>
-      </section>
-
-      {/* ---------------- Capacidade e presença ---------------- */}
-      <section className={`${shared.section} ${shared.toneCarvao}`}>
-        <div className={shared.container}>
-          <h2 className={shared.headline}>Uma estrutura que cresceu acompanhando Santa Catarina.</h2>
-          <p className={shared.body}>
-            A expansão do Grupo Almeida permite aproximar estrutura, logística e conhecimento técnico de diferentes
-            regiões do estado.
-          </p>
-          <TerritoryMap ariaLabel="Mapa de Santa Catarina com as localidades onde a Almeida Ambiental está presente e a presença da Saturno Ambiental em Blumenau" />
-          <p className={styles.presenceNote}>
-            Em Blumenau e no Vale do Itajaí, essa presença regional se estende através da Saturno Ambiental,
-            parte do Grupo Almeida.
-          </p>
         </div>
       </section>
 

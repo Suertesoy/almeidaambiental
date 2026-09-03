@@ -4,12 +4,32 @@
    Composição assimétrica, não grade: uma peça grande de matéria e a lista
    tipográfica organizada por família ao lado dela.
 
+   Correção de direção de arte (branch feature/correcao-direcao-arte): a
+   versão anterior dava à lista um painel de fundo sólido (branco/verde),
+   e a fotografia terminava numa borda reta — a composição lia como
+   "imagem + card" grudados lado a lado, exatamente o que a materialidade
+   existe para evitar. Duas mudanças resolvem isso:
+
+     1. `.index` perdeu o `background` sólido — a lista vive diretamente
+        sobre a cor da SEÇÃO que a hospeda (nenhuma cor própria, nenhuma
+        borda, nenhum raio, nenhuma sombra).
+     2. `.media` ganhou uma máscara de gradiente na borda que a lista
+        invade — a foto se dissolve para transparente ali (revelando o
+        fundo da seção por trás) em vez de terminar em corte reto. Como a
+        superfície da própria imagem gerada já é da mesma família de cor
+        do fundo da seção (warm stone/kraft — ver o prompt em
+        lib/material-surfaces.ts), o resultado é matéria e fundo se
+        misturando, não uma fotografia colada com um painel ao lado.
+
    Desktop  — ~60% imagem / 40% informação, com a coluna de informação
-              subindo sobre a margem da imagem. É a sobreposição que faz
-              as duas metades lerem como UMA composição em vez de duas
-              caixas lado a lado.
+              subindo bem para dentro da margem da imagem (a área de
+              espaço negativo que o próprio prompt pede). É essa
+              sobreposição funda, não uma borda de card, que costura as
+              duas metades numa composição só.
    Mobile   — imagem grande primeiro, lista compacta depois, famílias em
-              duas colunas quando cabem. Nunca doze cartões altos.
+              duas colunas quando cabem (nunca abaixo de 480px — nomes
+              longos quebrariam mal). A transição usa a mesma máscara,
+              agora na borda inferior.
    Sem asset — a lista assume a largura inteira em colunas próprias. Ver o
               cabeçalho de MaterialAtlas.tsx: nenhuma imagem é emprestada
               para preencher o vão.
@@ -18,7 +38,7 @@
 .atlas {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(28px, 5vw, 44px);
+  gap: 0;
   align-items: start;
 }
 
@@ -38,9 +58,17 @@
 }
 
 /* Mobile: 4:5, a composição própria de retrato (não um recorte do
-   desktop — os dois assets são gerados separadamente). */
+   desktop — os dois assets são gerados separadamente). A máscara dissolve
+   o quarto inferior da imagem para transparente, para a lista continuar
+   sem uma borda reta entre as duas. */
 .media {
   aspect-ratio: 4 / 5;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+}
+
+.index {
+  margin-top: clamp(-56px, -8vw, -28px);
 }
 
 /* ---------------- Índice por família ---------------- */
@@ -178,34 +206,29 @@
 
   .media {
     aspect-ratio: 3 / 2;
+    /* No desktop a foto se dissolve pela direita — é ali que o prompt da
+       imagem concentra o espaço negativo (ver lib/material-surfaces.ts) e
+       é ali que a lista entra. Sobrescreve a máscara vertical do mobile. */
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 58%, transparent 96%);
+    mask-image: linear-gradient(to right, black 0%, black 58%, transparent 96%);
   }
 
-  /* A informação sobe sobre a margem da imagem: é o que costura as duas
-     metades numa composição só. O padding compensa o recuo para que o
-     texto não encoste na imagem. */
+  /* A lista entra bem para dentro da área de espaço negativo da própria
+     fotografia — não é uma coluna vizinha, é texto vivendo dentro da
+     composição. Sem painel: sem fundo, sem borda, sem raio, sem sombra —
+     só a cor da seção (herdada por trás) e as hairlines do próprio Atlas. */
   .index {
     grid-template-columns: 1fr 1fr;
     /* `position: relative` aqui não é sobre posicionamento — é sobre ordem
-       de pintura. `.media` é posicionada (precisa disso para ancorar o selo
-       de imagem ilustrativa), e elemento posicionado pinta acima de
-       não-posicionado no mesmo contexto, independentemente da ordem no DOM.
-       Sem esta linha a imagem cobre a faixa que o painel invade, e a
-       sobreposição acontece ao contrário do pretendido: o nome da primeira
-       família fica encostado na borda da fotografia. */
+       de pintura. `.media` é posicionada, e elemento posicionado pinta
+       acima de não-posicionado no mesmo contexto, independentemente da
+       ordem no DOM. Sem esta linha a imagem cobre a faixa que a lista
+       invade. */
     position: relative;
     z-index: 1;
-    margin-left: clamp(-72px, -4vw, -32px);
-    /* O padding à direita não é simetria decorativa: sem ele a contagem de
-       cada família (alinhada à direita por .familyLabel) encosta na borda
-       do painel, e a coluna inteira lê como texto cortado. */
-    padding: clamp(28px, 3vw, 40px) clamp(20px, 2vw, 32px) clamp(28px, 3vw, 40px)
-      clamp(32px, 3.5vw, 48px);
-    background: var(--color-background);
+    margin-left: clamp(-220px, -14vw, -120px);
+    padding: clamp(28px, 3vw, 40px) 0 clamp(28px, 3vw, 40px) 0;
     row-gap: clamp(22px, 2.2vw, 32px);
-  }
-
-  .dark .index {
-    background: var(--color-forest-deep);
   }
 
   /* Sem imagem não existe margem para invadir — a lista volta a ser um
@@ -213,7 +236,6 @@
   .atlasNoMedia .index {
     margin-left: 0;
     padding: 0;
-    background: none;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     column-gap: clamp(24px, 3vw, 44px);
   }
@@ -225,6 +247,6 @@
 
 @media (min-width: 1280px) {
   .index {
-    padding-left: clamp(44px, 4vw, 64px);
+    padding-left: clamp(64px, 6vw, 96px);
   }
 }

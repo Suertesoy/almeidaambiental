@@ -34,16 +34,6 @@
   letter-spacing: 0.14em;
 }
 
-/* ---------------- Capacidade e presença ---------------- */
-
-.presenceNote {
-  margin: 20px 0 0;
-  max-width: 62ch;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-}
-
 /* ---------------- Mapa regional (RegionalMap.tsx) ---------------- */
 
 /* Os estilos do mapa antigo (.mapFrame/.mapSvg/.mapOutline/.mapPoint/

@@ -60,14 +60,24 @@ import type { EditorialImage } from "../../lib/media";
 export default function MaterialAtlas({
   interimImage,
   dark = false,
+  showImage = true,
 }: {
   interimImage?: EditorialImage;
   dark?: boolean;
+  /**
+   * A Saturno usa a mesma lista de materiais (mesma fonte de dados), mas
+   * não pode repetir a MESMA fotografia grande do Atlas da Almeida
+   * Ambiental — leria como a página copiando a outra (correção de direção
+   * de arte, Seção 20). `showImage={false}` força o layout sem mídia
+   * mesmo quando o par MATERIAL_IMAGES existe; quem chama assim entra com
+   * a própria materialidade por trás (ver SaturnoPage.tsx).
+   */
+  showImage?: boolean;
 }) {
   const [active, setActive] = useState<string | null>(null);
   const atlas = MATERIAL_IMAGES["material-atlas"];
-  const atlasPair = Boolean(atlas.desktop && atlas.mobile);
-  const hasImage = atlasPair || Boolean(interimImage);
+  const atlasPair = showImage && Boolean(atlas.desktop && atlas.mobile);
+  const hasImage = atlasPair || (showImage && Boolean(interimImage));
 
   return (
     <div
@@ -81,7 +91,7 @@ export default function MaterialAtlas({
           </picture>
         </figure>
       ) : (
-        interimImage && (
+        showImage && interimImage && (
           <figure className={styles.media}>
             <img src={interimImage.src} alt={interimImage.alt} loading="lazy" decoding="async" />
             {interimImage.sourceType !== "archive" && <IllustrativeBadge />}

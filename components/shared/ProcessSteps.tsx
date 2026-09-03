@@ -3,8 +3,6 @@ import { PROCESS_STEP_ICONS } from "../icons";
 
 export type ProcessStep = {
   name: string;
-  /** Frase curta — só quando existir conteúdo já validado para a etapa. */
-  note?: string;
 };
 
 /**
@@ -12,9 +10,16 @@ export type ProcessStep = {
  * MICROCOMPOSIÇÃO — a matéria mudando de estado, etapa a etapa
  * ============================================================
  *
- * O problema da versão anterior não era a informação: era que ícone +
- * nome + borda é a MESMA apresentação que serve para categoria, para
- * serviço e para processo. Nada ali dizia "isto é uma transformação".
+ * Correção de direção de arte (branch feature/correcao-direcao-arte): a
+ * versão anterior desenhava o cabeçalho (ícone + nome) EM CIMA e a
+ * microcomposição (traços + linha) EMBAIXO, como dois blocos empilhados.
+ * Como as seis etapas normalizam a altura do cabeçalho pela mesma linha de
+ * base, o resultado lia como duas réguas sobrepostas — "ícone + nome" numa
+ * faixa, "gráfico" noutra — exatamente a duplicação que a rodada pediu para
+ * eliminar. Agora cabeçalho e microcomposição dividem a MESMA linha: o
+ * ícone e o nome ficam à esquerda, a microcomposição ocupa o restante da
+ * largura à direita, os dois centralizados no mesmo eixo vertical. Existe
+ * uma peça por etapa, não duas.
  *
  * Cada etapa ganha uma microcomposição própria construída com um
  * vocabulário mínimo — traços verticais e uma linha de percurso — onde o
@@ -166,22 +171,26 @@ function StepMicro({ index }: { index: number }) {
 
 /**
  * PROCESS RIBBON — as seis etapas da operação (Diagnóstico → Coleta →
- * Triagem → Trituração → Descaracterização → Destinação) como UM sistema
- * dividido em seis momentos, não como seis cartões.
+ * Triagem → Trituração → Descaracterização → Destinação) como UMA ÚNICA
+ * peça, não como seis cartões nem como cabeçalho + gráfico separado.
  *
- * A informação continua tão simples quanto era (ícone funcional + nome, e
- * uma frase curta só quando existir conteúdo validado para a etapa — o
- * componente nunca inventa uma). O que mudou é a apresentação: cada
- * segmento encosta no vizinho, a régua horizontal é contínua e a linha de
- * percurso atravessa as seis etapas subindo. Ver o bloco MICRO acima.
+ * Cada etapa é uma linha (ícone + nome à esquerda, microcomposição à
+ * direita, mesmo eixo vertical) em vez de um bloco de duas linhas. É essa
+ * mudança — cabeçalho e traço dividindo o mesmo espaço, não empilhados —
+ * que faz a régua ler como um sistema contínuo: ícone e nome têm hierarquia
+ * visual maior (opacos, peso 600) que a microcomposição (traços finos,
+ * baixa opacidade), mas os dois ocupam a MESMA faixa horizontal.
  *
  * Mobile: trilho horizontal com ~1,5 segmento visível, scroll nativo, snap
- * suave. Sem autoplay, sem dots, sem setas.
+ * suave. Sem autoplay, sem dots, sem setas — o próximo segmento aparecendo
+ * pela metade já é a affordance.
  *
  * Desktop (a partir de 720px): as seis simultâneas em seis colunas — uma
- * régua só. A grade intermediária de 3×2 que existia antes foi removida de
- * propósito: ela quebrava a linha de percurso no fim da primeira fileira,
- * que é justamente o que faz as etapas lerem como um processo único.
+ * régua só, altura total ~100–130px. A linha de percurso entra na borda
+ * esquerda do primeiro segmento e sai na borda direita do último; como os
+ * segmentos encostam um no outro (gap: 0) e cada um sai exatamente na
+ * altura em que o vizinho entra, ela lê como um traço contínuo subindo ao
+ * longo das seis etapas — não seis traços soltos.
  *
  * Acessibilidade: o contêiner de scroll é focável e anunciado como grupo,
  * então quem navega por teclado alcança o trilho e rola com as setas — e o
@@ -189,9 +198,10 @@ function StepMicro({ index }: { index: number }) {
  * Ícones e microcomposições são decorativos (o nome da etapa já está em
  * texto) e ficam fora da árvore semântica.
  *
- * API inalterada em relação à versão anterior: os dois consumidores
- * (HomePage e AlmeidaAmbientalPage) continuam passando `steps` e
- * `ariaLabel` e não precisaram mudar.
+ * Escopo deliberado: este componente representa PROCESSO, e só processo —
+ * materiais, equipamentos e serviços continuam com a própria linguagem
+ * visual (MaterialAtlas, peças editoriais, listas). Não virou um componente
+ * genérico de lista.
  */
 export default function ProcessSteps({
   steps,
@@ -210,7 +220,6 @@ export default function ProcessSteps({
               <div className={styles.head}>
                 {StepIcon && <StepIcon className={styles.icon} />}
                 <p className={styles.name}>{step.name}</p>
-                {step.note && <p className={styles.note}>{step.note}</p>}
               </div>
               <StepMicro index={index} />
             </li>

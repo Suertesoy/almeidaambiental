@@ -17,13 +17,6 @@ import { IMPACT_METRICS } from "../shared/impactMetrics";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
-/* Substituída nesta rodada (Checkpoint B): a imagem anterior
-   (ambiental-logistica-editorial.webp, caminhões estacionados em vista
-   aérea) tinha baixa qualidade e não comunicava operação integrada. Gerada
-   via Magnific/MCP em 4:3 (1760x1328, reamostrada para 1440x1080) —
-   arquivo novo e independente porque o antigo continua em uso por
-   /home4 (fora de escopo desta tarefa). */
-const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
 /* Substitui saturno-fardos.webp (rodada "materialidade-assets-finais",
@@ -85,57 +78,62 @@ export default function HomePage() {
     <div className={styles.page} data-page="home">
       <Hero />
 
-      {/* ---------------- Almeida Ambiental / apresentação ---------------- */}
-      <section
-        id="almeida-ambiental"
-        className={`${styles.section} ${styles.toneForest} ${boundarySurface}`}
-      >
-        <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
-            <div className={styles.duoContent}>
-              <BrandMark
-                brand={BRANDS["almeida-ambiental"]}
-                variant="branca"
-                className={styles.eyebrowMark}
-              />
-              <h2 className={styles.headline}>
-                RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
-              </h2>
-              <p className={styles.body}>
-                Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-                responsável de resíduos.
-              </p>
-            </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_AMBIENTAL_INTRO}
-                alt="Operação logística da Almeida Ambiental"
-                objectPosition="center"
-                priority
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* ---------------- Almeida Ambiental (território contínuo) ----------------
+          Correção de direção de arte (branch feature/correcao-direcao-arte):
+          as duas dobras da Almeida Ambiental eram duas seções com o mesmo
+          tom sólido, e só a segunda ganhava a textura de materialidade — o
+          usuário via "acabou uma imagem de fundo, começou outra" no meio do
+          território de uma única empresa. A materialidade agora pertence ao
+          TERRITÓRIO (este wrapper), não à dobra: uma única MaterialSurface
+          cobre as duas seções por baixo, com `position:absolute; inset:0`
+          relativo a este wrapper (ver .ambientalTerritory), e cada `section`
+          interna abre mão do próprio `toneForest` sólido — o tom (cor de
+          texto, --role-*) continua vindo daqui por herança de custom
+          property, só o preenchimento visual passou a ser um só, contínuo.
 
-      {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section className={`${styles.section} ${styles.toneForest} ${boundarySurface}`}>
-        {/* Dobra âncora de materialidade da Almeida Ambiental. A dobra 2
-            continua sólida de propósito: a materialidade só cria ritmo
-            enquanto for alternância — sólida, material, sólida. */}
+          A fotografia de "galpão/operação integrada" que ocupava a segunda
+          dobra saiu: era uma imagem ilustrativa gerada por IA
+          (ambiental-operacao-integrada.webp, ver histórico do arquivo) que
+          competia com a materialidade em vez de documentar uma instalação
+          real. Não entrou outra imagem no lugar — a superfície material já
+          cumpre a função visual da dobra enquanto não existir captação real. */}
+      <div className={`${styles.toneForest} ${styles.ambientalTerritory}`}>
         <MaterialSurface surface="ambiental-materia" />
-        <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
-              <SectionMedia
-                imageSrc={IMG_AMBIENTAL_PROCESSO}
-                alt="Operação integrada de recebimento, triagem e processamento de resíduos na Almeida Ambiental"
-                objectPosition="center"
-              />
-            </div>
-            <div className={styles.duoContent}>
+
+        <section id="almeida-ambiental" className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
+              <div className={styles.duoContent}>
+                <BrandMark
+                  brand={BRANDS["almeida-ambiental"]}
+                  variant="branca"
+                  className={styles.eyebrowMark}
+                />
+                <h2 className={styles.headline}>
+                  RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
+                </h2>
+                <p className={styles.body}>
+                  Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
+                  responsável de resíduos.
+                </p>
+              </div>
+              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
+                <SectionMedia
+                  imageSrc={IMG_AMBIENTAL_INTRO}
+                  alt="Operação logística da Almeida Ambiental"
+                  objectPosition="center"
+                  priority
+                />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal>
               <p className={styles.eyebrow}>Almeida Ambiental</p>
               <h2 className={styles.headline}>EFICIÊNCIA EM CADA ETAPA DO PROCESSO</h2>
               <p className={styles.body}>
@@ -148,12 +146,12 @@ export default function HomePage() {
                   Conheça Almeida Ambiental
                 </Link>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
 
-          <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
-        </div>
-      </section>
+            <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
+          </div>
+        </section>
+      </div>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
       <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>

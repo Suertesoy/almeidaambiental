@@ -167,16 +167,23 @@ export default function SaturnoPage() {
       </section>
 
       {/* ---------------- Materiais ----------------
-          Sem a foto de linha de triagem (removida): a variante "index" já é
-          uma lista numerada em colunas, ou seja, o material aparece por
-          nome e quantidade de linhas — informação — em vez de aparecer como
-          uma esteira genérica que não é a da Saturno. Sem imagem,
-          MaterialAtlas assume a largura inteira (.atlasNoMedia). */}
-      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
+          Correção de direção de arte: esta seção usava MaterialAtlas sem
+          imagem própria, o que soava neutro, mas quando o par de
+          MATERIAL_IMAGES existia a Saturno passava a exibir a MESMA
+          fotografia grande do Atlas da Almeida Ambiental — lendo como a
+          página copiando a outra (Seção 20 da rodada). `showImage={false}`
+          bloqueia essa foto especificamente aqui; a lista (mesma fonte de
+          dados, MATERIAL_FAMILIES) continua "index" — nome e quantidade de
+          linhas, sem esteira genérica. No lugar de uma segunda fotografia
+          idêntica, a materialidade PRÓPRIA da Saturno (saturno-fluxo, a
+          mesma peça do capítulo de fechamento) entra como fundo desta
+          seção — fibra, papel e cartonagem, não stone claro. */}
+      <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
+        <MaterialSurface surface="saturno-fluxo" />
         <div className={shared.container}>
           <h2 className={shared.headline}>Materiais que fazem parte da operação.</h2>
           <div className={styles.materialsBlock}>
-            <MaterialAtlas />
+            <MaterialAtlas dark showImage={false} />
           </div>
         </div>
       </section>

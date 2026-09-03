@@ -246,21 +246,26 @@ export const MATERIAL_IMAGES: Record<MaterialImageId, MaterialImageAsset> = {
     alt: "Composição editorial vista de cima com as famílias de material recicláveis trabalhadas pelo Grupo Almeida: papelão, papel, plásticos, metais, madeira e demais categorias organizadas em zonas distintas",
     ratio: { desktop: "3:2", mobile: "4:5" },
     size: { desktop: [1800, 1200], mobile: [1080, 1350] },
-    /* Único par gerado com modelo diferente (imagen-nano-banana-2 em vez
-       de seedream-4-5): o modelo padrão da rodada ignorava os negativos e
-       inseria vidro, símbolo de reciclagem, lajes de pedra e até um
-       smartphone/tabela nutricional legível, mesmo com "no glass"/"no
-       recycling symbol"/"no text" explícitos — cinco gerações rejeitadas
-       ao todo (ver relatório da rodada). O prompt abaixo é a versão final
-       que passou no gate: descreve um "material specification board" sem
-       repetir a palavra "recyclable" (gatilho aparente dos clichês) e
-       nomeia só famílias compatíveis com CORE_MATERIALS (lib/materials.ts)
-       — sem vidro, sem PET nomeado, sem pedra. */
+    /* Segunda geração deste par (branch feature/correcao-direcao-arte,
+       Seções 13-19): a primeira versão (fundo verde floresta sólido)
+       resolveu o gate de conteúdo mas ficou visualmente separada da
+       superfície stone clara da seção — a foto terminava em corte reto
+       contra um fundo bem mais claro, lendo como "imagem + card" mesmo
+       depois do painel branco sair. Regenerada com o mesmo modelo
+       (imagen-nano-banana-2, o único que respeitou "no glass"/"no
+       recycling symbol" na rodada anterior) e um prompt que muda só o
+       fundo — da superfície verde para "warm mineral beige and soft kraft
+       studio surface... designed to visually merge into a sophisticated
+       institutional website background" — mesma família de cor do
+       --color-stone-warm-alt que hospeda a seção. A versão mobile trouxe
+       cacos de vidro transparentes na primeira tentativa (mesmo padrão da
+       rodada anterior) e precisou de uma segunda geração com "no broken
+       glass, no glass shards" reforçado. */
     prompt: {
       desktop:
-        "Overhead flat-lay editorial material specification board for an industrial recycling company, arranged on a solid deep forest green surface: a stack of plain kraft paper sheets, a sheet of corrugated cardboard, a small stack of colored printed paper offcuts, a folded stack of blank newsprint sheets with soft grey printed texture and no legible headlines, an open corrugated cardboard box, a pile of clean clear and colored plastic sheet fragments, a few flattened laminated carton (Tetra Pak style) fragments, a small stack of wood offcuts, a brushed aluminum sheet, a few pieces of scrap iron and steel, each material in its own clean zone with visible gaps between zones, realistic industrial material textures, soft directional studio lighting, subtle shadows, restrained palette of deep forest green, graphite grey and warm kraft, editorial Swiss design sensibility, sample board / material library aesthetic, 3:2 composition, no recycling symbol or arrows icon, no text, no legible words, no logos, no people, no factory, no garbage pile, no dirty waste, no plants, no leaves, no glass, no stone, no rock, no marble, no concrete slab, no ceramic, no phone, no smartphone, no electronic device, no screen",
+        "Top down editorial still life of clean recyclable material families arranged directly on a warm mineral beige and soft kraft studio surface, designed to visually merge into a sophisticated institutional website background. Tactile corrugated cardboard, layered kraft paper, clean white paper, newspaper sheets, colored printed paper, clean plastic fragments, Tetra Pak packaging material without branding or printed text, brushed aluminum, dark iron pieces and natural wood offcuts arranged as a curated material library. The composition should feel like an editorial material archive or museum material study, not trash. Materials concentrated primarily through the left and center 60 percent of the frame, gradually becoming more sparse toward the right side, leaving generous clean warm beige negative space for HTML typography. Soft directional studio lighting, subtle realistic shadows, restrained warm stone, kraft, charcoal and muted forest accents. Sophisticated Swiss editorial sensibility, tactile realistic photography, calm institutional aesthetic. No text, no labels, no typography, no logos, no recycling symbols, no glass, no smartphone, no cereal packaging, no nutrition labels, no readable packaging, no plants, no leaves, no garbage dump, no dirty waste, no white card, no pedestal.",
       mobile:
-        "Vertical overhead flat-lay editorial material specification board for an industrial recycling company on a solid deep forest green surface, arranged as a clean 3x3 grid of material samples with visible gaps between cells: kraft paper sheets, folded blank newsprint sheets with soft grey texture and no legible headlines, wood offcuts, colored printed paper offcuts with corrugated cardboard (abstract color blocks, no legible text), a small pile of folded opaque and semi-transparent colored plastic packaging offcuts with soft rounded edges (no sharp broken edges, not glass-like), a brushed aluminum sheet, more blank newsprint, flattened plain laminated carton (Tetra Pak style) fragments in muted solid colors with no printed labels or text, scrap iron and steel pieces, realistic industrial material textures, soft directional studio lighting, restrained palette of deep forest green, graphite grey and warm kraft, editorial Swiss design sensibility, sample board aesthetic, portrait 4:5, no recycling symbol or arrows icon, no text, no legible words, no nutrition label, no barcode, no product packaging text, no logos, no people, no factory, no garbage pile, no dirty waste, no plants, no leaves, no glass, no broken glass, no glass shards, no stone, no rock, no marble, no concrete, no ceramic, no phone, no smartphone, no electronic device, no screen",
+        "Vertical top down editorial still life of clean recyclable materials arranged directly on a warm mineral beige and soft kraft studio surface that visually merges into a premium institutional website background. Corrugated cardboard, kraft paper, white paper, newspaper, colored printed paper, clean opaque plastic fragments with soft rounded edges (not sharp, not glass-like), unbranded Tetra Pak material, brushed aluminum, dark iron and natural wood arranged as a curated material archive. Keep the material composition concentrated mainly through the upper half and central region, with increasing negative space toward the lower portion for HTML content below. Realistic tactile textures, soft directional studio light, subtle shadows, warm beige, kraft, charcoal and restrained muted green accents, sophisticated contemporary editorial photography. No text, no labels, no logo, no recycling symbol, no glass, no broken glass, no glass shards, no transparent sharp shards, no smartphone, no package with readable printing, no nutrition table, no plants, no leaves, no dirty waste, no white card, no pedestal.",
     },
   },
 

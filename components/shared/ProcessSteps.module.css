@@ -1,30 +1,30 @@
 /* ==========================================================
-   PROCESS RIBBON — as seis etapas da operação como UM sistema dividido em
-   seis momentos.
+   PROCESS RIBBON — as seis etapas da operação como UMA ÚNICA peça.
 
-   A versão anterior desta régua já era compacta e rápida de ler, mas
-   apresentava o processo com o mesmo vocabulário que o site usa para
-   categoria e para serviço: ícone + nome + borda. Nada dizia "isto é uma
-   transformação". Aqui a informação é a mesma; o que entra é identidade —
-   uma microcomposição por etapa (ver o bloco MICRO em ProcessSteps.tsx) e
-   uma linha de percurso que atravessa as seis subindo.
+   Correção de direção de arte: a versão anterior empilhava cabeçalho
+   (ícone + nome) e microcomposição (traços + linha) em duas linhas dentro
+   de cada segmento. Como as seis normalizavam a altura do cabeçalho pela
+   mesma linha de base, o resultado pintava como duas réguas sobrepostas —
+   "nomes numa faixa, gráfico noutra" — e não como uma peça só. Agora
+   cabeçalho e microcomposição dividem a MESMA linha (`.step` é uma linha
+   flex, não uma coluna): ícone+nome à esquerda, traço à direita, os dois
+   centralizados no mesmo eixo vertical.
 
-   Três coisas fazem os segmentos lerem como um sistema e não como cartões:
+   Três coisas continuam fazendo os segmentos lerem como um sistema:
 
-     1. gap: 0 — a régua superior de um segmento encosta na do vizinho.
-     2. Nenhum segmento tem fundo, borda lateral, raio ou sombra. O que
-        separa duas etapas é um tique vertical curto, não uma caixa.
+     1. gap: 0 — um segmento encosta no vizinho.
+     2. Nenhum segmento tem fundo, borda, raio ou sombra. O que separa duas
+        etapas é um fio vertical extremamente sutil, não uma caixa.
      3. A linha de percurso sai de um segmento na mesma altura em que entra
-        no seguinte.
+        no seguinte (ver o bloco MICRO em ProcessSteps.tsx).
 
    Cores: tudo em `currentColor` sobre pseudo-elementos e traços com
-   opacidade própria. A régua herda a cor de texto da superfície que a
-   hospeda (verde floresta na Home, pedra clara na página da empresa) sem
-   precisar de uma variante por tom, e a opacidade fica isolada no traço —
-   nunca sobre o texto.
+   opacidade própria — a régua herda a cor de texto da superfície que a
+   hospeda sem precisar de uma variante por tom.
 
-   Altura útil por segmento: cabeçalho (ícone 22 + nome) + microcomposição
-   de 64px + respiro ≈ 150–170px, dentro da faixa de 180–220px pedida.
+   Altura total do ribbon: ~90–120px (cabeçalho + traço na mesma linha,
+   padding vertical) — bem abaixo do teto de 170px pedido, porque não
+   sobra uma segunda linha para acomodar.
    ========================================================== */
 
 .scroller {
@@ -60,85 +60,70 @@
   flex: 0 0 66%; /* ≈1,5 segmento visível no mobile */
   min-width: 0;
   scroll-snap-align: start;
-  /* Sem padding lateral AQUI: o respiro entre etapas mora em .head.
-     O segmento inteiro precisa ser a caixa do SVG, senão a linha de
-     percurso termina antes da borda e reabre um vão visível entre uma
-     etapa e a seguinte — que é justamente o que ela existe para fechar. */
-  padding: 18px 0 0;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 20px 14px;
 }
 
-/* Régua contínua: cada segmento pinta o seu trecho, encostado no do
-   vizinho. */
-.step::before {
+/* Divisor entre etapas: um fio vertical extremamente sutil, não uma régua
+   horizontal por cima do texto. Some no primeiro segmento — não existe
+   "etapa anterior" para separar dele. */
+.step:not(:first-child)::before {
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.22;
-}
-
-/* Marcador editorial: um tique vertical curto descendo da régua no início
-   de cada etapa — não uma bolinha de infográfico, não uma borda de caixa. */
-.step::after {
-  content: "";
-  position: absolute;
-  top: 0;
+  top: 14%;
+  bottom: 14%;
   left: 0;
   width: 1px;
-  height: 7px;
   background: currentColor;
-  opacity: 0.5;
+  opacity: 0.16;
 }
 
-/* O cabeçalho cresce para ocupar a folga, então a microcomposição de todos
-   os segmentos fica alinhada na mesma linha de base — é isso que faz a
-   linha de percurso emendar de um segmento para o outro mesmo quando um
-   nome quebra em duas linhas e o vizinho não. */
+/* ---------------- Cabeçalho: ícone + nome ----------------
+   Hierarquia visual acima da microcomposição (opacos, peso 600) — a régua
+   se lê primeiro como texto, o traço é o acompanhamento, não o contrário. */
 .head {
-  flex: 1 0 auto;
-  /* O respiro lateral do texto, que saiu de .step. */
-  padding-right: 20px;
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .icon {
+  flex: none;
   display: block;
-  width: 22px;
-  height: 22px;
-  margin-bottom: 10px;
+  width: 18px;
+  height: 18px;
   color: var(--role-muted, var(--text-muted));
 }
 
 .name {
   margin: 0;
+  min-width: 0;
   color: inherit;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 14px;
-  line-height: 1.3;
-  letter-spacing: 0.005em;
-}
-
-/* Frase curta opcional — só aparece quando existe conteúdo validado para
-   a etapa; o componente nunca inventa uma. */
-.note {
-  margin: 6px 0 0;
-  max-width: 28ch;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
   font-size: 12.5px;
-  line-height: 1.45;
+  line-height: 1.25;
+  letter-spacing: 0.005em;
+  /* "Descaracterização" é uma palavra só e mais larga que a célula em
+     1440px: hyphens (o documento já é lang="pt-BR", ver app/layout.tsx)
+     insere um hífen de verdade no ponto de quebra em vez de partir a
+     palavra ao meio sem marca nenhuma. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
-/* ---------------- Microcomposição ---------------- */
-
+/* ---------------- Microcomposição ----------------
+   Preenche o espaço que sobra na mesma linha do cabeçalho — nunca uma
+   segunda faixa abaixo dele. */
 .micro {
+  flex: 1 1 44px;
+  min-width: 44px;
   display: block;
-  width: 100%;
-  height: 64px;
-  margin-top: 14px;
+  height: 26px;
   overflow: visible;
 }
 
@@ -172,10 +157,7 @@
   opacity: 0.75;
 }
 
-/* ---------------- Desktop: as seis de uma vez, régua única ----------------
-   Sem etapa intermediária de 3×2: aquela grade quebrava a linha de percurso
-   no fim da primeira fileira, que é exatamente o que faz as seis lerem
-   como um processo único. Seis colunas ou trilho — nada entre os dois. */
+/* ---------------- Desktop: as seis de uma vez, régua única ---------------- */
 
 @media (min-width: 720px) {
   .scroller {
@@ -190,35 +172,31 @@
 
   .step {
     flex: none;
-    padding: 18px 0 0;
+    padding: 20px 14px 20px 16px;
   }
 
-  .head {
-    padding-right: 14px;
+  .name {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .step {
+    padding: 22px 16px 22px 18px;
+    gap: 14px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
   }
 
   .name {
     font-size: 13px;
   }
-}
-
-@media (min-width: 1024px) {
-  .head {
-    padding-right: 20px;
-  }
-
-  .icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .name {
-    font-size: 14px;
-  }
 
   .micro {
-    height: 72px;
-    margin-top: 22px;
+    height: 32px;
   }
 }
 

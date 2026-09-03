@@ -40,6 +40,22 @@ html:has([data-page="home"]) {
   scroll-margin-top: var(--anchor-offset);
 }
 
+/* ---------------- Território contínuo ----------------
+   Um wrapper de território agrupa as dobras de uma mesma empresa que devem
+   compartilhar UMA materialidade de fundo, em vez de cada `section` interna
+   ter a sua própria (o que reiniciava a textura no meio do território — ver
+   HomePage.tsx). `position: relative` é a única regra necessária: é o que
+   dá a MaterialSurface (`position: absolute; inset: 0`, ver
+   MaterialSurface.module.css) uma caixa do tamanho das duas dobras somadas
+   para preencher, em vez da caixa de uma `section` só. As `section`
+   internas abrem mão do próprio tom sólido (`.toneForest` etc.) e herdam
+   cor de texto e `--role-*` deste wrapper por custom property — só o
+   preenchimento visual muda de "uma cor sólida por dobra" para "uma
+   textura contínua atrás de todas elas". */
+.ambientalTerritory {
+  position: relative;
+}
+
 /* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
    (ver comentário lá): cada tom expõe os papéis de texto como custom
    properties, que atravessam a fronteira de CSS Modules por herança do DOM. */
