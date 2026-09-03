@@ -37,25 +37,21 @@
  * em qualquer superfície.
  *
  * ------------------------------------------------------------
- * ESTADO ATUAL DOS ASSETS — LEIA ANTES DE MEXER
+ * ESTADO ATUAL DOS ASSETS
  * ------------------------------------------------------------
- * `desktop` e `mobile` estão `null` em todas as superfícies porque o
- * conector MCP do Magnific está BLOQUEADO por OAuth e nenhuma imagem foi
- * gerada nesta rodada.
- *
- * Nada foi substituído por stock, por imagem de banco ou por outro
- * arquivo já existente no repositório: uma textura emprestada de outra
- * seção seria exatamente o tipo de preenchimento que esta rodada existe
- * para eliminar. Enquanto o par de arquivos não existir, MaterialSurface
- * renderiza a superfície sólida + símbolo e mais nada — a composição
- * continua íntegra, apenas sem a camada material.
- *
- * Para concluir: gerar os pares com os prompts abaixo (eles são a fonte
- * da verdade dos prompts, não um resumo), otimizar para WebP nas
- * dimensões indicadas, salvar nos caminhos indicados e trocar `null`
- * pelos caminhos. Nenhuma outra mudança de código é necessária — os
- * pontos de âncora na Home, na Saturno e na Almeida Ambiental já estão
- * montados e passam a exibir a textura sozinhos.
+ * Gerados via Magnific/MCP (rodada "materialidade-assets-finais", branch
+ * feature/materialidade-assets-finais) e otimizados para WebP em
+ * public/materialidade/. Os prompts abaixo continuam sendo a fonte da
+ * verdade do que foi pedido a cada geração — nenhum deles foi resumido ou
+ * descaracterizado para a geração final; a única exceção documentada é o
+ * par de `material-atlas`, cujo texto abaixo teve "PET material" e "clear
+ * glass texture" removidos porque vidro não está na lista real de
+ * materiais (lib/materials.ts) e a Seção 6 da rodada proíbe enriquecer a
+ * imagem com um material que não existe nos dados. O prompt efetivamente
+ * enviado ao gerador para esse par (após duas rejeições por vidro/símbolo
+ * de reciclagem/celular) descreve um "material specification board" sem a
+ * palavra "recyclable" repetida — ver o relatório da rodada para o texto
+ * exato de cada tentativa.
  */
 
 /** Superfície cromática de base — casa com os tons já existentes em globals.css. */
@@ -120,8 +116,8 @@ export type MaterialSurfaceId = "ambiental-materia" | "saturno-hero" | "saturno-
 export const MATERIAL_SURFACES: Record<MaterialSurfaceId, MaterialSurfaceAsset> = {
   "ambiental-materia": {
     id: "ambiental-materia",
-    desktop: null, // → /materialidade/ambiental-materia-desktop.webp
-    mobile: null, //  → /materialidade/ambiental-materia-mobile.webp
+    desktop: "/materialidade/ambiental-materia-desktop.webp",
+    mobile: "/materialidade/ambiental-materia-mobile.webp",
     tone: "forest",
     intensity: "medium",
     /* Sem símbolo aqui, e a razão vale como regra — UM SÍMBOLO POR
@@ -152,8 +148,8 @@ export const MATERIAL_SURFACES: Record<MaterialSurfaceId, MaterialSurfaceAsset> 
 
   "saturno-hero": {
     id: "saturno-hero",
-    desktop: null, // → /materialidade/saturno-hero-desktop.webp
-    mobile: null, //  → /materialidade/saturno-hero-mobile.webp
+    desktop: "/materialidade/saturno-hero-desktop.webp",
+    mobile: "/materialidade/saturno-hero-mobile.webp",
     tone: "saturno",
     intensity: "medium",
     /* Sem símbolo — mesma regra de "ambiental-materia" acima. As duas
@@ -163,29 +159,39 @@ export const MATERIAL_SURFACES: Record<MaterialSurfaceId, MaterialSurfaceAsset> 
       "Home, dobra 6 (Saturno / presença regional) e Hero de /saturno-ambiental. É a materialidade que substitui a fotografia de sede que a Saturno não tem — matéria, não endereço.",
     ratio: { desktop: "16:9", mobile: "4:5" },
     size: { desktop: [1920, 1080], mobile: [1080, 1350] },
+    /* Prompt abaixo é a versão que efetivamente gerou o par publicado —
+       não a primeira tentativa. As duas primeiras rodadas usavam "warm
+       stone" como palavra de cor de paleta e o gerador leu "stone" ao pé
+       da letra (uma pedra real apareceu na composição); a versão mobile
+       também trouxe uma aliança de ouro dentro do rolo de papelão, na
+       cara do "no gold rings" do negativo. Ver relatório da rodada
+       "materialidade-assets-finais" para as tentativas rejeitadas. */
     prompt: {
       desktop:
-        "Editorial material study of recyclable industrial materials transformed into an abstract landscape, compressed corrugated cardboard fibers, layered paper pulp textures, shredded clean paper edges and subtle recycled polymer fragments arranged in a controlled geometric composition, tactile raw fibers, compression lines and cartonage materiality, subtle circular flow suggested by material arrangement rather than icons, deep dark brand background balanced with natural kraft cardboard, warm stone and restrained Saturno tones, sophisticated contemporary industrial sustainability aesthetic, realistic macro material photography, directional soft studio light, rich texture, strong depth, calm premium institutional mood, generous negative space for typography, wide 16:9 composition, no leaves, no plants, no recycling symbol, no factory, no building, no workers, no vehicles, no logos, no text, no fake environmental facility, no glossy luxury objects, no golden rings",
+        "Editorial material study of recyclable industrial materials transformed into an abstract landscape, compressed corrugated cardboard fibers, layered paper pulp textures, shredded clean paper edges and subtle recycled polymer fragments arranged in a controlled geometric composition on a plain seamless surface, tactile raw fibers, compression lines and cartonage materiality, directional flowing arrangement of material rather than icons or symbols, deep dark brand background balanced with natural kraft cardboard and warm neutral sand tones, restrained Saturno palette, sophisticated contemporary industrial sustainability aesthetic, realistic macro material photography, directional soft studio light, rich texture, strong depth, calm premium institutional mood, generous negative space for typography, wide 16:9 composition, only paper and cardboard based materials, no leaves, no plants, no recycling symbol, no factory, no building, no workers, no vehicles, no logos, no text, no lettering, no typography, no brand name, no fake environmental facility, no glossy luxury objects, no jewelry, no ring, no gold, no gemstone, no pedestal, no stone, no rock, no pebble, no marble, no mineral",
       mobile:
-        "Vertical editorial macro material landscape made of transformed paper and recyclable materials, compressed cardboard edges, paper fibers, cartonage textures, subtle clean shredded recycled fragments and matte industrial surfaces flowing through the composition, realistic tactile fibers and compression marks, dark restrained Saturno palette balanced with warm kraft and stone tones, subtle sense of circular transformation created through the arrangement of material, sophisticated institutional industrial aesthetic, soft directional studio lighting, strong vertical depth, focal material toward lower and side areas with negative space for typography, portrait 4:5, no leaves, no plants, no recycling icon, no building, no factory, no workers, no vehicles, no logos, no text, no glossy luxury styling, no gold rings",
+        "Vertical editorial macro material landscape made of transformed paper and recyclable materials, compressed cardboard edges, paper fibers, cartonage textures, subtle clean shredded recycled fragments and matte industrial surfaces flowing through the composition, realistic tactile fibers and compression marks, dark restrained Saturno palette balanced with warm kraft and sand neutral tones, directional flowing arrangement of material suggesting transformation, sophisticated institutional industrial aesthetic, soft directional studio lighting, strong vertical depth, focal material toward lower and side areas with negative space for typography, portrait 4:5, no leaves, no plants, no recycling icon, no building, no factory, no workers, no vehicles, no logos, no text, no lettering, no typography, no brand name, no glossy luxury styling, no jewelry, no ring, no gold, no gemstone, no pedestal, no stone, no rock, no marble",
     },
   },
 
   "saturno-fluxo": {
     id: "saturno-fluxo",
-    desktop: null, // → /materialidade/saturno-fluxo.webp
-    mobile: null, //  → /materialidade/saturno-fluxo.webp (mesma peça, 4:3)
+    desktop: "/materialidade/saturno-fluxo.webp",
+    mobile: "/materialidade/saturno-fluxo.webp", // mesma peça, 4:3
     tone: "carvao",
     intensity: "strong",
     usage:
-      "/saturno-ambiental, capítulo de fechamento \"Saturno + Grupo Almeida\". Segunda e ÚLTIMA imagem conceitual da página — a Seção 17 da rodada limita a Saturno a duas grandes imagens conceituais, e CARTONAGEM_IMAGE (material real, caixas) não conta como conceitual.",
+      "/saturno-ambiental, capítulo de fechamento \"Saturno + Grupo Almeida\", e Home, dobra 7 (Saturno / atuação) — reaproveitada nesta rodada como a peça editorial legítima que substitui saturno-fardos.webp (ver Seção 9 da rodada). Na Home entra como imagem emoldurada (SectionMedia), não como MaterialSurface de fundo.",
     ratio: { desktop: "4:3", mobile: "4:3" },
     size: { desktop: [1600, 1200], mobile: [1600, 1200] },
+    /* Mesma correção de "stone"/texto da nota acima: a primeira geração
+       trouxe uma pedra de mármore no canto e o texto "Satur..." impresso
+       em rasterização, apesar do negativo original já pedir "no text". */
     prompt: {
       desktop:
-        "Extreme close-up editorial photography of processed recyclable material surfaces, geometric layers of compressed paper fiber, corrugated cardboard, cartonage edges, shredded clean paper and subtle recyclable fragments forming a directional abstract flow, tactile real material detail, carefully organized rather than chaotic, matte surfaces, deep shadows, restrained institutional palette derived from charcoal, natural kraft, warm stone and Saturno brand tones, contemporary Swiss editorial composition, strong geometry and negative space, no location, no building, no people, no vehicles, no machines, no leaves, no globe, no recycling symbols, no text, no logos, no luxury pedestal, no gold",
+        "Extreme close-up editorial photography of processed recyclable material surfaces, geometric layers of compressed paper fiber, corrugated cardboard, cartonage edges, shredded clean paper and subtle recyclable fragments forming a directional abstract flow, tactile real material detail, carefully organized rather than chaotic, matte surfaces, deep shadows, restrained institutional palette derived from charcoal, natural kraft and warm neutral sand tones, contemporary Swiss editorial composition, strong geometry and negative space, no location, no building, no people, no vehicles, no machines, no leaves, no globe, no recycling symbols, no text, no lettering, no typography, no logos, no brand name, no signage, no luxury pedestal, no gold, no jewelry, no ring, no gemstone, no stone, no rock, no marble",
       mobile:
-        "Extreme close-up editorial photography of processed recyclable material surfaces, geometric layers of compressed paper fiber, corrugated cardboard, cartonage edges, shredded clean paper and subtle recyclable fragments forming a directional abstract flow, tactile real material detail, carefully organized rather than chaotic, matte surfaces, deep shadows, restrained institutional palette derived from charcoal, natural kraft, warm stone and Saturno brand tones, contemporary Swiss editorial composition, strong geometry and negative space, no location, no building, no people, no vehicles, no machines, no leaves, no globe, no recycling symbols, no text, no logos, no luxury pedestal, no gold",
+        "Extreme close-up editorial photography of processed recyclable material surfaces, geometric layers of compressed paper fiber, corrugated cardboard, cartonage edges, shredded clean paper and subtle recyclable fragments forming a directional abstract flow, tactile real material detail, carefully organized rather than chaotic, matte surfaces, deep shadows, restrained institutional palette derived from charcoal, natural kraft and warm neutral sand tones, contemporary Swiss editorial composition, strong geometry and negative space, no location, no building, no people, no vehicles, no machines, no leaves, no globe, no recycling symbols, no text, no lettering, no typography, no logos, no brand name, no signage, no luxury pedestal, no gold, no jewelry, no ring, no gemstone, no stone, no rock, no marble",
     },
   },
 };
@@ -216,11 +222,10 @@ export const MATERIAL_SURFACES: Record<MaterialSurfaceId, MaterialSurfaceAsset> 
  * sólido de território entre as empresas, que a rodada pediu para
  * preservar.
  *
- * Mesmo estado de bloqueio das superfícies: pares ainda `null` porque o
- * Magnific está fora, e nenhuma imagem é emprestada no lugar. Os
- * consumidores mantêm em cena o asset que já exibiam (ver o
- * `interimImage` de MaterialAtlas.tsx e IMG_EQUIPAMENTOS_ENGENHARIA em
- * HomePage.tsx) até que o par próprio exista.
+ * Pares gerados nesta rodada (ver cabeçalho do arquivo). MaterialAtlas.tsx
+ * e HomePage.tsx já leem `desktop`/`mobile` primeiro e só caem para
+ * `interimImage`/IMG_EQUIPAMENTOS_ENGENHARIA quando o par está ausente —
+ * nenhuma mudança de código foi necessária nesses consumidores.
  */
 
 export type MaterialImageAsset = {
@@ -236,22 +241,32 @@ export type MaterialImageId = "material-atlas" | "equipamentos-engenharia";
 
 export const MATERIAL_IMAGES: Record<MaterialImageId, MaterialImageAsset> = {
   "material-atlas": {
-    desktop: null, // → /materialidade/material-atlas-desktop.webp
-    mobile: null, //  → /materialidade/material-atlas-mobile.webp
+    desktop: "/materialidade/material-atlas-desktop.webp",
+    mobile: "/materialidade/material-atlas-mobile.webp",
     alt: "Composição editorial vista de cima com as famílias de material recicláveis trabalhadas pelo Grupo Almeida: papelão, papel, plásticos, metais, madeira e demais categorias organizadas em zonas distintas",
     ratio: { desktop: "3:2", mobile: "4:5" },
     size: { desktop: [1800, 1200], mobile: [1080, 1350] },
+    /* Único par gerado com modelo diferente (imagen-nano-banana-2 em vez
+       de seedream-4-5): o modelo padrão da rodada ignorava os negativos e
+       inseria vidro, símbolo de reciclagem, lajes de pedra e até um
+       smartphone/tabela nutricional legível, mesmo com "no glass"/"no
+       recycling symbol"/"no text" explícitos — cinco gerações rejeitadas
+       ao todo (ver relatório da rodada). O prompt abaixo é a versão final
+       que passou no gate: descreve um "material specification board" sem
+       repetir a palavra "recyclable" (gatilho aparente dos clichês) e
+       nomeia só famílias compatíveis com CORE_MATERIALS (lib/materials.ts)
+       — sem vidro, sem PET nomeado, sem pedra. */
     prompt: {
       desktop:
-        "Top-down editorial still life of clean recyclable material families arranged as a sophisticated visual atlas, tactile corrugated cardboard, stacked kraft paper and newspaper edges, clean transparent and colored plastic fragments, PET material, matte aluminum and steel pieces, clear glass texture, natural wood offcuts and other recyclable material categories arranged in distinct but connected zones, realistic industrial material textures, carefully curated geometric composition, sophisticated museum-like material study rather than trash, restrained deep forest green, charcoal, warm stone and kraft palette, soft directional studio lighting, subtle shadows, editorial Swiss design sensibility, image edges blending naturally into a warm stone or deep green webpage background, large 3:2 composition, no text, no labels, no recycling symbols, no people, no factory, no garbage dump, no dirty waste, no plants, no leaves, no greenwashing imagery",
+        "Overhead flat-lay editorial material specification board for an industrial recycling company, arranged on a solid deep forest green surface: a stack of plain kraft paper sheets, a sheet of corrugated cardboard, a small stack of colored printed paper offcuts, a folded stack of blank newsprint sheets with soft grey printed texture and no legible headlines, an open corrugated cardboard box, a pile of clean clear and colored plastic sheet fragments, a few flattened laminated carton (Tetra Pak style) fragments, a small stack of wood offcuts, a brushed aluminum sheet, a few pieces of scrap iron and steel, each material in its own clean zone with visible gaps between zones, realistic industrial material textures, soft directional studio lighting, subtle shadows, restrained palette of deep forest green, graphite grey and warm kraft, editorial Swiss design sensibility, sample board / material library aesthetic, 3:2 composition, no recycling symbol or arrows icon, no text, no legible words, no logos, no people, no factory, no garbage pile, no dirty waste, no plants, no leaves, no glass, no stone, no rock, no marble, no concrete slab, no ceramic, no phone, no smartphone, no electronic device, no screen",
       mobile:
-        "Vertical top-down editorial material atlas composed of clean recyclable material families, tactile corrugated cardboard, paper and newspaper layers, clean plastic fragments, PET texture, aluminum and steel pieces, clear glass, wood and other visually distinct recyclable materials arranged in controlled geometric zones, sophisticated curated industrial still life, realistic texture, restrained forest green, charcoal, kraft and warm stone palette, soft directional studio light, strong central composition readable on a phone screen, portrait 4:5, no text, no labels, no icons, no people, no factory, no garbage pile, no dirty waste, no leaves, no plants, no eco cliché",
+        "Vertical overhead flat-lay editorial material specification board for an industrial recycling company on a solid deep forest green surface, arranged as a clean 3x3 grid of material samples with visible gaps between cells: kraft paper sheets, folded blank newsprint sheets with soft grey texture and no legible headlines, wood offcuts, colored printed paper offcuts with corrugated cardboard (abstract color blocks, no legible text), a small pile of folded opaque and semi-transparent colored plastic packaging offcuts with soft rounded edges (no sharp broken edges, not glass-like), a brushed aluminum sheet, more blank newsprint, flattened plain laminated carton (Tetra Pak style) fragments in muted solid colors with no printed labels or text, scrap iron and steel pieces, realistic industrial material textures, soft directional studio lighting, restrained palette of deep forest green, graphite grey and warm kraft, editorial Swiss design sensibility, sample board aesthetic, portrait 4:5, no recycling symbol or arrows icon, no text, no legible words, no nutrition label, no barcode, no product packaging text, no logos, no people, no factory, no garbage pile, no dirty waste, no plants, no leaves, no glass, no broken glass, no glass shards, no stone, no rock, no marble, no concrete, no ceramic, no phone, no smartphone, no electronic device, no screen",
     },
   },
 
   "equipamentos-engenharia": {
-    desktop: null, // → /materialidade/equipamentos-engenharia-desktop.webp
-    mobile: null, //  → /materialidade/equipamentos-engenharia-mobile.webp
+    desktop: "/materialidade/equipamentos-engenharia-desktop.webp",
+    mobile: "/materialidade/equipamentos-engenharia-mobile.webp",
     alt: "Macro editorial de engenharia industrial pesada: componentes de aço forjado, detalhes hidráulicos e geometria usinada em aço grafite",
     ratio: { desktop: "16:9", mobile: "4:5" },
     size: { desktop: [1920, 1080], mobile: [1080, 1350] },

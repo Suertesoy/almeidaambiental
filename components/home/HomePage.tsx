@@ -14,7 +14,7 @@ import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
-import { MATERIAL_IMAGES } from "../../lib/material-surfaces";
+import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
 /* Substituída nesta rodada (Checkpoint B): a imagem anterior
@@ -26,7 +26,13 @@ const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica
 const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
-const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
+/* Substitui saturno-fardos.webp (rodada "materialidade-assets-finais",
+   Seção 9): a foto antiga afirmava "Fardos processados pela Saturno
+   Ambiental" sem base — ninguém confirmou que aqueles fardos eram da
+   Saturno. No lugar entra a materialidade própria da marca (mesma peça do
+   capítulo de fechamento de /saturno-ambiental) como imagem emoldurada,
+   não como fotografia de operação. */
+const IMG_SATURNO_ATUACAO = MATERIAL_SURFACES["saturno-fluxo"].desktop!;
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
 /**
@@ -257,7 +263,7 @@ export default function HomePage() {
             <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
               <SectionMedia
                 imageSrc={IMG_SATURNO_ATUACAO}
-                alt="Fardos processados pela Saturno Ambiental"
+                alt="Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos"
                 objectPosition="center"
               />
             </div>
