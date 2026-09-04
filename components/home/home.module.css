@@ -52,7 +52,8 @@ html:has([data-page="home"]) {
    cor de texto e `--role-*` deste wrapper por custom property — só o
    preenchimento visual muda de "uma cor sólida por dobra" para "uma
    textura contínua atrás de todas elas". */
-.ambientalTerritory {
+.ambientalTerritory,
+.saturnoTerritory {
   position: relative;
 }
 
@@ -743,6 +744,11 @@ html:has([data-page="home"]) {
   display: block;
 }
 
+/* Consolidação de territórios (Seção 19): a frase é o manifesto do Grupo,
+   não uma headline institucional de dobra — sentence case lê como fala
+   humana, uppercase lia como grito. text-transform:none é a mudança real;
+   o conteúdo em lib/../HomePage.tsx já foi escrito em sentence case, mas
+   sem isto o CSS forçava caixa alta por cima do texto de qualquer forma. */
 .manifestoHeadline {
   margin: 0 0 24px;
   max-width: 720px;
@@ -751,7 +757,7 @@ html:has([data-page="home"]) {
   font-size: clamp(28px, 2.6vw + 16px, 46px);
   line-height: 1.1;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .manifesto .body {

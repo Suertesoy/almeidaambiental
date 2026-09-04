@@ -38,6 +38,20 @@ const GESTAO_AMBIENTAL = FRENTES.find((f) => f.id === "gestao-ambiental")!;
  * "saturno-territorio" e, daí para baixo, geometria, espaçamento e
  * conteúdo. A única fotografia da página é a Cartonagem, porque mostra
  * material — caixas de papelão — e não uma instalação.
+ *
+ * Consolidação de territórios (branch feature/territorios-visuais-
+ * continuos): Posicionamento, Frentes, Cartonagem e Gestão Ambiental eram
+ * quatro seções alternando pedra clara / pedra clara-alt / pedra clara /
+ * verde floresta (a cor da Almeida AMBIENTAL, não da Saturno!) — nenhuma
+ * delas a materialidade própria que o Hero já estabelece. As quatro agora
+ * vivem dentro de .saturnoTerritory, com a MESMA MaterialSurface
+ * ("saturno-hero", tone "saturno" — já calibrado para
+ * --color-saturno-deep, o mesmo fundo de --toneSaturno) atravessando
+ * todas. Cartonagem mantém sua fotografia real como peça editorial
+ * dentro do ambiente, não como seção à parte. Materiais e o fechamento
+ * (toneCarvao + saturno-fluxo) continuam como estavam — um fechamento
+ * mais escuro dentro da mesma família de tons frios e baixa luminância,
+ * não uma volta à pedra clara.
  */
 export default function SaturnoPage() {
   return (
@@ -54,117 +68,127 @@ export default function SaturnoPage() {
         secondaryCta={{ label: "Falar com a Saturno Ambiental", href: CONTACT_ANCHORS.blumenau }}
       />
 
-      {/* ---------------- Posicionamento ---------------- */}
-      {/* Metade de entrada da fronteira aberta no Hero: o oliva profundo da
-          Saturno termina em corte reto contra a pedra clara e o símbolo
-          atravessa a linha. No desktop, "headline lateral" evita que a
-          seção vire uma coluna estreita perdida em 1440px (Seção 43). */}
-      <section className={`${shared.section} ${shared.toneStone} ${boundarySurface}`}>
-        <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onLight" />
-        <div className={shared.container}>
-          <div className={styles.positioningGrid}>
-            <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
-            <div className={styles.positioningCopy}>
-              <p className={shared.body}>
-                A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
-                identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento,
-                cartonagem e serviços técnicos ambientais.
-              </p>
-              <p className={shared.body}>
-                <strong>Desde 2022, a Saturno integra o Grupo Almeida</strong>, ampliando a presença do grupo no Vale do
-                Itajaí.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* `boundarySurface` em cada `section` abaixo (mesmo quando não hospeda
+          nenhuma BrandBoundaryMark) é o contrato de empilhamento que
+          MaterialSurface exige — sem `position: relative` + `z-index: 0` na
+          section, o texto estático pinta ATRÁS da textura posicionada, não
+          na frente dela. */}
+      <div className={`${shared.toneSaturno} ${styles.saturnoTerritory}`}>
+        <MaterialSurface surface="saturno-hero" />
 
-      {/* ---------------- Frentes compartilhadas, tratamento compacto ----------------
-          Coleta, Triagem, Trituração/Descaracterização e Destinação — a
-          sequência do processo operacional não deve terminar em
-          Trituração/Descaracterização (correção 2026-08-20, pedido explícito
-          do responsável do projeto). Cartonagem e Gestão Ambiental continuam
-          como capítulos próprios abaixo, fora desta grade compacta. */}
-      <section id="frentes" className={`${shared.sectionCompact} ${shared.toneStoneAlt}`}>
-        <div className={shared.container}>
-          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Serviços</p>
-          <h2 className={shared.headline}>Gestão de resíduos com linguagem própria da região.</h2>
-          <div className={styles.frentesCompactGrid}>
-            {COMPACT_FRENTES.map((frente, index) => (
-              <div key={frente.id} className={styles.frentesCompactItem}>
-                <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
-                <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
-                <p className={styles.frentesCompactCopy}>{frente.copy}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Cartonagem (exclusiva, capítulo próprio) ---------------- */}
-      <section className={`${shared.sectionEditorial} ${shared.toneStone}`}>
-        <div className={shared.container}>
-          <div className={`${shared.duo} ${shared.duoMediaLeft}`}>
-            <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
-              <img src={CARTONAGEM.image!.src} alt={CARTONAGEM.image!.alt} loading="lazy" decoding="async" />
-            </div>
-            <div className={shared.duoContent}>
-              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{CARTONAGEM.eyebrow}</p>
-              <h2 className={shared.headline}>{CARTONAGEM.headline}</h2>
-              <p className={shared.body}>{CARTONAGEM.copy}</p>
-              {CARTONAGEM.tags && (
-                <ul className={shared.tagRow}>
-                  {CARTONAGEM.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-              )}
-              <div className={shared.ctaRow}>
-                <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={CARTONAGEM.cta!.href}>
-                  {CARTONAGEM.cta!.label}
-                </Link>
+        {/* ---------------- Posicionamento ---------------- */}
+        {/* Metade de entrada da fronteira aberta no Hero: o oliva profundo da
+            Saturno termina em corte reto contra o território seguinte (fora
+            deste wrapper) e o símbolo atravessa a linha. No desktop,
+            "headline lateral" evita que a seção vire uma coluna estreita
+            perdida em 1440px (Seção 43). */}
+        <section className={`${shared.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
+          <div className={shared.container}>
+            <div className={styles.positioningGrid}>
+              <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
+              <div className={styles.positioningCopy}>
+                <p className={shared.body}>
+                  A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
+                  identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento,
+                  cartonagem e serviços técnicos ambientais.
+                </p>
+                <p className={shared.body}>
+                  <strong>Desde 2022, a Saturno integra o Grupo Almeida</strong>, ampliando a presença do grupo no Vale do
+                  Itajaí.
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ---------------- Gestão Ambiental (exclusiva, frente consultiva) ----------------
-          Era um duo com a fotografia de um "profissional analisando planta"
-          que nunca existiu. Serviço técnico não se prova com a foto de
-          alguém segurando papel: o que este bloco tem de concreto são os
-          oito itens de escopo, e é a eles que a seção dá o espaço agora —
-          headline lateral no desktop (mesma gramática do posicionamento) e
-          a lista técnica ocupando a coluna larga em vez de dividir espaço
-          com uma imagem ilustrativa. */}
-      <section className={`${shared.sectionEditorial} ${shared.toneForest}`}>
-        <div className={shared.container}>
-          <div className={styles.positioningGrid}>
-            <div>
-              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
-              <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
+        {/* ---------------- Frentes compartilhadas, tratamento compacto ----------------
+            Coleta, Triagem, Trituração/Descaracterização e Destinação — a
+            sequência do processo operacional não deve terminar em
+            Trituração/Descaracterização (correção 2026-08-20, pedido explícito
+            do responsável do projeto). Cartonagem e Gestão Ambiental continuam
+            como capítulos próprios abaixo, fora desta grade compacta. */}
+        <section id="frentes" className={`${shared.sectionCompact} ${boundarySurface}`}>
+          <div className={shared.container}>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Serviços</p>
+            <h2 className={shared.headline}>Gestão de resíduos com linguagem própria da região.</h2>
+            <div className={styles.frentesCompactGrid}>
+              {COMPACT_FRENTES.map((frente, index) => (
+                <div key={frente.id} className={styles.frentesCompactItem}>
+                  <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
+                  <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
+                  <p className={styles.frentesCompactCopy}>{frente.copy}</p>
+                </div>
+              ))}
             </div>
-            <div className={styles.positioningCopy}>
-              <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
-              {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
-                  como lista real e estruturada — divisor + um item por
-                  linha, não parágrafo contínuo nem pílulas soltas. */}
-              {GESTAO_AMBIENTAL.tags && (
-                <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
-                  {GESTAO_AMBIENTAL.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-              )}
-              <div className={shared.ctaRow}>
-                <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={GESTAO_AMBIENTAL.cta!.href}>
-                  {GESTAO_AMBIENTAL.cta!.label}
-                </Link>
+          </div>
+        </section>
+
+        {/* ---------------- Cartonagem (exclusiva, capítulo próprio) ---------------- */}
+        <section className={`${shared.sectionEditorial} ${boundarySurface}`}>
+          <div className={shared.container}>
+            <div className={`${shared.duo} ${shared.duoMediaLeft}`}>
+              <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
+                <img src={CARTONAGEM.image!.src} alt={CARTONAGEM.image!.alt} loading="lazy" decoding="async" />
+              </div>
+              <div className={shared.duoContent}>
+                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{CARTONAGEM.eyebrow}</p>
+                <h2 className={shared.headline}>{CARTONAGEM.headline}</h2>
+                <p className={shared.body}>{CARTONAGEM.copy}</p>
+                {CARTONAGEM.tags && (
+                  <ul className={shared.tagRow}>
+                    {CARTONAGEM.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                )}
+                <div className={shared.ctaRow}>
+                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={CARTONAGEM.cta!.href}>
+                    {CARTONAGEM.cta!.label}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* ---------------- Gestão Ambiental (exclusiva, frente consultiva) ----------------
+            Era um duo com a fotografia de um "profissional analisando planta"
+            que nunca existiu. Serviço técnico não se prova com a foto de
+            alguém segurando papel: o que este bloco tem de concreto são os
+            oito itens de escopo, e é a eles que a seção dá o espaço agora —
+            headline lateral no desktop (mesma gramática do posicionamento) e
+            a lista técnica ocupando a coluna larga em vez de dividir espaço
+            com uma imagem ilustrativa. */}
+        <section className={`${shared.sectionEditorial} ${boundarySurface}`}>
+          <div className={shared.container}>
+            <div className={styles.positioningGrid}>
+              <div>
+                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
+                <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
+              </div>
+              <div className={styles.positioningCopy}>
+                <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
+                {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
+                    como lista real e estruturada — divisor + um item por
+                    linha, não parágrafo contínuo nem pílulas soltas. */}
+                {GESTAO_AMBIENTAL.tags && (
+                  <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
+                    {GESTAO_AMBIENTAL.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                )}
+                <div className={shared.ctaRow}>
+                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={GESTAO_AMBIENTAL.cta!.href}>
+                    {GESTAO_AMBIENTAL.cta!.label}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* ---------------- Materiais ----------------
           Correção de direção de arte: esta seção usava MaterialAtlas sem

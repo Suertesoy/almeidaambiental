@@ -1,10 +1,33 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import shared from "../shared/company-page.module.css";
 import styles from "./product-explorer.module.css";
 import ProductDetail from "./ProductDetail";
 import { PRODUCTS, type Product } from "../../lib/equipamentos-data";
+
+/**
+ * Abrir/fechar o detalhe com a sensação de "a própria imagem cresceu",
+ * não um modal aparecendo do nada (Seção 13 da rodada de territórios
+ * visuais). View Transitions API quando o navegador suporta e a pessoa
+ * não pediu menos movimento — caso contrário, o estado muda direto e o
+ * <dialog> abre/fecha exatamente como antes, sem nenhuma diferença visual.
+ * `flushSync` é necessário porque a API tira uma "foto" do DOM logo depois
+ * do callback: sem ele, o React adiaria o re-render e a transição
+ * capturaria o estado antigo. Nenhuma biblioteca nova — só a API nativa.
+ */
+function withViewTransition(mutate: () => void) {
+  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  const prefersReducedMotion =
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (typeof doc.startViewTransition === "function" && !prefersReducedMotion) {
+    doc.startViewTransition(() => flushSync(mutate));
+  } else {
+    mutate();
+  }
+}
 
 /**
  * Catálogo técnico explorável da Almeida Equipamentos.
@@ -33,11 +56,11 @@ export default function ProductExplorer() {
 
   const openDetail = useCallback((product: Product, trigger: HTMLElement | null) => {
     triggerRef.current = trigger;
-    setDetail(product);
+    withViewTransition(() => setDetail(product));
   }, []);
 
   const closeDetail = useCallback(() => {
-    setDetail(null);
+    withViewTransition(() => setDetail(null));
     // Devolve o foco a quem abriu — o <dialog> nativo cuida do resto.
     triggerRef.current?.focus();
     triggerRef.current = null;
@@ -90,6 +113,7 @@ export default function ProductExplorer() {
                       alt={product.image.alt}
                       loading="lazy"
                       decoding="async"
+                      className={product.id === selected.id && !detail ? styles.transitionHero : undefined}
                     />
                   </span>
                   <span className={styles.itemManufacturer}>{product.manufacturer}</span>
@@ -132,7 +156,7 @@ export default function ProductExplorer() {
 
             <img
               key={selected.id}
-              className={`${styles.stageProduct} ${styles.swap}`}
+              className={`${styles.stageProduct} ${styles.swap} ${!detail ? styles.transitionHero : ""}`}
               src={selected.image.src}
               alt=""
               loading="lazy"

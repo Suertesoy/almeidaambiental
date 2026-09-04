@@ -38,8 +38,11 @@
 
 /* ---------------- Eficiência que aparece no transporte ---------------- */
 
+/* Consolidação de territórios: a seção deixou de ser toneForest (escura) e
+   passou a ser toneStone (clara) — a hairline e o preenchimento "solto"
+   abaixo, calibrados para escuro, precisam da variante clara equivalente. */
 .densitySection {
-  border-bottom: 1px solid rgba(247, 246, 241, 0.14);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.14);
 }
 
 /* Checkpoint D (refinamento mobile 2026-08-20): align-items era "end",
@@ -97,7 +100,7 @@
 }
 
 .densityBarFill[data-stage="solto"] {
-  background: rgba(247, 246, 241, 0.18);
+  background: rgba(21, 21, 15, 0.14);
 }
 
 .densityBarFill[data-stage="prensado"] {
@@ -224,12 +227,14 @@
 
 .matrixItem {
   padding: 20px 0;
-  border-top: 1px solid rgba(247, 246, 241, 0.2);
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
 }
 
-/* Checkpoint D (Seção 18): ícone reconhecível antes do nome — superfície
-   escura (toneForest), então o ícone usa --role-secondary (on-dark
-   secondary), não dourado (Seção 33: nem todo ícone é accent). */
+/* Checkpoint D (Seção 18): ícone reconhecível antes do nome. Consolidação
+   de territórios: a seção deixou de ser toneForest (escura) e passou a
+   ser toneStoneAlt (clara) — --role-secondary já resolve para a variante
+   certa por herança do tom que envolve a seção; o fallback só precisava
+   parar de assumir escuro (Seção 33: nem todo ícone é accent). */
 .matrixHead {
   display: flex;
   align-items: center;
@@ -241,7 +246,7 @@
   flex: none;
   width: 24px;
   height: 24px;
-  color: var(--role-secondary, var(--text-on-dark-secondary));
+  color: var(--role-secondary, var(--text-secondary));
 }
 
 @media (min-width: 1024px) {

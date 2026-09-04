@@ -12,6 +12,16 @@
   overflow-x: clip;
 }
 
+/* ---------------- Território material (Posicionamento → Gestão Ambiental) ----------------
+   Consolidação de territórios: mesmo mecanismo de .ambientalTerritory
+   (components/home/home.module.css) — um wrapper único hospeda UMA
+   MaterialSurface atravessando as quatro seções, em vez de cada uma ter
+   seu próprio tom (e, antes desta rodada, uma delas usando até a cor da
+   Almeida Ambiental por engano). */
+.saturnoTerritory {
+  position: relative;
+}
+
 /* ---------------- Headline lateral no desktop ----------------
    Usada pelo posicionamento e, desde a rodada de refino editorial, também
    pela Gestão Ambiental — que perdeu a fotografia ilustrativa e passou a

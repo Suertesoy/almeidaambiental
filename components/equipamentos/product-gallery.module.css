@@ -63,6 +63,16 @@
   padding: clamp(12px, 4%, 32px);
 }
 
+/* Continuidade "card → detalhe" (Seção 13 da rodada de territórios
+   visuais): a primeira imagem (sempre a foto principal — `gallery`/`video`
+   só entram depois dela, ver ProductGallery.tsx) recebe o MESMO
+   view-transition-name que o palco/card de origem em ProductExplorer.tsx
+   assume enquanto o detalhe está fechado, para a API morfar uma na outra
+   em vez do <dialog> só aparecer. Sem efeito quando a API não é usada. */
+.slide:first-child img {
+  view-transition-name: product-hero;
+}
+
 .slide video {
   width: 100%;
   height: 100%;

@@ -218,74 +218,76 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Saturno Ambiental / presença regional ----------------
-          Dobra âncora de materialidade da Saturno (Seção 5 da rodada: "uma
-          das duas dobras deve ganhar a materialidade própria da marca").
+      {/* ---------------- Saturno Ambiental (território contínuo) ----------------
+          Consolidação de territórios (branch feature/territorios-visuais-
+          continuos): mesmo problema que a Almeida Ambiental já teve —
+          a primeira dobra tinha a materialidade (MaterialSurface
+          "saturno-hero") e a segunda ficava só na cor sólida, então o
+          usuário via a textura desaparecer exatamente no meio do
+          território de uma única empresa. A materialidade passa a
+          pertencer ao wrapper (.saturnoTerritory), não à dobra — a mesma
+          MaterialSurface cobre as duas por baixo, sem reiniciar.
 
-          A fotografia que ocupava o slot direito saiu junto, e não por
-          composição: era `saturno-operacao.webp`, uma imagem gerada
-          descrita como "Operação da Saturno Ambiental em Blumenau" — ou
-          seja, afirmava uma instalação que ninguém fotografou. A página
-          /saturno-ambiental já tinha removido exatamente esse tipo de
-          afirmação (ver o cabeçalho de lib/saturno-data.ts) e a Home
-          continuava contradizendo a própria regra.
-
-          Não entrou outra imagem no lugar: o território da Saturno é
-          matéria, tipografia e superfície. A dobra passa a ser a
-          declaração de marca — símbolo oficial, região e headline
-          monumental sobre a superfície material da empresa, a MESMA
-          composição que abre /saturno-ambiental. */}
-      <section className={`${styles.section} ${styles.toneStone} ${boundarySurface}`}>
+          A dobra de "atuação" mantém a sua própria fotografia
+          (saturno-fluxo, framed) como PEÇA editorial dentro do ambiente —
+          não como um segundo fundo de página inteira — exatamente a
+          distinção que a rodada pede entre AMBIENTE e ASSET. Não é a
+          mesma imagem da dobra anterior (saturno-hero ≠ saturno-fluxo),
+          então a variedade continua existindo dentro do mesmo mundo
+          visual. */}
+      <div className={`${styles.toneStone} ${styles.saturnoTerritory}`}>
         <MaterialSurface surface="saturno-hero" />
-        <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
-        <div className={styles.container}>
-          <Reveal className={styles.brandStatement}>
-            <BrandMark
-              brand={BRANDS["saturno-ambiental"]}
-              variant="branca"
-              className={styles.eyebrowMark}
-            />
-            <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-            <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
-              EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
-            </h2>
-          </Reveal>
-        </div>
-      </section>
 
-      {/* ---------------- Saturno Ambiental / atuação ---------------- */}
-      <section className={`${styles.section} ${styles.toneStone} ${boundarySurface}`}>
-        <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-              <SectionMedia
-                imageSrc={IMG_SATURNO_ATUACAO}
-                alt="Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos"
-                objectPosition="center"
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={styles.brandStatement}>
+              <BrandMark
+                brand={BRANDS["saturno-ambiental"]}
+                variant="branca"
+                className={styles.eyebrowMark}
               />
-            </div>
-            <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Saturno Ambiental</p>
-              <h2 className={styles.headline}>GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA</h2>
-              <p className={styles.body}>
-                Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-                construída para unir eficiência operacional e responsabilidade ambiental.
-              </p>
-              <ul className={styles.tagRow}>
-                <li>Gestão de Resíduos</li>
-                <li>Cartonagem</li>
-                <li>Consultoria</li>
-              </ul>
-              <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
-                  Conheça Saturno Ambiental
-                </Link>
+              <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
+              <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
+                EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
+              </h2>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
+              <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
+                <SectionMedia
+                  imageSrc={IMG_SATURNO_ATUACAO}
+                  alt="Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos"
+                  objectPosition="center"
+                />
               </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+              <div className={styles.duoContent}>
+                <p className={styles.eyebrow}>Saturno Ambiental</p>
+                <h2 className={styles.headline}>GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA</h2>
+                <p className={styles.body}>
+                  Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
+                  construída para unir eficiência operacional e responsabilidade ambiental.
+                </p>
+                <ul className={styles.tagRow}>
+                  <li>Gestão de Resíduos</li>
+                  <li>Cartonagem</li>
+                  <li>Consultoria</li>
+                </ul>
+                <div className={styles.ctaRow}>
+                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
+                    Conheça Saturno Ambiental
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      </div>
 
       {/* ---------------- Impacto positivo 2025 ---------------- */}
       <section
@@ -341,7 +343,7 @@ export default function HomePage() {
               <SectionMedia imageSrc={IMG_MANIFESTO} alt="Grupo Almeida" objectPosition="center 40%" />
             </div>
             <h2 className={styles.manifestoHeadline}>
-              O QUE COMEÇOU COM PAPEL E PAPELÃO HOJE CONECTA OPERAÇÃO, TECNOLOGIA E SUSTENTABILIDADE.
+              O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.
             </h2>
             <p className={styles.body}>Há 40 anos transformando o presente, pensando no futuro.</p>
             <div className={styles.ctaRow}>

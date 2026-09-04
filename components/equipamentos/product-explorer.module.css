@@ -402,3 +402,18 @@
     transition: none;
   }
 }
+
+/* ---------------- Transição para o detalhe (Seção 13) ----------------
+   `view-transition-name` marca QUAL imagem a View Transitions API deve
+   morfar entre os dois estados do DOM (antes/depois do <dialog> abrir) —
+   a mesma imagem principal reaparece em ProductGallery.tsx com o mesmo
+   nome (ver .slide:first-child img em product-gallery.module.css). Como
+   só um elemento pode ostentar um nome por vez, a classe só é aplicada
+   via JS (ProductExplorer.tsx) enquanto o detalhe está FECHADO — assim
+   que abre, esta imagem perde o nome e a da galeria assume, exatamente a
+   troca "antes/depois" que a API precisa para animar. Sem suporte no
+   navegador ou com prefers-reduced-motion, a classe fica inerte (nenhum
+   efeito visual) e o <dialog> abre normalmente. */
+.transitionHero {
+  view-transition-name: product-hero;
+}

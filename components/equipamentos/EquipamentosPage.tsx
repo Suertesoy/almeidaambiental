@@ -105,8 +105,11 @@ export default function EquipamentosPage() {
       {/* ---------------- Eficiência que aparece no transporte ---------------- */}
       <LogisticsEfficiency />
 
-      {/* ---------------- Qual tecnologia para qual material ---------------- */}
-      <section className={`${shared.section} ${shared.toneForest}`}>
+      {/* ---------------- Qual tecnologia para qual material ----------------
+          Consolidação de territórios (Seção 11): usava toneForest, a cor
+          da Almeida Ambiental — a Equipamentos pediu um único ambiente
+          claro e contínuo, sem tons emprestados de outra empresa. */}
+      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>O equipamento começa pelo material, não pela máquina.</h2>
           <p className={shared.body}>

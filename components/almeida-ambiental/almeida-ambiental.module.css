@@ -10,18 +10,28 @@
   overflow-x: clip;
 }
 
+/* ---------------- Território material (Posicionamento + Pilares) ----------------
+   Consolidação de territórios: wrapper único (mesmo mecanismo de
+   .ambientalTerritory em components/home/home.module.css) que agrupa
+   Posicionamento e os três Pilares sob UMA MaterialSurface contínua, em
+   vez de cada seção alternar seu próprio tom de pedra clara. */
+.materialTerritory {
+  position: relative;
+}
+
 /* Numeração como metadata em accent dourado atenuado — mesmo papel de
    .flowIndex (company-page.module.css), .frentesCompactIndex (saturno) e
    .indexNumber (MaterialGrid): "número = metadata categórica" reconhecível
    em todo o site (Seção 30). */
 /* Separa os benefícios do pilar (highlights) do corpo conceitual acima
-   (Seção 31) — divisor sutil, sem virar card. As três seções de pilar são
-   sempre claras (toneStone/toneStoneAlt), então a cor do divisor não
-   precisa de variante escura aqui. */
+   (Seção 31) — divisor sutil, sem virar card. As três seções de pilar
+   passaram a viver sobre .materialTerritory (verde floresta escuro), então
+   o divisor usa a mesma cor clara-translúcida das hairlines em superfície
+   escura do resto do site (ver ProcessSteps.module.css). */
 .pillarHighlights {
   margin-top: var(--gap-body-support);
   padding-top: 16px;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  border-top: 1px solid rgba(247, 246, 241, 0.18);
 }
 
 .pillarIndex {
