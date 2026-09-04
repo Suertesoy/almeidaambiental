@@ -1,0 +1,419 @@
+/* ==========================================================
+   Explorador de catálogo técnico da Almeida Equipamentos.
+
+   Substitui os seis capítulos de produto (uma seção inteira por
+   equipamento, com bloco técnico e specs despejados na primeira leitura) e
+   a barra sticky de navegação entre eles.
+
+   A lógica agora é de revelação progressiva:
+     1. descubro o equipamento (imagem + nome + uma frase),
+     2. escolho aprofundar,
+     3. só então vejo galeria, aplicação, benefícios e specs.
+
+   Não é e-commerce: nenhum preço, carrinho, quantidade, favorito ou
+   badge promocional existe aqui — e uma única ação por equipamento.
+
+   Um só DOM para os dois breakpoints. No mobile cada item é um cartão com
+   imagem grande; a partir de 1024px os mesmos itens viram a coluna
+   esquerda de um master-detail e a imagem grande passa para o palco à
+   direita. Nada é duplicado só para mudar de layout.
+   ========================================================== */
+
+.explorer {
+  margin-top: clamp(32px, 5vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .explorer {
+    /* 4/8 e não 5/7: a crítica da rodada era "lista à esquerda + card
+       comum à direita". A lista é índice, não conteúdo — ela precisa do
+       espaço de um índice, e o palco precisa do espaço de uma vitrine. */
+    grid-template-columns: 4fr 8fr;
+    gap: clamp(40px, 4vw, 72px);
+    align-items: start;
+  }
+}
+
+.master {
+  min-width: 0;
+}
+
+/* ---------------- Bloco do item selecionado (só desktop) ---------------- */
+
+.selected {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .selected {
+    display: block;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(21, 21, 15, 0.16);
+  }
+}
+
+.selectedManufacturer {
+  margin: 0 0 6px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.selectedName {
+  margin: 0 0 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(24px, 1.6vw + 16px, 32px);
+  line-height: 1.1;
+}
+
+.selectedSummary {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.selectedCta {
+  margin-top: 22px;
+}
+
+/* Transição curta e funcional ao trocar de equipamento — nunca um efeito
+   de entrada chamativo. */
+.swap {
+  animation: explorer-swap 200ms ease-out both;
+}
+
+@keyframes explorer-swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ---------------- Lista de equipamentos ---------------- */
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.itemButton {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 24px 0 32px;
+  border: 0;
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.itemButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Imagem de descoberta: grande, o equipamento inteiro, sem specs por perto.
+   Mesma decisão do palco do desktop (ver o bloco da vitrine abaixo): 4:3 é
+   a proporção nativa dos renders, então `cover` preenche sem cortar nada e
+   sem deixar moldura em volta. */
+.cardMedia {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 18px;
+  overflow: hidden;
+  background: rgba(21, 21, 15, 0.05);
+}
+
+.cardMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemManufacturer {
+  display: block;
+  margin: 0 0 4px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.itemName {
+  display: block;
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(21px, 1.2vw + 15px, 26px);
+  line-height: 1.15;
+}
+
+.itemSummary {
+  display: block;
+  margin: 8px 0 0;
+  max-width: 42ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* Faixa de informações confirmadas. Existe só quando o equipamento tem
+   spec validada — ver ProductExplorer.tsx. Tipografia de metadata técnica,
+   nunca de badge promocional: sem fundo colorido, sem pílula, sem ícone. */
+.itemSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(21, 21, 15, 0.14);
+}
+
+.itemSpec {
+  position: relative;
+  padding-left: 13px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.itemSpec::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 7px;
+  height: 1px;
+  background: var(--color-gold-aged);
+}
+
+.itemCue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.itemCue::after {
+  content: "→";
+}
+
+@media (min-width: 1024px) {
+  .cardMedia,
+  .itemSummary,
+  .itemSpecs,
+  .itemCue {
+    display: none;
+  }
+
+  .itemButton {
+    padding: 16px 0;
+  }
+
+  .itemName {
+    font-size: 19px;
+    transition: color 160ms ease;
+  }
+
+  .itemButton:hover .itemName {
+    color: var(--color-gold-aged);
+  }
+
+  .itemButton[aria-current="true"] {
+    border-top-color: var(--color-gold-aged);
+  }
+
+  .itemButton[aria-current="true"] .itemName {
+    color: var(--color-gold-aged);
+  }
+}
+
+/* ---------------- Palco (desktop) ---------------- */
+
+.stage {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    display: block;
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
+}
+
+/* ---------------- Vitrine técnica ----------------
+   O palco era um retângulo cinza com a imagem dentro — na prática, um
+   card comum ao lado de uma lista, que é exatamente a leitura que a
+   rodada pediu para eliminar.
+
+   O que faz dele uma vitrine e não um card:
+
+     · a imagem preenche o palco inteiro, sem moldura em volta;
+     · marcas de canto — quatro cantoneiras finas, vocabulário de desenho
+       técnico, não moldura decorativa;
+     · metadata impressa — índice e fabricante sobre a própria vitrine,
+       como marcação de prancha.
+
+   Sem borda externa, sem raio, sem sombra: nada que devolva a silhueta de
+   cartão.
+
+   ---------------- O estúdio é o do próprio render ----------------
+   Primeira tentativa: o palco tinha superfície própria (gradiente + linha
+   de horizonte + símbolo ao fundo) e a imagem entrava por cima com
+   `contain` e respiro. Na revisão visual do gate isso ficou pior, não
+   melhor — os renders não são recortados em transparência, cada um traz o
+   seu próprio fundo de estúdio, e a foto virava um retângulo claro
+   flutuando dentro de outro retângulo: exatamente a leitura de "card
+   comum" que o palco deveria eliminar.
+
+   Pior: os fundos dos seis renders não são iguais entre si (amostrados nos
+   cantos superiores: #d2d2d2, #bebebe, #bababa), então nenhuma cor de
+   palco emendaria com todos.
+
+   A solução é deixar de disputar. O palco assume a proporção NATIVA dos
+   renders (1400 × 1056 = 4:3) e a imagem entra com `cover`. Como as
+   proporções batem exatamente, nada é cortado, não sobra moldura, e o
+   fundo infinito que já existe dentro do render passa a SER a superfície
+   da vitrine. O que o site acrescenta por cima é justamente o que o render
+   não tem: as marcas de canto e a metadata técnica.
+
+   O fundo abaixo é só o que aparece enquanto a imagem carrega. */
+
+.stageMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  isolation: isolate;
+  background: rgba(21, 21, 15, 0.05);
+}
+
+/* Cantoneiras de prancha técnica. */
+.stageTick {
+  position: absolute;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  border: 0 solid rgba(21, 21, 15, 0.32);
+  pointer-events: none;
+}
+
+.tickTl {
+  top: 14px;
+  left: 14px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.tickTr {
+  top: 14px;
+  right: 14px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.tickBl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.tickBr {
+  bottom: 14px;
+  right: 14px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.stageProduct {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stageIndex {
+  position: absolute;
+  z-index: 2;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: var(--color-gold-aged);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.stageIndexTotal {
+  color: var(--role-muted, var(--text-muted));
+  font-size: 11px;
+}
+
+.stageManufacturer {
+  position: absolute;
+  z-index: 2;
+  bottom: 28px;
+  left: 30px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap {
+    animation: none;
+  }
+
+  .itemName {
+    transition: none;
+  }
+}
+
+/* ---------------- Transição para o detalhe (Seção 13) ----------------
+   `view-transition-name` marca QUAL imagem a View Transitions API deve
+   morfar entre os dois estados do DOM (antes/depois do <dialog> abrir) —
+   a mesma imagem principal reaparece em ProductGallery.tsx com o mesmo
+   nome (ver .slide:first-child img em product-gallery.module.css). Como
+   só um elemento pode ostentar um nome por vez, a classe só é aplicada
+   via JS (ProductExplorer.tsx) enquanto o detalhe está FECHADO — assim
+   que abre, esta imagem perde o nome e a da galeria assume, exatamente a
+   troca "antes/depois" que a API precisa para animar. Sem suporte no
+   navegador ou com prefers-reduced-motion, a classe fica inerte (nenhum
+   efeito visual) e o <dialog> abre normalmente. */
+.transitionHero {
+  view-transition-name: product-hero;
+}

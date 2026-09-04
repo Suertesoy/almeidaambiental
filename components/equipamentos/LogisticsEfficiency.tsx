@@ -11,6 +11,11 @@ import { DENSITY_STAGES } from "../../lib/equipamentos-data";
  * melhor cada transporte. Gráfico conceitual (sem eixos, sem grid, sem
  * biblioteca) — ver DENSITY_STAGES em lib/equipamentos-data.ts para o
  * porquê de não haver kg nas barras.
+ *
+ * Consolidação de territórios (Seção 11 da rodada): usava toneForest —
+ * a cor de identidade da Almeida AMBIENTAL, não da Equipamentos, que
+ * pediu para ser "um único ambiente claro e contínuo". Passa a usar a
+ * mesma superfície stone das seções vizinhas.
  */
 export default function LogisticsEfficiency() {
   const chartRef = useRef<HTMLDivElement>(null);
@@ -34,7 +39,7 @@ export default function LogisticsEfficiency() {
 
   return (
     <section
-      className={`${shared.section} ${shared.toneForest} ${styles.densitySection}`}
+      className={`${shared.section} ${shared.toneStone} ${styles.densitySection}`}
       aria-labelledby="densidade-heading"
     >
       <div className={shared.container}>

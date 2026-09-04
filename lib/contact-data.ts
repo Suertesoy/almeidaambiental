@@ -128,6 +128,24 @@ export const REGIONS: RegionContact[] = [
   },
 ];
 
+/**
+ * WhatsApp contextual de um equipamento (Almeida Equipamentos).
+ *
+ * Não é um canal novo: reaproveita exatamente o número de Atendimento da
+ * matriz em São José já publicado acima (a Almeida Equipamentos não tem
+ * canal próprio — ver `note` da região) e o mesmo mecanismo de mensagem
+ * pré-preenchida que /contato usa. A única diferença é que o nome do
+ * equipamento selecionado viaja junto com a ação, para que quem atende já
+ * saiba do que se trata. Nenhum número, e-mail ou canal é inventado aqui.
+ */
+const SAO_JOSE = REGIONS.find((region) => region.id === "sao-jose")!;
+const SAO_JOSE_WHATSAPP = SAO_JOSE.channels.find((channel) => channel.action === "whatsapp")!;
+
+export const equipmentWhatsAppHref = (equipmentName: string) =>
+  `${SAO_JOSE_WHATSAPP.href}?text=${encodeURIComponent(
+    `Olá! Vim pelo site do Grupo Almeida e gostaria de falar sobre o equipamento ${equipmentName}.`
+  )}`;
+
 /** Anchors regionais reutilizados pelos CTAs de outras páginas — única
  *  fonte de verdade para não duplicar "/contato#..." espalhado pelo site. */
 export const CONTACT_ANCHORS = {

@@ -11,13 +11,31 @@ import { img } from "./media";
 import { CORE_MATERIALS } from "./materials";
 import { CONTACT_ANCHORS } from "./contact-data";
 
-export const HERO_IMAGE = img(
-  "saturno-ambiental",
-  "hero",
-  "/saturno-ambiental/vale-itajai.webp",
-  "Operação ambiental contemporânea no Vale do Itajaí, galpão industrial cercado por paisagem verde de Santa Catarina"
-);
-
+/**
+ * ---------------- Por que esta página quase não tem fotografia ----------------
+ *
+ * Não existe captação prevista da instalação atual da Saturno, e o prédio
+ * de hoje não representa o padrão que o Grupo está construindo. Enquanto
+ * isso for verdade, três imagens geradas que existiam aqui saíram nesta
+ * rodada porque não ilustravam um conceito — elas afirmavam fatos:
+ *
+ *   vale-itajai.webp        — um galpão inventado servindo de sede da
+ *                             Saturno no Hero da própria empresa.
+ *   triagem-mezanino.webp   — uma linha de triagem apresentada como a
+ *                             operação real da Saturno.
+ *   consultoria-ambiental.webp — um profissional inexistente passando por
+ *                             registro de uma equipe real.
+ *
+ * Nenhuma foi substituída por outra imagem: emprestar a fotografia de uma
+ * unidade da Almeida faria a sede de uma empresa passar pela da outra, e
+ * gerar um prédio novo repetiria o mesmo erro com outro arquivo. O
+ * território visual da Saturno passa a vir de tipografia, superfície,
+ * geometria, símbolo, espaçamento e conteúdo — ver SaturnoPage.tsx.
+ *
+ * CARTONAGEM_IMAGE fica: mostra o MATERIAL que a Saturno comercializa
+ * (caixas de papelão em tamanhos diferentes), não uma instalação, uma
+ * equipe ou um endereço. É material, e material a Saturno tem.
+ */
 export const CARTONAGEM_IMAGE = img(
   "saturno-ambiental",
   "cartonagem",
@@ -25,19 +43,19 @@ export const CARTONAGEM_IMAGE = img(
   "Caixas de papelão novas e usadas organizadas em diferentes tamanhos dentro de galpão"
 );
 
-export const GESTAO_AMBIENTAL_IMAGE = img(
-  "saturno-ambiental",
-  "gestao-ambiental",
-  "/saturno-ambiental/consultoria-ambiental.webp",
-  "Profissional analisando planta e documentação técnica em ambiente industrial"
-);
-
-export const MATERIALS_IMAGE = img(
-  "saturno-ambiental",
-  "materiais",
-  "/saturno-ambiental/triagem-mezanino.webp",
-  "Vista elevada de linha de triagem industrial de materiais recicláveis"
-);
+/**
+ * Faixa de metadados do Hero tipográfico. Só o que já está validado em
+ * outro lugar do repositório: a região vem da lede da própria página, o
+ * ano de integração vem de `lib/historia-data.ts` (evento "2022-saturno") e
+ * de DECISOES.md, e o escopo é o resumo das frentes listadas abaixo em
+ * FRENTES. Nada de número de funcionários, área, frota ou capacidade —
+ * esses dados não existem para a Saturno no material aprovado.
+ */
+export const HERO_META = [
+  "Blumenau · Vale do Itajaí",
+  "No Grupo Almeida desde 2022",
+  "Resíduos, cartonagem e gestão ambiental",
+];
 
 export type Frente = {
   id: "coleta" | "triagem" | "trituracao" | "destinacao" | "cartonagem" | "gestao-ambiental";
@@ -99,7 +117,6 @@ export const FRENTES: Frente[] = [
       "Orientações relacionadas a programas ambientais e sistemas de MTR",
     ],
     cta: { label: "Conversar sobre Gestão Ambiental", href: CONTACT_ANCHORS.blumenau },
-    image: GESTAO_AMBIENTAL_IMAGE,
   },
 ];
 

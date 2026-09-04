@@ -10,18 +10,28 @@
   overflow-x: clip;
 }
 
+/* ---------------- Território material (Posicionamento + Pilares) ----------------
+   Consolidação de territórios: wrapper único (mesmo mecanismo de
+   .ambientalTerritory em components/home/home.module.css) que agrupa
+   Posicionamento e os três Pilares sob UMA MaterialSurface contínua, em
+   vez de cada seção alternar seu próprio tom de pedra clara. */
+.materialTerritory {
+  position: relative;
+}
+
 /* Numeração como metadata em accent dourado atenuado — mesmo papel de
    .flowIndex (company-page.module.css), .frentesCompactIndex (saturno) e
    .indexNumber (MaterialGrid): "número = metadata categórica" reconhecível
    em todo o site (Seção 30). */
 /* Separa os benefícios do pilar (highlights) do corpo conceitual acima
-   (Seção 31) — divisor sutil, sem virar card. As três seções de pilar são
-   sempre claras (toneStone/toneStoneAlt), então a cor do divisor não
-   precisa de variante escura aqui. */
+   (Seção 31) — divisor sutil, sem virar card. As três seções de pilar
+   passaram a viver sobre .materialTerritory (verde floresta escuro), então
+   o divisor usa a mesma cor clara-translúcida das hairlines em superfície
+   escura do resto do site (ver ProcessSteps.module.css). */
 .pillarHighlights {
   margin-top: var(--gap-body-support);
   padding-top: 16px;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
+  border-top: 1px solid rgba(247, 246, 241, 0.18);
 }
 
 .pillarIndex {
@@ -34,73 +44,19 @@
   letter-spacing: 0.14em;
 }
 
-/* ---------------- Capacidade e presença ---------------- */
-
-.presenceNote {
-  margin: 20px 0 0;
-  max-width: 62ch;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-}
-
 /* ---------------- Mapa regional (RegionalMap.tsx) ---------------- */
 
-.mapFrame {
-  position: relative;
-  width: 100%;
-  max-width: 460px;
-  margin: clamp(40px, 6vw, 64px) auto 0;
-  border: 1px solid rgba(247, 246, 241, 0.22);
-  border-radius: 4px;
+/* Os estilos do mapa antigo (.mapFrame/.mapSvg/.mapOutline/.mapPoint/
+   .mapDot/.mapDotSaturno/.mapPointLabel/.mapPointNote/.mapCaption) saíram
+   com RegionalMap.tsx nesta rodada. O mapa passou a ser
+   components/shared/TerritoryMap.tsx, com a malha real do IBGE e estilos
+   próprios — ver lib/geo-santa-catarina.ts. */
+
+/* Respiro entre a headline/texto introdutório e o primeiro grid de Material
+   Cards. Aumentado na rodada de refino de fluxo/materiais: o problema de
+   conteúdo invadindo visualmente o título (relatado na Saturno) não podia
+   se repetir aqui. */
+.atlasBlock {
+  margin-top: clamp(44px, 7vw, 72px);
 }
 
-.mapSvg {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 5;
-  display: block;
-}
-
-.mapOutline {
-  fill: rgba(247, 246, 241, 0.05);
-  stroke: rgba(247, 246, 241, 0.28);
-  stroke-width: 0.6;
-}
-
-.mapPoint {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.mapDot {
-  fill: var(--color-gold-aged);
-}
-
-.mapDotSaturno {
-  fill: none;
-  stroke: var(--color-background);
-  stroke-width: 0.5;
-  opacity: 0.85;
-}
-
-.mapPointLabel {
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 3.6px;
-  font-weight: 600;
-  fill: var(--color-background);
-}
-
-.mapPointNote {
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 2.8px;
-  fill: var(--role-muted, var(--text-on-dark-muted));
-}
-
-.mapCaption {
-  margin: 16px 0 0;
-  text-align: center;
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 12px;
-  color: var(--role-muted, var(--text-on-dark-muted));
-}

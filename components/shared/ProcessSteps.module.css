@@ -1,0 +1,145 @@
+/* ==========================================================
+   PROCESS FLOW MARQUEE — ícone + nome + conector, em movimento contínuo.
+
+   Sem fundo, sem card, sem borda, sem divisor: o que separa duas etapas é
+   o conector vetorial entre elas (ver ProcessConnectorIcon em icons.tsx).
+   O próprio deslocamento horizontal é a expressão visual — ver o
+   comentário longo em ProcessSteps.tsx para como o loop de duas cópias
+   funciona sem salto perceptível.
+   ========================================================== */
+
+.viewport {
+  margin-top: clamp(32px, 5vw, 56px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 4%, black 96%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 4%, black 96%, transparent 100%);
+}
+
+.viewport:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 6px;
+}
+
+/* A sequência atravessa quase a largura inteira da viewport no desktop —
+   extrapolar ligeiramente o container editorial reforça a sensação de
+   movimento cruzando a tela (Seção 13 da rodada). Seguro porque .page
+   (Home e páginas de empresa) já declara `overflow-x: clip`. */
+@media (min-width: 1024px) {
+  .viewport {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  --marquee-duration: 26s;
+  animation: marqueeScroll var(--marquee-duration) linear infinite;
+}
+
+@media (min-width: 1024px) {
+  .track {
+    --marquee-duration: 32s;
+  }
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* As duas cópias têm largura idêntica: 50% do track é exatamente uma
+       sequência inteira. */
+    transform: translateX(-50%);
+  }
+}
+
+@media (hover: hover) {
+  .viewport:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+.viewport:focus .track,
+.viewport:focus-within .track {
+  animation-play-state: paused;
+}
+
+.sequence {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 14px);
+  padding-block: clamp(28px, 5vw, 44px);
+}
+
+.icon {
+  flex: none;
+  display: block;
+  width: clamp(22px, 1.1vw + 17px, 30px);
+  height: clamp(22px, 1.1vw + 17px, 30px);
+  color: currentColor;
+  opacity: 0.88;
+}
+
+.name {
+  flex: none;
+  margin: 0;
+  white-space: nowrap;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: clamp(14px, 0.4vw + 13px, 16px);
+  letter-spacing: 0.005em;
+}
+
+.connector {
+  flex: none;
+  display: block;
+  width: clamp(32px, 4vw, 56px);
+  height: auto;
+  color: currentColor;
+  opacity: 0.45;
+}
+
+/* Superfícies claras precisam de um pouco mais de traço para o mesmo peso
+   ótico — o mesmo ajuste por superfície que outros componentes fazem. */
+@media (prefers-contrast: more) {
+  .icon,
+  .connector {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .sequenceCopy {
+    display: none;
+  }
+
+  .viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Sem a cópia de loop, o conector depois de Destinação apontaria para o
+     nada — a sequência real fica parada e termina limpa na última etapa. */
+  .sequence > .step:last-child .connector {
+    display: none;
+  }
+}

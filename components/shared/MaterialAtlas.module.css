@@ -1,0 +1,252 @@
+/* ==========================================================
+   MATERIAL ATLAS
+
+   Composição assimétrica, não grade: uma peça grande de matéria e a lista
+   tipográfica organizada por família ao lado dela.
+
+   Correção de direção de arte (branch feature/correcao-direcao-arte): a
+   versão anterior dava à lista um painel de fundo sólido (branco/verde),
+   e a fotografia terminava numa borda reta — a composição lia como
+   "imagem + card" grudados lado a lado, exatamente o que a materialidade
+   existe para evitar. Duas mudanças resolvem isso:
+
+     1. `.index` perdeu o `background` sólido — a lista vive diretamente
+        sobre a cor da SEÇÃO que a hospeda (nenhuma cor própria, nenhuma
+        borda, nenhum raio, nenhuma sombra).
+     2. `.media` ganhou uma máscara de gradiente na borda que a lista
+        invade — a foto se dissolve para transparente ali (revelando o
+        fundo da seção por trás) em vez de terminar em corte reto. Como a
+        superfície da própria imagem gerada já é da mesma família de cor
+        do fundo da seção (warm stone/kraft — ver o prompt em
+        lib/material-surfaces.ts), o resultado é matéria e fundo se
+        misturando, não uma fotografia colada com um painel ao lado.
+
+   Desktop  — ~60% imagem / 40% informação, com a coluna de informação
+              subindo bem para dentro da margem da imagem (a área de
+              espaço negativo que o próprio prompt pede). É essa
+              sobreposição funda, não uma borda de card, que costura as
+              duas metades numa composição só.
+   Mobile   — imagem grande primeiro, lista compacta depois, famílias em
+              duas colunas quando cabem (nunca abaixo de 480px — nomes
+              longos quebrariam mal). A transição usa a mesma máscara,
+              agora na borda inferior.
+   Sem asset — a lista assume a largura inteira em colunas próprias. Ver o
+              cabeçalho de MaterialAtlas.tsx: nenhuma imagem é emprestada
+              para preencher o vão.
+   ========================================================== */
+
+.atlas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+/* ---------------- Imagem ---------------- */
+
+.media {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile: 4:5, a composição própria de retrato (não um recorte do
+   desktop — os dois assets são gerados separadamente). A máscara dissolve
+   o quarto inferior da imagem para transparente, para a lista continuar
+   sem uma borda reta entre as duas. */
+.media {
+  aspect-ratio: 4 / 5;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+}
+
+.index {
+  margin-top: clamp(-56px, -8vw, -28px);
+}
+
+/* ---------------- Índice por família ---------------- */
+
+.index {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 4vw, 30px);
+}
+
+/* Duas colunas de família já a partir de 480px: as famílias têm de 2 a 6
+   itens, então empilhá-las uma sob a outra no celular devolveria justamente
+   a coluna alta e monótona que o Atlas existe para eliminar. */
+@media (min-width: 480px) {
+  .index {
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(20px, 5vw, 40px);
+  }
+}
+
+.family {
+  break-inside: avoid;
+}
+
+.familyLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.28);
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dark .familyLabel {
+  border-bottom-color: rgba(247, 246, 241, 0.32);
+}
+
+/* Contagem como metadata editorial — mesma gramática de numeração que o
+   resto do site usa (serif, discreto, nunca como badge). */
+.familyCount {
+  flex: none;
+  color: var(--role-accent, var(--text-accent));
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.familyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* O item é um botão porque destacar um material na lista é uma ação real,
+   mas não pode PARECER um botão: sem fundo, sem borda, sem raio — só o
+   nome do material sobre a superfície da seção. */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(21, 21, 15, 0.1);
+  background: none;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(15px, 0.7vw + 12px, 18px);
+  text-align: left;
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.dark .item {
+  border-bottom-color: rgba(247, 246, 241, 0.14);
+}
+
+.item:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .item:hover .itemName {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+}
+
+/* Destaque discreto — o material escolhido ganha o acento da superfície e
+   um tique à esquerda. Não muda o tamanho da linha, então a lista inteira
+   não reflui a cada toque. */
+.itemActive {
+  color: var(--role-accent, var(--text-accent));
+  border-bottom-color: currentColor;
+}
+
+.itemActive .itemIcon {
+  color: currentColor;
+  opacity: 1;
+}
+
+.itemIcon {
+  flex: none;
+  width: 19px;
+  height: 19px;
+  color: var(--role-secondary, var(--text-secondary));
+  opacity: 0.75;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.itemName {
+  min-width: 0;
+}
+
+/* ---------------- Desktop ---------------- */
+
+@media (min-width: 960px) {
+  .atlas {
+    /* ~60/40. A imagem é a peça maior de propósito: ela precisa ser lida
+       como matéria, não como thumbnail de apoio ao texto. */
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 0;
+    align-items: center;
+  }
+
+  .media {
+    aspect-ratio: 3 / 2;
+    /* No desktop a foto se dissolve pela direita — é ali que o prompt da
+       imagem concentra o espaço negativo (ver lib/material-surfaces.ts) e
+       é ali que a lista entra. Sobrescreve a máscara vertical do mobile. */
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 58%, transparent 96%);
+    mask-image: linear-gradient(to right, black 0%, black 58%, transparent 96%);
+  }
+
+  /* A lista entra bem para dentro da área de espaço negativo da própria
+     fotografia — não é uma coluna vizinha, é texto vivendo dentro da
+     composição. Sem painel: sem fundo, sem borda, sem raio, sem sombra —
+     só a cor da seção (herdada por trás) e as hairlines do próprio Atlas. */
+  .index {
+    grid-template-columns: 1fr 1fr;
+    /* `position: relative` aqui não é sobre posicionamento — é sobre ordem
+       de pintura. `.media` é posicionada, e elemento posicionado pinta
+       acima de não-posicionado no mesmo contexto, independentemente da
+       ordem no DOM. Sem esta linha a imagem cobre a faixa que a lista
+       invade. */
+    position: relative;
+    z-index: 1;
+    margin-left: clamp(-220px, -14vw, -120px);
+    padding: clamp(28px, 3vw, 40px) 0 clamp(28px, 3vw, 40px) 0;
+    row-gap: clamp(22px, 2.2vw, 32px);
+  }
+
+  /* Sem imagem não existe margem para invadir — a lista volta a ser um
+     bloco normal, alinhado com o resto da seção. */
+  .atlasNoMedia .index {
+    margin-left: 0;
+    padding: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: clamp(24px, 3vw, 44px);
+  }
+
+  .atlasNoMedia {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1280px) {
+  .index {
+    padding-left: clamp(64px, 6vw, 96px);
+  }
+}

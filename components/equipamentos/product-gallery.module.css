@@ -1,0 +1,204 @@
+/* ==========================================================
+   Galeria de um equipamento.
+
+   Estruturada para receber, sem redesenho, o que ainda vai chegar da
+   captação real: foto principal, fotos adicionais, detalhes e vídeo de
+   funcionamento. Mídia ausente simplesmente não é renderizada — não existe
+   moldura vazia nem aviso de "vídeo em breve". Com uma única imagem, a
+   galeria é exatamente uma imagem: sem tira de miniaturas, sem contador,
+   sem setas.
+
+   O carrossel é scroll nativo com snap: no celular o gesto de arrastar já
+   funciona sem JavaScript e a rolagem vertical da página nunca é
+   capturada. As miniaturas são botões reais, então o mesmo conteúdo é
+   alcançável por teclado.
+   ========================================================== */
+
+.gallery {
+  min-width: 0;
+}
+
+.track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: rgba(21, 21, 15, 0.05);
+}
+
+.slideImageButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.slideImageButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: -3px;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(12px, 4%, 32px);
+}
+
+/* Continuidade "card → detalhe" (Seção 13 da rodada de territórios
+   visuais): a primeira imagem (sempre a foto principal — `gallery`/`video`
+   só entram depois dela, ver ProductGallery.tsx) recebe o MESMO
+   view-transition-name que o palco/card de origem em ProductExplorer.tsx
+   assume enquanto o detalhe está fechado, para a API morfar uma na outra
+   em vez do <dialog> só aparecer. Sem efeito quando a API não é usada. */
+.slide:first-child img {
+  view-transition-name: product-hero;
+}
+
+.slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* ---------------- Miniaturas ---------------- */
+
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  padding: 4px;
+  border: 1px solid rgba(21, 21, 15, 0.16);
+  border-radius: 3px;
+  background: rgba(21, 21, 15, 0.04);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.thumb[aria-current="true"] {
+  border-color: var(--color-gold-aged);
+}
+
+.thumb:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Miniatura de vídeo sem poster: rótulo tipográfico, não um ícone de play
+   sobre uma caixa vazia. */
+.thumbVideoLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.caption {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---------------- Visualização ampliada ---------------- */
+
+.lightbox {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.lightbox::backdrop {
+  background: rgba(9, 16, 13, 0.92);
+}
+
+.lightboxInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 5vw, 56px);
+}
+
+.lightboxInner img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: clamp(12px, 3vw, 24px);
+  right: clamp(12px, 3vw, 24px);
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(247, 246, 241, 0.4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-background);
+  cursor: pointer;
+}
+
+.lightboxClose:hover {
+  background: rgba(247, 246, 241, 0.12);
+}
+
+.lightboxClose:focus-visible {
+  outline: 3px solid var(--color-background);
+  outline-offset: 2px;
+}
+
+.lightboxClose svg {
+  width: 16px;
+  height: 16px;
+}

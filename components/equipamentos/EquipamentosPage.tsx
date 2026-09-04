@@ -2,12 +2,13 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./equipamentos.module.css";
 import CompanyHero from "../shared/CompanyHero";
-import ProductRotation from "../shared/ProductRotation";
 import EditorialCTA from "../shared/EditorialCTA";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
+import EditorialPicture from "../shared/EditorialPicture";
+import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import LogisticsEfficiency from "./LogisticsEfficiency";
-import ProductNav from "./ProductNav";
-import { MATERIAL_ICONS, BENEFIT_ICONS } from "../icons";
+import ProductExplorer from "./ProductExplorer";
+import { MATERIAL_ICONS } from "../icons";
 import {
   HERO_IMAGE,
   DETALHE_MECANICO_IMAGE,
@@ -18,27 +19,24 @@ import {
 } from "../../lib/equipamentos-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
-const PRODUCT_TONE = [
-  shared.toneStone,
-  shared.toneStoneAlt,
-  shared.toneStone,
-  shared.toneStoneAlt,
-  shared.toneStone,
-  shared.toneStoneAlt,
-];
-
 const MODALITIES = ["Compra", "Locação", "Consignação"];
 
 /**
- * /almeida-equipamentos — a mais visual e tecnológica das três páginas
- * (Seção 31 em diante), sem virar loja virtual: sem preço, sem carrinho.
- * Hero técnico → posicionamento (Compra/Locação/Consignação) → navegação
- * interna → seis capítulos de produto (portfólio EXATO, Seção 32) →
- * "eficiência que aparece no transporte" (ponte editorial, LogisticsEfficiency)
- * → "qual tecnologia para qual material" → parcerias internacionais → CTA final.
- * O depoimento CTS (Seção 48) não entra: nenhum texto aprovado da autoria
- * original foi localizado no repositório — ver pendências no relatório do
- * checkpoint em vez de inventar a fala.
+ * /almeida-equipamentos — a mais técnica das três páginas, sem virar loja
+ * virtual: sem preço, sem carrinho, sem quantidade, sem favorito, sem
+ * badge promocional.
+ *
+ * Hero técnico → posicionamento (Compra/Locação/Consignação) → catálogo
+ * técnico explorável (ProductExplorer, portfólio EXATO de seis itens) →
+ * "eficiência que aparece no transporte" → "qual tecnologia para qual
+ * material" → parcerias internacionais → cross-link → CTA final.
+ *
+ * Rodada de refino editorial: os seis capítulos de produto em sequência
+ * vertical e a barra sticky de navegação entre eles deram lugar ao
+ * explorador de catálogo — descoberta primeiro, profundidade sob demanda
+ * (ver ProductExplorer.tsx / ProductDetail.tsx). A fronteira
+ * "equipamentos-catalogo" marca a entrada nesse território com o símbolo
+ * atravessando o corte entre as duas superfícies.
  */
 export default function EquipamentosPage() {
   return (
@@ -54,7 +52,8 @@ export default function EquipamentosPage() {
       />
 
       {/* ---------------- Posicionamento ---------------- */}
-      <section className={`${shared.section} ${shared.toneStone}`}>
+      <section className={`${shared.section} ${shared.toneStone} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="equipamentos-catalogo" half="leaving" surface="onLight" />
         <div className={shared.container}>
           <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
             <div className={shared.duoContent}>
@@ -70,101 +69,47 @@ export default function EquipamentosPage() {
                 ))}
               </ul>
             </div>
+            {/* Materialidade mecânica (engenharia/precisão): slot já
+                preparado para receber uma composição própria de desktop e
+                outra de mobile via `mobileSrc` no dado — ver lib/media.ts.
+                Hoje serve a mesma imagem nos dois, enquadrada por
+                objectPosition. */}
             <div className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
-              <img src={DETALHE_MECANICO_IMAGE.src} alt={DETALHE_MECANICO_IMAGE.alt} loading="lazy" decoding="async" />
+              <EditorialPicture image={DETALHE_MECANICO_IMAGE} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- Navegação interna dos seis produtos ---------------- */}
-      <ProductNav products={PRODUCTS} />
+      {/* ---------------- Catálogo técnico explorável ---------------- */}
+      <section
+        id="produtos"
+        className={`${shared.section} ${shared.toneStoneAlt} ${boundarySurface}`}
+        aria-labelledby="produtos-heading"
+      >
+        <BrandBoundaryMark boundary="equipamentos-catalogo" half="entering" surface="onLight" />
+        <div className={shared.container}>
+          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Catálogo técnico</p>
+          <h2 id="produtos-heading" className={shared.headline}>
+            Seis tecnologias. Comece pela que se parece com a sua operação.
+          </h2>
+          <p className={shared.body}>
+            Escolha um equipamento para ver galeria, aplicação, benefícios e as especificações confirmadas pelo
+            fabricante.
+          </p>
 
-      {/* ---------------- Seis capítulos de produto ---------------- */}
-      {PRODUCTS.map((product, index) => {
-        const sideClass = index % 2 === 0 ? shared.duoMediaRight : shared.duoMediaLeft;
-
-        return (
-          <section
-            key={product.id}
-            id={product.id}
-            className={`${styles.productChapter} ${PRODUCT_TONE[index]}`}
-            aria-labelledby={`${product.id}-heading`}
-          >
-            <div className={shared.container}>
-              <div className={`${shared.duo} ${sideClass}`}>
-                <div className={shared.duoMedia}>
-                  <ProductRotation image={product.image} priority={index === 0} />
-                </div>
-
-                <div className={shared.duoContent}>
-                  <p className={styles.productManufacturer}>{product.manufacturer}</p>
-                  <h2 className={styles.productName}>{product.name}</h2>
-                  <p className={styles.productPromise}>{product.headline}</p>
-                  <p className={shared.body}>{product.copy}</p>
-
-                  {/* Bloco técnico (Seção 23): Ideal para / Benefícios / specs
-                      agrupados em área de apoio visualmente distinta —
-                      divisor superior, fundo tonal sutil, 2 colunas no
-                      desktop. Listas reais (uma linha por item), não mais
-                      pílulas separadas por ponto correndo em bloco. */}
-                  <div className={styles.technicalBlock}>
-                    <div className={styles.technicalGroup}>
-                      <p className={shared.eyebrow}>Ideal para</p>
-                      <ul className={styles.iconList}>
-                        {product.idealFor.map((item) => {
-                          const ItemIcon = MATERIAL_ICONS[item];
-                          return (
-                            <li key={item} className={styles.iconListItem}>
-                              {ItemIcon ? <ItemIcon /> : <span className={styles.iconPlaceholder} aria-hidden="true" />}
-                              <span>{item}</span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-
-                    <div className={styles.technicalGroup}>
-                      <p className={shared.eyebrow}>Benefícios</p>
-                      <ul className={styles.iconList}>
-                        {product.benefits.map((benefit) => {
-                          const BenefitIcon = BENEFIT_ICONS[benefit];
-                          return (
-                            <li key={benefit} className={styles.iconListItem}>
-                              {BenefitIcon ? <BenefitIcon /> : <span className={styles.iconPlaceholder} aria-hidden="true" />}
-                              <span>{benefit}</span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-
-                    {product.confirmedSpecs && (
-                      <ul className={`${styles.specsList} ${styles.specsListSpan}`}>
-                        {product.confirmedSpecs.map((spec) => (
-                          <li key={spec}>{spec}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-
-                  <div className={shared.ctaRow}>
-                    <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={CONTACT_ANCHORS.saoJose}>
-                      Falar sobre {product.name}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        );
-      })}
+          <ProductExplorer />
+        </div>
+      </section>
 
       {/* ---------------- Eficiência que aparece no transporte ---------------- */}
       <LogisticsEfficiency />
 
-      {/* ---------------- Qual tecnologia para qual material ---------------- */}
-      <section className={`${shared.section} ${shared.toneForest}`}>
+      {/* ---------------- Qual tecnologia para qual material ----------------
+          Consolidação de territórios (Seção 11): usava toneForest, a cor
+          da Almeida Ambiental — a Equipamentos pediu um único ambiente
+          claro e contínuo, sem tons emprestados de outra empresa. */}
+      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>O equipamento começa pelo material, não pela máquina.</h2>
           <p className={shared.body}>
@@ -190,7 +135,7 @@ export default function EquipamentosPage() {
               );
             })}
           </div>
-          <div className={shared.ctaRow} style={{ marginTop: "clamp(32px, 5vw, 48px)" }}>
+          <div className={`${shared.ctaRow} ${styles.matrixCtaRow}`}>
             <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={CONTACT_ANCHORS.saoJose}>
               Descrever minha operação
             </Link>
@@ -204,7 +149,7 @@ export default function EquipamentosPage() {
           <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Parcerias internacionais</p>
           <h2 className={shared.headline}>Tecnologia internacional aplicada à experiência brasileira.</h2>
           <div className={styles.partnersMedia}>
-            <img src={FEIRA_IMAGE.src} alt={FEIRA_IMAGE.alt} loading="lazy" decoding="async" />
+            <EditorialPicture image={FEIRA_IMAGE} />
             <IllustrativeBadge />
           </div>
           <p className={shared.body}>

@@ -1,0 +1,200 @@
+/* ==========================================================
+   TERRITORY MAP
+
+   Mobile  — o mapa ocupa a largura inteira e o índice numerado vem logo
+             abaixo, dentro da mesma moldura. O BLOCO fica quase quadrado
+             mesmo com o estado mantendo a proporção real (1000 × 700):
+             é assim que se evita o "mapa horizontal minúsculo" sem
+             deformar geografia para caber num retrato.
+   Desktop — o mapa toma uma coluna grande e o índice fica ao lado, na
+             mesma altura de leitura.
+
+   O componente é pintado sobre superfície escura (hoje: .toneCarvao na
+   /almeida-ambiental). Cores vêm de --role-* e dos tokens da paleta —
+   nada de cinza neutro, que quebraria a família cromática do site.
+   ========================================================== */
+
+.frame {
+  position: relative;
+  margin-top: clamp(36px, 6vw, 56px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vw, 36px);
+}
+
+/* ---------------- Área do mapa ---------------- */
+
+.mapArea {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-top: 1px solid rgba(247, 246, 241, 0.18);
+  border-bottom: 1px solid rgba(247, 246, 241, 0.18);
+  padding: clamp(14px, 3vw, 26px) 0;
+}
+
+.svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Símbolo institucional atrás da geografia. Cortado pela moldura de
+   propósito (a mesma gramática de BrandBoundaryMark e MaterialSurface) e
+   ancorado no sudoeste do quadro, onde o estado não passa.
+
+   Ajustado depois da revisão visual do gate: a 5% de opacidade e com um
+   terço da peça dentro do quadro, ele lia como um borrão de origem
+   desconhecida no canto, e não como assinatura. Mais recuado e mais
+   apagado, volta a ser o que deveria ser — presença arquitetônica que só
+   se percebe procurando. */
+.symbol {
+  position: absolute;
+  z-index: 0;
+  left: -26%;
+  bottom: -46%;
+  width: 74%;
+  height: auto;
+  max-width: none;
+  opacity: 0.028;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Traço fino: o estado é uma silhueta, não uma área preenchida de mapa
+   temático. O preenchimento quase imperceptível só separa "dentro" de
+   "fora" quando o halo de um ponto cruza o litoral. */
+.outline {
+  fill: rgba(247, 246, 241, 0.045);
+  stroke: rgba(247, 246, 241, 0.42);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Halo de PRESENÇA — raio idêntico em todas as localidades, de propósito.
+   Ver o cabeçalho de TerritoryMap.tsx: é o que impede a leitura de "área
+   atendida", porque cobertura real nunca seria igual em todas elas. */
+.halo {
+  fill: var(--color-gold-aged);
+  opacity: 0.1;
+}
+
+.dot {
+  fill: var(--color-gold-aged);
+}
+
+/* Saturno: ponto vazado, mesma distinção que o mapa anterior já fazia
+   entre a operação da Almeida Ambiental e a da Saturno. */
+.dotSaturno {
+  fill: var(--color-forest-deep);
+  stroke: var(--color-background);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.pinNumber {
+  fill: var(--color-background);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 26px;
+  text-anchor: middle;
+}
+
+/* ---------------- Índice numerado ---------------- */
+
+.index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: clamp(16px, 4vw, 28px);
+}
+
+.indexItem {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(247, 246, 241, 0.16);
+}
+
+.indexNumber {
+  flex: none;
+  color: var(--color-gold-aged);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.indexBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.indexName {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.indexRole {
+  color: var(--role-muted, var(--text-on-dark-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11.5px;
+  line-height: 1.3;
+}
+
+.indexRoleSaturno {
+  color: var(--role-secondary, var(--text-on-dark-secondary));
+}
+
+.caption {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--role-muted, var(--text-on-dark-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---------------- Desktop ---------------- */
+
+@media (min-width: 900px) {
+  .frame {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    column-gap: clamp(32px, 4vw, 56px);
+    align-items: center;
+  }
+
+  .mapArea {
+    grid-row: span 2;
+    border: 0;
+    padding: 0;
+  }
+
+  .index {
+    grid-template-columns: 1fr;
+    align-self: end;
+  }
+
+  .caption {
+    align-self: start;
+    margin-top: 4px;
+  }
+
+  .indexName {
+    font-size: 15px;
+  }
+
+  .pinNumber {
+    font-size: 22px;
+  }
+}

@@ -28,208 +28,21 @@
   font-size: 13px;
 }
 
-/* ---------------- Navegação interna dos seis produtos ---------------- */
-
-.productNav {
-  position: sticky;
-  top: var(--header-height);
-  z-index: 10;
-  background: var(--color-stone-warm);
-  border-bottom: 1px solid rgba(21, 21, 15, 0.12);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  /* Affordance discreta de scroll horizontal: fade nas duas bordas em vez
-     de setas ou carrossel — some sozinho onde a lista já couber inteira. */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 24px,
-    black calc(100% - 24px),
-    transparent
-  );
-  mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
-}
-
-.productNavList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: clamp(4px, 2vw, 8px);
-  padding-inline: clamp(20px, 6vw, 64px);
-  max-width: 1320px;
-  margin-inline: auto;
-}
-
-.productNavList li {
-  flex: none;
-}
-
-.productNavLink {
-  display: inline-flex;
-  align-items: center;
-  height: 52px;
-  padding-inline: 14px;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-muted);
-  text-decoration: none;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-}
-
-.productNavLink:hover {
-  color: var(--text-secondary);
-}
-
-.productNavLink[aria-current="true"] {
-  color: var(--color-gold-aged);
-  border-bottom-color: var(--color-gold-aged);
-}
-
-/* ---------------- Capítulo de produto ---------------- */
-
-.productChapter {
-  padding-block: clamp(56px, 9vw, 96px);
-  /* --anchor-offset (header + respiro) + altura da própria barra sticky de
-     produtos (52px de link + borda), para o título nunca ficar coberto. */
-  scroll-margin-top: calc(var(--anchor-offset) + 40px);
-}
-
-/* Fabricante como metadata (Seção 20): não compete com o nome do produto —
-   sans serif pequena, uppercase, tracking aberto, cor muted. */
-.productManufacturer {
-  margin: 0 0 6px;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Produto continua headline editorial (Seção 21) — só reduz a margem
-   inferior, porque agora a promessa (.productPromise) vem colada como
-   parte da mesma unidade "nome + tagline", não como um parágrafo solto. */
-.productName {
-  margin: 0 0 8px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(24px, 1.6vw + 16px, 32px);
-}
-
-/* Promessa (Seção 22): um degrau visual abaixo do nome do produto — serifada
-   menor, peso mais moderado (600, não 700), cor secondary (não a mesma cor
-   do título), coluna mais estreita. "Produto → promessa → explicação", não
-   "título → outro título → parágrafo". */
-.productPromise {
-  margin: 0 0 var(--gap-title-body);
-  max-width: 42ch;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 600;
-  font-size: clamp(16px, 0.8vw + 13px, 19px);
-  line-height: 1.3;
-  letter-spacing: -0.003em;
-}
-
-/* ---------------- Bloco técnico (Seção 23) ----------------
-   Ideal para / Benefícios / specs confirmadas agrupados em área de apoio
-   claramente distinta do corpo editorial acima: divisor superior, fundo
-   tonal extremamente sutil (não um card — sem sombra, sem radius forte),
-   2 colunas no desktop. */
-.technicalBlock {
-  margin-top: var(--gap-body-support);
-  padding: 24px;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
-  background: rgba(21, 21, 15, 0.035);
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-@media (min-width: 640px) {
-  .technicalBlock {
-    grid-template-columns: 1fr 1fr;
-    gap: 24px 32px;
-    padding: 28px 32px;
-  }
-}
-
-.technicalGroup {
-  min-width: 0;
-}
-
-/* .technicalList (lista real, um item por linha, com bullet genérico)
-   mudou para company-page.module.css — reaproveitada pela Saturno (Seção
-   37) e pelas specs textuais aqui. Ver shared.technicalList.
-
-   .iconList é a variante só de "Ideal para"/"Benefícios" (Checkpoint C,
-   Seção 12-13 da tarefa): troca o bullet genérico por um ícone funcional
-   pequeno por item (MATERIAL_ICONS/BENEFIT_ICONS, components/icons.tsx).
-   Self-contained (não estende .technicalList) para não arriscar a cascata
-   entre os dois CSS Modules — ver histórico de decisão no commit. Quando um
-   item não tem ícone mapeado (ex. descrição de uso que não é bem um
-   material), .iconPlaceholder preserva o alinhamento com um marcador
-   discreto no lugar do ícone, sem virar bullet genérico de novo. */
-.iconList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.iconListItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.iconListItem svg {
-  flex: none;
-  width: 17px;
-  height: 17px;
-  color: var(--role-muted, var(--text-muted));
-}
-
-.iconPlaceholder {
-  flex: none;
-  width: 5px;
-  height: 5px;
-  margin-inline: 6px;
-  border-radius: 999px;
-  background: currentColor;
-  opacity: 0.5;
-}
-
-.specsList {
-  list-style: none;
-  margin: 20px 0 0;
-  padding: 16px 0 0;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
-}
-
-.specsListSpan {
-  grid-column: 1 / -1;
-}
+/* A navegação sticky dos seis produtos (.productNav*) e o capítulo de
+   produto (.productChapter/.productManufacturer/.productName/.productPromise/
+   .technicalBlock/.iconList/.specsList) foram removidos nesta rodada: os
+   seis capítulos verticais deram lugar ao catálogo técnico explorável.
+   Descoberta e master-detail vivem em product-explorer.module.css; o
+   detalhe ampliado (galeria, aplicação, benefícios, specs em accordion e
+   ação única) vive em product-detail.module.css e product-gallery.module.css. */
 
 /* ---------------- Eficiência que aparece no transporte ---------------- */
 
+/* Consolidação de territórios: a seção deixou de ser toneForest (escura) e
+   passou a ser toneStone (clara) — a hairline e o preenchimento "solto"
+   abaixo, calibrados para escuro, precisam da variante clara equivalente. */
 .densitySection {
-  border-bottom: 1px solid rgba(247, 246, 241, 0.14);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.14);
 }
 
 /* Checkpoint D (refinamento mobile 2026-08-20): align-items era "end",
@@ -287,7 +100,7 @@
 }
 
 .densityBarFill[data-stage="solto"] {
-  background: rgba(247, 246, 241, 0.18);
+  background: rgba(21, 21, 15, 0.14);
 }
 
 .densityBarFill[data-stage="prensado"] {
@@ -414,12 +227,14 @@
 
 .matrixItem {
   padding: 20px 0;
-  border-top: 1px solid rgba(247, 246, 241, 0.2);
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
 }
 
-/* Checkpoint D (Seção 18): ícone reconhecível antes do nome — superfície
-   escura (toneForest), então o ícone usa --role-secondary (on-dark
-   secondary), não dourado (Seção 33: nem todo ícone é accent). */
+/* Checkpoint D (Seção 18): ícone reconhecível antes do nome. Consolidação
+   de territórios: a seção deixou de ser toneForest (escura) e passou a
+   ser toneStoneAlt (clara) — --role-secondary já resolve para a variante
+   certa por herança do tom que envolve a seção; o fallback só precisava
+   parar de assumir escuro (Seção 33: nem todo ícone é accent). */
 .matrixHead {
   display: flex;
   align-items: center;
@@ -431,7 +246,7 @@
   flex: none;
   width: 24px;
   height: 24px;
-  color: var(--role-secondary, var(--text-on-dark-secondary));
+  color: var(--role-secondary, var(--text-secondary));
 }
 
 @media (min-width: 1024px) {
@@ -484,4 +299,10 @@
   font-weight: 700;
   font-size: clamp(22px, 2vw + 12px, 34px);
   letter-spacing: -0.01em;
+}
+
+/* Espaço antes do CTA que fecha a matriz material→tecnologia (era um
+   style inline na página). */
+.matrixCtaRow {
+  margin-top: clamp(32px, 5vw, 48px);
 }

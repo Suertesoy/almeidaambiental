@@ -12,7 +12,22 @@
   overflow-x: clip;
 }
 
-/* ---------------- Posicionamento (headline lateral no desktop) ---------------- */
+/* ---------------- Território material (Posicionamento → Gestão Ambiental) ----------------
+   Consolidação de territórios: mesmo mecanismo de .ambientalTerritory
+   (components/home/home.module.css) — um wrapper único hospeda UMA
+   MaterialSurface atravessando as quatro seções, em vez de cada uma ter
+   seu próprio tom (e, antes desta rodada, uma delas usando até a cor da
+   Almeida Ambiental por engano). */
+.saturnoTerritory {
+  position: relative;
+}
+
+/* ---------------- Headline lateral no desktop ----------------
+   Usada pelo posicionamento e, desde a rodada de refino editorial, também
+   pela Gestão Ambiental — que perdeu a fotografia ilustrativa e passou a
+   precisar exatamente da mesma gramática: título à esquerda, corpo e lista
+   técnica na coluna larga. Uma primitiva, duas seções, nenhuma variante
+   nova. */
 
 .positioningGrid {
   display: grid;
@@ -32,6 +47,23 @@
   margin-bottom: 0;
 }
 
+/* ==========================================================
+   Frentes compactas — LINGUAGEM DE PERCURSO, não grade de cartões
+
+   Auditoria visual da rodada de materialidade (Seção 8): estas quatro
+   frentes são Coleta → Triagem → Trituração → Destinação, ou seja,
+   exatamente o mesmo PROCESSO que a Almeida Ambiental apresenta como
+   régua contínua (components/shared/ProcessSteps.tsx). O mesmo conteúdo
+   estava sendo contado em duas linguagens visuais diferentes: percurso
+   numa página, quatro cartões numerados na outra.
+
+   Não é caso de trocar pelo componente da régua — estas frentes têm
+   headline e parágrafo próprios, que a régua não carrega. O que entra é o
+   VOCABULÁRIO do percurso sobre a estrutura que já existe: régua contínua
+   no topo e o tique vertical curto marcando o início de cada etapa. Mesmo
+   desenho de .step em ProcessSteps.module.css, mesma leitura de sequência.
+   ========================================================== */
+
 .frentesCompactGrid {
   margin-top: clamp(40px, 6vw, 56px);
   display: grid;
@@ -42,21 +74,46 @@
 @media (min-width: 768px) {
   .frentesCompactGrid {
     /* 4 colunas (era 3) — Destinação entra como 4ª frente compacta desde
-       2026-08-20, mesma grade, sem novo componente. */
+       2026-08-20, mesma grade, sem novo componente.
+       gap: 0 e o respiro vindo do padding do item: com gap, a régua
+       superior de cada trecho não encostaria na do vizinho e a sequência
+       voltaria a ler como quatro caixas soltas. */
     grid-template-columns: repeat(4, 1fr);
-    gap: clamp(24px, 3vw, 40px);
+    gap: 0;
   }
 }
 
 .frentesCompactItem {
+  position: relative;
   padding: 28px 0;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+/* Régua contínua atravessando as quatro frentes. */
+.frentesCompactItem::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+/* Tique de início de etapa — mesmo marcador editorial da régua do
+   processo, não uma borda de caixa. */
+.frentesCompactItem::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 7px;
+  background: currentColor;
+  opacity: 0.5;
 }
 
 @media (min-width: 768px) {
   .frentesCompactItem {
-    padding: 0;
-    border-top: none;
+    padding: 20px clamp(20px, 2.4vw, 36px) 0 0;
   }
 }
 
@@ -98,6 +155,36 @@
   margin-bottom: var(--gap-body-support);
   padding-top: 16px;
   border-top: 1px solid rgba(247, 246, 241, 0.22);
+}
+
+/* A fotografia ilustrativa que dividia esta seção saiu (ver SaturnoPage.tsx):
+   os oito itens de escopo herdaram a largura inteira da coluna de conteúdo.
+   Em coluna única eles viravam uma tira alta e estreita de oito linhas, então
+   a partir de 768px a lista quebra em duas colunas — a informação passa a
+   caber num relance, que é o que uma lista de escopo precisa fazer.
+
+   Seletor composto de propósito: `.technicalList` (company-page.module.css)
+   declara `display: flex` com a mesma especificidade. Duas classes de módulos
+   diferentes empatadas resolvem por ordem de injeção do bundler, que não é
+   estável entre dev e build — 0-2-0 aqui vence sempre. */
+.gestaoTagsList.gestaoTagsColumns {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: clamp(24px, 4vw, 48px);
+  row-gap: 6px;
+}
+
+@media (min-width: 768px) {
+  .gestaoTagsList.gestaoTagsColumns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Respiro entre a headline e o primeiro grid de Material Cards — aumentado
+   na rodada de refino de fluxo/materiais para que o conteúdo nunca invada
+   visualmente o título (era o problema da versão com imagem de fundo). */
+.materialsBlock {
+  margin-top: clamp(44px, 7vw, 72px);
 }
 
 /* ---------------- Saturno + Grupo Almeida ---------------- */

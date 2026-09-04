@@ -172,6 +172,18 @@ video {
   display: block;
 }
 
+/* <picture> nunca deve criar caixa própria.
+   Ele entrou no site como wrapper de composição alternativa de mobile
+   (SectionMedia, MaterialSurface, MaterialAtlas): o slot que define
+   proporção, recorte e object-fit continua sendo o contêiner de layout, e
+   a <img> precisa continuar se comportando como filha direta dele. Sem
+   isto, um wrapper inline de altura automática apareceria no meio e
+   `height: 100%` da imagem passaria a resolver contra ele — a mídia
+   colapsaria em qualquer slot com aspect-ratio. */
+picture {
+  display: contents;
+}
+
 button {
   font-family: inherit;
 }
@@ -530,8 +542,10 @@ html {
    Rodada de refinamento visual (item 12): o Footer passa a reutilizar
    --color-forest-deep — o MESMO token do Header/menu (.site-header/
    .menu-panel), não uma cor "parecida" — para fechar a página de volta
-   dentro da identidade principal do grupo (ver .fadeToForest em
-   home.module.css para a transição da dobra 9 até aqui). Toda a hierarquia
+   dentro da identidade principal do grupo. A transição em gradiente que
+   ligava a dobra 9 até aqui (.fadeToForest) foi removida na rodada de
+   refino editorial: o manifesto final termina em carvão e o Footer começa
+   em verde floresta, em corte reto. Toda a hierarquia
    de texto abaixo passa dos papéis --text-* (superfície clara) para
    --text-on-dark-* (mesma família usada por toneForest/toneCarvao na
    Home), incluindo os divisores (hairline claro sobre fundo escuro, mesmo

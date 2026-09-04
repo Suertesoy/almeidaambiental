@@ -9,6 +9,28 @@
  * as imagens são `illustrative`, geradas via Magnific/MCP como placeholder,
  * e devem ser substituídas por fotografia real do Grupo Almeida assim que
  * disponível, sem exigir mudança de estrutura aqui.
+ *
+ * ---------------- Prédios gerados ----------------
+ *
+ * Rodada de refino editorial: três reconstituições saíram da timeline —
+ * a sede de São José (2021), a operação de Blumenau (2022) e a unidade de
+ * Araquari (2026). Existe uma diferença de natureza entre reconstituir uma
+ * TECNOLOGIA e reconstituir um ENDEREÇO. Um caminhão dos anos 1980, uma
+ * prensa horizontal ou um triturador ilustram um tipo de equipamento que
+ * realmente entrou na operação naquele ano — a imagem é um exemplo do
+ * gênero e continua no lugar, com o selo de ilustrativa.
+ *
+ * Um prédio, não: existe UM galpão real em Araquari, UMA sede real em São
+ * José, UMA instalação real em Blumenau. Colocar ao lado dessas datas um
+ * complexo industrial gerado é apresentar como documentação de um imóvel
+ * específico algo que nunca foi fotografado — e, no caso de 2022, fazer um
+ * prédio inventado passar pela instalação da Saturno. Nenhuma foi
+ * substituída por outra imagem: os eventos continuam com data, cidade,
+ * área construída e texto íntegros, e a área construída continua no
+ * infográfico de evolução (GROWTH_SCALE). Só o prédio falso saiu.
+ *
+ * Quando houver fotografia real dessas unidades, basta devolver `image`
+ * com `sourceType: "archive"` — nada de estrutura muda.
  */
 
 export type ImageSourceType = "illustrative" | "archive";
@@ -271,7 +293,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "expansao",
     description: "Inauguração da nova sede da empresa, com 5.500 m² de área construída.",
     highlights: ["5.500 m²"],
-    image: img("/historia/crescimento-sede-2019.webp", "Reconstituição de complexo industrial contemporâneo de grande escala, representando a nova sede inaugurada em 2021"),
+    /* Sem imagem: ver "prédios gerados" no cabeçalho deste arquivo. */
     location: "São José",
     areaSqm: 5500,
     growthMilestone: true,
@@ -291,7 +313,9 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "expansao",
     description: "Aquisição da empresa Saturno, em Blumenau, fortalecendo a presença regional.",
     highlights: ["Saturno", "Blumenau"],
-    image: img("/historia/expansao-regional-2022.webp", "Reconstituição de operação industrial regional de reciclagem em Santa Catarina, representando o fortalecimento regional do grupo"),
+    /* Sem imagem: ver "prédios gerados" no cabeçalho deste arquivo. Este
+       era o caso mais grave — uma operação gerada fazendo as vezes da
+       instalação real da Saturno em Blumenau. */
     location: "Blumenau",
     side: "left",
   },
@@ -339,7 +363,8 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "novo-ciclo",
     description: "Inauguração da nova unidade de Araquari, com 3.000 m² de área construída.",
     highlights: ["3.000 m²"],
-    image: img("/historia/araquari-2026.webp", "Reconstituição de galpão industrial moderno em Santa Catarina, representando a nova unidade de Araquari inaugurada em 2026"),
+    /* Sem imagem: ver "prédios gerados" no cabeçalho deste arquivo. O peso
+       visual deste marco vem de `monumental`, não da fotografia. */
     location: "Araquari",
     areaSqm: 3000,
     side: "right",
@@ -365,7 +390,23 @@ export const MAP_LOCATIONS: Array<{ name: string; year: number; x: number; y: nu
   { name: "Joinville", year: 2024, x: 58, y: 22 },
 ];
 
-export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição de pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, fotografia documental em preto e branco");
+/**
+ * Abertura de /historia. A imagem é uma RECONSTITUIÇÃO gerada, não um
+ * registro do acervo — não existe fotografia de 1985 do Grupo Almeida no
+ * material aprovado.
+ *
+ * A tela já dizia isso (IllustrativeBadge no canto do Hero, ver
+ * components/historia/HeroDecades.tsx), mas o texto alternativo ainda
+ * terminava em "fotografia documental em preto e branco": quem navega por
+ * leitor de tela — exatamente quem não vê o selo — ouvia a imagem se
+ * apresentar como documento. "Fotografia documental" descrevia o estilo
+ * da imagem e era lido como a natureza dela.
+ *
+ * O preto e branco continua descrito, porque é informação visual real; o
+ * que saiu foi a palavra que transformava uma reconstituição em registro
+ * histórico (Seção 22 da rodada de materialidade).
+ */
+export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição ilustrativa de um pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, em preto e branco");
 
 export const EPILOGUE_STATS = [
   { value: "40+", label: "anos de história" },

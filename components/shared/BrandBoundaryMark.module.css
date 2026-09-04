@@ -1,0 +1,106 @@
+/* ==========================================================
+   BrandBoundaryMark — assinatura de fronteira de território.
+
+   Substitui os gradientes de transição entre seções (removidos nesta
+   rodada): a superfície termina em corte reto e o que costura os dois
+   territórios é o símbolo oficial do Grupo, não uma mistura de cor.
+
+   Mecânica: uma fronteira é composta por DUAS metades, uma em cada seção
+   adjacente, cada uma recortada pelo `overflow: hidden` da própria seção.
+   Como as duas usam a mesma largura e o mesmo lado, e cada uma é deslocada
+   exatamente meia altura do símbolo para fora da sua seção, elas se
+   encontram na borda do DOM e leem como UMA peça atravessando o corte —
+   sem nenhum elemento posicionado entre as duas seções e sem disputa de
+   z-index entre superfícies irmãs.
+
+   Altura do símbolo = largura × 0.945 (viewBox 1038×981 dos SVGs oficiais
+   em public/brand/). Meia altura = largura × 0.4726 — é esse o valor dos
+   deslocamentos verticais abaixo; nada aqui depende de medir o arquivo em
+   tempo de execução.
+   ========================================================== */
+
+/* Superfície que hospeda uma metade de fronteira. Mesmo contrato do
+   .watermarkSurface da Home: cria o contexto de empilhamento, recorta o
+   símbolo (sem gerar scroll horizontal) e garante que TODO conteúdo real
+   da seção pinte por cima dele — `:not(.mark)` é o que mantém a marca
+   sozinha na camada de fundo. */
+.surface {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* `[data-layer="background"]` é o contrato com MaterialSurface: uma dobra
+   pode ter, além da assinatura de fronteira, uma camada de materialidade
+   atrás do conteúdo. Sem esta exclusão a textura subiria para z-index 1 e
+   cobriria o símbolo da fronteira — a ordem correta de pintura é
+   textura → símbolo de fronteira → conteúdo real. É um atributo, e não uma
+   classe importada, para que os dois componentes não precisem se conhecer. */
+.surface > *:not(.mark):not([data-layer="background"]) {
+  position: relative;
+  z-index: 1;
+}
+
+.mark {
+  /* Desktop: monumental, mas sempre dentro da faixa de respiro da seção.
+     Redefinido no mobile mais abaixo. */
+  --bbm-w: clamp(300px, 34vw, 460px);
+  --bbm-half: calc(var(--bbm-w) * -0.4726);
+  --bbm-inset: calc(var(--bbm-w) * -0.3);
+
+  position: absolute;
+  z-index: 0;
+  display: block;
+  width: var(--bbm-w);
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Metade de quem SAI: o símbolo desce meia altura para fora da seção, então
+   só a metade de cima aparece — encostada na borda inferior. */
+.leaving {
+  bottom: var(--bbm-half);
+}
+
+/* Metade de quem ENTRA: espelho exato da anterior. */
+.entering {
+  top: var(--bbm-half);
+}
+
+.left {
+  left: var(--bbm-inset);
+}
+
+.right {
+  right: var(--bbm-inset);
+}
+
+/* Opacidade por superfície — faixa institucional de 3% a 8%: presença
+   arquitetônica, nunca elemento gráfico competindo com o conteúdo. */
+.onDark {
+  opacity: 0.06;
+}
+
+.onLight {
+  opacity: 0.07;
+}
+
+/* Mobile: menor, mais afastado do texto e mais recuado para a extremidade —
+   aparece como fragmento gráfico na borda, não como peça atrás do conteúdo.
+   Opacidade cai para a metade inferior da faixa (3%–6%). */
+@media (max-width: 767px) {
+  .mark {
+    --bbm-w: clamp(170px, 44vw, 250px);
+    --bbm-inset: calc(var(--bbm-w) * -0.44);
+  }
+
+  .onDark {
+    opacity: 0.045;
+  }
+
+  .onLight {
+    opacity: 0.055;
+  }
+}

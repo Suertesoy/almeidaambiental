@@ -6,39 +6,69 @@ import styles from "./home.module.css";
 import Hero from "./Hero";
 import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
-import BrandWatermark from "../shared/BrandWatermark";
+import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
+import ProcessSteps from "../shared/ProcessSteps";
+import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
+import { FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
-import { PROCESS_STEP_ICONS } from "../icons";
+import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 
 const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
-/* Substituída nesta rodada (Checkpoint B): a imagem anterior
-   (ambiental-logistica-editorial.webp, caminhões estacionados em vista
-   aérea) tinha baixa qualidade e não comunicava operação integrada. Gerada
-   via Magnific/MCP em 4:3 (1760x1328, reamostrada para 1440x1080) —
-   arquivo novo e independente porque o antigo continua em uso por
-   /home4 (fora de escopo desta tarefa). */
-const IMG_AMBIENTAL_PROCESSO = "/images/home-variants/ambiental/ambiental-operacao-integrada.webp";
 const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
-const IMG_SATURNO_REGIONAL = "/images/home-variants/saturno/saturno-operacao.webp";
-const IMG_SATURNO_ATUACAO = "/images/home-variants/saturno/saturno-fardos.webp";
+/* Substitui saturno-fardos.webp (rodada "materialidade-assets-finais",
+   Seção 9): a foto antiga afirmava "Fardos processados pela Saturno
+   Ambiental" sem base — ninguém confirmou que aqueles fardos eram da
+   Saturno. No lugar entra a materialidade própria da marca (mesma peça do
+   capítulo de fechamento de /saturno-ambiental) como imagem emoldurada,
+   não como fotografia de operação. */
+const IMG_SATURNO_ATUACAO = MATERIAL_SURFACES["saturno-fluxo"].desktop!;
 const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
 
-/* Composição editorial das 6 etapas (ver home.module.css, comentário em
-   `.processComposition`) — sem linha, seta ou rota conectando as estações.
-   Ordem semântica e ordem visual são sempre a mesma (natural, sem
-   serpente): grid 3×2 no desktop, 2×3 no mobile, ambos por ordem direta do
-   DOM (grid-auto-flow: row), nunca via nth-child de reposicionamento. */
-const PROCESS_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
+/**
+ * Engenharia da Almeida Equipamentos como PEÇA editorial (Seção 5 da
+ * rodada de materialidade: "a imagem macro de engenharia / aço como grande
+ * elemento editorial"). Não vira MaterialSurface porque a dobra é pedra
+ * clara — véu escuro sobre superfície clara desmontaria o corte sólido de
+ * território entre as empresas. Ver o bloco MATERIAL_IMAGES em
+ * lib/material-surfaces.ts.
+ *
+ * Enquanto o par próprio não existir (Magnific bloqueado), a dobra mantém
+ * em cena o detalhe mecânico que já exibia — nenhuma imagem nova é
+ * emprestada de outra seção para simular a mudança.
+ */
+const ENGENHARIA_ASSET = MATERIAL_IMAGES["equipamentos-engenharia"];
+const ENGENHARIA = {
+  src: ENGENHARIA_ASSET.desktop ?? IMG_EQUIPAMENTOS_ENGENHARIA,
+  mobileSrc: ENGENHARIA_ASSET.mobile ?? undefined,
+  alt: ENGENHARIA_ASSET.desktop
+    ? ENGENHARIA_ASSET.alt
+    : "Detalhe mecânico de equipamento da Almeida Equipamentos",
+};
+
+/* As seis etapas vêm de lib/almeida-ambiental-data.ts (FLOW_STEPS) — mesma
+   fonte usada pela página /almeida-ambiental, para que a sequência não
+   possa divergir entre as duas. Só o nome da etapa: não existe frase curta
+   validada por etapa no conteúdo aprovado, e o componente não inventa uma. */
+const PROCESS_STEPS = FLOW_STEPS.map((name) => ({ name }));
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
  * sem scroll snap, sem interceptação de wheel, sem vídeo sincronizado ao
  * scroll. O único elemento fixo na tela é o Header (ver components/Header.tsx
  * e app/globals.css); o vídeo institucional vive só no Hero (Hero.tsx).
+ *
+ * Rodada de refino editorial: as superfícies terminam em corte reto (nenhum
+ * gradiente de transição entre seções) e as quatro trocas de território —
+ * Grupo → Ambiental → Equipamentos → Saturno → Impacto — são costuradas
+ * pelo símbolo oficial atravessando a linha de corte, alternando de lado a
+ * cada fronteira (esquerda / direita / esquerda / direita). Uma fronteira é
+ * declarada em duas seções adjacentes com o mesmo id; a única exceção é
+ * "grupo-ambiental", cuja metade de saída cairia por cima do vídeo do Hero
+ * — ali o símbolo emerge da borda superior da dobra 2 em vez de atravessar.
  */
 export default function HomePage() {
   const impactoRef = useRef<HTMLDivElement>(null);
@@ -48,55 +78,62 @@ export default function HomePage() {
     <div className={styles.page} data-page="home">
       <Hero />
 
-      {/* ---------------- Almeida Ambiental / apresentação ---------------- */}
-      <section
-        id="almeida-ambiental"
-        className={`${styles.section} ${styles.toneForest} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.apresentacaoWatermark} />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
-            <div className={styles.duoContent}>
-              <BrandMark
-                brand={BRANDS["almeida-ambiental"]}
-                variant="branca"
-                className={styles.eyebrowMark}
-              />
-              <h2 className={styles.headline}>
-                RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
-              </h2>
-              <p className={styles.body}>
-                Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-                responsável de resíduos.
-              </p>
-            </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_AMBIENTAL_INTRO}
-                alt="Operação logística da Almeida Ambiental"
-                objectPosition="center"
-                priority
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* ---------------- Almeida Ambiental (território contínuo) ----------------
+          Correção de direção de arte (branch feature/correcao-direcao-arte):
+          as duas dobras da Almeida Ambiental eram duas seções com o mesmo
+          tom sólido, e só a segunda ganhava a textura de materialidade — o
+          usuário via "acabou uma imagem de fundo, começou outra" no meio do
+          território de uma única empresa. A materialidade agora pertence ao
+          TERRITÓRIO (este wrapper), não à dobra: uma única MaterialSurface
+          cobre as duas seções por baixo, com `position:absolute; inset:0`
+          relativo a este wrapper (ver .ambientalTerritory), e cada `section`
+          interna abre mão do próprio `toneForest` sólido — o tom (cor de
+          texto, --role-*) continua vindo daqui por herança de custom
+          property, só o preenchimento visual passou a ser um só, contínuo.
 
-      {/* ---------------- Almeida Ambiental / capacidade operacional ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneForest} ${styles.fadeToStoneAlt} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.processWatermark} />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
-              <SectionMedia
-                imageSrc={IMG_AMBIENTAL_PROCESSO}
-                alt="Operação integrada de recebimento, triagem e processamento de resíduos na Almeida Ambiental"
-                objectPosition="center"
-              />
-            </div>
-            <div className={styles.duoContent}>
+          A fotografia de "galpão/operação integrada" que ocupava a segunda
+          dobra saiu: era uma imagem ilustrativa gerada por IA
+          (ambiental-operacao-integrada.webp, ver histórico do arquivo) que
+          competia com a materialidade em vez de documentar uma instalação
+          real. Não entrou outra imagem no lugar — a superfície material já
+          cumpre a função visual da dobra enquanto não existir captação real. */}
+      <div className={`${styles.toneForest} ${styles.ambientalTerritory}`}>
+        <MaterialSurface surface="ambiental-materia" />
+
+        <section id="almeida-ambiental" className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
+              <div className={styles.duoContent}>
+                <BrandMark
+                  brand={BRANDS["almeida-ambiental"]}
+                  variant="branca"
+                  className={styles.eyebrowMark}
+                />
+                <h2 className={styles.headline}>
+                  RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
+                </h2>
+                <p className={styles.body}>
+                  Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
+                  responsável de resíduos.
+                </p>
+              </div>
+              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
+                <SectionMedia
+                  imageSrc={IMG_AMBIENTAL_INTRO}
+                  alt="Operação logística da Almeida Ambiental"
+                  objectPosition="center"
+                  priority
+                />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal>
               <p className={styles.eyebrow}>Almeida Ambiental</p>
               <h2 className={styles.headline}>EFICIÊNCIA EM CADA ETAPA DO PROCESSO</h2>
               <p className={styles.body}>
@@ -109,30 +146,16 @@ export default function HomePage() {
                   Conheça Almeida Ambiental
                 </Link>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
 
-          <Reveal className={styles.processComposition}>
-            <ol className={styles.processSteps}>
-              {PROCESS_STEPS.map((step, index) => {
-                const StepIcon = PROCESS_STEP_ICONS[index];
-                return (
-                  <li key={step} className={styles.processStep}>
-                    <StepIcon className={styles.processIcon} />
-                    <p className={styles.processLabel}>{step}</p>
-                  </li>
-                );
-              })}
-            </ol>
-          </Reveal>
-        </div>
-      </section>
+            <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
+          </div>
+        </section>
+      </div>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeFromForest} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="light" className={styles.equipamentosWatermark} />
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
             <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
@@ -158,17 +181,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Almeida Equipamentos / engenharia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${styles.fadeToStone}`}>
+      {/* ---------------- Almeida Equipamentos / engenharia ----------------
+          Rodada de refino de fluxo/materiais (Seções 27-32): a frase
+          "Compactadores, prensas e tecnologias desenvolvidas para
+          diferentes materiais, volumes e realidades operacionais" saiu por
+          repetir, em prosa, exatamente as quatro famílias já listadas
+          logo abaixo (.tagRow) — não é perda de informação, é remover
+          redundância. O headline vira sentence case só nesta dobra
+          (.headlineSentence sobrescreve o text-transform:uppercase padrão
+          de .headline, mesmo mecanismo já usado por .manifestoHeadline).
+          `.duoEven` troca a proporção de 8fr/4fr (duoMediaNarrow) para
+          6fr/6fr — texto e imagem com peso equilibrado no desktop. */}
+      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="equipamentos-saturno" half="leaving" surface="onLight" />
         <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoMediaNarrow}`}>
+          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
               <p className={styles.eyebrow}>Almeida Equipamentos</p>
-              <h2 className={styles.headline}>ENGENHARIA PARA MOVIMENTAR MAIS COM MENOS</h2>
-              <p className={styles.body}>
-                Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
-                realidades operacionais.
-              </p>
+              <h2 className={`${styles.headline} ${styles.headlineSentence}`}>
+                Engenharia para movimentar mais com menos
+              </h2>
               <p className={styles.body}>Conhecimento de campo conectado a tecnologias internacionais.</p>
               <ul className={styles.tagRow}>
                 <li>Compactadores</li>
@@ -182,10 +214,11 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaTall}`}>
+            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
               <SectionMedia
-                imageSrc={IMG_EQUIPAMENTOS_ENGENHARIA}
-                alt="Detalhe mecânico de equipamento da Almeida Equipamentos"
+                imageSrc={ENGENHARIA.src}
+                mobileSrc={ENGENHARIA.mobileSrc}
+                alt={ENGENHARIA.alt}
                 objectPosition="center"
               />
             </div>
@@ -193,75 +226,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Saturno Ambiental / presença regional ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStone} ${styles.fadeFromStoneAlt} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.saturnoPresencaWatermark} />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
-            <div className={styles.duoContent}>
+      {/* ---------------- Saturno Ambiental (território contínuo) ----------------
+          Consolidação de territórios (branch feature/territorios-visuais-
+          continuos): mesmo problema que a Almeida Ambiental já teve —
+          a primeira dobra tinha a materialidade (MaterialSurface
+          "saturno-hero") e a segunda ficava só na cor sólida, então o
+          usuário via a textura desaparecer exatamente no meio do
+          território de uma única empresa. A materialidade passa a
+          pertencer ao wrapper (.saturnoTerritory), não à dobra — a mesma
+          MaterialSurface cobre as duas por baixo, sem reiniciar.
+
+          A dobra de "atuação" mantém a sua própria fotografia
+          (saturno-fluxo, framed) como PEÇA editorial dentro do ambiente —
+          não como um segundo fundo de página inteira — exatamente a
+          distinção que a rodada pede entre AMBIENTE e ASSET. Não é a
+          mesma imagem da dobra anterior (saturno-hero ≠ saturno-fluxo),
+          então a variedade continua existindo dentro do mesmo mundo
+          visual. */}
+      <div className={`${styles.toneStone} ${styles.saturnoTerritory}`}>
+        <MaterialSurface surface="saturno-hero" />
+
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={styles.brandStatement}>
               <BrandMark
                 brand={BRANDS["saturno-ambiental"]}
                 variant="branca"
                 className={styles.eyebrowMark}
               />
               <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-              <h2 className={styles.headline}>EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.</h2>
-            </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_SATURNO_REGIONAL}
-                alt="Operação da Saturno Ambiental em Blumenau"
-                objectPosition="center 55%"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
+              <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
+                EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
+              </h2>
+            </Reveal>
+          </div>
+        </section>
 
-      {/* ---------------- Saturno Ambiental / atuação ---------------- */}
-      <section
-        className={`${styles.section} ${styles.toneStone} ${styles.fadeToCarvao} ${styles.watermarkSurface}`}
-      >
-        <BrandWatermark mode="dark" className={styles.saturnoAtuacaoWatermark} />
-        <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-              <SectionMedia
-                imageSrc={IMG_SATURNO_ATUACAO}
-                alt="Fardos processados pela Saturno Ambiental"
-                objectPosition="center"
-              />
-            </div>
-            <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Saturno Ambiental</p>
-              <h2 className={styles.headline}>GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA</h2>
-              <p className={styles.body}>
-                Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-                construída para unir eficiência operacional e responsabilidade ambiental.
-              </p>
-              <ul className={styles.tagRow}>
-                <li>Gestão de Resíduos</li>
-                <li>Cartonagem</li>
-                <li>Consultoria</li>
-              </ul>
-              <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
-                  Conheça Saturno Ambiental
-                </Link>
+        <section className={`${styles.section} ${boundarySurface}`}>
+          <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
+          <div className={styles.container}>
+            <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
+              <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
+                <SectionMedia
+                  imageSrc={IMG_SATURNO_ATUACAO}
+                  alt="Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos"
+                  objectPosition="center"
+                />
               </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+              <div className={styles.duoContent}>
+                <p className={styles.eyebrow}>Saturno Ambiental</p>
+                <h2 className={styles.headline}>GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA</h2>
+                <p className={styles.body}>
+                  Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
+                  construída para unir eficiência operacional e responsabilidade ambiental.
+                </p>
+                <ul className={styles.tagRow}>
+                  <li>Gestão de Resíduos</li>
+                  <li>Cartonagem</li>
+                  <li>Consultoria</li>
+                </ul>
+                <div className={styles.ctaRow}>
+                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
+                    Conheça Saturno Ambiental
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      </div>
 
       {/* ---------------- Impacto positivo 2025 ---------------- */}
       <section
-        className={`${styles.section} ${styles.toneCarvao} ${styles.fadeFromStone} ${styles.watermarkSurface}`}
+        className={`${styles.section} ${styles.toneCarvao} ${boundarySurface}`}
         ref={impactoRef}
       >
-        <BrandWatermark mode="dark" className={styles.impactWatermark} />
+        <BrandBoundaryMark boundary="saturno-impacto" half="entering" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={styles.impactHead}>
             <p className={styles.eyebrow}>Impacto Positivo · 2025</p>
@@ -299,15 +340,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Manifesto final ---------------- */}
-      <section className={`${styles.section} ${styles.toneCarvao} ${styles.fadeToForest} ${styles.manifesto}`}>
+      {/* ---------------- Manifesto final ----------------
+          Fecha em carvão contra o verde floresta do Footer, em corte reto
+          (o antigo .fadeToForest foi removido). Sem fronteira aqui: é o
+          mesmo território do bloco de Impacto, não uma troca de empresa. */}
+      <section className={`${styles.section} ${styles.toneCarvao} ${styles.manifesto}`}>
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>
               <SectionMedia imageSrc={IMG_MANIFESTO} alt="Grupo Almeida" objectPosition="center 40%" />
             </div>
             <h2 className={styles.manifestoHeadline}>
-              O QUE COMEÇOU COM PAPEL E PAPELÃO HOJE CONECTA OPERAÇÃO, TECNOLOGIA E SUSTENTABILIDADE.
+              O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.
             </h2>
             <p className={styles.body}>Há 40 anos transformando o presente, pensando no futuro.</p>
             <div className={styles.ctaRow}>
