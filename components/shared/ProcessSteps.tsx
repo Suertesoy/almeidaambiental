@@ -1,5 +1,5 @@
 import styles from "./ProcessSteps.module.css";
-import { PROCESS_STEP_ICONS } from "../icons";
+import { PROCESS_STEP_ICONS, ProcessConnectorIcon } from "../icons";
 
 export type ProcessStep = {
   name: string;
@@ -7,202 +7,68 @@ export type ProcessStep = {
 
 /**
  * ============================================================
- * MICROCOMPOSIÇÃO — a matéria mudando de estado, etapa a etapa
+ * PROCESS FLOW MARQUEE — o processo como movimento, não como dashboard
  * ============================================================
  *
- * Correção de direção de arte (branch feature/correcao-direcao-arte): a
- * versão anterior desenhava o cabeçalho (ícone + nome) EM CIMA e a
- * microcomposição (traços + linha) EMBAIXO, como dois blocos empilhados.
- * Como as seis etapas normalizam a altura do cabeçalho pela mesma linha de
- * base, o resultado lia como duas réguas sobrepostas — "ícone + nome" numa
- * faixa, "gráfico" noutra — exatamente a duplicação que a rodada pediu para
- * eliminar. Agora cabeçalho e microcomposição dividem a MESMA linha: o
- * ícone e o nome ficam à esquerda, a microcomposição ocupa o restante da
- * largura à direita, os dois centralizados no mesmo eixo vertical. Existe
- * uma peça por etapa, não duas.
+ * Rodada de refino de fluxo/materiais: a versão anterior (microcomposição —
+ * traços e blocos representando o estado da matéria a cada etapa, ver
+ * histórico deste arquivo) continuava lendo como componente de dashboard —
+ * ícone, nome, gráfico abstrato, divisor, próxima etapa. Este componente
+ * abandona esse vocabulário inteiro. O que resta é o mínimo possível:
  *
- * Cada etapa ganha uma microcomposição própria construída com um
- * vocabulário mínimo — traços verticais e uma linha de percurso — onde o
- * que muda de uma etapa para a outra é o RITMO dos traços:
+ *   ÍCONE + NOME + CONECTOR
  *
- *   Diagnóstico       4 traços esparsos e irregulares  (matéria bruta,
- *                     ainda não medida)
- *   Coleta            os traços se agrupam em três blocos (recolhimento)
- *   Triagem           os grupos ficam regulares e equidistantes (separado
- *                     por tipo)
- *   Trituração        muitos traços curtos e densos (fragmentado)
- *   Descaracterização traços mínimos e todos idênticos (perdeu a forma
- *                     reconhecível — é literalmente o que a etapa faz)
- *   Destinação        os fragmentos voltam a ser dois volumes sólidos
- *                     com cintas (fardo pronto)
+ * ...e o próprio MOVIMENTO como expressão visual — a sequência atravessa a
+ * viewport da esquerda para a direita, em loop contínuo, como uma faixa
+ * (sem fundo, sem card, sem borda) flutuando no espaço da seção.
  *
- * Não é imagem, não é ilustração e não é ícone repetido: é a mesma
- * matéria contada seis vezes.
+ * ---------------- Como o loop funciona ----------------
+ * `.track` contém DUAS cópias visuais idênticas da sequência lado a lado
+ * (`.sequence`, a real, semântica; `.sequenceCopy`, aria-hidden="true") e
+ * anima com `translateX(-50%)` — como as duas cópias têm exatamente a
+ * mesma largura, deslocar por metade da largura do track equivale a
+ * deslocar por uma sequência inteira, e o quadro final é pixel-idêntico ao
+ * quadro inicial: o loop não tem salto perceptível. `width: max-content`
+ * no track é o que garante que ele seja exatamente 2x a largura de uma
+ * sequência, não 100% de um container que poderia ser menor.
  *
- * ---------------- A linha que atravessa ----------------
- * `flow` é [y de entrada, y de saída] no viewBox de cada segmento, e a
- * saída de uma etapa é SEMPRE a entrada da seguinte (46→44→38→30→26→20→16).
- * Como os segmentos encostam um no outro (gap: 0 no CSS), a linha lida no
- * desktop é uma régua única subindo ao longo das seis etapas, não seis
- * traços soltos. A subida não é decorativa: é o resíduo ganhando valor ao
- * longo do percurso.
+ * Só a primeira cópia é uma <ol> semântica (ordem das etapas reais); a
+ * segunda existe só para completar visualmente o loop e não deve ser
+ * anunciada por leitor de tela nem alcançável por Tab.
  *
- * ---------------- Por que só traço vertical ----------------
- * O SVG usa `preserveAspectRatio="none"` para que a linha de percurso
- * toque exatamente as duas bordas do segmento em qualquer largura — sem
- * isso ela não emendaria com a do vizinho. A contrapartida é que o eixo x
- * estica. Todo o vocabulário foi então escolhido para sobreviver a isso:
- * traço vertical não tem largura para esticar, e `vector-effect` mantém a
- * espessura constante. Círculo, diagonal e texto ficariam deformados —
- * por isso não existe nenhum aqui.
+ * ---------------- Interação ----------------
+ * Desktop: hover ou foco no viewport pausa a animação. Mobile: nenhum
+ * gesto horizontal é exigido — a animação roda sozinha e o scroll vertical
+ * da página nunca é interceptado (o marquee não captura eventos de toque).
+ *
+ * `prefers-reduced-motion: reduce`: a animação para, a cópia duplicada some
+ * (`display:none`) e a sequência real vira scroll horizontal nativo — toda
+ * a informação continua acessível, só o movimento desaparece.
+ *
+ * ---------------- Escopo ----------------
+ * Este componente representa PROCESSO, e só processo — materiais e
+ * equipamentos continuam com a própria linguagem (MaterialCards, peças
+ * editoriais). Não virou um componente genérico de lista/carrossel.
  */
-type Micro = {
-  flow: [number, number];
-  /** [x, altura] de cada traço, medidos a partir da base (y = 58). */
-  ticks: [number, number][];
-  /** Volumes sólidos — só a última etapa tem. [x, largura, altura] */
-  blocks?: [number, number, number][];
-};
-
-const MICRO: Micro[] = [
-  /* Diagnóstico */
-  { flow: [46, 44], ticks: [[14, 30], [42, 18], [70, 38], [98, 24]] },
-  /* Coleta */
-  {
-    flow: [44, 38],
-    ticks: [[12, 24], [19, 30], [46, 22], [53, 28], [60, 22], [88, 26], [95, 20]],
-  },
-  /* Triagem */
-  {
-    flow: [38, 30],
-    ticks: [
-      [12, 26], [20, 26], [28, 26],
-      [52, 26], [60, 26], [68, 26],
-      [92, 26], [100, 26], [108, 26],
-    ],
-  },
-  /* Trituração — fragmentos de tamanhos ainda diferentes entre si */
-  {
-    flow: [30, 26],
-    ticks: [
-      [10, 19], [17, 9], [24, 17], [31, 8], [38, 15], [45, 10],
-      [52, 20], [59, 8], [66, 16], [73, 11], [80, 18], [87, 9],
-      [94, 15], [101, 10], [108, 17],
-    ],
-  },
-  /* Descaracterização — mais denso e RIGOROSAMENTE uniforme: nada ali
-     tem mais forma própria que o vizinho. É a diferença que separa
-     "quebrado em pedaços" de "não é mais reconhecível". */
-  {
-    flow: [26, 20],
-    ticks: [
-      [10, 6], [14, 6], [18, 6], [22, 6], [26, 6], [30, 6], [34, 6],
-      [38, 6], [42, 6], [46, 6], [50, 6], [54, 6], [58, 6], [62, 6],
-      [66, 6], [70, 6], [74, 6], [78, 6], [82, 6], [86, 6], [90, 6],
-      [94, 6], [98, 6], [102, 6], [106, 6], [110, 6],
-    ],
-  },
-  /* Destinação */
-  {
-    flow: [20, 16],
-    ticks: [],
-    blocks: [
-      [16, 38, 26],
-      [66, 38, 26],
-    ],
-  },
-];
-
-const BASE = 58;
-
-function StepMicro({ index }: { index: number }) {
-  const micro = MICRO[index];
-  if (!micro) return null;
-  const [entry, exit] = micro.flow;
-
+function Sequence({ steps, hidden }: { steps: ProcessStep[]; hidden?: boolean }) {
+  const Tag = hidden ? "div" : "ol";
+  const Item = hidden ? "div" : "li";
   return (
-    <svg className={styles.micro} viewBox="0 0 120 64" preserveAspectRatio="none" aria-hidden="true">
-      {micro.ticks.map(([x, h]) => (
-        <line
-          key={x}
-          className={styles.tick}
-          x1={x}
-          y1={BASE}
-          x2={x}
-          y2={BASE - h}
-          vectorEffect="non-scaling-stroke"
-        />
-      ))}
-
-      {micro.blocks?.map(([x, w, h]) => (
-        <g key={x}>
-          <rect className={styles.block} x={x} y={BASE - h} width={w} height={h} />
-          {/* Cintas do fardo */}
-          <line
-            className={styles.strap}
-            x1={x + w * 0.28}
-            y1={BASE - h}
-            x2={x + w * 0.28}
-            y2={BASE}
-            vectorEffect="non-scaling-stroke"
-          />
-          <line
-            className={styles.strap}
-            x1={x + w * 0.72}
-            y1={BASE - h}
-            x2={x + w * 0.72}
-            y2={BASE}
-            vectorEffect="non-scaling-stroke"
-          />
-        </g>
-      ))}
-
-      {/* Percurso: entra na borda esquerda e sai na direita, exatamente na
-          altura em que o vizinho continua. */}
-      <path
-        className={styles.flow}
-        d={`M0,${entry} C40,${entry} 80,${exit} 120,${exit}`}
-        fill="none"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <Tag className={`${styles.sequence} ${hidden ? styles.sequenceCopy : ""}`} aria-hidden={hidden ? "true" : undefined}>
+      {steps.map((step, index) => {
+        const StepIcon = PROCESS_STEP_ICONS[index];
+        return (
+          <Item key={step.name} className={styles.step}>
+            {StepIcon && <StepIcon className={styles.icon} />}
+            <p className={styles.name}>{step.name}</p>
+            <ProcessConnectorIcon className={styles.connector} />
+          </Item>
+        );
+      })}
+    </Tag>
   );
 }
 
-/**
- * PROCESS RIBBON — as seis etapas da operação (Diagnóstico → Coleta →
- * Triagem → Trituração → Descaracterização → Destinação) como UMA ÚNICA
- * peça, não como seis cartões nem como cabeçalho + gráfico separado.
- *
- * Cada etapa é uma linha (ícone + nome à esquerda, microcomposição à
- * direita, mesmo eixo vertical) em vez de um bloco de duas linhas. É essa
- * mudança — cabeçalho e traço dividindo o mesmo espaço, não empilhados —
- * que faz a régua ler como um sistema contínuo: ícone e nome têm hierarquia
- * visual maior (opacos, peso 600) que a microcomposição (traços finos,
- * baixa opacidade), mas os dois ocupam a MESMA faixa horizontal.
- *
- * Mobile: trilho horizontal com ~1,5 segmento visível, scroll nativo, snap
- * suave. Sem autoplay, sem dots, sem setas — o próximo segmento aparecendo
- * pela metade já é a affordance.
- *
- * Desktop (a partir de 720px): as seis simultâneas em seis colunas — uma
- * régua só, altura total ~100–130px. A linha de percurso entra na borda
- * esquerda do primeiro segmento e sai na borda direita do último; como os
- * segmentos encostam um no outro (gap: 0) e cada um sai exatamente na
- * altura em que o vizinho entra, ela lê como um traço contínuo subindo ao
- * longo das seis etapas — não seis traços soltos.
- *
- * Acessibilidade: o contêiner de scroll é focável e anunciado como grupo,
- * então quem navega por teclado alcança o trilho e rola com as setas — e o
- * scroll é overflow nativo, que nunca captura o gesto vertical da página.
- * Ícones e microcomposições são decorativos (o nome da etapa já está em
- * texto) e ficam fora da árvore semântica.
- *
- * Escopo deliberado: este componente representa PROCESSO, e só processo —
- * materiais, equipamentos e serviços continuam com a própria linguagem
- * visual (MaterialAtlas, peças editoriais, listas). Não virou um componente
- * genérico de lista.
- */
 export default function ProcessSteps({
   steps,
   ariaLabel = "Etapas da operação",
@@ -211,21 +77,11 @@ export default function ProcessSteps({
   ariaLabel?: string;
 }) {
   return (
-    <div className={styles.scroller} tabIndex={0} role="group" aria-label={ariaLabel}>
-      <ol className={styles.list}>
-        {steps.map((step, index) => {
-          const StepIcon = PROCESS_STEP_ICONS[index];
-          return (
-            <li key={step.name} className={styles.step}>
-              <div className={styles.head}>
-                {StepIcon && <StepIcon className={styles.icon} />}
-                <p className={styles.name}>{step.name}</p>
-              </div>
-              <StepMicro index={index} />
-            </li>
-          );
-        })}
-      </ol>
+    <div className={styles.viewport} tabIndex={0} role="group" aria-label={ariaLabel}>
+      <div className={styles.track}>
+        <Sequence steps={steps} />
+        <Sequence steps={steps} hidden />
+      </div>
     </div>
   );
 }

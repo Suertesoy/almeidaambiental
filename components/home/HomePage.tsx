@@ -181,18 +181,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------------- Almeida Equipamentos / engenharia ---------------- */}
+      {/* ---------------- Almeida Equipamentos / engenharia ----------------
+          Rodada de refino de fluxo/materiais (Seções 27-32): a frase
+          "Compactadores, prensas e tecnologias desenvolvidas para
+          diferentes materiais, volumes e realidades operacionais" saiu por
+          repetir, em prosa, exatamente as quatro famílias já listadas
+          logo abaixo (.tagRow) — não é perda de informação, é remover
+          redundância. O headline vira sentence case só nesta dobra
+          (.headlineSentence sobrescreve o text-transform:uppercase padrão
+          de .headline, mesmo mecanismo já usado por .manifestoHeadline).
+          `.duoEven` troca a proporção de 8fr/4fr (duoMediaNarrow) para
+          6fr/6fr — texto e imagem com peso equilibrado no desktop. */}
       <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="equipamentos-saturno" half="leaving" surface="onLight" />
         <div className={styles.container}>
-          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoMediaNarrow}`}>
+          <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
               <p className={styles.eyebrow}>Almeida Equipamentos</p>
-              <h2 className={styles.headline}>ENGENHARIA PARA MOVIMENTAR MAIS COM MENOS</h2>
-              <p className={styles.body}>
-                Compactadores, prensas e tecnologias desenvolvidas para diferentes materiais, volumes e
-                realidades operacionais.
-              </p>
+              <h2 className={`${styles.headline} ${styles.headlineSentence}`}>
+                Engenharia para movimentar mais com menos
+              </h2>
               <p className={styles.body}>Conhecimento de campo conectado a tecnologias internacionais.</p>
               <ul className={styles.tagRow}>
                 <li>Compactadores</li>
@@ -206,7 +214,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className={`${styles.duoMedia} ${styles.duoMediaTall}`}>
+            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
               <SectionMedia
                 imageSrc={ENGENHARIA.src}
                 mobileSrc={ENGENHARIA.mobileSrc}

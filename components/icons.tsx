@@ -132,16 +132,41 @@ export function ProcessDescaracterizacaoIcon({ className }: FunctionalIconProps)
   );
 }
 
-/* Destinação: seta chegando a um ponto final (fim de linha) — etapa de
-   saída/entrega, distinta do pin de localização usado anteriormente (que
-   confundia "destino" com "endereço"). Última etapa do fluxo, sempre a 6ª
-   posição. */
+/* Destinação: uma entrada se ramificando em três saídas — cada tipo de
+   resíduo segue para seu destino adequado. Substitui a seta única (fim de
+   linha), que lia como "chegada" e não como "distribuição" (rodada de
+   refino de fluxo/materiais). Trunk + três ramos, cada um com sua própria
+   ponta em chevron, mesmo peso óptico dos demais ícones do processo. Última
+   etapa do fluxo, sempre a 6ª posição. */
 export function ProcessDestinacaoIcon({ className }: FunctionalIconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 12h13" {...iconStroke} />
-      <path d="M11 7l5 5-5 5" {...iconStroke} />
-      <path d="M21 5v14" {...iconStroke} />
+      <path d="M2.5 12H8" {...iconStroke} />
+      <path d="M8 12 19 5" {...iconStroke} />
+      <path d="M8 12 21 12" {...iconStroke} />
+      <path d="M8 12 19 19" {...iconStroke} />
+      <path d="M15.61 5.26 19 5 17.33 7.96" {...iconStroke} />
+      <path d="M18 10.4 21 12 18 13.6" {...iconStroke} />
+      <path d="M17.33 16.04 19 19 15.61 18.74" {...iconStroke} />
+    </svg>
+  );
+}
+
+/* Conector entre etapas do Process Flow Marquee — substitui o caractere "→"
+   por um traço vetorial fino com a mesma ponta em chevron usada nos ícones
+   acima. Largura controlada via CSS (flex:none), sem preserveAspectRatio
+   para não distorcer a ponta. */
+export function ProcessConnectorIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 40 16" fill="none" aria-hidden="true">
+      <path d="M2 8h29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M25.5 2.8 33 8l-7.5 5.2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

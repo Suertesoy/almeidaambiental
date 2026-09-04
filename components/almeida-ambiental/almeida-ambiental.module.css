@@ -52,10 +52,11 @@
    components/shared/TerritoryMap.tsx, com a malha real do IBGE e estilos
    próprios — ver lib/geo-santa-catarina.ts. */
 
-/* Respiro do Material Atlas dentro da seção de materiais. Era um
-   style inline com o mesmo clamp; virou classe porque agora o bloco tem
-   composição própria e não só uma margem. */
+/* Respiro entre a headline/texto introdutório e o primeiro grid de Material
+   Cards. Aumentado na rodada de refino de fluxo/materiais: o problema de
+   conteúdo invadindo visualmente o título (relatado na Saturno) não podia
+   se repetir aqui. */
 .atlasBlock {
-  margin-top: clamp(32px, 5vw, 48px);
+  margin-top: clamp(44px, 7vw, 72px);
 }
 

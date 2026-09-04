@@ -2,12 +2,12 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./almeida-ambiental.module.css";
 import CompanyHero from "../shared/CompanyHero";
-import MaterialAtlas from "../shared/MaterialAtlas";
+import MaterialCards from "../shared/MaterialCards";
 import MaterialSurface from "../shared/MaterialSurface";
 import EditorialCTA from "../shared/EditorialCTA";
 import ProcessSteps from "../shared/ProcessSteps";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
-import { HERO_IMAGE, POSITIONING_IMAGE, MATERIALS_IMAGE, PILLARS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
+import { HERO_IMAGE, POSITIONING_IMAGE, PILLARS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 
 /* Mesma lista de etapas da Home (FLOW_STEPS), mesmo componente de lista
@@ -34,7 +34,7 @@ const PILLAR_SIDE = [shared.duoMediaRight, shared.duoMediaLeft, shared.duoMediaR
  * da Home. As quatro seções agora vivem dentro de .materialTerritory —
  * MESMA MaterialSurface ("ambiental-materia") atravessando todas, cada
  * uma mantendo sua própria fotografia como peça editorial dentro do
- * ambiente. Materiais (Material Atlas, pedra clara) e o fechamento
+ * ambiente. Materiais (Material Cards, pedra clara) e o fechamento
  * seguem como estavam: a Seção 10 da rodada permite explicitamente uma
  * "área clara editorial dentro do território" sem forçá-la a escuro, e a
  * fronteira "ambiental-processo" (lib/brand-boundaries.ts) continua
@@ -122,13 +122,11 @@ export default function AlmeidaAmbientalPage() {
             A operação evoluiu muito além do papel e papelão que marcaram o início da Almeida. Hoje, a estrutura
             atende diferentes categorias de resíduos e direciona cada uma conforme suas características.
           </p>
-          {/* Material Atlas: a mesma lista validada, agora como composição
-              assimétrica organizada por família de material em vez de grade
-              de doze itens equidistantes. `interimImage` mantém em cena o
-              asset que este bloco já exibia, até que o par próprio do Atlas
-              seja gerado — ver MaterialAtlas.tsx. */}
+          {/* Material Cards: a mesma lista validada (lib/materials.ts) como
+              coleção visual — ícone grande primeiro, nome depois. Sem
+              imagem, sem tabela: ver MaterialCards.tsx. */}
           <div className={styles.atlasBlock}>
-            <MaterialAtlas interimImage={MATERIALS_IMAGE} />
+            <MaterialCards tone="ambiental" />
           </div>
         </div>
       </section>

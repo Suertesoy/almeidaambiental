@@ -1,213 +1,145 @@
 /* ==========================================================
-   PROCESS RIBBON — as seis etapas da operação como UMA ÚNICA peça.
+   PROCESS FLOW MARQUEE — ícone + nome + conector, em movimento contínuo.
 
-   Correção de direção de arte: a versão anterior empilhava cabeçalho
-   (ícone + nome) e microcomposição (traços + linha) em duas linhas dentro
-   de cada segmento. Como as seis normalizavam a altura do cabeçalho pela
-   mesma linha de base, o resultado pintava como duas réguas sobrepostas —
-   "nomes numa faixa, gráfico noutra" — e não como uma peça só. Agora
-   cabeçalho e microcomposição dividem a MESMA linha (`.step` é uma linha
-   flex, não uma coluna): ícone+nome à esquerda, traço à direita, os dois
-   centralizados no mesmo eixo vertical.
-
-   Três coisas continuam fazendo os segmentos lerem como um sistema:
-
-     1. gap: 0 — um segmento encosta no vizinho.
-     2. Nenhum segmento tem fundo, borda, raio ou sombra. O que separa duas
-        etapas é um fio vertical extremamente sutil, não uma caixa.
-     3. A linha de percurso sai de um segmento na mesma altura em que entra
-        no seguinte (ver o bloco MICRO em ProcessSteps.tsx).
-
-   Cores: tudo em `currentColor` sobre pseudo-elementos e traços com
-   opacidade própria — a régua herda a cor de texto da superfície que a
-   hospeda sem precisar de uma variante por tom.
-
-   Altura total do ribbon: ~90–120px (cabeçalho + traço na mesma linha,
-   padding vertical) — bem abaixo do teto de 170px pedido, porque não
-   sobra uma segunda linha para acomodar.
+   Sem fundo, sem card, sem borda, sem divisor: o que separa duas etapas é
+   o conector vetorial entre elas (ver ProcessConnectorIcon em icons.tsx).
+   O próprio deslocamento horizontal é a expressão visual — ver o
+   comentário longo em ProcessSteps.tsx para como o loop de duas cópias
+   funciona sem salto perceptível.
    ========================================================== */
 
-.scroller {
+.viewport {
   margin-top: clamp(32px, 5vw, 56px);
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
-  /* Barra fina e discreta — visível, nunca escondida. A affordance de
-     continuidade é o próximo segmento aparecendo pela metade, mas o scroll
-     continua sendo um scroll de verdade. */
-  scrollbar-width: thin;
-  scrollbar-color: currentColor transparent;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 4%, black 96%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 4%, black 96%, transparent 100%);
 }
 
-.scroller:focus-visible {
+.viewport:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 6px;
 }
 
-.list {
+/* A sequência atravessa quase a largura inteira da viewport no desktop —
+   extrapolar ligeiramente o container editorial reforça a sensação de
+   movimento cruzando a tela (Seção 13 da rodada). Seguro porque .page
+   (Home e páginas de empresa) já declara `overflow-x: clip`. */
+@media (min-width: 1024px) {
+  .viewport {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  --marquee-duration: 26s;
+  animation: marqueeScroll var(--marquee-duration) linear infinite;
+}
+
+@media (min-width: 1024px) {
+  .track {
+    --marquee-duration: 32s;
+  }
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* As duas cópias têm largura idêntica: 50% do track é exatamente uma
+       sequência inteira. */
+    transform: translateX(-50%);
+  }
+}
+
+@media (hover: hover) {
+  .viewport:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+.viewport:focus .track,
+.viewport:focus-within .track {
+  animation-play-state: paused;
+}
+
+.sequence {
+  display: flex;
+  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  /* Sem gap: a régua de cada segmento precisa encostar na do vizinho para
-     ler como um traço contínuo. O respiro vem do padding interno. */
-  gap: 0;
 }
 
 .step {
-  position: relative;
-  flex: 0 0 66%; /* ≈1,5 segmento visível no mobile */
-  min-width: 0;
-  scroll-snap-align: start;
+  flex: none;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px 16px 20px 14px;
-}
-
-/* Divisor entre etapas: um fio vertical extremamente sutil, não uma régua
-   horizontal por cima do texto. Some no primeiro segmento — não existe
-   "etapa anterior" para separar dele. */
-.step:not(:first-child)::before {
-  content: "";
-  position: absolute;
-  top: 14%;
-  bottom: 14%;
-  left: 0;
-  width: 1px;
-  background: currentColor;
-  opacity: 0.16;
-}
-
-/* ---------------- Cabeçalho: ícone + nome ----------------
-   Hierarquia visual acima da microcomposição (opacos, peso 600) — a régua
-   se lê primeiro como texto, o traço é o acompanhamento, não o contrário. */
-.head {
-  flex: 0 1 auto;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: clamp(8px, 1.4vw, 14px);
+  padding-block: clamp(28px, 5vw, 44px);
 }
 
 .icon {
   flex: none;
   display: block;
-  width: 18px;
-  height: 18px;
-  color: var(--role-muted, var(--text-muted));
+  width: clamp(22px, 1.1vw + 17px, 30px);
+  height: clamp(22px, 1.1vw + 17px, 30px);
+  color: currentColor;
+  opacity: 0.88;
 }
 
 .name {
+  flex: none;
   margin: 0;
-  min-width: 0;
+  white-space: nowrap;
   color: inherit;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 12.5px;
-  line-height: 1.25;
+  font-size: clamp(14px, 0.4vw + 13px, 16px);
   letter-spacing: 0.005em;
-  /* "Descaracterização" é uma palavra só e mais larga que a célula em
-     1440px: hyphens (o documento já é lang="pt-BR", ver app/layout.tsx)
-     insere um hífen de verdade no ponto de quebra em vez de partir a
-     palavra ao meio sem marca nenhuma. */
-  overflow-wrap: break-word;
-  hyphens: auto;
 }
 
-/* ---------------- Microcomposição ----------------
-   Preenche o espaço que sobra na mesma linha do cabeçalho — nunca uma
-   segunda faixa abaixo dele. */
-.micro {
-  flex: 1 1 44px;
-  min-width: 44px;
+.connector {
+  flex: none;
   display: block;
-  height: 26px;
-  overflow: visible;
-}
-
-/* Os traços da matéria. Densidade e altura mudam por etapa (ProcessSteps.tsx);
-   a cor e o peso são os mesmos nas seis, senão cada etapa viraria um
-   gráfico próprio em vez de um momento do mesmo sistema. */
-.tick {
-  stroke: currentColor;
-  stroke-width: 1.5;
-  opacity: 0.34;
-}
-
-/* Fardo da última etapa — único momento com massa preenchida: é o material
-   que voltou a ser um volume. */
-.block {
-  fill: currentColor;
-  opacity: 0.2;
-}
-
-.strap {
-  stroke: currentColor;
-  stroke-width: 1;
-  opacity: 0.42;
-}
-
-/* A linha de percurso é a peça mais forte da composição: é ela que diz que
-   as seis etapas são um caminho só. */
-.flow {
-  stroke: var(--role-accent, var(--text-accent));
-  stroke-width: 1.5;
-  opacity: 0.75;
-}
-
-/* ---------------- Desktop: as seis de uma vez, régua única ---------------- */
-
-@media (min-width: 720px) {
-  .scroller {
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-
-  .list {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .step {
-    flex: none;
-    padding: 20px 14px 20px 16px;
-  }
-
-  .name {
-    font-size: 12px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .step {
-    padding: 22px 16px 22px 18px;
-    gap: 14px;
-  }
-
-  .icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .name {
-    font-size: 13px;
-  }
-
-  .micro {
-    height: 32px;
-  }
+  width: clamp(32px, 4vw, 56px);
+  height: auto;
+  color: currentColor;
+  opacity: 0.45;
 }
 
 /* Superfícies claras precisam de um pouco mais de traço para o mesmo peso
-   ótico — o mesmo ajuste por superfície que BrandBoundaryMark faz. */
+   ótico — o mesmo ajuste por superfície que outros componentes fazem. */
 @media (prefers-contrast: more) {
-  .tick {
-    opacity: 0.55;
+  .icon,
+  .connector {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
   }
 
-  .flow {
-    opacity: 1;
+  .sequenceCopy {
+    display: none;
+  }
+
+  .viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Sem a cópia de loop, o conector depois de Destinação apontaria para o
+     nada — a sequência real fica parada e termina limpa na última etapa. */
+  .sequence > .step:last-child .connector {
+    display: none;
   }
 }

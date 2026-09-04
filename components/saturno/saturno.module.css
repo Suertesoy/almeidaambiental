@@ -180,10 +180,11 @@
   }
 }
 
-/* Mesmo respiro que separava a headline da grade de materiais quando ela
-   ainda vinha acompanhada de imagem — antes um style inline na página. */
+/* Respiro entre a headline e o primeiro grid de Material Cards — aumentado
+   na rodada de refino de fluxo/materiais para que o conteúdo nunca invada
+   visualmente o título (era o problema da versão com imagem de fundo). */
 .materialsBlock {
-  margin-top: clamp(32px, 5vw, 48px);
+  margin-top: clamp(44px, 7vw, 72px);
 }
 
 /* ---------------- Saturno + Grupo Almeida ---------------- */

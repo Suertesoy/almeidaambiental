@@ -190,6 +190,15 @@ html:has([data-page="home"]) {
   text-wrap: balance;
 }
 
+/* Modificador seletivo (rodada de refino de fluxo/materiais, Seção 29): só
+   o headline da dobra "Almeida Equipamentos / engenharia" muda para
+   sentence case — mesmo mecanismo já usado por .manifestoHeadline, mas
+   como sobrescrita combinável com .headline (que continua uppercase em
+   todas as outras seis dobras de empresa) em vez de uma classe autônoma. */
+.headlineSentence {
+  text-transform: none;
+}
+
 /* ---------------- Declaração de marca sobre superfície material ----------
    Dobra sem imagem, onde a própria marca é o assunto: símbolo oficial,
    região e uma headline maior que a das dobras narrativas. Usada hoje pela
