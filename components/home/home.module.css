@@ -57,6 +57,25 @@ html:has([data-page="home"]) {
   position: relative;
 }
 
+/* Rodada de refino de brand stage (Seção 6): no mobile, a distância entre
+   o fim da entrada (marca + posicionamento) e o começo da segunda dobra
+   (Process Flow + foto de frota) lia como um buraco — as duas dobras têm
+   o `padding-block` cheio de `.section` nas duas pontas que se encontram,
+   dobrando o respiro exatamente onde as duas deveriam ler como capítulos
+   consecutivos do MESMO território. Reduz só o lado que se toca (o
+   padding-bottom de quem sai, o padding-top de quem entra), preservando o
+   padding-block padrão em todo o resto — topo da entrada, base da dobra
+   de processo — e sem tocar em nenhuma outra `section` do site. */
+@media (max-width: 1023px) {
+  .ambientalEntrySection {
+    padding-bottom: clamp(32px, 7vw, 56px);
+  }
+
+  .ambientalProcessSection {
+    padding-top: clamp(32px, 7vw, 56px);
+  }
+}
+
 /* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
    (ver comentário lá): cada tom expõe os papéis de texto como custom
    properties, que atravessam a fronteira de CSS Modules por herança do DOM. */
@@ -169,21 +188,37 @@ html:has([data-page="home"]) {
   grid-area: media;
 }
 
-/* Mesma largura fluida nas três empresas (Ambiental/Equipamentos/Saturno):
-   é o que dá equivalência de PESO ÓPTICO entre logos com proporções
-   diferentes, sem forçar a mesma largura em pixels artificialmente — cada
-   uma cresce/encolhe pela própria altura natural (height: auto). Nunca
-   esticada. */
+/* Rodada de refino de brand stage (Seção 5): a largura igual em px das
+   três marcas (clamp(190px,16vw,260px) fixo) ficou conservadora — em
+   telas grandes as três liam pequenas dentro do respiro do BrandStage.
+   A régua agora é PESO ÓPTICO, não largura em pixels: no mobile (largura
+   cheia, uma coluna só) continua em vw fluido; no desktop (coluna própria
+   dentro do .duo) a largura passa a ser um PERCENTUAL da área interna do
+   próprio BrandStage (.stage, ver BrandStage.module.css — a % de um item
+   flex resolve contra o content-box do pai, ou seja, contra a coluna já
+   descontado o padding/respiro do stage). Cada marca recebe seu próprio
+   percentual/teto (modificadores abaixo) porque a mesma largura de coluna
+   não produz o mesmo peso: a Equipamentos é colorida sobre pedra clara
+   (menos contraste que branco sobre verde/oliva) e precisa de mais área
+   para ler com a mesma força. Nunca esticada: height sempre auto. */
 .brandStageLogo {
   display: block;
-  width: clamp(190px, 55vw, 320px);
+  width: clamp(200px, 58vw, 340px);
   max-width: 100%;
   height: auto;
 }
 
 @media (min-width: 1024px) {
   .brandStageLogo {
-    width: clamp(190px, 16vw, 260px);
+    width: 80%;
+    max-width: 360px;
+  }
+
+  .brandStageLogoEquipamentos {
+    /* Colorida sobre pedra clara: precisa de mais área que branco sobre
+       fundo escuro para o mesmo peso óptico (Seção 12/13 do pedido). */
+    width: 94%;
+    max-width: 460px;
   }
 }
 
@@ -592,6 +627,19 @@ html:has([data-page="home"]) {
   grid-template-areas: "media" "content";
   gap: clamp(28px, 6vw, 48px);
   align-items: center;
+}
+
+/* Rodada de refino de brand stage (Seção 10): exceção pontual à regra
+   "foto sempre primeiro no mobile" — só para a segunda dobra Ambiental
+   (texto + foto de frota + Process Flow). Ali a foto tem função
+   operacional, não de abertura de capítulo: o texto (headline "Eficiência
+   em cada etapa do processo" + corpo + CTA) precisa vir antes dela. O
+   desktop não muda — .duoMediaRight já resolve "content media" a partir
+   de 1024px, então esta regra só existe abaixo disso. */
+@media (max-width: 1023px) {
+  .duoContentFirst {
+    grid-template-areas: "content" "media";
+  }
 }
 
 @media (min-width: 1024px) {
