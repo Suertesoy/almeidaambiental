@@ -1,0 +1,14 @@
+/* ==========================================================
+   BrandStage — área de respiro para a logo grande nas dobras de entrada
+   de cada empresa (rodada "presença de marca"). Cuida só de alinhamento e
+   centralização óptica; quem consome define área/grid (via `className`),
+   cor de fundo, layout da section e qual logo entra (`children`).
+   ========================================================== */
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(200px, 24vw, 320px);
+  padding: clamp(12px, 2vw, 32px);
+}

@@ -8,6 +8,7 @@ import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
+import BrandStage from "../shared/BrandStage";
 import ProcessSteps from "../shared/ProcessSteps";
 import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
@@ -16,9 +17,19 @@ import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 
-const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
-const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
+/* IMG_EQUIPAMENTOS_TECNOLOGIA saiu na rodada de presença de marca: a
+   fotografia da dobra de ENTRADA da Almeida Equipamentos deu lugar à logo
+   oficial grande (BrandStage abaixo). */
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
+/* IMG_AMBIENTAL_FROTA: mesmo arquivo que ocupava a dobra de ENTRADA da
+   Almeida Ambiental antes da rodada de presença de marca (ver commit
+   b6f21ed, const IMG_AMBIENTAL_INTRO). Rodada de refino de brand stage
+   (Seção 7): a foto volta, mas com outro papel — não mais na entrada
+   (que agora é só marca + posicionamento), e sim na SEGUNDA dobra, ao
+   lado de "Eficiência em cada etapa do processo", como evidência visual
+   da operação ao lado do Process Flow. Mesmo arquivo, mesmo alt de antes;
+   nenhuma imagem nova foi gerada. */
+const IMG_AMBIENTAL_FROTA = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
 /* Substitui saturno-fardos.webp (rodada "materialidade-assets-finais",
    Seção 9): a foto antiga afirmava "Fardos processados pela Saturno
    Ambiental" sem base — ninguém confirmou que aqueles fardos eram da
@@ -100,16 +111,27 @@ export default function HomePage() {
       <div className={`${styles.toneForest} ${styles.ambientalTerritory}`}>
         <MaterialSurface surface="ambiental-materia" />
 
-        <section id="almeida-ambiental" className={`${styles.section} ${boundarySurface}`}>
+        {/* Rodada de refino de brand stage (Seção 3/4): as três entradas de
+            empresa agora compartilham a MESMA lógica no desktop — logo
+            grande à esquerda, conteúdo à direita — em vez de alternar
+            lado a lado. O ritmo entre as três já vem da troca de marca,
+            cor, textura e fundo; a posição da marca não precisa mais
+            variar por section. */}
+        <section
+          id="almeida-ambiental"
+          className={`${styles.section} ${styles.ambientalEntrySection} ${boundarySurface}`}
+        >
           <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
           <div className={styles.container}>
-            <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
-              <div className={styles.duoContent}>
+            <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
+              <BrandStage className={styles.duoStage}>
                 <BrandMark
                   brand={BRANDS["almeida-ambiental"]}
                   variant="branca"
-                  className={styles.eyebrowMark}
+                  className={styles.brandStageLogo}
                 />
+              </BrandStage>
+              <div className={styles.duoContent}>
                 <h2 className={styles.headline}>
                   RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
                 </h2>
@@ -118,33 +140,42 @@ export default function HomePage() {
                   responsável de resíduos.
                 </p>
               </div>
-              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                <SectionMedia
-                  imageSrc={IMG_AMBIENTAL_INTRO}
-                  alt="Operação logística da Almeida Ambiental"
-                  objectPosition="center"
-                  priority
-                />
-              </div>
             </Reveal>
           </div>
         </section>
 
-        <section className={`${styles.section} ${boundarySurface}`}>
+        {/* Rodada de refino de brand stage (Seção 7-9): a fotografia real da
+            frota (mesmo arquivo da entrada, antes do commit 7843173) volta
+            aqui como peça editorial ao lado do Process Flow — função
+            operacional, não mais de assinatura de marca. No mobile, o
+            conteúdo textual continua vindo primeiro (.duoContentFirst
+            inverte a ordem padrão de .duo só abaixo de 1024px), então a
+            foto funciona como pausa visual entre o texto e o Process Flow,
+            nunca como abertura da dobra. */}
+        <section className={`${styles.section} ${styles.ambientalProcessSection} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
           <div className={styles.container}>
-            <Reveal>
-              <p className={styles.eyebrow}>Almeida Ambiental</p>
-              <h2 className={styles.headline}>EFICIÊNCIA EM CADA ETAPA DO PROCESSO</h2>
-              <p className={styles.body}>
-                Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
-                transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
-                ambiental.
-              </p>
-              <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-ambiental">
-                  Conheça Almeida Ambiental
-                </Link>
+            <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoContentFirst}`}>
+              <div className={styles.duoContent}>
+                <p className={styles.eyebrow}>Almeida Ambiental</p>
+                <h2 className={styles.headline}>EFICIÊNCIA EM CADA ETAPA DO PROCESSO</h2>
+                <p className={styles.body}>
+                  Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
+                  transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
+                  ambiental.
+                </p>
+                <div className={styles.ctaRow}>
+                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-ambiental">
+                    Conheça Almeida Ambiental
+                  </Link>
+                </div>
+              </div>
+              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
+                <SectionMedia
+                  imageSrc={IMG_AMBIENTAL_FROTA}
+                  alt="Operação logística da Almeida Ambiental"
+                  objectPosition="center"
+                />
               </div>
             </Reveal>
 
@@ -158,19 +189,17 @@ export default function HomePage() {
         <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_EQUIPAMENTOS_TECNOLOGIA}
-                alt="Engenharia da Almeida Equipamentos"
-                objectPosition="center 55%"
-              />
-            </div>
-            <div className={styles.duoContent}>
+            {/* Imagem de maquinário saiu (feedback de presença de marca): a
+                logo oficial colorida grande entra no lugar, como
+                BrandStage — ver Seção 11/13 do pedido da cliente. */}
+            <BrandStage className={styles.duoStage}>
               <BrandMark
                 brand={BRANDS["almeida-equipamentos"]}
                 variant="original"
-                className={styles.eyebrowMark}
+                className={`${styles.brandStageLogo} ${styles.brandStageLogoEquipamentos}`}
               />
+            </BrandStage>
+            <div className={styles.duoContent}>
               <h2 className={styles.headline}>TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO</h2>
               <p className={styles.body}>
                 Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
@@ -249,16 +278,23 @@ export default function HomePage() {
         <section className={`${styles.section} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
           <div className={styles.container}>
-            <Reveal className={styles.brandStatement}>
-              <BrandMark
-                brand={BRANDS["saturno-ambiental"]}
-                variant="branca"
-                className={styles.eyebrowMark}
-              />
-              <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-              <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
-                EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
-              </h2>
+            {/* Rodada de refino de brand stage (Seção 15): logo à esquerda,
+                conteúdo à direita — mesma lógica de Ambiental/Equipamentos,
+                sem mais alternância de lado entre as três entradas. */}
+            <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.brandStatement}`}>
+              <BrandStage className={styles.duoStage}>
+                <BrandMark
+                  brand={BRANDS["saturno-ambiental"]}
+                  variant="branca"
+                  className={styles.brandStageLogo}
+                />
+              </BrandStage>
+              <div className={styles.duoContent}>
+                <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
+                <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
+                  EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
+                </h2>
+              </div>
             </Reveal>
           </div>
         </section>

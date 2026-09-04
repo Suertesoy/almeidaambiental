@@ -5,6 +5,8 @@ import Link from "next/link";
 import styles from "./home.module.css";
 import { HERO_POSTER_DATA_URI } from "../../lib/hero-poster";
 import { ChevronDownIcon } from "../icons";
+import BrandMark from "../shared/BrandMark";
+import { BRANDS } from "../../lib/brands";
 
 const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
 
@@ -97,8 +99,11 @@ export default function Hero() {
       <div className={styles.heroScrim} aria-hidden="true" />
 
       <div className={styles.heroContent}>
-        <p className={styles.heroEyebrow}>Grupo Almeida</p>
-        <p className={styles.heroYears}>40 anos</p>
+        {/* Feedback da cliente (rodada "presença de marca"): o pequeno bloco
+            textual "Grupo Almeida / 40 anos" dava lugar à logo completa
+            oficial — presença de marca real na entrada do Hero, sem
+            competir com a headline abaixo. */}
+        <BrandMark brand={BRANDS["grupo-almeida"]} variant="branca" className={styles.heroBrandMark} />
         {/* Sem quebra de linha forçada (regra 13 da tarefa): o texto flui e
             reorganiza as linhas conforme a largura de cada viewport, em vez
             de reproduzir as mesmas quebras do desktop no mobile. */}
