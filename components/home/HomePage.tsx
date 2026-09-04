@@ -8,6 +8,7 @@ import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
+import BrandStage from "../shared/BrandStage";
 import ProcessSteps from "../shared/ProcessSteps";
 import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
@@ -16,8 +17,10 @@ import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
 import { IMPACT_METRICS } from "../shared/impactMetrics";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 
-const IMG_AMBIENTAL_INTRO = "/images/home-variants/ambiental/ambiental-logistica-cinematic.webp";
-const IMG_EQUIPAMENTOS_TECNOLOGIA = "/images/home-variants/equipamentos/equipamentos-engenharia.webp";
+/* IMG_AMBIENTAL_INTRO e IMG_EQUIPAMENTOS_TECNOLOGIA saíram nesta rodada
+   (feedback de presença de marca): as fotografias das dobras de entrada da
+   Almeida Ambiental e da Almeida Equipamentos deram lugar às logos oficiais
+   grandes (BrandStage abaixo) — ver Seções 7-14 do pedido da cliente. */
 const IMG_EQUIPAMENTOS_ENGENHARIA = "/images/home-variants/equipamentos/equipamentos-detalhe-mecanico.webp";
 /* Substitui saturno-fardos.webp (rodada "materialidade-assets-finais",
    Seção 9): a foto antiga afirmava "Fardos processados pela Saturno
@@ -105,11 +108,6 @@ export default function HomePage() {
           <div className={styles.container}>
             <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
               <div className={styles.duoContent}>
-                <BrandMark
-                  brand={BRANDS["almeida-ambiental"]}
-                  variant="branca"
-                  className={styles.eyebrowMark}
-                />
                 <h2 className={styles.headline}>
                   RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
                 </h2>
@@ -118,14 +116,16 @@ export default function HomePage() {
                   responsável de resíduos.
                 </p>
               </div>
-              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                <SectionMedia
-                  imageSrc={IMG_AMBIENTAL_INTRO}
-                  alt="Operação logística da Almeida Ambiental"
-                  objectPosition="center"
-                  priority
+              {/* Fotografia de frota saiu (feedback de presença de marca):
+                  a logo oficial grande entra no lugar, como BrandStage —
+                  ver Seção 7/8 do pedido da cliente. */}
+              <BrandStage className={styles.duoStage}>
+                <BrandMark
+                  brand={BRANDS["almeida-ambiental"]}
+                  variant="branca"
+                  className={styles.brandStageLogo}
                 />
-              </div>
+              </BrandStage>
             </Reveal>
           </div>
         </section>
@@ -158,19 +158,17 @@ export default function HomePage() {
         <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia
-                imageSrc={IMG_EQUIPAMENTOS_TECNOLOGIA}
-                alt="Engenharia da Almeida Equipamentos"
-                objectPosition="center 55%"
-              />
-            </div>
-            <div className={styles.duoContent}>
+            {/* Imagem de maquinário saiu (feedback de presença de marca): a
+                logo oficial colorida grande entra no lugar, como
+                BrandStage — ver Seção 11/13 do pedido da cliente. */}
+            <BrandStage className={styles.duoStage}>
               <BrandMark
                 brand={BRANDS["almeida-equipamentos"]}
                 variant="original"
-                className={styles.eyebrowMark}
+                className={styles.brandStageLogo}
               />
+            </BrandStage>
+            <div className={styles.duoContent}>
               <h2 className={styles.headline}>TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO</h2>
               <p className={styles.body}>
                 Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
@@ -249,16 +247,24 @@ export default function HomePage() {
         <section className={`${styles.section} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
           <div className={styles.container}>
-            <Reveal className={styles.brandStatement}>
-              <BrandMark
-                brand={BRANDS["saturno-ambiental"]}
-                variant="branca"
-                className={styles.eyebrowMark}
-              />
-              <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-              <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
-                EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
-              </h2>
+            {/* Logo pequena saiu da coluna textual (feedback de presença de
+                marca): a dobra vira duo texto + BrandStage grande à
+                direita, mesmo gesto de Ambiental/Equipamentos — ver
+                Seção 15/16 do pedido da cliente. */}
+            <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.brandStatement}`}>
+              <div className={styles.duoContent}>
+                <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
+                <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
+                  EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
+                </h2>
+              </div>
+              <BrandStage className={styles.duoStage}>
+                <BrandMark
+                  brand={BRANDS["saturno-ambiental"]}
+                  variant="branca"
+                  className={styles.brandStageLogo}
+                />
+              </BrandStage>
             </Reveal>
           </div>
         </section>

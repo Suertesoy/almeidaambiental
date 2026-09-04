@@ -86,7 +86,7 @@ export default function SaturnoPage() {
           <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
           <div className={shared.container}>
             <div className={styles.positioningGrid}>
-              <h2 className={shared.headline}>Próxima da operação. Próxima de quem precisa dela.</h2>
+              <h2 className={shared.headline}>Gestão ambiental próxima de quem precisa.</h2>
               <div className={styles.positioningCopy}>
                 <p className={shared.body}>
                   A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
