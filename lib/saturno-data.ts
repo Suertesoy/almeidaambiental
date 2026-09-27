@@ -121,3 +121,74 @@ export const FRENTES: Frente[] = [
 ];
 
 export const MATERIALS = [...CORE_MATERIALS];
+
+/* ==========================================================
+   VERSÃO EM INGLÊS — mesmo significado, mesmos fatos/números/datas.
+   Ver lib/i18n/locale.ts.
+   ========================================================== */
+
+export const CARTONAGEM_IMAGE_EN = img(
+  "saturno-ambiental",
+  "cartonagem",
+  "/saturno-ambiental/cartonagem-caixas.webp",
+  "New and used cardboard boxes organized in different sizes inside a warehouse"
+);
+
+export const HERO_META_EN = [
+  "Blumenau · Vale do Itajaí region",
+  "Part of Grupo Almeida since 2022",
+  "Waste management, cartonage and environmental services",
+];
+
+export const FRENTES_EN: Frente[] = [
+  {
+    id: "coleta",
+    eyebrow: "Waste Collection",
+    headline: "Collection connected to the region's routine.",
+    copy: "Volume, frequency and material type change from one operation to another. Saturno structures collection around these differences and routes waste to the right sorting and processing steps.",
+  },
+  {
+    id: "triagem",
+    eyebrow: "Sorting and Classification",
+    headline: "Sorting correctly to make the most of it.",
+    copy: "Sorting organizes materials by composition and destination, creating the conditions to recover value, reduce improper disposal and route each type of waste to the right solution.",
+  },
+  {
+    id: "trituracao",
+    eyebrow: "Shredding and Destruction",
+    headline: "Security and destruction when the material calls for it.",
+    copy: "Confidential materials and certain types of waste can require destruction before disposal. Saturno has processing solutions to prepare that material more securely and efficiently.",
+  },
+  {
+    id: "destinacao",
+    eyebrow: "Disposal",
+    headline: "The cycle is completed with the right routing.",
+    copy: "Once sorted and processed, each material moves on to the proper disposal channel based on its composition — closing the chain that starts with collection.",
+  },
+  {
+    id: "cartonagem",
+    eyebrow: "Cartonage",
+    headline: "Cardboard that goes back into operation.",
+    copy: "Saturno runs a dedicated unit that makes and sells cardboard boxes, with new and used options in different sizes. It's a natural extension of an operation that knows the material from recovery through to reuse.",
+    tags: ["Different sizes and options, subject to availability"],
+    cta: { label: "Ask about sizes and stock", href: CONTACT_ANCHORS.blumenau },
+    image: CARTONAGEM_IMAGE_EN,
+  },
+  {
+    id: "gestao-ambiental",
+    eyebrow: "Environmental Management",
+    headline: "Technical expertise is part of the management too.",
+    copy: "Beyond waste operations, Saturno Ambiental provides specialized technical services to help companies meet their environmental responsibilities.",
+    tags: [
+      "Compliance with environmental license conditions",
+      "Preparation of environmental plans and programs",
+      "PGRS (Solid Waste Management Plan)",
+      "PGRSS (Health Care Waste Management Plan)",
+      "PAE (Emergency Action Plan)",
+      "Talks and training sessions",
+      "Environmental education",
+      "Guidance on environmental programs and MTR (waste manifest) systems",
+    ],
+    cta: { label: "Talk about Environmental Management", href: CONTACT_ANCHORS.blumenau },
+  },
+];

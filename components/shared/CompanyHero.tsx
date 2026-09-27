@@ -9,6 +9,7 @@ import BrandBoundaryMark, {
 import type { EditorialImage } from "../../lib/media";
 import type { BrandBoundaryId } from "../../lib/brand-boundaries";
 import type { MaterialSurfaceId } from "../../lib/material-surfaces";
+import type { Locale } from "../../lib/i18n/locale";
 
 export type CompanyHeroCta = {
   label: string;
@@ -16,6 +17,7 @@ export type CompanyHeroCta = {
 };
 
 export type CompanyHeroProps = {
+  locale: Locale;
   eyebrow: string;
   title: string;
   lede: string;
@@ -62,6 +64,7 @@ export type CompanyHeroProps = {
  * fotografia de outra unidade do Grupo.
  */
 export default function CompanyHero({
+  locale,
   eyebrow,
   title,
   lede,
@@ -97,7 +100,7 @@ export default function CompanyHero({
         <>
           <img src={image.src} alt={image.alt} className={styles.media} loading="eager" fetchPriority="high" />
           <div className={styles.scrim} aria-hidden="true" />
-          {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" />}
+          {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" locale={locale} />}
         </>
       )}
 

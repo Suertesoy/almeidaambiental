@@ -142,6 +142,107 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+/* ==========================================================
+   VERSÃO EM INGLÊS — mesmo portfólio, mesmos IDs, mesmos fabricantes e
+   specs confirmadas. Ver lib/i18n/locale.ts. Nomes descritivos genéricos
+   (ex.: "Compactador de Fuso") viram termos técnicos em inglês; nomes de
+   marca e códigos de modelo (Pöttinger, Austropressen, Heger, APV 90/100,
+   Crocodile) não são traduzidos.
+   ========================================================== */
+export const PRODUCTS_EN: Product[] = [
+  {
+    id: "compactador-fuso",
+    name: "Screw Compactor",
+    manufacturer: "Pöttinger",
+    headline: "More material per load. Less volume taking up space.",
+    copy: "Designed for large volumes, the screw compactor uses a high-force screw to continuously shred and compact material. It's especially useful when cardboard, plastic or wood start taking up too much space before collection.",
+    idealFor: ["Cardboard", "Plastic", "Wood"],
+    benefits: ["Higher load density", "Volume reduction", "Handles large materials", "Logistics gain"],
+    confirmedSpecs: ["9 to 15 kW motor", "Compaction ratio up to 5:1"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-compactador-fuso",
+      "/almeida-equipamentos/produtos/compactador-fuso.webp",
+      "Industrial screw compactor isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+  {
+    id: "apv-90-100",
+    name: "APV 90 and APV 100",
+    manufacturer: "Austropressen",
+    headline: "Vertical compaction where every square meter counts.",
+    copy: "The APV balers serve operations that need to organize paper, cardboard, textiles or plastics without dedicating a large area to the equipment. The vertical format combines compaction and practicality in a solution suited to commercial and industrial operations.",
+    idealFor: ["Paper", "Cardboard", "Textiles", "Plastics"],
+    benefits: ["Low space requirement", "Practical operation", "Compact vertical format"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-apv",
+      "/almeida-equipamentos/produtos/apv-90-100.webp",
+      "Compact vertical baler isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+  {
+    id: "compactador-hidraulico",
+    name: "Hydraulic Compactor",
+    manufacturer: "Pöttinger",
+    headline: "Compaction for waste that requires containment and force.",
+    copy: "The hydraulic compactor combines storage and compaction in a single integrated structure. It's especially suited to operations that need to reduce volume, keep the site organized and handle waste that may require greater containment.",
+    idealFor: ["Industrial waste", "Materials with higher liquid generation"],
+    benefits: ["Integrated storage and compaction", "Enclosed structure", "Containment suited to the material"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-compactador-hidraulico",
+      "/almeida-equipamentos/produtos/compactador-hidraulico.webp",
+      "Enclosed hydraulic compactor isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+  {
+    id: "conteineres-almeida",
+    name: "Almeida Containers",
+    manufacturer: "In-house production",
+    headline: "Structure developed to work alongside the operation.",
+    copy: "The containers Almeida produces complement collection and compaction systems with a structure designed for durability, handling and material discharge.",
+    idealFor: ["Roll-on/roll-off collection", "Large-volume operations"],
+    benefits: ["In-house production by Grupo Almeida", "Geometry designed for unloading", "Durable industrial finish"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-conteineres",
+      "/almeida-equipamentos/produtos/conteineres-almeida.webp",
+      "Industrial roll-on/roll-off container isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+  {
+    id: "prensas-horizontais",
+    name: "Horizontal Balers",
+    manufacturer: "Austropressen",
+    headline: "High capacity for operations already working at a different scale.",
+    copy: "When volume calls for continuous processing and high-density bales, horizontal balers expand operational capacity and reduce the need to handle material before transport.",
+    idealFor: ["Large continuous volumes", "High-density bales"],
+    benefits: ["Continuous processing", "High-density bales", "Less handling before transport"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-prensa-horizontal",
+      "/almeida-equipamentos/produtos/prensas-horizontais.webp",
+      "Large industrial horizontal baler isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+  {
+    id: "crocodile",
+    name: "Crocodile",
+    manufacturer: "Heger",
+    headline: "Less liquid. Less weight. More efficient processing.",
+    copy: "The Crocodile separates liquids from different materials, making later stages of recycling, transport, storage or disposal easier.",
+    idealFor: ["Plastic cups", "Tetra Pak packaging", "PET bottles", "Specific sludges"],
+    benefits: ["Reduced weight for transport", "Prepares material for recycling", "Compact, robust process"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-crocodile",
+      "/almeida-equipamentos/produtos/crocodile.webp",
+      "Industrial dewatering equipment isolated on a neutral background, illustrative product visualization"
+    ),
+  },
+];
+
 export type MaterialAssociation = {
   material: string;
   products: string[]; // ids de PRODUCTS
@@ -159,11 +260,27 @@ export const MATERIAL_ASSOCIATIONS: MaterialAssociation[] = [
   { material: "Grandes volumes contínuos", products: ["prensas-horizontais", "conteineres-almeida"] },
 ];
 
+export const MATERIAL_ASSOCIATIONS_EN: MaterialAssociation[] = [
+  { material: "Cardboard", products: ["compactador-fuso", "apv-90-100"] },
+  { material: "Plastic", products: ["compactador-fuso", "apv-90-100", "crocodile"] },
+  { material: "Wood", products: ["compactador-fuso"] },
+  { material: "Wet waste", products: ["compactador-hidraulico", "crocodile"] },
+  { material: "Confidential documents", products: ["compactador-hidraulico"] },
+  { material: "Large continuous volumes", products: ["prensas-horizontais", "conteineres-almeida"] },
+];
+
 export const HERO_IMAGE = img(
   "almeida-equipamentos",
   "hero",
   "/almeida-equipamentos/hero-compactador.webp",
   "Grande equipamento industrial de compactação integrado a instalação moderna, visualização ilustrativa"
+);
+
+export const HERO_IMAGE_EN = img(
+  "almeida-equipamentos",
+  "hero",
+  "/almeida-equipamentos/hero-compactador.webp",
+  "Large industrial compaction equipment integrated into a modern facility, illustrative visualization"
 );
 
 export const DETALHE_MECANICO_IMAGE = img(
@@ -173,11 +290,25 @@ export const DETALHE_MECANICO_IMAGE = img(
   "Close técnico de estrutura mecânica e painel metálico de equipamento industrial"
 );
 
+export const DETALHE_MECANICO_IMAGE_EN = img(
+  "almeida-equipamentos",
+  "detalhe-mecanico",
+  "/almeida-equipamentos/detalhe-mecanico.webp",
+  "Technical close-up of mechanical structure and metal panel on industrial equipment"
+);
+
 export const FEIRA_IMAGE = img(
   "almeida-equipamentos",
   "parcerias-internacionais",
   "/almeida-equipamentos/feira-tecnologica.webp",
   "Ambiente conceitual de feira de tecnologia ambiental internacional, ilustrativo"
+);
+
+export const FEIRA_IMAGE_EN = img(
+  "almeida-equipamentos",
+  "parcerias-internacionais",
+  "/almeida-equipamentos/feira-tecnologica.webp",
+  "Conceptual environment of an international environmental technology trade fair, illustrative"
 );
 
 export const PARTNERS = ["Pöttinger", "Austropressen", "Heger"];
@@ -207,4 +338,10 @@ export const DENSITY_STAGES: DensityStage[] = [
   { id: "solto", label: "Material solto", density: "Baixa densidade", scale: 0.3 },
   { id: "prensado", label: "Material prensado", density: "Densidade intermediária", scale: 0.62 },
   { id: "compactado", label: "Material compactado", density: "Alta densidade", scale: 1 },
+];
+
+export const DENSITY_STAGES_EN: DensityStage[] = [
+  { id: "solto", label: "Loose material", density: "Low density", scale: 0.3 },
+  { id: "prensado", label: "Baled material", density: "Intermediate density", scale: 0.62 },
+  { id: "compactado", label: "Compacted material", density: "High density", scale: 1 },
 ];

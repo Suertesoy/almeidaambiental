@@ -12,10 +12,12 @@ import BrandStage from "../shared/BrandStage";
 import ProcessSteps from "../shared/ProcessSteps";
 import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
-import { FLOW_STEPS } from "../../lib/almeida-ambiental-data";
+import { FLOW_STEPS, FLOW_STEPS_EN } from "../../lib/almeida-ambiental-data";
 import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
-import { IMPACT_METRICS } from "../shared/impactMetrics";
+import { IMPACT_METRICS, IMPACT_METRICS_EN } from "../shared/impactMetrics";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
+import { localizeHref } from "../../lib/i18n/routes";
+import type { Locale } from "../../lib/i18n/locale";
 
 /* IMG_EQUIPAMENTOS_TECNOLOGIA saiu na rodada de presença de marca: a
    fotografia da dobra de ENTRADA da Almeida Equipamentos deu lugar à logo
@@ -52,19 +54,93 @@ const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
  * emprestada de outra seção para simular a mudança.
  */
 const ENGENHARIA_ASSET = MATERIAL_IMAGES["equipamentos-engenharia"];
+const ENGENHARIA_ALT = {
+  pt: ENGENHARIA_ASSET.desktop ? ENGENHARIA_ASSET.alt : "Detalhe mecânico de equipamento da Almeida Equipamentos",
+  en: ENGENHARIA_ASSET.desktop
+    ? "Industrial engineering macro detail: forged steel components and machined gray steel geometry"
+    : "Mechanical detail of Almeida Equipamentos equipment",
+} as const;
 const ENGENHARIA = {
   src: ENGENHARIA_ASSET.desktop ?? IMG_EQUIPAMENTOS_ENGENHARIA,
   mobileSrc: ENGENHARIA_ASSET.mobile ?? undefined,
-  alt: ENGENHARIA_ASSET.desktop
-    ? ENGENHARIA_ASSET.alt
-    : "Detalhe mecânico de equipamento da Almeida Equipamentos",
 };
 
-/* As seis etapas vêm de lib/almeida-ambiental-data.ts (FLOW_STEPS) — mesma
-   fonte usada pela página /almeida-ambiental, para que a sequência não
-   possa divergir entre as duas. Só o nome da etapa: não existe frase curta
-   validada por etapa no conteúdo aprovado, e o componente não inventa uma. */
-const PROCESS_STEPS = FLOW_STEPS.map((name) => ({ name }));
+const COPY = {
+  pt: {
+    ambientalEntryHeadlinePrefix: "RESÍDUOS GANHAM UM NOVO ",
+    ambientalEntryHeadlineGold: "DESTINO",
+    ambientalEntryBody:
+      "Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão responsável de resíduos.",
+    ambientalProcessEyebrow: "Almeida Ambiental",
+    ambientalProcessHeadline: "EFICIÊNCIA EM CADA ETAPA DO PROCESSO",
+    ambientalProcessBody:
+      "Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade ambiental.",
+    ambientalProcessCta: "Conheça Almeida Ambiental",
+    ambientalFrotaAlt: "Operação logística da Almeida Ambiental",
+    ambientalProcessAriaLabel: "Etapas da operação da Almeida Ambiental",
+    equipamentosEntryHeadline: "TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO",
+    equipamentosEntryBody:
+      "Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.",
+    equipamentosEyebrow: "Almeida Equipamentos",
+    equipamentosHeadline: "Engenharia para movimentar mais com menos",
+    equipamentosBody: "Conhecimento de campo conectado a tecnologias internacionais.",
+    equipamentosTags: ["Compactadores", "Prensas", "Trituradores", "Containers"],
+    equipamentosCta: "Conheça Almeida Equipamentos",
+    saturnoLocationLine: "Blumenau · Vale do Itajaí",
+    saturnoEntryHeadline: "EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.",
+    saturnoAtuacaoAlt: "Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos",
+    saturnoEyebrow: "Saturno Ambiental",
+    saturnoHeadline: "GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA",
+    saturnoBody:
+      "Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação construída para unir eficiência operacional e responsabilidade ambiental.",
+    saturnoTags: ["Gestão de Resíduos", "Cartonagem", "Consultoria"],
+    saturnoCta: "Conheça Saturno Ambiental",
+    impactEyebrow: "Impacto Positivo · 2025",
+    impactHeadline: "CADA RESÍDUO PROCESSADO VIRA UM NÚMERO QUE A NATUREZA RECONHECE.",
+    impactReportCta: "Ver Relatório de Sustentabilidade 2025",
+    manifestoAlt: "Grupo Almeida",
+    manifestoHeadline: "O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.",
+    manifestoBody: "Há 40 anos transformando o presente, pensando no futuro.",
+    manifestoCta: "Entre em contato com o Grupo Almeida",
+  },
+  en: {
+    ambientalEntryHeadlinePrefix: "WASTE GETS A NEW ",
+    ambientalEntryHeadlineGold: "DESTINATION",
+    ambientalEntryBody:
+      "For four decades, technical knowledge and operational experience have come together in responsible waste management.",
+    ambientalProcessEyebrow: "Almeida Ambiental",
+    ambientalProcessHeadline: "EFFICIENCY IN EVERY STEP OF THE PROCESS",
+    ambientalProcessBody:
+      "From collection to disposal, Almeida Ambiental brings together structure, technology and experience to turn waste into value, with more logistics efficiency, safety and environmental responsibility.",
+    ambientalProcessCta: "See Almeida Ambiental",
+    ambientalFrotaAlt: "Almeida Ambiental's logistics operation",
+    ambientalProcessAriaLabel: "Almeida Ambiental's operating steps",
+    equipamentosEntryHeadline: "TECHNOLOGY BORN FROM THE OPERATION ITSELF",
+    equipamentosEntryBody:
+      "Created to improve Grupo Almeida's processes, Almeida Equipamentos turns decades of industry experience into technology applied to waste management.",
+    equipamentosEyebrow: "Almeida Equipamentos",
+    equipamentosHeadline: "Engineering to move more with less",
+    equipamentosBody: "Field knowledge connected to international technology.",
+    equipamentosTags: ["Compactors", "Balers", "Shredders", "Containers"],
+    equipamentosCta: "See Almeida Equipamentos",
+    saturnoLocationLine: "Blumenau · Vale do Itajaí",
+    saturnoEntryHeadline: "REGIONAL EXPERIENCE. GROUP STRENGTH.",
+    saturnoAtuacaoAlt: "Saturno Ambiental's materiality: layers of compressed paper and cardboard",
+    saturnoEyebrow: "Saturno Ambiental",
+    saturnoHeadline: "ENVIRONMENTAL MANAGEMENT THAT GOES BEYOND COLLECTION",
+    saturnoBody:
+      "Collection, sorting, shredding, cartonage and environmental consulting are all part of an operation built to combine operational efficiency with environmental responsibility.",
+    saturnoTags: ["Waste Management", "Cartonage", "Consulting"],
+    saturnoCta: "See Saturno Ambiental",
+    impactEyebrow: "Positive Impact · 2025",
+    impactHeadline: "EVERY BIT OF WASTE PROCESSED BECOMES A NUMBER NATURE RECOGNIZES.",
+    impactReportCta: "View 2025 Sustainability Report",
+    manifestoAlt: "Grupo Almeida",
+    manifestoHeadline: "What began with paper and cardboard today connects operations, technology and sustainability.",
+    manifestoBody: "40 years transforming the present, with the future in mind.",
+    manifestoCta: "Get in touch with Grupo Almeida",
+  },
+} as const;
 
 /**
  * Nova Home principal — narrativa editorial contínua (Seção 2 em diante),
@@ -81,13 +157,16 @@ const PROCESS_STEPS = FLOW_STEPS.map((name) => ({ name }));
  * "grupo-ambiental", cuja metade de saída cairia por cima do vídeo do Hero
  * — ali o símbolo emerge da borda superior da dobra 2 em vez de atravessar.
  */
-export default function HomePage() {
+export default function HomePage({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+  const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
+  const impactMetrics = locale === "en" ? IMPACT_METRICS_EN : IMPACT_METRICS;
   const impactoRef = useRef<HTMLDivElement>(null);
   const impactoActive = useEnterOnce([impactoRef]);
 
   return (
     <div className={styles.page} data-page="home">
-      <Hero />
+      <Hero locale={locale} />
 
       {/* ---------------- Almeida Ambiental (território contínuo) ----------------
           Correção de direção de arte (branch feature/correcao-direcao-arte):
@@ -133,12 +212,10 @@ export default function HomePage() {
               </BrandStage>
               <div className={styles.duoContent}>
                 <h2 className={styles.headline}>
-                  RESÍDUOS GANHAM UM NOVO <span className={styles.gold}>DESTINO</span>
+                  {t.ambientalEntryHeadlinePrefix}
+                  <span className={styles.gold}>{t.ambientalEntryHeadlineGold}</span>
                 </h2>
-                <p className={styles.body}>
-                  Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão
-                  responsável de resíduos.
-                </p>
+                <p className={styles.body}>{t.ambientalEntryBody}</p>
               </div>
             </Reveal>
           </div>
@@ -157,29 +234,21 @@ export default function HomePage() {
           <div className={styles.container}>
             <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoContentFirst}`}>
               <div className={styles.duoContent}>
-                <p className={styles.eyebrow}>Almeida Ambiental</p>
-                <h2 className={styles.headline}>EFICIÊNCIA EM CADA ETAPA DO PROCESSO</h2>
-                <p className={styles.body}>
-                  Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para
-                  transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade
-                  ambiental.
-                </p>
+                <p className={styles.eyebrow}>{t.ambientalProcessEyebrow}</p>
+                <h2 className={styles.headline}>{t.ambientalProcessHeadline}</h2>
+                <p className={styles.body}>{t.ambientalProcessBody}</p>
                 <div className={styles.ctaRow}>
-                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/almeida-ambiental">
-                    Conheça Almeida Ambiental
+                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/almeida-ambiental", locale)}>
+                    {t.ambientalProcessCta}
                   </Link>
                 </div>
               </div>
               <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                <SectionMedia
-                  imageSrc={IMG_AMBIENTAL_FROTA}
-                  alt="Operação logística da Almeida Ambiental"
-                  objectPosition="center"
-                />
+                <SectionMedia imageSrc={IMG_AMBIENTAL_FROTA} alt={t.ambientalFrotaAlt} objectPosition="center" />
               </div>
             </Reveal>
 
-            <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
+            <ProcessSteps steps={processSteps} ariaLabel={t.ambientalProcessAriaLabel} />
           </div>
         </section>
       </div>
@@ -200,11 +269,8 @@ export default function HomePage() {
               />
             </BrandStage>
             <div className={styles.duoContent}>
-              <h2 className={styles.headline}>TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO</h2>
-              <p className={styles.body}>
-                Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma
-                décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.
-              </p>
+              <h2 className={styles.headline}>{t.equipamentosEntryHeadline}</h2>
+              <p className={styles.body}>{t.equipamentosEntryBody}</p>
             </div>
           </Reveal>
         </div>
@@ -226,20 +292,17 @@ export default function HomePage() {
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
-              <p className={styles.eyebrow}>Almeida Equipamentos</p>
-              <h2 className={`${styles.headline} ${styles.headlineSentence}`}>
-                Engenharia para movimentar mais com menos
-              </h2>
-              <p className={styles.body}>Conhecimento de campo conectado a tecnologias internacionais.</p>
+              <p className={styles.eyebrow}>{t.equipamentosEyebrow}</p>
+              <h2 className={`${styles.headline} ${styles.headlineSentence}`}>{t.equipamentosHeadline}</h2>
+              <p className={styles.body}>{t.equipamentosBody}</p>
               <ul className={styles.tagRow}>
-                <li>Compactadores</li>
-                <li>Prensas</li>
-                <li>Trituradores</li>
-                <li>Containers</li>
+                {t.equipamentosTags.map((tag) => (
+                  <li key={tag}>{tag}</li>
+                ))}
               </ul>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href="/almeida-equipamentos">
-                  Conheça Almeida Equipamentos
+                <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
+                  {t.equipamentosCta}
                 </Link>
               </div>
             </div>
@@ -247,7 +310,7 @@ export default function HomePage() {
               <SectionMedia
                 imageSrc={ENGENHARIA.src}
                 mobileSrc={ENGENHARIA.mobileSrc}
-                alt={ENGENHARIA.alt}
+                alt={ENGENHARIA_ALT[locale]}
                 objectPosition="center"
               />
             </div>
@@ -290,10 +353,8 @@ export default function HomePage() {
                 />
               </BrandStage>
               <div className={styles.duoContent}>
-                <p className={styles.locationLine}>Blumenau · Vale do Itajaí</p>
-                <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>
-                  EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.
-                </h2>
+                <p className={styles.locationLine}>{t.saturnoLocationLine}</p>
+                <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>{t.saturnoEntryHeadline}</h2>
               </div>
             </Reveal>
           </div>
@@ -304,27 +365,20 @@ export default function HomePage() {
           <div className={styles.container}>
             <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
               <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-                <SectionMedia
-                  imageSrc={IMG_SATURNO_ATUACAO}
-                  alt="Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos"
-                  objectPosition="center"
-                />
+                <SectionMedia imageSrc={IMG_SATURNO_ATUACAO} alt={t.saturnoAtuacaoAlt} objectPosition="center" />
               </div>
               <div className={styles.duoContent}>
-                <p className={styles.eyebrow}>Saturno Ambiental</p>
-                <h2 className={styles.headline}>GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA</h2>
-                <p className={styles.body}>
-                  Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação
-                  construída para unir eficiência operacional e responsabilidade ambiental.
-                </p>
+                <p className={styles.eyebrow}>{t.saturnoEyebrow}</p>
+                <h2 className={styles.headline}>{t.saturnoHeadline}</h2>
+                <p className={styles.body}>{t.saturnoBody}</p>
                 <ul className={styles.tagRow}>
-                  <li>Gestão de Resíduos</li>
-                  <li>Cartonagem</li>
-                  <li>Consultoria</li>
+                  {t.saturnoTags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
                 </ul>
                 <div className={styles.ctaRow}>
-                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/saturno-ambiental">
-                    Conheça Saturno Ambiental
+                  <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/saturno-ambiental", locale)}>
+                    {t.saturnoCta}
                   </Link>
                 </div>
               </div>
@@ -341,15 +395,13 @@ export default function HomePage() {
         <BrandBoundaryMark boundary="saturno-impacto" half="entering" surface="onDark" />
         <div className={styles.container}>
           <Reveal className={styles.impactHead}>
-            <p className={styles.eyebrow}>Impacto Positivo · 2025</p>
-            <h2 className={styles.headline}>
-              CADA RESÍDUO PROCESSADO VIRA UM NÚMERO QUE A NATUREZA RECONHECE.
-            </h2>
+            <p className={styles.eyebrow}>{t.impactEyebrow}</p>
+            <h2 className={styles.headline}>{t.impactHeadline}</h2>
           </Reveal>
 
           <Reveal>
             <div className={styles.metricsGrid}>
-              {IMPACT_METRICS.map((metric) => (
+              {impactMetrics.map((metric) => (
                 <div key={metric.label} className={styles.metricItem}>
                   <span className={styles.metricValue}>
                     <CountUpMetric
@@ -358,6 +410,7 @@ export default function HomePage() {
                       suffix={metric.suffix}
                       display={metric.display}
                       active={impactoActive}
+                      locale={locale}
                     />
                   </span>
                   <span className={styles.metricLabel}>{metric.label}</span>
@@ -369,7 +422,7 @@ export default function HomePage() {
                 DECISOES.md. Botão desabilitado em vez de link quebrado. */}
             <div className={styles.ctaRow}>
               <button type="button" className={`${styles.btn} ${styles.btnOutlineOnDark}`} disabled>
-                Ver Relatório de Sustentabilidade 2025
+                {t.impactReportCta}
               </button>
             </div>
           </Reveal>
@@ -384,15 +437,13 @@ export default function HomePage() {
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>
-              <SectionMedia imageSrc={IMG_MANIFESTO} alt="Grupo Almeida" objectPosition="center 40%" />
+              <SectionMedia imageSrc={IMG_MANIFESTO} alt={t.manifestoAlt} objectPosition="center 40%" />
             </div>
-            <h2 className={styles.manifestoHeadline}>
-              O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.
-            </h2>
-            <p className={styles.body}>Há 40 anos transformando o presente, pensando no futuro.</p>
+            <h2 className={styles.manifestoHeadline}>{t.manifestoHeadline}</h2>
+            <p className={styles.body}>{t.manifestoBody}</p>
             <div className={styles.ctaRow}>
-              <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href="/contato">
-                Entre em contato com o Grupo Almeida
+              <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/contato", locale)}>
+                {t.manifestoCta}
               </Link>
             </div>
           </Reveal>

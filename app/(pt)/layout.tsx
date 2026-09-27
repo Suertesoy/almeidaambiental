@@ -1,25 +1,15 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
 import Script from "next/script";
-import "./globals.css";
-
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
-  variable: "--font-playfair",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-inter",
-  display: "swap",
-});
+import "../globals.css";
+import { playfairDisplay, inter } from "../../lib/fonts";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://almeidaambiental.vercel.app"),
   title: "Grupo Almeida",
   description: "Site institucional do Grupo Almeida.",
+  alternates: {
+    languages: { "pt-BR": "/", en: "/en" },
+  },
 };
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import Home3Page from "../../components/home3/Home3Page";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import Home3Page from "../../../components/home3/Home3Page";
 
 export const metadata: Metadata = {
   title: "Grupo Almeida — Home 3",
@@ -13,7 +13,7 @@ export default function Page() {
     <main>
       <Header />
       <Home3Page />
-      <Footer />
+      <Footer locale="pt" />
     </main>
   );
 }

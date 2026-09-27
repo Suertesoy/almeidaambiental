@@ -4,6 +4,24 @@ import styles from "./historia.module.css";
 import { useReveal } from "./useReveal";
 import { MAP_LOCATIONS } from "../../lib/historia-data";
 import { SC_OUTLINE_PATH, SC_VIEWBOX, TERRITORY_POINTS } from "../../lib/geo-santa-catarina";
+import type { Locale } from "../../lib/i18n/locale";
+
+const COPY = {
+  pt: {
+    eyebrow: "Presença em Santa Catarina",
+    headline: "De São José a uma presença cada vez maior no estado.",
+    mapAriaLabel: "Mapa de Santa Catarina com as cidades onde o Grupo Almeida opera",
+    caption:
+      "Contorno de Santa Catarina a partir da malha territorial oficial do IBGE. Os pontos marcam a ordem cronológica de chegada do grupo em cada cidade.",
+  },
+  en: {
+    eyebrow: "Presence across Santa Catarina",
+    headline: "From São José to a growing presence across the state.",
+    mapAriaLabel: "Map of Santa Catarina with the cities where Grupo Almeida operates",
+    caption:
+      "Outline of Santa Catarina based on IBGE's official territorial data. The points mark the chronological order in which the group arrived in each city.",
+  },
+} as const;
 
 /**
  * Mapa de expansão (Seção 11) — reaproveita a MESMA malha territorial real
@@ -41,7 +59,8 @@ const LABEL_LAYOUT: Record<string, { side: "start" | "end"; nameDy: number; year
   "São José": { side: "end", nameDy: 14, yearDy: 40 },
 };
 
-export default function ExpansionMap() {
+export default function ExpansionMap({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
   const { ref, active } = useReveal<HTMLDivElement>(0.4);
 
   return (
@@ -55,9 +74,9 @@ export default function ExpansionMap() {
 
         <div className={styles.mapLayout}>
           <div>
-            <p className={styles.eyebrow}>Presença em Santa Catarina</p>
+            <p className={styles.eyebrow}>{t.eyebrow}</p>
             <h2 id="map-heading" className={styles.chapterHeadline}>
-              De São José a uma presença cada vez maior no estado.
+              {t.headline}
             </h2>
           </div>
 
@@ -67,7 +86,7 @@ export default function ExpansionMap() {
                 className={styles.mapSvg}
                 viewBox={`0 0 ${SC_VIEWBOX.width} ${SC_VIEWBOX.height}`}
                 role="img"
-                aria-label="Mapa de Santa Catarina com as cidades onde o Grupo Almeida opera"
+                aria-label={t.mapAriaLabel}
               >
                 <path className={styles.mapOutline} d={SC_OUTLINE_PATH} />
                 {MAP_LOCATIONS.map((point, index) => {
@@ -102,10 +121,7 @@ export default function ExpansionMap() {
                 })}
               </svg>
             </div>
-            <p className={styles.mapCaption}>
-              Contorno de Santa Catarina a partir da malha territorial oficial do IBGE. Os pontos marcam a ordem
-              cronológica de chegada do grupo em cada cidade.
-            </p>
+            <p className={styles.mapCaption}>{t.caption}</p>
           </div>
         </div>
 

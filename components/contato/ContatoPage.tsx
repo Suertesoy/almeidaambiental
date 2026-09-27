@@ -3,7 +3,9 @@ import shared from "../shared/company-page.module.css";
 import styles from "./contato.module.css";
 import Reveal from "../shared/Reveal";
 import { PhoneIcon, WhatsAppIcon } from "../icons";
-import { REGIONS, type Channel } from "../../lib/contact-data";
+import { REGIONS, REGIONS_EN, type Channel } from "../../lib/contact-data";
+import { localizeHref } from "../../lib/i18n/routes";
+import type { Locale } from "../../lib/i18n/locale";
 
 const DIRECTORY = [
   { id: "sao-jose", title: "São José" },
@@ -13,11 +15,52 @@ const DIRECTORY = [
 
 const withMessage = (href: string, message: string) => `${href}?text=${encodeURIComponent(message)}`;
 
-function channelCopy(channel: Channel) {
-  const typeLabel = channel.action === "whatsapp" ? "WhatsApp" : "Telefone";
+const COPY = {
+  pt: {
+    eyebrow: "Contato",
+    heroTitle: "Encontre o canal certo para sua operação.",
+    heroLede: "Atendimento direto para São José, Araquari / Joinville e Blumenau.",
+    directoryAriaLabel: "Diretório de unidades",
+    channelsLabel: "Canais de contato",
+    openInGoogleMaps: "Abrir no Google Maps",
+    openInWaze: "Abrir no Waze",
+    finalHeadline: "Três frentes. Um mesmo Grupo.",
+    finalBody:
+      "Almeida Ambiental, Almeida Equipamentos e Saturno Ambiental trabalham de forma complementar para conectar gestão de resíduos, tecnologia e presença regional.",
+    backToHome: "Voltar para a Home",
+    ourStory: "Conheça nossa história",
+    typeLabelWhatsapp: "WhatsApp",
+    typeLabelPhone: "Telefone",
+    callCta: "Ligar",
+    whatsappCta: "Falar pelo WhatsApp",
+    talkTo: (label: string) => `Falar com ${label}`,
+  },
+  en: {
+    eyebrow: "Contact",
+    heroTitle: "Find the right channel for your operation.",
+    heroLede: "Direct service for São José, Araquari / Joinville and Blumenau.",
+    directoryAriaLabel: "Unit directory",
+    channelsLabel: "Contact channels",
+    openInGoogleMaps: "Open in Google Maps",
+    openInWaze: "Open in Waze",
+    finalHeadline: "Three fronts. One Group.",
+    finalBody:
+      "Almeida Ambiental, Almeida Equipamentos and Saturno Ambiental work in a complementary way to connect waste management, technology and regional presence.",
+    backToHome: "Back to Home",
+    ourStory: "See our story",
+    typeLabelWhatsapp: "WhatsApp",
+    typeLabelPhone: "Phone",
+    callCta: "Call",
+    whatsappCta: "Chat on WhatsApp",
+    talkTo: (label: string) => `Talk to ${label}`,
+  },
+} as const;
+
+function channelCopy(channel: Channel, locale: Locale) {
+  const t = COPY[locale];
+  const typeLabel = channel.action === "whatsapp" ? t.typeLabelWhatsapp : t.typeLabelPhone;
   const meta = channel.label === typeLabel ? channel.display : `${typeLabel} · ${channel.display}`;
-  const cta =
-    channel.action === "call" ? "Ligar" : channel.label === "WhatsApp" ? "Falar pelo WhatsApp" : `Falar com ${channel.label}`;
+  const cta = channel.action === "call" ? t.callCta : channel.label === "WhatsApp" ? t.whatsappCta : t.talkTo(channel.label);
   return { meta, cta };
 }
 
@@ -35,24 +78,25 @@ function channelCopy(channel: Channel) {
  * chave/API — ver lib/contact-data.ts). Dados oficiais em
  * lib/contact-data.ts — sem fax, sem e-mail.
  */
-export default function ContatoPage() {
+export default function ContatoPage({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+  const regions = locale === "en" ? REGIONS_EN : REGIONS;
+
   return (
     <div className={styles.page} data-page="contato">
       {/* ---------------- Hero ---------------- */}
       <section className={`${shared.sectionCompact} ${shared.toneForest} ${styles.heroSection}`}>
         <div className={shared.container}>
           <Reveal>
-            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Contato</p>
-            <h1 className={styles.heroTitle}>Encontre o canal certo para sua operação.</h1>
-            <p className={`${shared.body} ${styles.heroLede}`}>
-              Atendimento direto para São José, Araquari / Joinville e Blumenau.
-            </p>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
+            <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
+            <p className={`${shared.body} ${styles.heroLede}`}>{t.heroLede}</p>
           </Reveal>
         </div>
       </section>
 
       {/* ---------------- Diretório compacto ---------------- */}
-      <nav className={`${shared.sectionCompact} ${shared.toneStone} ${styles.directoryNav}`} aria-label="Diretório de unidades">
+      <nav className={`${shared.sectionCompact} ${shared.toneStone} ${styles.directoryNav}`} aria-label={t.directoryAriaLabel}>
         <div className={shared.container}>
           <ul className={styles.directoryChips}>
             {DIRECTORY.map((item) => (
@@ -67,7 +111,7 @@ export default function ContatoPage() {
       </nav>
 
       {/* ---------------- Unidades ---------------- */}
-      {REGIONS.map((region) => {
+      {regions.map((region) => {
         const hasLocation = Boolean(region.addressLines && region.addressLines.length > 0);
 
         return (
@@ -101,7 +145,7 @@ export default function ContatoPage() {
                         <div className={styles.mapFrame}>
                           <iframe
                             src={region.mapEmbedSrc}
-                            title={region.mapEmbedTitle ?? `Mapa — ${region.headline}`}
+                            title={region.mapEmbedTitle ?? (locale === "en" ? `Map — ${region.headline}` : `Mapa — ${region.headline}`)}
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                           />
@@ -111,12 +155,12 @@ export default function ContatoPage() {
                       <div className={styles.mapActions}>
                         {region.mapHref && (
                           <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
-                            Abrir no Google Maps
+                            {t.openInGoogleMaps}
                           </a>
                         )}
                         {region.wazeHref && (
                           <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
-                            Abrir no Waze
+                            {t.openInWaze}
                           </a>
                         )}
                       </div>
@@ -124,10 +168,10 @@ export default function ContatoPage() {
                   )}
 
                   <div className={styles.unitChannels}>
-                    <span className={styles.channelGroupLabel}>Canais de contato</span>
+                    <span className={styles.channelGroupLabel}>{t.channelsLabel}</span>
                     <div className={styles.channelList}>
                       {region.channels.map((channel) => {
-                        const { meta, cta } = channelCopy(channel);
+                        const { meta, cta } = channelCopy(channel, locale);
                         const isWhatsApp = channel.action === "whatsapp";
                         return (
                           <div key={channel.href} className={styles.channelRow}>
@@ -159,17 +203,14 @@ export default function ContatoPage() {
       {/* ---------------- Fechamento ---------------- */}
       <section className={`${shared.section} ${shared.toneCarvao} ${shared.finalCta}`}>
         <div className={shared.container}>
-          <h2 className={shared.finalCtaHeadline}>Três frentes. Um mesmo Grupo.</h2>
-          <p className={shared.body}>
-            Almeida Ambiental, Almeida Equipamentos e Saturno Ambiental trabalham de forma complementar para
-            conectar gestão de resíduos, tecnologia e presença regional.
-          </p>
+          <h2 className={shared.finalCtaHeadline}>{t.finalHeadline}</h2>
+          <p className={shared.body}>{t.finalBody}</p>
           <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnSolidGold}`} href="/">
-              Voltar para a Home
+            <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/", locale)}>
+              {t.backToHome}
             </Link>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/historia">
-              Conheça nossa história
+            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref("/historia", locale)}>
+              {t.ourStory}
             </Link>
           </div>
         </div>

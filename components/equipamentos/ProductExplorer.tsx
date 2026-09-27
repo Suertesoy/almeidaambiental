@@ -5,7 +5,13 @@ import { flushSync } from "react-dom";
 import shared from "../shared/company-page.module.css";
 import styles from "./product-explorer.module.css";
 import ProductDetail from "./ProductDetail";
-import { PRODUCTS, type Product } from "../../lib/equipamentos-data";
+import type { Product } from "../../lib/equipamentos-data";
+import type { Locale } from "../../lib/i18n/locale";
+
+const COPY = {
+  pt: { viewDetailsOf: (name: string) => `Ver detalhes de ${name}`, viewDetails: "Ver detalhes" },
+  en: { viewDetailsOf: (name: string) => `View details for ${name}`, viewDetails: "View details" },
+} as const;
 
 /**
  * Abrir/fechar o detalhe com a sensação de "a própria imagem cresceu",
@@ -49,8 +55,9 @@ function withViewTransition(mutate: () => void) {
  * mobile, onde não existe palco para receber a seleção, o mesmo toque já
  * abre o detalhe.
  */
-export default function ProductExplorer() {
-  const [selected, setSelected] = useState<Product>(PRODUCTS[0]);
+export default function ProductExplorer({ locale, products }: { locale: Locale; products: Product[] }) {
+  const t = COPY[locale];
+  const [selected, setSelected] = useState<Product>(products[0]);
   const [detail, setDetail] = useState<Product | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
@@ -66,7 +73,7 @@ export default function ProductExplorer() {
     triggerRef.current = null;
   }, []);
 
-  const selectedIndex = PRODUCTS.findIndex((product) => product.id === selected.id);
+  const selectedIndex = products.findIndex((product) => product.id === selected.id);
 
   const handleItemClick = (product: Product, event: React.MouseEvent<HTMLButtonElement>) => {
     setSelected(product);
@@ -93,13 +100,13 @@ export default function ProductExplorer() {
                 className={`${shared.btn} ${shared.btnOutlineOnLight}`}
                 onClick={(event) => openDetail(selected, event.currentTarget)}
               >
-                Ver detalhes de {selected.name}
+                {t.viewDetailsOf(selected.name)}
               </button>
             </div>
           </div>
 
           <ul className={styles.list}>
-            {PRODUCTS.map((product) => (
+            {products.map((product) => (
               <li key={product.id}>
                 <button
                   type="button"
@@ -134,7 +141,7 @@ export default function ProductExplorer() {
                       ))}
                     </span>
                   )}
-                  <span className={styles.itemCue}>Ver detalhes</span>
+                  <span className={styles.itemCue}>{t.viewDetails}</span>
                 </button>
               </li>
             ))}
@@ -165,14 +172,14 @@ export default function ProductExplorer() {
 
             <span className={styles.stageIndex}>
               {String(selectedIndex + 1).padStart(2, "0")}
-              <span className={styles.stageIndexTotal}>/ {String(PRODUCTS.length).padStart(2, "0")}</span>
+              <span className={styles.stageIndexTotal}>/ {String(products.length).padStart(2, "0")}</span>
             </span>
             <span className={styles.stageManufacturer}>{selected.manufacturer}</span>
           </div>
         </div>
       </div>
 
-      <ProductDetail product={detail} onClose={closeDetail} />
+      <ProductDetail product={detail} onClose={closeDetail} locale={locale} />
     </>
   );
 }

@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n/locale";
+
 /**
  * Lista nominal de materiais trabalhados pela Almeida Ambiental e pela
  * Saturno Ambiental — vem do material institucional do site anterior
@@ -20,6 +22,31 @@ export const CORE_MATERIALS = [
 ] as const;
 
 export type CoreMaterial = (typeof CORE_MATERIALS)[number];
+
+/**
+ * Tradução de exibição da versão em inglês. CORE_MATERIALS continua sendo
+ * a chave canônica usada por ícones (components/icons.tsx) e agrupamento
+ * (FAMILY_OF abaixo) nos dois idiomas — só o texto mostrado muda. Ver
+ * lib/i18n/locale.ts.
+ */
+export const MATERIAL_LABEL_EN: Record<CoreMaterial, string> = {
+  "Papelão": "Cardboard",
+  "Papel branco": "White paper",
+  "Gráfica colorida": "Color print paper",
+  "Sacos de cimento": "Cement bags",
+  "Jornal": "Newspaper",
+  "Plástico": "Plastic",
+  "Tetra Pak": "Tetra Pak",
+  "Documentos sigilosos": "Confidential documents",
+  "Madeira": "Wood",
+  "Alumínio": "Aluminum",
+  "Ferro": "Scrap iron",
+  "Resíduo orgânico": "Organic waste",
+};
+
+export function translateMaterial(material: CoreMaterial, locale: Locale): string {
+  return locale === "en" ? MATERIAL_LABEL_EN[material] : material;
+}
 
 /* ==========================================================
    FAMÍLIAS DE MATERIAL — organização de leitura, não dado novo

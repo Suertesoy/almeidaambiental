@@ -1,6 +1,7 @@
 import styles from "./MaterialCards.module.css";
 import { MATERIAL_ICONS } from "../icons";
-import { CORE_MATERIALS } from "../../lib/materials";
+import { CORE_MATERIALS, translateMaterial } from "../../lib/materials";
+import type { Locale } from "../../lib/i18n/locale";
 
 export type MaterialCardsTone = "ambiental" | "saturno";
 
@@ -24,7 +25,7 @@ export type MaterialCardsTone = "ambiental" | "saturno";
  * Ambiental, "saturno" para a superfície escura/quente do território
  * Saturno. Mesmo componente, tema visual por empresa.
  */
-export default function MaterialCards({ tone }: { tone: MaterialCardsTone }) {
+export default function MaterialCards({ tone, locale }: { tone: MaterialCardsTone; locale: Locale }) {
   return (
     <ul className={`${styles.grid} ${styles[tone]}`}>
       {CORE_MATERIALS.map((material) => {
@@ -32,7 +33,7 @@ export default function MaterialCards({ tone }: { tone: MaterialCardsTone }) {
         return (
           <li key={material} className={styles.card}>
             {Icon && <Icon className={styles.icon} />}
-            <span className={styles.name}>{material}</span>
+            <span className={styles.name}>{translateMaterial(material, locale)}</span>
           </li>
         );
       })}

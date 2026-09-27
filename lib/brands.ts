@@ -76,11 +76,14 @@ export const BRAND_ORDER: BrandId[] = [
  * Sem sub-rotas dentro de cada empresa hoje, mas usa startsWith para não
  * quebrar se alguma for adicionada depois. Qualquer rota fora das três
  * empresas (Home, /contato, /historia, protótipos /home2-4) cai no Grupo
- * Almeida.
+ * Almeida. O prefixo "/en" da versão em inglês é removido antes de
+ * comparar, já que os slugs em inglês (ex.: "/en/almeida-ambiental")
+ * continuam começando pelo mesmo nome de empresa.
  */
 export function getActiveBrandId(pathname: string): BrandId {
-  if (pathname.startsWith("/almeida-ambiental")) return "almeida-ambiental";
-  if (pathname.startsWith("/almeida-equipamentos")) return "almeida-equipamentos";
-  if (pathname.startsWith("/saturno-ambiental")) return "saturno-ambiental";
+  const normalized = pathname === "/en" ? "/" : pathname.startsWith("/en/") ? pathname.slice(3) : pathname;
+  if (normalized.startsWith("/almeida-ambiental")) return "almeida-ambiental";
+  if (normalized.startsWith("/almeida-equipamentos")) return "almeida-equipamentos";
+  if (normalized.startsWith("/saturno-ambiental")) return "saturno-ambiental";
   return "grupo-almeida";
 }

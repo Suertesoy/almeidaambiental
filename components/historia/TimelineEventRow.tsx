@@ -5,6 +5,7 @@ import Highlighted from "./Highlighted";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { useReveal } from "./useReveal";
 import type { TimelineEvent } from "../../lib/historia-data";
+import type { Locale } from "../../lib/i18n/locale";
 
 /**
  * Um marco da timeline. O HTML preserva a ordem cronológica por conta
@@ -12,7 +13,7 @@ import type { TimelineEvent } from "../../lib/historia-data";
  * de entender a sequência. `side` só importa em desktop (>=1024px); no
  * mobile todo evento cai na mesma coluna de conteúdo (Seção 17).
  */
-export default function TimelineEventRow({ event }: { event: TimelineEvent }) {
+export default function TimelineEventRow({ event, locale }: { event: TimelineEvent; locale: Locale }) {
   const { ref, active } = useReveal<HTMLElement>();
   const sideClass = event.side === "left" ? styles.eventRowLeft : "";
   const monumentalClass = event.monumental ? styles.eventMonumental : "";
@@ -48,7 +49,7 @@ export default function TimelineEventRow({ event }: { event: TimelineEvent }) {
             decoding="async"
             style={{ objectPosition: event.image.orientation === "portrait" ? "center 30%" : "center" }}
           />
-          {event.image.sourceType === "illustrative" && <IllustrativeBadge />}
+          {event.image.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
         </div>
       )}
     </article>

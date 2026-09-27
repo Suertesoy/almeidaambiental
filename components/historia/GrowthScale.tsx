@@ -3,6 +3,7 @@
 import styles from "./historia.module.css";
 import { useReveal } from "./useReveal";
 import { GROWTH_SCALE } from "../../lib/historia-data";
+import type { Locale } from "../../lib/i18n/locale";
 
 const STEP_CLASS = [
   styles.growthStep0,
@@ -13,7 +14,30 @@ const STEP_CLASS = [
   styles.growthStep5,
 ];
 
-function GrowthItem({ year, sqm, index }: { year: number; sqm: number; index: number }) {
+const COPY = {
+  pt: {
+    eyebrow: "Uma história em metros quadrados",
+    headline: "De 300 m² a 5.500 m²: quatro décadas de escala.",
+    numberLocale: "pt-BR",
+  },
+  en: {
+    eyebrow: "A story measured in square meters",
+    headline: "From 300 m² to 5,500 m²: four decades of scale.",
+    numberLocale: "en-US",
+  },
+} as const;
+
+function GrowthItem({
+  year,
+  sqm,
+  index,
+  numberLocale,
+}: {
+  year: number;
+  sqm: number;
+  index: number;
+  numberLocale: string;
+}) {
   const { ref, active } = useReveal<HTMLDivElement>(0.5);
   return (
     <div
@@ -21,7 +45,7 @@ function GrowthItem({ year, sqm, index }: { year: number; sqm: number; index: nu
       className={`${styles.growthItem} ${active ? styles.growthItemActive : ""} ${STEP_CLASS[index] ?? ""}`}
     >
       <span className={styles.growthYear}>{year}</span>
-      <span className={styles.growthValue}>{sqm.toLocaleString("pt-BR")} m²</span>
+      <span className={styles.growthValue}>{sqm.toLocaleString(numberLocale)} m²</span>
     </div>
   );
 }
@@ -32,7 +56,8 @@ function GrowthItem({ year, sqm, index }: { year: number; sqm: number; index: nu
  * numa escala visual — o número cresce de tamanho junto com o metro
  * quadrado, para que o crescimento seja sentido, não só lido.
  */
-export default function GrowthScale() {
+export default function GrowthScale({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
   return (
     <section className={`${styles.growthScale} ${styles.chapterStone}`} aria-labelledby="growth-scale-heading">
       <div className={styles.container}>
@@ -43,14 +68,14 @@ export default function GrowthScale() {
         </div>
 
         <div className={styles.growthHead}>
-          <p className={styles.eyebrow}>Uma história em metros quadrados</p>
+          <p className={styles.eyebrow}>{t.eyebrow}</p>
           <h2 id="growth-scale-heading" className={styles.chapterHeadline}>
-            De 300 m² a 5.500 m²: quatro décadas de escala.
+            {t.headline}
           </h2>
         </div>
         <div className={styles.growthList}>
           {GROWTH_SCALE.map((item, index) => (
-            <GrowthItem key={item.year} year={item.year} sqm={item.sqm} index={index} />
+            <GrowthItem key={item.year} year={item.year} sqm={item.sqm} index={index} numberLocale={t.numberLocale} />
           ))}
         </div>
 

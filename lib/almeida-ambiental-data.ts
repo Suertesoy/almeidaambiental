@@ -92,3 +92,68 @@ export const MATERIALS = [...CORE_MATERIALS];
 export const FLOW_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
 
 export const PRESENCE_LOCATIONS = ["São José", "Chapecó", "Araquari", "Joinville"];
+
+/* ==========================================================
+   VERSÃO EM INGLÊS — mesmo significado, mesmos fatos/números/materiais.
+   Ver lib/i18n/locale.ts. HERO_IMAGE/POSITIONING_IMAGE/MATERIALS_IMAGE
+   compartilham o mesmo arquivo de imagem; só o alt muda de idioma.
+   ========================================================== */
+
+export const HERO_IMAGE_EN = img(
+  "almeida-ambiental",
+  "hero",
+  "/almeida-ambiental/patio-industrial.webp",
+  "Industrial recycling yard with organized cardboard bales, a forklift in operation and a modern warehouse in the background"
+);
+
+export const POSITIONING_IMAGE_EN = img(
+  "almeida-ambiental",
+  "posicionamento",
+  "/almeida-ambiental/detalhe-classificacao.webp",
+  "Close-up of gloved hands sorting cardboard and paper on a sorting conveyor belt"
+);
+
+export const PILLARS_EN: Pillar[] = [
+  {
+    id: "coleta",
+    eyebrow: "Waste Collection",
+    headline: "Collection planned around the reality of each operation.",
+    copy: "Almeida Ambiental has the logistics structure to serve different volumes, materials and generation routines. Containers, compaction equipment and a properly sized transport operation make it possible to organize collection with more efficiency, space and predictability.",
+    highlights: ["Open and closed containers", "Compaction equipment", "Operation adapted to volume and material"],
+    image: img(
+      "almeida-ambiental",
+      "pilar-coleta",
+      "/almeida-ambiental/coleta-rollon.webp",
+      "Roll-on/roll-off truck operating in an industrial yard during waste collection"
+    ),
+  },
+  {
+    id: "triagem",
+    eyebrow: "Sorting and Classification",
+    headline: "The value of waste starts with correct separation.",
+    copy: "After collection, materials go through sorting and classification processes that identify their best destination and increase how much of them can be recovered. Combining operational experience with technology helps turn a step often treated as disposal into a traceable chain of material recovery.",
+    highlights: ["Classification by material type", "Proper recovery and routing", "Traceability of the operation"],
+    image: img(
+      "almeida-ambiental",
+      "pilar-triagem",
+      "/almeida-ambiental/triagem-esteira.webp",
+      "Industrial sorting line with workers classifying paper, plastic and packaging"
+    ),
+  },
+  {
+    id: "trituracao",
+    eyebrow: "Shredding and Destruction",
+    headline: "When material needs to stop being recognizable.",
+    copy: "Documents, confidential materials and other waste can require more than collection. Almeida Ambiental carries out shredding and destruction processes to reduce volume, protect information and prepare materials for the next steps in the recycling or disposal chain.",
+    highlights: [],
+    subcopy: "Depending on the material, the solution is sized in advance by the technical team.",
+    image: img(
+      "almeida-ambiental",
+      "pilar-trituracao",
+      "/almeida-ambiental/triturador.webp",
+      "Industrial shredder processing paper into fragments inside a warehouse"
+    ),
+  },
+];
+
+export const FLOW_STEPS_EN = ["Assessment", "Collection", "Sorting", "Shredding", "Destruction", "Disposal"];

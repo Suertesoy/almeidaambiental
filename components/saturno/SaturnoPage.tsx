@@ -6,14 +6,69 @@ import MaterialCards from "../shared/MaterialCards";
 import EditorialCTA from "../shared/EditorialCTA";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import MaterialSurface from "../shared/MaterialSurface";
-import { FRENTES, HERO_META } from "../../lib/saturno-data";
+import { FRENTES, FRENTES_EN, HERO_META, HERO_META_EN, type Frente } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
+import { localizeHref } from "../../lib/i18n/routes";
+import type { Locale } from "../../lib/i18n/locale";
 
-const COMPACT_FRENTES = FRENTES.filter(
-  (f) => f.id === "coleta" || f.id === "triagem" || f.id === "trituracao" || f.id === "destinacao"
-);
-const CARTONAGEM = FRENTES.find((f) => f.id === "cartonagem")!;
-const GESTAO_AMBIENTAL = FRENTES.find((f) => f.id === "gestao-ambiental")!;
+function pickFrentes(frentes: Frente[]) {
+  return {
+    compact: frentes.filter((f) => f.id === "coleta" || f.id === "triagem" || f.id === "trituracao" || f.id === "destinacao"),
+    cartonagem: frentes.find((f) => f.id === "cartonagem")!,
+    gestaoAmbiental: frentes.find((f) => f.id === "gestao-ambiental")!,
+  };
+}
+
+const COPY = {
+  pt: {
+    heroEyebrow: "Saturno Ambiental · Grupo Almeida",
+    heroTitle: "Presença regional, experiência compartilhada.",
+    heroLede:
+      "Em Blumenau e no Vale do Itajaí, a Saturno Ambiental reúne serviços de gestão de resíduos, estrutura operacional e soluções ambientais conectadas à experiência do Grupo Almeida.",
+    heroPrimaryCta: "Conheça nossas soluções",
+    heroSecondaryCta: "Falar com a Saturno Ambiental",
+    positioningHeadline: "Gestão ambiental próxima de quem precisa.",
+    positioningBody1:
+      "A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento, cartonagem e serviços técnicos ambientais.",
+    positioningBody2Strong: "Desde 2022, a Saturno integra o Grupo Almeida",
+    positioningBody2Rest: ", ampliando a presença do grupo no Vale do Itajaí.",
+    servicesEyebrow: "Serviços",
+    servicesHeadline: "Gestão de resíduos com linguagem própria da região.",
+    materialsHeadline: "Materiais que fazem parte da operação.",
+    groupBadge: "Saturno Ambiental · Grupo Almeida",
+    groupHeadline: "Uma marca regional conectada a uma estrutura maior.",
+    groupBody:
+      "A integração da Saturno ao Grupo Almeida amplia a capacidade de compartilhar experiência, tecnologia e estrutura entre diferentes regiões de Santa Catarina, preservando a proximidade e o reconhecimento construídos pela marca no Vale do Itajaí.",
+    groupCta: "Conheça o Grupo Almeida",
+    finalHeadline: "Gestão ambiental começa entendendo a realidade da operação.",
+    finalBody: "Conte o que sua empresa gera, onde está e qual desafio precisa resolver.",
+    finalCta: "Falar com a Saturno Ambiental",
+  },
+  en: {
+    heroEyebrow: "Saturno Ambiental · Grupo Almeida",
+    heroTitle: "Regional presence, shared experience.",
+    heroLede:
+      "In Blumenau and the Vale do Itajaí region, Saturno Ambiental brings together waste management services, operational structure and environmental solutions connected to Grupo Almeida's experience.",
+    heroPrimaryCta: "See our solutions",
+    heroSecondaryCta: "Talk to Saturno Ambiental",
+    positioningHeadline: "Environmental management close to the people who need it.",
+    positioningBody1:
+      "Saturno's presence in the Vale do Itajaí region strengthens Grupo Almeida's regional capacity without erasing the identity the company built in Blumenau. Its work combines collection, classification, processing, cartonage and technical environmental services.",
+    positioningBody2Strong: "Saturno has been part of Grupo Almeida since 2022",
+    positioningBody2Rest: ", expanding the group's presence in the Vale do Itajaí region.",
+    servicesEyebrow: "Services",
+    servicesHeadline: "Waste management with the region's own language.",
+    materialsHeadline: "Materials that are part of the operation.",
+    groupBadge: "Saturno Ambiental · Grupo Almeida",
+    groupHeadline: "A regional brand connected to a larger structure.",
+    groupBody:
+      "Saturno's integration into Grupo Almeida expands the group's capacity to share experience, technology and structure across different regions of Santa Catarina, while preserving the closeness and recognition the brand built in the Vale do Itajaí region.",
+    groupCta: "See Grupo Almeida",
+    finalHeadline: "Environmental management starts with understanding the operation's reality.",
+    finalBody: "Tell us what your company generates, where it's located and what challenge needs solving.",
+    finalCta: "Talk to Saturno Ambiental",
+  },
+} as const;
 
 /**
  * /saturno-ambiental — identidade regional própria conectada ao Grupo
@@ -53,19 +108,24 @@ const GESTAO_AMBIENTAL = FRENTES.find((f) => f.id === "gestao-ambiental")!;
  * mais escuro dentro da mesma família de tons frios e baixa luminância,
  * não uma volta à pedra clara.
  */
-export default function SaturnoPage() {
+export default function SaturnoPage({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+  const heroMeta = locale === "en" ? HERO_META_EN : HERO_META;
+  const { compact: compactFrentes, cartonagem, gestaoAmbiental } = pickFrentes(locale === "en" ? FRENTES_EN : FRENTES);
+
   return (
     <div className={styles.page} data-page="saturno-ambiental">
       <CompanyHero
-        eyebrow="Saturno Ambiental · Grupo Almeida"
-        title="Presença regional, experiência compartilhada."
-        lede="Em Blumenau e no Vale do Itajaí, a Saturno Ambiental reúne serviços de gestão de resíduos, estrutura operacional e soluções ambientais conectadas à experiência do Grupo Almeida."
+        locale={locale}
+        eyebrow={t.heroEyebrow}
+        title={t.heroTitle}
+        lede={t.heroLede}
         surface="saturno"
         material="saturno-hero"
-        meta={HERO_META}
+        meta={heroMeta}
         boundary={{ id: "saturno-territorio", surface: "onDark" }}
-        primaryCta={{ label: "Conheça nossas soluções", href: "#frentes" }}
-        secondaryCta={{ label: "Falar com a Saturno Ambiental", href: CONTACT_ANCHORS.blumenau }}
+        primaryCta={{ label: t.heroPrimaryCta, href: "#frentes" }}
+        secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.blumenau, locale) }}
       />
 
       {/* `boundarySurface` em cada `section` abaixo (mesmo quando não hospeda
@@ -86,16 +146,12 @@ export default function SaturnoPage() {
           <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
           <div className={shared.container}>
             <div className={styles.positioningGrid}>
-              <h2 className={shared.headline}>Gestão ambiental próxima de quem precisa.</h2>
+              <h2 className={shared.headline}>{t.positioningHeadline}</h2>
               <div className={styles.positioningCopy}>
+                <p className={shared.body}>{t.positioningBody1}</p>
                 <p className={shared.body}>
-                  A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a
-                  identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento,
-                  cartonagem e serviços técnicos ambientais.
-                </p>
-                <p className={shared.body}>
-                  <strong>Desde 2022, a Saturno integra o Grupo Almeida</strong>, ampliando a presença do grupo no Vale do
-                  Itajaí.
+                  <strong>{t.positioningBody2Strong}</strong>
+                  {t.positioningBody2Rest}
                 </p>
               </div>
             </div>
@@ -110,10 +166,10 @@ export default function SaturnoPage() {
             como capítulos próprios abaixo, fora desta grade compacta. */}
         <section id="frentes" className={`${shared.sectionCompact} ${boundarySurface}`}>
           <div className={shared.container}>
-            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>Serviços</p>
-            <h2 className={shared.headline}>Gestão de resíduos com linguagem própria da região.</h2>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.servicesEyebrow}</p>
+            <h2 className={shared.headline}>{t.servicesHeadline}</h2>
             <div className={styles.frentesCompactGrid}>
-              {COMPACT_FRENTES.map((frente, index) => (
+              {compactFrentes.map((frente, index) => (
                 <div key={frente.id} className={styles.frentesCompactItem}>
                   <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
                   <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
@@ -129,22 +185,22 @@ export default function SaturnoPage() {
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft}`}>
               <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
-                <img src={CARTONAGEM.image!.src} alt={CARTONAGEM.image!.alt} loading="lazy" decoding="async" />
+                <img src={cartonagem.image!.src} alt={cartonagem.image!.alt} loading="lazy" decoding="async" />
               </div>
               <div className={shared.duoContent}>
-                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{CARTONAGEM.eyebrow}</p>
-                <h2 className={shared.headline}>{CARTONAGEM.headline}</h2>
-                <p className={shared.body}>{CARTONAGEM.copy}</p>
-                {CARTONAGEM.tags && (
+                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{cartonagem.eyebrow}</p>
+                <h2 className={shared.headline}>{cartonagem.headline}</h2>
+                <p className={shared.body}>{cartonagem.copy}</p>
+                {cartonagem.tags && (
                   <ul className={shared.tagRow}>
-                    {CARTONAGEM.tags.map((tag) => (
+                    {cartonagem.tags.map((tag) => (
                       <li key={tag}>{tag}</li>
                     ))}
                   </ul>
                 )}
                 <div className={shared.ctaRow}>
-                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={CARTONAGEM.cta!.href}>
-                    {CARTONAGEM.cta!.label}
+                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref(cartonagem.cta!.href, locale)}>
+                    {cartonagem.cta!.label}
                   </Link>
                 </div>
               </div>
@@ -164,24 +220,24 @@ export default function SaturnoPage() {
           <div className={shared.container}>
             <div className={styles.positioningGrid}>
               <div>
-                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{GESTAO_AMBIENTAL.eyebrow}</p>
-                <h2 className={shared.headline}>{GESTAO_AMBIENTAL.headline}</h2>
+                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{gestaoAmbiental.eyebrow}</p>
+                <h2 className={shared.headline}>{gestaoAmbiental.headline}</h2>
               </div>
               <div className={styles.positioningCopy}>
-                <p className={shared.body}>{GESTAO_AMBIENTAL.copy}</p>
+                <p className={shared.body}>{gestaoAmbiental.copy}</p>
                 {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
                     como lista real e estruturada — divisor + um item por
                     linha, não parágrafo contínuo nem pílulas soltas. */}
-                {GESTAO_AMBIENTAL.tags && (
+                {gestaoAmbiental.tags && (
                   <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
-                    {GESTAO_AMBIENTAL.tags.map((tag) => (
+                    {gestaoAmbiental.tags.map((tag) => (
                       <li key={tag}>{tag}</li>
                     ))}
                   </ul>
                 )}
                 <div className={shared.ctaRow}>
-                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={GESTAO_AMBIENTAL.cta!.href}>
-                    {GESTAO_AMBIENTAL.cta!.label}
+                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref(gestaoAmbiental.cta!.href, locale)}>
+                    {gestaoAmbiental.cta!.label}
                   </Link>
                 </div>
               </div>
@@ -202,9 +258,9 @@ export default function SaturnoPage() {
           (ver tone="saturno" em MaterialCards.module.css). */}
       <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>Materiais que fazem parte da operação.</h2>
+          <h2 className={shared.headline}>{t.materialsHeadline}</h2>
           <div className={styles.materialsBlock}>
-            <MaterialCards tone="saturno" />
+            <MaterialCards tone="saturno" locale={locale} />
           </div>
         </div>
       </section>
@@ -218,25 +274,21 @@ export default function SaturnoPage() {
       <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
         <MaterialSurface surface="saturno-fluxo" />
         <div className={shared.container}>
-          <span className={styles.groupBadge}>Saturno Ambiental · Grupo Almeida</span>
-          <h2 className={shared.headline}>Uma marca regional conectada a uma estrutura maior.</h2>
-          <p className={shared.body}>
-            A integração da Saturno ao Grupo Almeida amplia a capacidade de compartilhar experiência, tecnologia e
-            estrutura entre diferentes regiões de Santa Catarina, preservando a proximidade e o reconhecimento
-            construídos pela marca no Vale do Itajaí.
-          </p>
+          <span className={styles.groupBadge}>{t.groupBadge}</span>
+          <h2 className={shared.headline}>{t.groupHeadline}</h2>
+          <p className={shared.body}>{t.groupBody}</p>
           <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href="/historia">
-              Conheça o Grupo Almeida
+            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref("/historia", locale)}>
+              {t.groupCta}
             </Link>
           </div>
         </div>
       </section>
 
       <EditorialCTA
-        headline="Gestão ambiental começa entendendo a realidade da operação."
-        body="Conte o que sua empresa gera, onde está e qual desafio precisa resolver."
-        cta={{ label: "Falar com a Saturno Ambiental", href: CONTACT_ANCHORS.blumenau }}
+        headline={t.finalHeadline}
+        body={t.finalBody}
+        cta={{ label: t.finalCta, href: localizeHref(CONTACT_ANCHORS.blumenau, locale) }}
         tone="forest"
       />
     </div>

@@ -414,3 +414,311 @@ export const EPILOGUE_STATS = [
   { value: "5.500 m²", label: "na sede de São José" },
   { value: "3.000 m²", label: "na nova unidade de Araquari" },
 ];
+
+/* ==========================================================
+   VERSÃO EM INGLÊS — mesma cronologia, mesmas datas/números/cidades. Ver
+   lib/i18n/locale.ts. GROWTH_SCALE e MAP_LOCATIONS não têm par em inglês:
+   são só números e nomes próprios, formatados por locale no componente
+   (ver components/historia/GrowthScale.tsx).
+   ========================================================== */
+
+export const CHAPTER_META_EN: Record<
+  Chapter,
+  { index: string; eyebrow: string; headline: string; tone: "stone" | "stoneAlt" | "forest" }
+> = {
+  origem: {
+    index: "01",
+    eyebrow: "Origins",
+    headline: "The first steps of a story built year after year.",
+    tone: "stone",
+  },
+  evolucao: {
+    index: "02",
+    eyebrow: "Evolution",
+    headline: "Growing also meant transforming the way we operate.",
+    tone: "stoneAlt",
+  },
+  expansao: {
+    index: "03",
+    eyebrow: "Expansion",
+    headline: "From a single operation in São José to a growing presence across Santa Catarina.",
+    tone: "stone",
+  },
+  "novo-ciclo": {
+    index: "04",
+    eyebrow: "New Cycle",
+    headline: "Four decades later, the story keeps being written.",
+    tone: "stoneAlt",
+  },
+};
+
+export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
+  {
+    id: "1985-fundacao",
+    year: 1985,
+    dateLabel: "September 1985",
+    chapter: "origem",
+    description:
+      "Almeida is founded in São José, Santa Catarina. Operations begin in a 300 m² warehouse, with one vertical press and one gas-powered Willys pickup truck.",
+    highlights: ["300 m²", "one vertical press", "one gas-powered Willys pickup truck"],
+    location: "São José",
+    areaSqm: 300,
+    growthMilestone: true,
+    side: "right",
+  },
+  {
+    id: "1986-frota-prensa",
+    year: 1986,
+    chapter: "origem",
+    description: "The first Mercedes-Benz 608 truck is acquired and a second vertical press is installed.",
+    highlights: ["Mercedes-Benz 608", "second vertical press"],
+    image: img(
+      "/historia/expansao-logistica-1988.webp",
+      "Illustrative reconstruction of a late-1980s cargo truck, representing the expansion of Almeida's fleet"
+    ),
+    side: "left",
+  },
+  {
+    id: "1987-frota",
+    year: 1987,
+    chapter: "origem",
+    description: "The fleet grows with the acquisition of a Volkswagen 6.90.",
+    highlights: ["Volkswagen 6.90"],
+    side: "right",
+  },
+  {
+    id: "1990-ampliacao-sao-jose",
+    year: 1990,
+    chapter: "origem",
+    description: "The São José unit is expanded to 500 m².",
+    highlights: ["500 m²"],
+    location: "São José",
+    areaSqm: 500,
+    growthMilestone: true,
+    side: "right",
+  },
+  {
+    id: "1990-blumenau",
+    year: 1990,
+    chapter: "origem",
+    description: "Operations begin at the Blumenau unit, Santa Catarina.",
+    highlights: ["Blumenau"],
+    location: "Blumenau",
+    side: "left",
+  },
+  {
+    id: "1993-prensa-horizontal",
+    year: 1993,
+    chapter: "origem",
+    description: "The first horizontal baler is installed, enabling the production of 400 kg bales.",
+    highlights: ["first horizontal baler", "400 kg"],
+    image: img(
+      "/historia/prensa-fardos-1993.webp",
+      "Illustrative reconstruction of an industrial horizontal baler and compacted cardboard bales, 1990s"
+    ),
+    side: "right",
+  },
+
+  {
+    id: "1997-roll-on-roll-off",
+    year: 1997,
+    chapter: "evolucao",
+    description: "The first Roll On/Roll Off truck is acquired, expanding logistics capacity.",
+    highlights: ["Roll On/Roll Off"],
+    side: "left",
+  },
+  {
+    id: "1998-triturador",
+    year: 1998,
+    chapter: "evolucao",
+    description: "The first shredder is installed, increasing material processing capacity.",
+    highlights: ["first shredder"],
+    image: img(
+      "/historia/triturador-2000.webp",
+      "Illustrative reconstruction of an industrial shredder and recyclable-material processing lines"
+    ),
+    side: "right",
+  },
+  {
+    id: "1999-novo-galpao",
+    year: 1999,
+    chapter: "evolucao",
+    description: "A new 2,500 m² warehouse is built.",
+    highlights: ["2,500 m²"],
+    areaSqm: 2500,
+    growthMilestone: true,
+    side: "left",
+  },
+  {
+    id: "2001-prensa-importada",
+    year: 2001,
+    chapter: "evolucao",
+    description: "The first imported horizontal baler is installed, enabling the production of 800 kg bales.",
+    highlights: ["first imported horizontal baler", "800 kg"],
+    side: "right",
+  },
+  {
+    id: "2004-ampliacao",
+    year: 2004,
+    chapter: "evolucao",
+    description: "The industrial structure is expanded to 3,100 m².",
+    highlights: ["3,100 m²"],
+    areaSqm: 3100,
+    growthMilestone: true,
+    side: "left",
+  },
+  {
+    id: "2005-segunda-prensa-800",
+    year: 2005,
+    chapter: "evolucao",
+    description: "A second baler for 800 kg bales is installed.",
+    highlights: ["800 kg"],
+    side: "right",
+  },
+  {
+    id: "2009-prensa-1100",
+    year: 2009,
+    chapter: "evolucao",
+    description: "A new imported baler is installed, enabling the production of 1,100 kg bales.",
+    highlights: ["1,100 kg"],
+    side: "left",
+  },
+  {
+    id: "2010-ampliacao-3500",
+    year: 2010,
+    chapter: "evolucao",
+    description: "The unit is expanded again, reaching a total built area of 3,500 m².",
+    highlights: ["3,500 m²"],
+    areaSqm: 3500,
+    growthMilestone: true,
+    side: "right",
+  },
+  {
+    id: "2012-compactador-pottinger",
+    year: 2012,
+    chapter: "evolucao",
+    description:
+      "The first imported screw-type waste compactor is installed. This also marks the start of the partnership with Pöttinger.",
+    highlights: ["imported screw-type waste compactor", "Pöttinger"],
+    image: img(
+      "/historia/tecnologia-2013.webp",
+      "Illustrative reconstruction of an imported industrial compactor, representing the technological modernization of the early 2010s"
+    ),
+    side: "left",
+  },
+  {
+    id: "2013-prensas-austropressen",
+    year: 2013,
+    chapter: "evolucao",
+    description:
+      "The first two-chamber balers are installed, increasing operational efficiency. This also marks the start of the partnership with Austropressen.",
+    highlights: ["two-chamber balers", "Austropressen"],
+    side: "right",
+  },
+  {
+    id: "2016-terreno-nova-sede",
+    year: 2016,
+    chapter: "evolucao",
+    description: "A 10,000 m² plot of land is acquired for the construction of the new headquarters.",
+    highlights: ["10,000 m²"],
+    side: "left",
+  },
+
+  {
+    id: "2020-chapeco",
+    year: 2020,
+    chapter: "expansao",
+    description: "Operations begin in the city of Chapecó, Santa Catarina.",
+    highlights: ["Chapecó"],
+    location: "Chapecó",
+    side: "right",
+  },
+  {
+    id: "2021-inauguracao-sede",
+    year: 2021,
+    chapter: "expansao",
+    description: "The company's new headquarters opens, with 5,500 m² of built area.",
+    highlights: ["5,500 m²"],
+    location: "São José",
+    areaSqm: 5500,
+    growthMilestone: true,
+    side: "left",
+  },
+  {
+    id: "2021-segunda-prensa-1100",
+    year: 2021,
+    chapter: "expansao",
+    description: "A second baler for 1,100 kg bales is installed.",
+    highlights: ["1,100 kg"],
+    side: "right",
+  },
+  {
+    id: "2022-saturno",
+    year: 2022,
+    chapter: "expansao",
+    description: "The company Saturno, in Blumenau, is acquired, strengthening the group's regional presence.",
+    highlights: ["Saturno", "Blumenau"],
+    location: "Blumenau",
+    side: "left",
+  },
+  {
+    id: "2023-araquari",
+    year: 2023,
+    chapter: "expansao",
+    description: "Operations begin at the Araquari unit, Santa Catarina.",
+    highlights: ["Araquari"],
+    location: "Araquari",
+    side: "right",
+  },
+  {
+    id: "2024-nsc",
+    year: 2024,
+    chapter: "expansao",
+    description: "The company NSC, in Joinville, Santa Catarina, is acquired.",
+    highlights: ["NSC", "Joinville"],
+    location: "Joinville",
+    side: "left",
+  },
+
+  {
+    id: "2025-terreno-araquari",
+    year: 2025,
+    chapter: "novo-ciclo",
+    description: "A 10,000 m² plot of land is acquired in Araquari, preparing the unit's expansion.",
+    highlights: ["10,000 m²", "Araquari"],
+    location: "Araquari",
+    side: "right",
+  },
+  {
+    id: "2025-terreno-chapeco",
+    year: 2025,
+    chapter: "novo-ciclo",
+    description: "A 10,000 m² plot of land is acquired in Chapecó, for future expansion.",
+    highlights: ["10,000 m²", "Chapecó"],
+    location: "Chapecó",
+    side: "left",
+  },
+  {
+    id: "2026-araquari-inauguracao",
+    year: 2026,
+    chapter: "novo-ciclo",
+    description: "The new Araquari unit opens, with 3,000 m² of built area.",
+    highlights: ["3,000 m²"],
+    location: "Araquari",
+    areaSqm: 3000,
+    side: "right",
+    monumental: true,
+  },
+];
+
+export const HERO_IMAGE_EN = img(
+  "/historia/hero-1985.webp",
+  "Illustrative reconstruction of a small industrial warehouse in southern Brazil in the 1980s, with a vertical press and a utility vehicle parked alongside, in black and white"
+);
+
+export const EPILOGUE_STATS_EN = [
+  { value: "40+", label: "years of history" },
+  { value: "5", label: "units" },
+  { value: "5,500 m²", label: "at the São José headquarters" },
+  { value: "3,000 m²", label: "at the new Araquari unit" },
+];

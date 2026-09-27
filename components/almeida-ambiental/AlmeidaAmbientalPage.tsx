@@ -7,15 +7,76 @@ import MaterialSurface from "../shared/MaterialSurface";
 import EditorialCTA from "../shared/EditorialCTA";
 import ProcessSteps from "../shared/ProcessSteps";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
-import { HERO_IMAGE, POSITIONING_IMAGE, PILLARS, FLOW_STEPS } from "../../lib/almeida-ambiental-data";
+import {
+  HERO_IMAGE,
+  HERO_IMAGE_EN,
+  POSITIONING_IMAGE,
+  POSITIONING_IMAGE_EN,
+  PILLARS,
+  PILLARS_EN,
+  FLOW_STEPS,
+  FLOW_STEPS_EN,
+} from "../../lib/almeida-ambiental-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
-
-/* Mesma lista de etapas da Home (FLOW_STEPS), mesmo componente de lista
-   visual — o processo não pode ser lido de duas formas diferentes entre a
-   Home e a página da empresa. */
-const PROCESS_STEPS = FLOW_STEPS.map((name) => ({ name }));
+import { localizeHref } from "../../lib/i18n/routes";
+import type { Locale } from "../../lib/i18n/locale";
 
 const PILLAR_SIDE = [shared.duoMediaRight, shared.duoMediaLeft, shared.duoMediaRight];
+
+const COPY = {
+  pt: {
+    heroEyebrow: "Almeida Ambiental",
+    heroTitle: "Gestão de resíduos construída sobre experiência, estrutura e eficiência.",
+    heroLede:
+      "Desde 1985, a Almeida Ambiental transforma coleta, triagem, processamento e destinação em uma operação integrada para grandes geradores de resíduos.",
+    heroPrimaryCta: "Conheça nossas soluções",
+    heroSecondaryCta: "Fale com a Almeida Ambiental",
+    positioningHeadline: "Mais do que recolher resíduos, é preciso entender o que acontece com eles depois.",
+    positioningBody:
+      "A experiência construída ao longo de quatro décadas permite à Almeida Ambiental unir estrutura logística, classificação, tecnologia e destinação adequada em uma mesma operação. Cada material exige uma solução diferente. O trabalho começa entendendo essa diferença.",
+    pillarCounter: (index: number) => `${String(index + 1).padStart(2, "0")} / 03`,
+    materialsHeadline: "Diferentes materiais. Diferentes caminhos.",
+    materialsBody:
+      "A operação evoluiu muito além do papel e papelão que marcaram o início da Almeida. Hoje, a estrutura atende diferentes categorias de resíduos e direciona cada uma conforme suas características.",
+    processEyebrow: "Do resíduo ao novo ciclo",
+    processHeadline: "Diagnóstico, coleta, triagem, trituração e destinação em uma só operação.",
+    processAriaLabel: "Etapas da operação da Almeida Ambiental",
+    crossEyebrow: "Tecnologia dentro da operação",
+    crossHeadline: "Equipamentos que não são apenas comercializados. São parte da experiência operacional do grupo.",
+    crossBody:
+      "A relação entre Almeida Ambiental e Almeida Equipamentos permite que conhecimento de campo e tecnologia caminhem juntos. Compactação, armazenagem e processamento são pensados a partir de problemas que fazem parte da operação diária.",
+    crossCta: "Conheça a Almeida Equipamentos",
+    finalHeadline: "Sua operação gera resíduos. A próxima etapa precisa ser planejada.",
+    finalBody: "Converse com a equipe e entenda qual estrutura faz sentido para seu volume, material e rotina.",
+    finalCta: "Falar com a Almeida Ambiental",
+  },
+  en: {
+    heroEyebrow: "Almeida Ambiental",
+    heroTitle: "Waste management built on experience, structure and efficiency.",
+    heroLede:
+      "Since 1985, Almeida Ambiental has turned collection, sorting, processing and disposal into an integrated operation for large waste generators.",
+    heroPrimaryCta: "See our solutions",
+    heroSecondaryCta: "Talk to Almeida Ambiental",
+    positioningHeadline: "Collecting waste is not enough — what happens to it afterward matters just as much.",
+    positioningBody:
+      "Four decades of experience let Almeida Ambiental bring logistics structure, classification, technology and proper disposal together in a single operation. Every material calls for a different solution. The work starts by understanding that difference.",
+    pillarCounter: (index: number) => `${String(index + 1).padStart(2, "0")} / 03`,
+    materialsHeadline: "Different materials. Different paths.",
+    materialsBody:
+      "The operation has grown well beyond the paper and cardboard that marked Almeida's beginnings. Today the structure handles different categories of waste and routes each one according to its characteristics.",
+    processEyebrow: "From waste to a new cycle",
+    processHeadline: "Assessment, collection, sorting, shredding and disposal in a single operation.",
+    processAriaLabel: "Almeida Ambiental's operating steps",
+    crossEyebrow: "Technology inside the operation",
+    crossHeadline: "Equipment that isn't just sold. It's part of the group's operational experience.",
+    crossBody:
+      "The relationship between Almeida Ambiental and Almeida Equipamentos lets field knowledge and technology move forward together. Compaction, storage and processing are designed around problems that are part of daily operations.",
+    crossCta: "See Almeida Equipamentos",
+    finalHeadline: "Your operation generates waste. The next step needs to be planned.",
+    finalBody: "Talk to the team and find out which structure fits your volume, material and routine.",
+    finalCta: "Talk to Almeida Ambiental",
+  },
+} as const;
 
 /**
  * /almeida-ambiental — "estrutura, processo e capacidade operacional",
@@ -41,16 +102,23 @@ const PILLAR_SIDE = [shared.duoMediaRight, shared.duoMediaLeft, shared.duoMediaR
  * marcando exatamente essa troca real de superfície antes do Process
  * Ribbon.
  */
-export default function AlmeidaAmbientalPage() {
+export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
+  const heroImage = locale === "en" ? HERO_IMAGE_EN : HERO_IMAGE;
+  const positioningImage = locale === "en" ? POSITIONING_IMAGE_EN : POSITIONING_IMAGE;
+  const pillars = locale === "en" ? PILLARS_EN : PILLARS;
+  const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
+
   return (
     <div className={styles.page} data-page="almeida-ambiental">
       <CompanyHero
-        eyebrow="Almeida Ambiental"
-        title="Gestão de resíduos construída sobre experiência, estrutura e eficiência."
-        lede="Desde 1985, a Almeida Ambiental transforma coleta, triagem, processamento e destinação em uma operação integrada para grandes geradores de resíduos."
-        image={HERO_IMAGE}
-        primaryCta={{ label: "Conheça nossas soluções", href: "#servicos" }}
-        secondaryCta={{ label: "Fale com a Almeida Ambiental", href: CONTACT_ANCHORS.saoJose }}
+        locale={locale}
+        eyebrow={t.heroEyebrow}
+        title={t.heroTitle}
+        lede={t.heroLede}
+        image={heroImage}
+        primaryCta={{ label: t.heroPrimaryCta, href: "#servicos" }}
+        secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
       />
 
       {/* ---------------- Território material (Posicionamento + Pilares) ----------------
@@ -67,17 +135,11 @@ export default function AlmeidaAmbientalPage() {
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow}`}>
               <div className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
-                <img src={POSITIONING_IMAGE.src} alt={POSITIONING_IMAGE.alt} loading="lazy" decoding="async" />
+                <img src={positioningImage.src} alt={positioningImage.alt} loading="lazy" decoding="async" />
               </div>
               <div className={shared.duoContent}>
-                <h2 className={shared.headline}>
-                  Mais do que recolher resíduos, é preciso entender o que acontece com eles depois.
-                </h2>
-                <p className={shared.body}>
-                  A experiência construída ao longo de quatro décadas permite à Almeida Ambiental unir estrutura
-                  logística, classificação, tecnologia e destinação adequada em uma mesma operação. Cada material
-                  exige uma solução diferente. O trabalho começa entendendo essa diferença.
-                </p>
+                <h2 className={shared.headline}>{t.positioningHeadline}</h2>
+                <p className={shared.body}>{t.positioningBody}</p>
               </div>
             </div>
           </div>
@@ -85,7 +147,7 @@ export default function AlmeidaAmbientalPage() {
 
         {/* Serviços: três pilares */}
         <div id="servicos">
-          {PILLARS.map((pillar, index) => (
+          {pillars.map((pillar, index) => (
             <section key={pillar.id} className={`${shared.section} ${boundarySurface}`}>
               <div className={shared.container}>
                 <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
@@ -93,7 +155,7 @@ export default function AlmeidaAmbientalPage() {
                     <img src={pillar.image.src} alt={pillar.image.alt} loading="lazy" decoding="async" />
                   </div>
                   <div className={shared.duoContent}>
-                    <span className={styles.pillarIndex}>{String(index + 1).padStart(2, "0")} / 03</span>
+                    <span className={styles.pillarIndex}>{t.pillarCounter(index)}</span>
                     <p className={shared.eyebrow}>{pillar.eyebrow}</p>
                     <h2 className={shared.headline}>{pillar.headline}</h2>
                     <p className={shared.body}>{pillar.copy}</p>
@@ -117,16 +179,13 @@ export default function AlmeidaAmbientalPage() {
       <section className={`${shared.section} ${shared.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-processo" half="leaving" surface="onLight" />
         <div className={shared.container}>
-          <h2 className={shared.headline}>Diferentes materiais. Diferentes caminhos.</h2>
-          <p className={shared.body}>
-            A operação evoluiu muito além do papel e papelão que marcaram o início da Almeida. Hoje, a estrutura
-            atende diferentes categorias de resíduos e direciona cada uma conforme suas características.
-          </p>
+          <h2 className={shared.headline}>{t.materialsHeadline}</h2>
+          <p className={shared.body}>{t.materialsBody}</p>
           {/* Material Cards: a mesma lista validada (lib/materials.ts) como
               coleção visual — ícone grande primeiro, nome depois. Sem
               imagem, sem tabela: ver MaterialCards.tsx. */}
           <div className={styles.atlasBlock}>
-            <MaterialCards tone="ambiental" />
+            <MaterialCards tone="ambiental" locale={locale} />
           </div>
         </div>
       </section>
@@ -135,36 +194,30 @@ export default function AlmeidaAmbientalPage() {
       <section className={`${shared.section} ${shared.toneForest} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-processo" half="entering" surface="onDark" />
         <div className={shared.container}>
-          <p className={shared.eyebrow}>Do resíduo ao novo ciclo</p>
-          <h2 className={shared.headline}>Diagnóstico, coleta, triagem, trituração e destinação em uma só operação.</h2>
-          <ProcessSteps steps={PROCESS_STEPS} ariaLabel="Etapas da operação da Almeida Ambiental" />
+          <p className={shared.eyebrow}>{t.processEyebrow}</p>
+          <h2 className={shared.headline}>{t.processHeadline}</h2>
+          <ProcessSteps steps={processSteps} ariaLabel={t.processAriaLabel} />
         </div>
       </section>
 
       {/* ---------------- Cross-link: Almeida Equipamentos ---------------- */}
       <section className={`${shared.section} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <p className={shared.eyebrow}>Tecnologia dentro da operação</p>
-          <h2 className={shared.headline}>
-            Equipamentos que não são apenas comercializados. São parte da experiência operacional do grupo.
-          </h2>
-          <p className={shared.body}>
-            A relação entre Almeida Ambiental e Almeida Equipamentos permite que conhecimento de campo e tecnologia
-            caminhem juntos. Compactação, armazenagem e processamento são pensados a partir de problemas que fazem
-            parte da operação diária.
-          </p>
+          <p className={shared.eyebrow}>{t.crossEyebrow}</p>
+          <h2 className={shared.headline}>{t.crossHeadline}</h2>
+          <p className={shared.body}>{t.crossBody}</p>
           <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="/almeida-equipamentos">
-              Conheça a Almeida Equipamentos
+            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
+              {t.crossCta}
             </Link>
           </div>
         </div>
       </section>
 
       <EditorialCTA
-        headline="Sua operação gera resíduos. A próxima etapa precisa ser planejada."
-        body="Converse com a equipe e entenda qual estrutura faz sentido para seu volume, material e rotina."
-        cta={{ label: "Falar com a Almeida Ambiental", href: CONTACT_ANCHORS.saoJose }}
+        headline={t.finalHeadline}
+        body={t.finalBody}
+        cta={{ label: t.finalCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
         tone="forest"
       />
     </div>

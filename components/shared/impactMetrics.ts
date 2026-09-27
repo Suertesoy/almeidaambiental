@@ -18,3 +18,17 @@ export const IMPACT_METRICS: Array<{
   { target: 153114, format: "integer", suffix: " t", display: "153.114 t", label: "CO₂ evitadas" },
   { target: 1.27, format: "decimal2", suffix: " bi", display: "1,27 bi", label: "litros de água economizados" },
 ];
+
+/** Versão em inglês — mesmos valores oficiais, só o rótulo muda. */
+export const IMPACT_METRICS_EN: Array<{
+  target: number;
+  format: MetricFormat;
+  suffix: string;
+  display: string;
+  label: string;
+}> = [
+  { target: 818907, format: "integer", suffix: "", display: "818,907", label: "trees preserved" },
+  { target: 54873, format: "integer", suffix: " t", display: "54,873 t", label: "materials recycled" },
+  { target: 153114, format: "integer", suffix: " t", display: "153,114 t", label: "CO₂ avoided" },
+  { target: 1.27, format: "decimal2", suffix: "bn", display: "1.27bn", label: "liters of water saved" },
+];

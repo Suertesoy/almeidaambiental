@@ -7,8 +7,27 @@ import { HERO_POSTER_DATA_URI } from "../../lib/hero-poster";
 import { ChevronDownIcon } from "../icons";
 import BrandMark from "../shared/BrandMark";
 import { BRANDS } from "../../lib/brands";
+import { localizeHref } from "../../lib/i18n/routes";
+import type { Locale } from "../../lib/i18n/locale";
 
 const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
+
+const COPY = {
+  pt: {
+    ariaLabel: "Grupo Almeida — 40 anos",
+    headlinePrefix: "TRANSFORMANDO RESÍDUO EM ",
+    headlineGold: "RESULTADO",
+    cta: "Conheça nossa história",
+    scrollHint: "Role para baixo",
+  },
+  en: {
+    ariaLabel: "Grupo Almeida — 40 years",
+    headlinePrefix: "TURNING WASTE INTO ",
+    headlineGold: "RESULTS",
+    cta: "See our story",
+    scrollHint: "Scroll down",
+  },
+} as const;
 
 /**
  * Hero cinematográfico da nova Home: vídeo cru, sem overlay verde, existe
@@ -17,7 +36,8 @@ const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
  * play/pause (IntersectionObserver), para não gastar ciclos com o vídeo
  * decodificando fora de tela.
  */
-export default function Hero() {
+export default function Hero({ locale }: { locale: Locale }) {
+  const t = COPY[locale];
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -70,7 +90,7 @@ export default function Hero() {
   }, [reducedMotion]);
 
   return (
-    <section ref={sectionRef} className={styles.hero} aria-label="Grupo Almeida — 40 anos">
+    <section ref={sectionRef} className={styles.hero} aria-label={t.ariaLabel}>
       <div
         className={`${styles.heroPoster}${videoReady ? ` ${styles.heroPosterHidden}` : ""}`}
         style={{ backgroundImage: `url(${HERO_POSTER_DATA_URI})` }}
@@ -108,18 +128,19 @@ export default function Hero() {
             reorganiza as linhas conforme a largura de cada viewport, em vez
             de reproduzir as mesmas quebras do desktop no mobile. */}
         <h1 className={styles.heroHeadline}>
-          TRANSFORMANDO RESÍDUO EM <span className={styles.gold}>RESULTADO</span>
+          {t.headlinePrefix}
+          <span className={styles.gold}>{t.headlineGold}</span>
         </h1>
         {/* /historia é a experiência editorial de storytelling cronológico
             (1985–2026) — navegação client-side via next/link, não mais uma
             âncora dentro da própria Home. */}
-        <Link className={styles.heroCta} href="/historia">
-          Conheça nossa história
+        <Link className={styles.heroCta} href={localizeHref("/historia", locale)}>
+          {t.cta}
         </Link>
       </div>
 
       <a className={styles.heroScrollHint} href="#almeida-ambiental">
-        <span>Role para baixo</span>
+        <span>{t.scrollHint}</span>
         <ChevronDownIcon />
       </a>
     </section>

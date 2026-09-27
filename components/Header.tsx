@@ -6,6 +6,9 @@ import Link from "next/link";
 import { CloseIcon, HamburgerIcon } from "./icons";
 import BrandMark from "./shared/BrandMark";
 import { BRANDS, BRAND_ORDER, getActiveBrandId } from "../lib/brands";
+import { localeFromPathname } from "../lib/i18n/locale";
+import { getAlternatePath, localizeHref } from "../lib/i18n/routes";
+import { dict } from "../lib/i18n/dictionary";
 
 /**
  * Itens do menu expandido (Seção 5/6, refinado no item 15 da rodada de
@@ -15,16 +18,21 @@ import { BRANDS, BRAND_ORDER, getActiveBrandId } from "../lib/brands";
  * Saturno; Contato continua só texto porque não representa uma
  * empresa/marca do grupo.
  */
-const MENU_ITEMS = [
-  ...BRAND_ORDER.map((id) => ({ kind: "brand" as const, brand: BRANDS[id] })),
-  { kind: "text" as const, label: "Contato", href: "/contato" },
-];
+const BRAND_MENU_ITEMS = BRAND_ORDER.map((id) => ({ kind: "brand" as const, brand: BRANDS[id] }));
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname() || "/";
+  const locale = localeFromPathname(pathname);
+  const t = dict(locale);
   const activeBrandId = getActiveBrandId(pathname);
   const activeBrand = BRANDS[activeBrandId];
+  const alternatePath = getAlternatePath(pathname);
+
+  const menuItems = [
+    ...BRAND_MENU_ITEMS,
+    { kind: "text" as const, label: t.header.contact, href: localizeHref("/contato", locale) },
+  ];
 
   return (
     <>
@@ -34,18 +42,26 @@ export default function Header() {
             fixamente o Grupo Almeida — sempre a variante branca porque o
             header é escuro (verde floresta) em qualquer contexto. */}
         <div className="desktop-only header-inner">
-          <Link href={activeBrand.href} className="logo-link">
+          <Link href={localizeHref(activeBrand.href, locale)} className="logo-link">
             <BrandMark brand={activeBrand} variant="branca" className="logo-image" />
           </Link>
 
           <div className="header-right">
-            <div className="lang-area" role="group" aria-label="Idioma">
-              <button type="button" className="lang-btn" aria-current="true">
+            <div className="lang-area" role="group" aria-label={t.header.languageGroupLabel}>
+              <Link
+                href={locale === "pt" ? pathname : alternatePath}
+                className="lang-btn"
+                aria-current={locale === "pt" ? "true" : undefined}
+              >
                 <img src="/brand/flag-br.png" alt="" className="lang-flag" aria-hidden="true" /> PT
-              </button>
-              <button type="button" className="lang-btn">
+              </Link>
+              <Link
+                href={locale === "en" ? pathname : alternatePath}
+                className="lang-btn"
+                aria-current={locale === "en" ? "true" : undefined}
+              >
                 <img src="/brand/flag-us.png" alt="" className="lang-flag" aria-hidden="true" /> EN
-              </button>
+              </Link>
             </div>
 
             <button
@@ -53,7 +69,7 @@ export default function Header() {
               className="hamburger-btn"
               aria-expanded={menuOpen}
               aria-controls="site-menu"
-              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-label={menuOpen ? t.header.closeMenu : t.header.openMenu}
               onClick={() => setMenuOpen((open) => !open)}
             >
               {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -64,18 +80,26 @@ export default function Header() {
         {/* Mobile (<1024px): mesma lógica contextual do bloco desktop
             acima, mesmo estado/toggle de menuOpen. */}
         <div className="mobile-fidelity mf-header-inner">
-          <Link href={activeBrand.href} className="mf-logo">
+          <Link href={localizeHref(activeBrand.href, locale)} className="mf-logo">
             <BrandMark brand={activeBrand} variant="branca" className="mf-logo-image" />
           </Link>
 
           <div className="mf-header-right">
-            <div className="mf-lang-toggle" role="group" aria-label="Idioma">
-              <button type="button" className="mf-lang-btn" aria-current="true">
-                <img src="/brand/flag-br.png" alt="" className="mf-lang-flag" aria-hidden="true" />
-              </button>
-              <button type="button" className="mf-lang-btn">
-                <img src="/brand/flag-us.png" alt="" className="mf-lang-flag" aria-hidden="true" />
-              </button>
+            <div className="mf-lang-toggle" role="group" aria-label={t.header.languageGroupLabel}>
+              <Link
+                href={locale === "pt" ? pathname : alternatePath}
+                className="mf-lang-btn"
+                aria-current={locale === "pt" ? "true" : undefined}
+              >
+                <img src="/brand/flag-br.png" alt="PT" className="mf-lang-flag" />
+              </Link>
+              <Link
+                href={locale === "en" ? pathname : alternatePath}
+                className="mf-lang-btn"
+                aria-current={locale === "en" ? "true" : undefined}
+              >
+                <img src="/brand/flag-us.png" alt="EN" className="mf-lang-flag" />
+              </Link>
             </div>
 
             <button
@@ -83,7 +107,7 @@ export default function Header() {
               className="mf-hamburger"
               aria-expanded={menuOpen}
               aria-controls="site-menu"
-              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-label={menuOpen ? t.header.closeMenu : t.header.openMenu}
               onClick={() => setMenuOpen((open) => !open)}
             >
               {menuOpen ? (
@@ -100,13 +124,13 @@ export default function Header() {
         </div>
       </header>
 
-      <nav id="site-menu" className="menu-panel" aria-label="Menu principal" hidden={!menuOpen}>
+      <nav id="site-menu" className="menu-panel" aria-label={t.header.mainMenu} hidden={!menuOpen}>
         <ul className="menu-list">
-          {MENU_ITEMS.map((item) =>
+          {menuItems.map((item) =>
             item.kind === "brand" ? (
               <li key={item.brand.id} className="menu-item">
                 <Link
-                  href={item.brand.href}
+                  href={localizeHref(item.brand.href, locale)}
                   className="menu-link menu-link-brand"
                   aria-current={item.brand.id === activeBrandId ? "page" : undefined}
                   onClick={() => setMenuOpen(false)}

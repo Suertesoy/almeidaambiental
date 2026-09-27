@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import type { Locale } from "../lib/i18n/locale";
 
 export type MetricFormat = "integer" | "decimal2";
 
 const COUNT_MS = 1400;
 
+const NUMBER_LOCALE: Record<Locale, string> = { pt: "pt-BR", en: "en-US" };
+
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-function formatMetric(value: number, format: MetricFormat): string {
+function formatMetric(value: number, format: MetricFormat, locale: Locale): string {
+  const numberLocale = NUMBER_LOCALE[locale];
   if (format === "decimal2") {
-    return value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return value.toLocaleString(numberLocale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
-  return Math.round(value).toLocaleString("pt-BR");
+  return Math.round(value).toLocaleString(numberLocale);
 }
 
 /** Fica `true` uma única vez, sem resetar, assim que qualquer um dos
@@ -59,12 +63,14 @@ export function CountUpMetric({
   suffix = "",
   display,
   active,
+  locale = "pt",
 }: {
   target: number;
   format: MetricFormat;
   suffix?: string;
   display: string;
   active: boolean;
+  locale?: Locale;
 }) {
   const [visibleText, setVisibleText] = useState(display);
   const startedRef = useRef(false);
@@ -74,9 +80,9 @@ export function CountUpMetric({
   // matchMedia durante a renderização do servidor.
   useEffect(() => {
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisibleText(formatMetric(0, format) + suffix);
+      setVisibleText(formatMetric(0, format, locale) + suffix);
     }
-  }, [format, suffix]);
+  }, [format, suffix, locale]);
 
   useEffect(() => {
     if (!active || startedRef.current) return;
@@ -91,12 +97,12 @@ export function CountUpMetric({
         setVisibleText(display);
         return;
       }
-      setVisibleText(formatMetric(target * easeOutCubic(t), format) + suffix);
+      setVisibleText(formatMetric(target * easeOutCubic(t), format, locale) + suffix);
       rafId = requestAnimationFrame(step);
     };
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
-  }, [active, target, format, suffix, display]);
+  }, [active, target, format, suffix, display, locale]);
 
   return (
     <>

@@ -3,7 +3,8 @@
 import styles from "./historia.module.css";
 import TimelineEventRow from "./TimelineEventRow";
 import { useLineProgress } from "./useLineProgress";
-import { CHAPTER_META, TIMELINE_EVENTS, type Chapter } from "../../lib/historia-data";
+import { CHAPTER_META, CHAPTER_META_EN, TIMELINE_EVENTS, TIMELINE_EVENTS_EN, type Chapter } from "../../lib/historia-data";
+import type { Locale } from "../../lib/i18n/locale";
 
 const TONE_CLASS: Record<string, string> = {
   stone: styles.chapterStone,
@@ -17,9 +18,9 @@ const TONE_CLASS: Record<string, string> = {
  * no fluxo normal do documento, então a linha lê como um traço contínuo
  * mesmo sendo um <div> por capítulo (ver useLineProgress.ts).
  */
-export default function ChapterSection({ chapter }: { chapter: Chapter }) {
-  const meta = CHAPTER_META[chapter];
-  const events = TIMELINE_EVENTS.filter((event) => event.chapter === chapter);
+export default function ChapterSection({ chapter, locale }: { chapter: Chapter; locale: Locale }) {
+  const meta = (locale === "en" ? CHAPTER_META_EN : CHAPTER_META)[chapter];
+  const events = (locale === "en" ? TIMELINE_EVENTS_EN : TIMELINE_EVENTS).filter((event) => event.chapter === chapter);
   const railRef = useLineProgress<HTMLDivElement>();
 
   return (
@@ -47,7 +48,7 @@ export default function ChapterSection({ chapter }: { chapter: Chapter }) {
             </div>
 
             {events.map((event) => (
-              <TimelineEventRow key={event.id} event={event} />
+              <TimelineEventRow key={event.id} event={event} locale={locale} />
             ))}
           </div>
         </div>

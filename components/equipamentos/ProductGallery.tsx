@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./product-gallery.module.css";
 import { CloseIcon } from "../icons";
 import type { EditorialImage, EditorialVideo } from "../../lib/media";
+import type { Locale } from "../../lib/i18n/locale";
 
 type Slide =
   | { kind: "image"; key: string; image: EditorialImage }
@@ -16,7 +17,27 @@ export type ProductGalleryProps = {
   gallery?: EditorialImage[];
   /** Vídeo de funcionamento. Ausente hoje; nenhuma área de vídeo aparece. */
   video?: EditorialVideo;
+  locale: Locale;
 };
+
+const COPY = {
+  pt: {
+    zoomImage: (alt: string) => `Ampliar imagem: ${alt}`,
+    viewImage: (n: number) => `Ver imagem ${n}`,
+    viewVideo: "Ver vídeo de funcionamento",
+    video: "Vídeo",
+    zoomedView: "Visualização ampliada",
+    closeZoomedView: "Fechar visualização ampliada",
+  },
+  en: {
+    zoomImage: (alt: string) => `Zoom in: ${alt}`,
+    viewImage: (n: number) => `View image ${n}`,
+    viewVideo: "Watch operation video",
+    video: "Video",
+    zoomedView: "Zoomed-in view",
+    closeZoomedView: "Close zoomed-in view",
+  },
+} as const;
 
 /**
  * Galeria de um equipamento do catálogo.
@@ -32,7 +53,8 @@ export type ProductGalleryProps = {
  * em visualização ampliada num <dialog> nativo — foco, Escape e camada
  * superior por conta do navegador.
  */
-export default function ProductGallery({ image, gallery, video }: ProductGalleryProps) {
+export default function ProductGallery({ image, gallery, video, locale }: ProductGalleryProps) {
+  const t = COPY[locale];
   const slides: Slide[] = [
     { kind: "image", key: image.src, image },
     ...(gallery ?? []).map((extra): Slide => ({ kind: "image", key: extra.src, image: extra })),
@@ -82,7 +104,7 @@ export default function ProductGallery({ image, gallery, video }: ProductGallery
                 type="button"
                 className={styles.slideImageButton}
                 onClick={() => setZoomed(slide.image)}
-                aria-label={`Ampliar imagem: ${slide.image.alt}`}
+                aria-label={t.zoomImage(slide.image.alt)}
               >
                 <img src={slide.image.src} alt={slide.image.alt} loading="lazy" decoding="async" />
               </button>
@@ -113,9 +135,7 @@ export default function ProductGallery({ image, gallery, video }: ProductGallery
               type="button"
               className={styles.thumb}
               aria-current={index === activeIndex ? "true" : undefined}
-              aria-label={
-                slide.kind === "image" ? `Ver imagem ${index + 1}` : "Ver vídeo de funcionamento"
-              }
+              aria-label={slide.kind === "image" ? t.viewImage(index + 1) : t.viewVideo}
               onClick={() => goTo(index)}
             >
               {slide.kind === "image" ? (
@@ -124,7 +144,7 @@ export default function ProductGallery({ image, gallery, video }: ProductGallery
                 <img src={slide.video.poster} alt="" aria-hidden="true" loading="lazy" decoding="async" />
               ) : (
                 <span className={styles.thumbVideoLabel} aria-hidden="true">
-                  Vídeo
+                  {t.video}
                 </span>
               )}
             </button>
@@ -138,7 +158,7 @@ export default function ProductGallery({ image, gallery, video }: ProductGallery
         ref={lightboxRef}
         className={styles.lightbox}
         onClose={() => setZoomed(null)}
-        aria-label="Visualização ampliada"
+        aria-label={t.zoomedView}
       >
         {zoomed && (
           <div className={styles.lightboxInner}>
@@ -146,7 +166,7 @@ export default function ProductGallery({ image, gallery, video }: ProductGallery
               type="button"
               className={styles.lightboxClose}
               onClick={() => setZoomed(null)}
-              aria-label="Fechar visualização ampliada"
+              aria-label={t.closeZoomedView}
             >
               <CloseIcon />
             </button>

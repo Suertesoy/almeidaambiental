@@ -25,6 +25,8 @@
  * endereço apontado pela tarefa, agora com fonte oficial independente.
  */
 
+import type { Locale } from "./i18n/locale";
+
 export type Channel = {
   label: string;
   display: string;
@@ -141,15 +143,93 @@ export const REGIONS: RegionContact[] = [
 const SAO_JOSE = REGIONS.find((region) => region.id === "sao-jose")!;
 const SAO_JOSE_WHATSAPP = SAO_JOSE.channels.find((channel) => channel.action === "whatsapp")!;
 
-export const equipmentWhatsAppHref = (equipmentName: string) =>
+export const equipmentWhatsAppHref = (equipmentName: string, locale: Locale = "pt") =>
   `${SAO_JOSE_WHATSAPP.href}?text=${encodeURIComponent(
-    `Olá! Vim pelo site do Grupo Almeida e gostaria de falar sobre o equipamento ${equipmentName}.`
+    locale === "en"
+      ? `Hello! I found you through the Grupo Almeida website and I'd like to ask about the ${equipmentName} equipment.`
+      : `Olá! Vim pelo site do Grupo Almeida e gostaria de falar sobre o equipamento ${equipmentName}.`
   )}`;
 
 /** Anchors regionais reutilizados pelos CTAs de outras páginas — única
- *  fonte de verdade para não duplicar "/contato#..." espalhado pelo site. */
+ *  fonte de verdade para não duplicar "/contato#..." espalhado pelo site.
+ *  Sempre no formato canônico em português: components/páginas convertem
+ *  para a rota em inglês com lib/i18n/routes.ts (`localizeHref`) na hora
+ *  de renderizar, então o mesmo valor serve os dois idiomas. */
 export const CONTACT_ANCHORS = {
   saoJose: "/contato#sao-jose",
   araquariJoinville: "/contato#araquari-joinville",
   blumenau: "/contato#blumenau",
 };
+
+/* ==========================================================
+   VERSÃO EM INGLÊS — mesmos dados oficiais (endereços, CNPJs, números de
+   telefone/WhatsApp, links de mapa) da versão em português. Endereços e
+   queries de mapa NÃO são traduzidos: são usados como estão para geocoding
+   real (Google Maps/Waze) e para localização física por correio. Só
+   texto editorial (eyebrow, descrição, nota, mensagem de WhatsApp, rótulos
+   de canal e título do mapa) muda de idioma. Ver lib/i18n/locale.ts.
+   ========================================================== */
+export const REGIONS_EN: RegionContact[] = [
+  {
+    id: "sao-jose",
+    eyebrow: "Headquarters · São José",
+    headline: "Grupo Almeida",
+    description: "Headquarters service and support for Grupo Almeida's operations in São José.",
+    cnpjLabel: "CNPJ Almeida Ambiental",
+    cnpj: "04.910.399/0001-07",
+    addressLines: [
+      "Esquina com Rua Francisco Severino de Souza",
+      "Rua Governador José Boabaid — Distrito Industrial",
+      "São José, SC — CEP 88104-760",
+    ],
+    mapHref: REGIONS[0].mapHref,
+    wazeHref: REGIONS[0].wazeHref,
+    mapEmbedSrc: REGIONS[0].mapEmbedSrc,
+    mapEmbedTitle: "Map — Almeida Ambiental, São José, SC",
+    channels: [
+      { label: "Customer Service", display: "(48) 3259-4444", href: "https://wa.me/554832594444", action: "whatsapp" },
+      { label: "Logistics", display: "(48) 99946-6066", href: "https://wa.me/5548999466066", action: "whatsapp" },
+    ],
+    whatsappMessage:
+      "Hello! I found you through the Grupo Almeida website and I'd like to speak with Almeida Ambiental in São José.",
+    note: "For Almeida Equipamentos, please use the headquarters channels in São José.",
+  },
+  {
+    id: "araquari-joinville",
+    eyebrow: "Araquari / Joinville",
+    headline: "Almeida Ambiental",
+    description: "Service from the Araquari / Joinville unit.",
+    cnpjLabel: "CNPJ Almeida Ambiental",
+    cnpj: "04.910.399/0002-80",
+    addressLines: ["Rua Antonio Amorim, 890 — Porto Grande", "Araquari, SC — CEP 89245-000"],
+    mapHref: REGIONS[1].mapHref,
+    wazeHref: REGIONS[1].wazeHref,
+    mapEmbedSrc: REGIONS[1].mapEmbedSrc,
+    mapEmbedTitle: "Map — Almeida Ambiental, Araquari, SC",
+    channels: [
+      { label: "Admin", display: "(47) 99949-6299", href: "https://wa.me/5547999496299", action: "whatsapp" },
+    ],
+    whatsappMessage:
+      "Hello! I found you through the Grupo Almeida website and I'd like to speak with Almeida Ambiental in Araquari / Joinville.",
+  },
+  {
+    id: "blumenau",
+    eyebrow: "Vale do Itajaí",
+    headline: "Saturno Ambiental",
+    description: "Environmental services, waste management and cartonage in Blumenau and the surrounding region.",
+    cnpjLabel: "CNPJ Saturno Ambiental",
+    cnpj: "02.111.538/0001-07",
+    addressLines: ["Rua Marechal Rondon, 510 — Salto Norte", "Blumenau, SC — CEP 89065-200"],
+    mapHref: REGIONS[2].mapHref,
+    wazeHref: REGIONS[2].wazeHref,
+    mapEmbedSrc: REGIONS[2].mapEmbedSrc,
+    mapEmbedTitle: "Map — Saturno Ambiental, Blumenau, SC",
+    channels: [
+      { label: "Phone", display: "(47) 3323-8441", href: "tel:+554733238441", action: "call" },
+      { label: "WhatsApp", display: "(48) 98464-9289", href: "https://wa.me/5548984649289", action: "whatsapp" },
+    ],
+    whatsappMessage:
+      "Hello! I found you through the Grupo Almeida website and I'd like to speak with Saturno Ambiental in Blumenau.",
+  },
+];
+

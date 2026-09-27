@@ -1,10 +1,14 @@
 import Link from "next/link";
 import BrandMark from "./shared/BrandMark";
 import { BRANDS } from "../lib/brands";
+import type { Locale } from "../lib/i18n/locale";
+import { localizeHref } from "../lib/i18n/routes";
+import { dict } from "../lib/i18n/dictionary";
 
 /** O Grupo Almeida é marca/grupo institucional, sem CNPJ próprio — só as
  *  quatro empresas/unidades abaixo têm CNPJ. Não inventar razão social,
- *  endereço ou telefone além do que foi fornecido. */
+ *  endereço ou telefone além do que foi fornecido. Nomes de empresa e
+ *  localização (cidade/UF) são nomes próprios — não traduzidos. */
 const COMPANIES = [
   { name: "Almeida Ambiental", location: "São José / SC", cnpj: "04.910.399/0001-07" },
   { name: "Almeida Ambiental", location: "Araquari / Joinville", cnpj: "04.910.399/0002-80" },
@@ -19,7 +23,9 @@ const COMPANIES = [
  * coluna centralizada, alta e isolada do resto do sistema visual. Nenhum
  * dado legal removido/alterado, nenhum accordion no desktop nem no mobile.
  */
-export default function Footer() {
+export default function Footer({ locale }: { locale: Locale }) {
+  const t = dict(locale).footer;
+
   return (
     <footer className="site-footer">
       <div className="footer-inner">
@@ -29,7 +35,7 @@ export default function Footer() {
           </div>
 
           <div className="footer-col footer-col-companies">
-            <p className="footer-heading">Empresas do Grupo</p>
+            <p className="footer-heading">{t.groupCompanies}</p>
             <ul className="footer-companies-grid">
               {COMPANIES.map((company) => (
                 <li key={`${company.name}-${company.cnpj}`} className="footer-company">
@@ -41,27 +47,27 @@ export default function Footer() {
             </ul>
           </div>
 
-          <nav className="footer-col footer-col-links" aria-label="Links institucionais">
-            <p className="footer-heading">Links</p>
+          <nav className="footer-col footer-col-links" aria-label={t.institutionalLinksLabel}>
+            <p className="footer-heading">{t.links}</p>
             <ul className="footer-links-list">
               {/* "Institucional" e "Política de Privacidade" ainda não têm rota
                   própria definida na arquitetura do site: permanecem como
                   texto até existirem. */}
               <li>
-                <span>Institucional</span>
+                <span>{t.institutional}</span>
               </li>
               <li>
-                <Link href="/contato">Contato</Link>
+                <Link href={localizeHref("/contato", locale)}>{t.contact}</Link>
               </li>
               <li>
-                <span>Política de Privacidade</span>
+                <span>{t.privacyPolicy}</span>
               </li>
             </ul>
           </nav>
         </div>
 
         <div className="footer-bottom">
-          <p className="footer-line">São José · Santa Catarina · Brasil</p>
+          <p className="footer-line">{t.locationLine}</p>
           <p className="footer-copyright">© Grupo Almeida</p>
         </div>
       </div>
