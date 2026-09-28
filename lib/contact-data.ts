@@ -178,7 +178,7 @@ export const REGIONS_EN: RegionContact[] = [
     cnpjLabel: "CNPJ Almeida Ambiental",
     cnpj: "04.910.399/0001-07",
     addressLines: [
-      "Esquina com Rua Francisco Severino de Souza",
+      "Corner of Rua Francisco Severino de Souza",
       "Rua Governador José Boabaid — Distrito Industrial",
       "São José, SC — CEP 88104-760",
     ],
@@ -198,7 +198,7 @@ export const REGIONS_EN: RegionContact[] = [
     id: "araquari-joinville",
     eyebrow: "Araquari / Joinville",
     headline: "Almeida Ambiental",
-    description: "Service from the Araquari / Joinville unit.",
+    description: "Customer service for the Araquari / Joinville unit.",
     cnpjLabel: "CNPJ Almeida Ambiental",
     cnpj: "04.910.399/0002-80",
     addressLines: ["Rua Antonio Amorim, 890 — Porto Grande", "Araquari, SC — CEP 89245-000"],
@@ -207,7 +207,7 @@ export const REGIONS_EN: RegionContact[] = [
     mapEmbedSrc: REGIONS[1].mapEmbedSrc,
     mapEmbedTitle: "Map — Almeida Ambiental, Araquari, SC",
     channels: [
-      { label: "Admin", display: "(47) 99949-6299", href: "https://wa.me/5547999496299", action: "whatsapp" },
+      { label: "Administration", display: "(47) 99949-6299", href: "https://wa.me/5547999496299", action: "whatsapp" },
     ],
     whatsappMessage:
       "Hello! I found you through the Grupo Almeida website and I'd like to speak with Almeida Ambiental in Araquari / Joinville.",
@@ -216,7 +216,7 @@ export const REGIONS_EN: RegionContact[] = [
     id: "blumenau",
     eyebrow: "Vale do Itajaí",
     headline: "Saturno Ambiental",
-    description: "Environmental services, waste management and cartonage in Blumenau and the surrounding region.",
+    description: "Environmental services, waste management and cardboard packaging in Blumenau and the surrounding region.",
     cnpjLabel: "CNPJ Saturno Ambiental",
     cnpj: "02.111.538/0001-07",
     addressLines: ["Rua Marechal Rondon, 510 — Salto Norte", "Blumenau, SC — CEP 89065-200"],

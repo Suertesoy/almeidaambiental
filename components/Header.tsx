@@ -34,6 +34,17 @@ export default function Header() {
     { kind: "text" as const, label: t.header.contact, href: localizeHref("/contato", locale) },
   ];
 
+  /**
+   * `activeBrandId` (acima) é contexto de marca — qual logo o Header exibe
+   * — e tem um fallback deliberado para "grupo-almeida" em qualquer rota
+   * sem marca própria (Home, /historia, /contato, protótipos). Não serve
+   * para decidir `aria-current`: em /historia e /contato isso fazia o
+   * item "Grupo Almeida" do menu se marcar como página atual sem ser.
+   * `aria-current="page"` só pode refletir uma correspondência exata de
+   * rota — daí este segundo helper, independente do contexto de marca.
+   */
+  const isCurrentRoute = (href: string) => href === pathname;
+
   return (
     <>
       <header className="site-header">
@@ -126,27 +137,36 @@ export default function Header() {
 
       <nav id="site-menu" className="menu-panel" aria-label={t.header.mainMenu} hidden={!menuOpen}>
         <ul className="menu-list">
-          {menuItems.map((item) =>
-            item.kind === "brand" ? (
-              <li key={item.brand.id} className="menu-item">
+          {menuItems.map((item) => {
+            if (item.kind === "brand") {
+              const href = localizeHref(item.brand.href, locale);
+              return (
+                <li key={item.brand.id} className="menu-item">
+                  <Link
+                    href={href}
+                    className="menu-link menu-link-brand"
+                    aria-current={isCurrentRoute(href) ? "page" : undefined}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <BrandMark brand={item.brand} variant="branca" className="menu-brand-logo" />
+                    <span className="menu-brand-name">{item.brand.name}</span>
+                  </Link>
+                </li>
+              );
+            }
+            return (
+              <li key={item.href} className="menu-item">
                 <Link
-                  href={localizeHref(item.brand.href, locale)}
-                  className="menu-link menu-link-brand"
-                  aria-current={item.brand.id === activeBrandId ? "page" : undefined}
+                  href={item.href}
+                  className="menu-link"
+                  aria-current={isCurrentRoute(item.href) ? "page" : undefined}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <BrandMark brand={item.brand} variant="branca" className="menu-brand-logo" />
-                  <span className="menu-brand-name">{item.brand.name}</span>
-                </Link>
-              </li>
-            ) : (
-              <li key={item.href} className="menu-item">
-                <Link href={item.href} className="menu-link" onClick={() => setMenuOpen(false)}>
                   {item.label}
                 </Link>
               </li>
-            )
-          )}
+            );
+          })}
         </ul>
       </nav>
     </>

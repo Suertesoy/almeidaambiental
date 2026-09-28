@@ -171,7 +171,7 @@ export const PRODUCTS_EN: Product[] = [
     name: "APV 90 and APV 100",
     manufacturer: "Austropressen",
     headline: "Vertical compaction where every square meter counts.",
-    copy: "The APV balers serve operations that need to organize paper, cardboard, textiles or plastics without dedicating a large area to the equipment. The vertical format combines compaction and practicality in a solution suited to commercial and industrial operations.",
+    copy: "The APV balers are built for operations that need to keep paper, cardboard, textiles or plastic organized without giving up valuable floor space. Their vertical design combines compaction with practicality, well suited to commercial and industrial settings.",
     idealFor: ["Paper", "Cardboard", "Textiles", "Plastics"],
     benefits: ["Low space requirement", "Practical operation", "Compact vertical format"],
     image: img(
@@ -186,8 +186,8 @@ export const PRODUCTS_EN: Product[] = [
     name: "Hydraulic Compactor",
     manufacturer: "Pöttinger",
     headline: "Compaction for waste that requires containment and force.",
-    copy: "The hydraulic compactor combines storage and compaction in a single integrated structure. It's especially suited to operations that need to reduce volume, keep the site organized and handle waste that may require greater containment.",
-    idealFor: ["Industrial waste", "Materials with higher liquid generation"],
+    copy: "The hydraulic compactor combines storage and compaction in a single enclosed unit. It suits operations that need to cut volume, keep the site tidy and safely contain waste that calls for it.",
+    idealFor: ["Industrial waste", "Liquid-heavy materials"],
     benefits: ["Integrated storage and compaction", "Enclosed structure", "Containment suited to the material"],
     image: img(
       "almeida-equipamentos",
@@ -200,8 +200,8 @@ export const PRODUCTS_EN: Product[] = [
     id: "conteineres-almeida",
     name: "Almeida Containers",
     manufacturer: "In-house production",
-    headline: "Structure developed to work alongside the operation.",
-    copy: "The containers Almeida produces complement collection and compaction systems with a structure designed for durability, handling and material discharge.",
+    headline: "Built to work alongside the operation.",
+    copy: "Almeida's in-house containers complement collection and compaction systems, built for durability, easy handling and efficient unloading.",
     idealFor: ["Roll-on/roll-off collection", "Large-volume operations"],
     benefits: ["In-house production by Grupo Almeida", "Geometry designed for unloading", "Durable industrial finish"],
     image: img(
@@ -216,7 +216,7 @@ export const PRODUCTS_EN: Product[] = [
     name: "Horizontal Balers",
     manufacturer: "Austropressen",
     headline: "High capacity for operations already working at a different scale.",
-    copy: "When volume calls for continuous processing and high-density bales, horizontal balers expand operational capacity and reduce the need to handle material before transport.",
+    copy: "When volume calls for continuous processing and high-density bales, horizontal balers add capacity and cut down on material handling before transport.",
     idealFor: ["Large continuous volumes", "High-density bales"],
     benefits: ["Continuous processing", "High-density bales", "Less handling before transport"],
     image: img(

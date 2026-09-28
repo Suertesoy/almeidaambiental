@@ -70,7 +70,7 @@ const COPY = {
     crossEyebrow: "Technology inside the operation",
     crossHeadline: "Equipment that isn't just sold. It's part of the group's operational experience.",
     crossBody:
-      "The relationship between Almeida Ambiental and Almeida Equipamentos lets field knowledge and technology move forward together. Compaction, storage and processing are designed around problems that are part of daily operations.",
+      "The relationship between Almeida Ambiental and Almeida Equipamentos lets field knowledge and technology move forward together. Compaction, storage and processing are all designed around real day-to-day problems.",
     crossCta: "See Almeida Equipamentos",
     finalHeadline: "Your operation generates waste. The next step needs to be planned.",
     finalBody: "Talk to the team and find out which structure fits your volume, material and routine.",

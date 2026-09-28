@@ -117,8 +117,8 @@ export const PILLARS_EN: Pillar[] = [
   {
     id: "coleta",
     eyebrow: "Waste Collection",
-    headline: "Collection planned around the reality of each operation.",
-    copy: "Almeida Ambiental has the logistics structure to serve different volumes, materials and generation routines. Containers, compaction equipment and a properly sized transport operation make it possible to organize collection with more efficiency, space and predictability.",
+    headline: "Collection planned around what each operation actually needs.",
+    copy: "Almeida Ambiental has the logistics structure to serve different volumes, materials and generation routines. Containers, compaction equipment and a properly sized transport operation make it possible to run collection more efficiently, with better use of space and more predictability.",
     highlights: ["Open and closed containers", "Compaction equipment", "Operation adapted to volume and material"],
     image: img(
       "almeida-ambiental",
@@ -143,10 +143,10 @@ export const PILLARS_EN: Pillar[] = [
   {
     id: "trituracao",
     eyebrow: "Shredding and Destruction",
-    headline: "When material needs to stop being recognizable.",
+    headline: "When material needs to become unrecognizable.",
     copy: "Documents, confidential materials and other waste can require more than collection. Almeida Ambiental carries out shredding and destruction processes to reduce volume, protect information and prepare materials for the next steps in the recycling or disposal chain.",
     highlights: [],
-    subcopy: "Depending on the material, the solution is sized in advance by the technical team.",
+    subcopy: "Depending on the material, our technical team sizes the solution in advance.",
     image: img(
       "almeida-ambiental",
       "pilar-trituracao",

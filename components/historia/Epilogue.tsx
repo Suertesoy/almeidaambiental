@@ -19,7 +19,7 @@ const COPY = {
   en: {
     headlinePrefix: "What began in ",
     headlineUnit: "300 m²",
-    headlineSuffix: " today connects five units across Santa Catarina.",
+    headlineSuffix: " now connects five units across Santa Catarina.",
     closingText:
       "Four decades of investment in infrastructure, technology and people turned a small family operation into a group with regional presence, industrial capacity and integrated work in recycling, waste management, environmental logistics and equipment.",
     backToHome: "Back to Home",

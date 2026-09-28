@@ -16,7 +16,7 @@ const COPY = {
     ariaLabel: "Grupo Almeida — 1985, the beginning of a four-decade story",
     eyebrow: "Grupo Almeida · Our story",
     headline: "A family leaves Chapecó for São José.",
-    lede: "In a 300 m² warehouse, with one vertical press and one gas-powered Willys pickup truck, a story that would span four decades began.",
+    lede: "A story spanning four decades began in a 300 m² warehouse, with one vertical press and one gas-powered Willys pickup truck.",
     scrollHint: "Scroll to follow our story",
   },
 } as const;

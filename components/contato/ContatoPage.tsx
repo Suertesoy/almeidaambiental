@@ -45,7 +45,7 @@ const COPY = {
     openInWaze: "Open in Waze",
     finalHeadline: "Three fronts. One Group.",
     finalBody:
-      "Almeida Ambiental, Almeida Equipamentos and Saturno Ambiental work in a complementary way to connect waste management, technology and regional presence.",
+      "Almeida Ambiental, Almeida Equipamentos and Saturno Ambiental work together, connecting waste management, technology and regional presence.",
     backToHome: "Back to Home",
     ourStory: "See our story",
     typeLabelWhatsapp: "WhatsApp",

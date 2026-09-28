@@ -64,34 +64,34 @@ const COPY = {
   },
   en: {
     heroEyebrow: "Almeida Equipamentos",
-    heroTitle: "Technology to move less volume with more efficiency.",
+    heroTitle: "Technology that reduces volume and improves operational efficiency.",
     heroLede:
-      "Equipment for compaction, baling, dewatering and storage, developed around the real needs of waste management.",
+      "Equipment for compaction, baling, dewatering and storage, designed around the practical realities of waste management.",
     heroSubcopy: "International technology, in-house production and operational experience within Grupo Almeida.",
     heroPrimaryCta: "See the technologies",
     heroSecondaryCta: "Find the solution for your operation",
-    positioningHeadline: "Equipment chosen by people who also live the operation.",
+    positioningHeadline: "Equipment selected by people who work with these operations every day.",
     positioningBody:
-      "Almeida Equipamentos was born from the closeness between technology and waste management. The knowledge built on the environmental operation makes it possible to assess not just the machine, but what it changes in space, transport, productivity and routine.",
+      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That hands-on experience means every recommendation looks beyond the machine itself, to what it actually changes in space, transport, productivity and daily routine.",
     catalogEyebrow: "Technical catalog",
-    catalogHeadline: "Six technologies. Start with the one that looks like your operation.",
+    catalogHeadline: "Six technologies. Start with the one that best matches your operation.",
     catalogBody: "Choose a piece of equipment to see its gallery, application, benefits and manufacturer-confirmed specs.",
     matrixHeadline: "The equipment choice starts with the material, not the machine.",
     matrixBody:
-      "Volume, density, moisture, available space and collection frequency completely change the solution. That's why the choice starts by understanding the operation.",
+      "Volume, density, moisture, available space and collection frequency all shape the right solution — which is why the process starts with understanding the operation itself.",
     matrixCta: "Describe my operation",
     partnersEyebrow: "International partnerships",
-    partnersHeadline: "International technology applied to Brazilian experience.",
+    partnersHeadline: "International technology, shaped by Brazilian operational experience.",
     partnersBody:
-      "Grupo Almeida's long-standing contact with European technologies — including the IFAT trade fair in Munich, a world reference in environmental solutions — is a relevant part of Almeida Equipamentos' positioning.",
+      "Grupo Almeida has built long-standing ties with European technology providers, including through IFAT in Munich — the world's leading trade fair for environmental solutions. That relationship shapes how Almeida Equipamentos approaches its work.",
     crossEyebrow: "Technology in real operation",
-    crossHeadline: "Before reaching the catalog, every technology already operates inside the group itself.",
+    crossHeadline: "Every technology in this catalog is already at work inside the group.",
     crossBody:
-      "The same equipment shown here supports Almeida Ambiental's daily operation — collection, sorting and shredding at real scale, not in theory. It's this closeness between whoever sells the technology and whoever also lives the operation that guides every recommendation.",
+      "The same equipment featured here runs Almeida Ambiental's day-to-day operation — collection, sorting and shredding at full scale, not on paper. Every recommendation comes from people who use this technology themselves, not just sell it.",
     crossCta: "See Almeida Ambiental",
     finalHeadline: "The best machine is the one that fits your operation.",
     finalBody:
-      "Tell us what material you process, the approximate volume and the available space. The Almeida Equipamentos team can guide you to the most suitable solution.",
+      "Tell us what material you process, your approximate volume and the space available, and the Almeida Equipamentos team can help you find the right fit.",
     finalCta: "Talk to Almeida Equipamentos",
   },
 } as const;

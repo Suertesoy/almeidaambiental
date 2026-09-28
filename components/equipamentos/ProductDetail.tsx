@@ -30,18 +30,18 @@ const COPY = {
     talkAboutEquipment: "Falar sobre este equipamento",
   },
   en: {
-    detailsLabel: (name: string) => `Details for the ${name} equipment`,
+    detailsLabel: (name: string) => `${name} equipment details`,
     detailsLabelGeneric: "Equipment details",
     close: "Close details",
     whatItsFor: "What it's for",
     whereItFits: "Where it fits",
-    mainBenefits: "Main benefits",
+    mainBenefits: "Key benefits",
     technicalSpecs: "Technical specifications",
     specNote:
-      "Specifications confirmed in official manufacturer material. Final sizing and configuration depend on the material, volume and space of your operation.",
+      "Specifications confirmed by the manufacturer. Final sizing and configuration depend on your material, volume and available space.",
     acquisitionModes: "Acquisition options",
     modalities: ["Purchase", "Rental", "Consignment"],
-    talkAboutEquipment: "Talk about this equipment",
+    talkAboutEquipment: "Ask about this equipment",
   },
 } as const;
 
