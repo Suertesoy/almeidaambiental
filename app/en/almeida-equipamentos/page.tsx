@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Compactors, balers, containers and technology to make waste operations more efficient, with Pöttinger, Austropressen and Heger solutions plus in-house Almeida production.",
   alternates: {
-    languages: { "pt-BR": "/almeida-equipamentos", en: "/en/almeida-equipamentos" },
+    canonical: "/en/almeida-equipamentos",
+    languages: { "pt-BR": "/almeida-equipamentos", en: "/en/almeida-equipamentos", "x-default": "/almeida-equipamentos" },
   },
 };
 

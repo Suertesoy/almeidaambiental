@@ -18,7 +18,7 @@ const COPY = {
   },
   en: {
     eyebrow: "Logistics efficiency",
-    headline: "Efficiency that shows up in transport.",
+    headline: "Efficiency that carries through to transport.",
     body: "The higher the density, the better the use of space, storage and transport.",
     chartAriaLabel:
       "Illustrative chart comparing three stages of material density: loose (low density), baled (intermediate density) and compacted (high density), with the compacted material bar visibly larger than the others.",

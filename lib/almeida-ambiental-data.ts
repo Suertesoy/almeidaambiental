@@ -118,7 +118,7 @@ export const PILLARS_EN: Pillar[] = [
     id: "coleta",
     eyebrow: "Waste Collection",
     headline: "Collection planned around what each operation actually needs.",
-    copy: "Almeida Ambiental has the logistics structure to serve different volumes, materials and generation routines. Containers, compaction equipment and a properly sized transport operation make it possible to run collection more efficiently, with better use of space and more predictability.",
+    copy: "Almeida Ambiental has the logistics capabilities to serve different volumes, materials and waste generation patterns. Containers, compaction equipment and a properly sized transport operation make it possible to run collection more efficiently, with better use of space and more predictability.",
     highlights: ["Open and closed containers", "Compaction equipment", "Operation adapted to volume and material"],
     image: img(
       "almeida-ambiental",
@@ -131,8 +131,8 @@ export const PILLARS_EN: Pillar[] = [
     id: "triagem",
     eyebrow: "Sorting and Classification",
     headline: "The value of waste starts with correct separation.",
-    copy: "After collection, materials go through sorting and classification processes that identify their best destination and increase how much of them can be recovered. Combining operational experience with technology helps turn a step often treated as disposal into a traceable chain of material recovery.",
-    highlights: ["Classification by material type", "Proper recovery and routing", "Traceability of the operation"],
+    copy: "After collection, materials go through sorting and classification processes that identify the most appropriate route for each material and increase how much of it can be recovered. Combining operational experience with technology helps turn a step often treated as disposal into a traceable chain of material recovery.",
+    highlights: ["Classification by material type", "Proper recovery and routing", "Operational traceability"],
     image: img(
       "almeida-ambiental",
       "pilar-triagem",

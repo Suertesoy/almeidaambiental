@@ -187,7 +187,7 @@ export const PRODUCTS_EN: Product[] = [
     manufacturer: "Pöttinger",
     headline: "Compaction for waste that requires containment and force.",
     copy: "The hydraulic compactor combines storage and compaction in a single enclosed unit. It suits operations that need to cut volume, keep the site tidy and safely contain waste that calls for it.",
-    idealFor: ["Industrial waste", "Liquid-heavy materials"],
+    idealFor: ["Industrial waste", "Materials with high liquid content"],
     benefits: ["Integrated storage and compaction", "Enclosed structure", "Containment suited to the material"],
     image: img(
       "almeida-equipamentos",
@@ -200,7 +200,7 @@ export const PRODUCTS_EN: Product[] = [
     id: "conteineres-almeida",
     name: "Almeida Containers",
     manufacturer: "In-house production",
-    headline: "Built to work alongside the operation.",
+    headline: "Built for day-to-day operations.",
     copy: "Almeida's in-house containers complement collection and compaction systems, built for durability, easy handling and efficient unloading.",
     idealFor: ["Roll-on/roll-off collection", "Large-volume operations"],
     benefits: ["In-house production by Grupo Almeida", "Geometry designed for unloading", "Durable industrial finish"],

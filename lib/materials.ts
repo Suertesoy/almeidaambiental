@@ -32,7 +32,12 @@ export type CoreMaterial = (typeof CORE_MATERIALS)[number];
 export const MATERIAL_LABEL_EN: Record<CoreMaterial, string> = {
   "Papelão": "Cardboard",
   "Papel branco": "White paper",
-  "Gráfica colorida": "Color print paper",
+  /* "Gráfica colorida" sem definição adicional no repositório além de
+     estar na família "papel" (ver FAMILY_OF abaixo) — mantido descritivo e
+     literal ("papel impresso em cores") em vez de assumir um subtipo
+     específico (ex.: revista/papel couché) que a fonte não confirma. Se a
+     cliente confirmar o significado exato, ajustar aqui. */
+  "Gráfica colorida": "Color-printed paper",
   "Sacos de cimento": "Cement bags",
   "Jornal": "Newspaper",
   "Plástico": "Plastic",

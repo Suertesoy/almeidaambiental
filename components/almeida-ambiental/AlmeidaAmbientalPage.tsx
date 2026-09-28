@@ -59,21 +59,21 @@ const COPY = {
     heroSecondaryCta: "Talk to Almeida Ambiental",
     positioningHeadline: "Collecting waste is not enough — what happens to it afterward matters just as much.",
     positioningBody:
-      "Four decades of experience let Almeida Ambiental bring logistics structure, classification, technology and proper disposal together in a single operation. Every material calls for a different solution. The work starts by understanding that difference.",
+      "Four decades of experience let Almeida Ambiental bring logistics infrastructure, classification, technology and proper disposal together in a single operation. Every material calls for a different solution. The work starts by understanding that difference.",
     pillarCounter: (index: number) => `${String(index + 1).padStart(2, "0")} / 03`,
     materialsHeadline: "Different materials. Different paths.",
     materialsBody:
-      "The operation has grown well beyond the paper and cardboard that marked Almeida's beginnings. Today the structure handles different categories of waste and routes each one according to its characteristics.",
+      "The operation has grown well beyond the paper and cardboard that marked Almeida's beginnings. Today it handles different categories of waste and routes each one according to its characteristics.",
     processEyebrow: "From waste to a new cycle",
     processHeadline: "Assessment, collection, sorting, shredding and disposal in a single operation.",
     processAriaLabel: "Almeida Ambiental's operating steps",
-    crossEyebrow: "Technology inside the operation",
+    crossEyebrow: "Technology on the ground",
     crossHeadline: "Equipment that isn't just sold. It's part of the group's operational experience.",
     crossBody:
       "The relationship between Almeida Ambiental and Almeida Equipamentos lets field knowledge and technology move forward together. Compaction, storage and processing are all designed around real day-to-day problems.",
     crossCta: "See Almeida Equipamentos",
     finalHeadline: "Your operation generates waste. The next step needs to be planned.",
-    finalBody: "Talk to the team and find out which structure fits your volume, material and routine.",
+    finalBody: "Talk to the team and find out which solution fits your volume, material and routine.",
     finalCta: "Talk to Almeida Ambiental",
   },
 } as const;

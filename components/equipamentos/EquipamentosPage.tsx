@@ -72,22 +72,22 @@ const COPY = {
     heroSecondaryCta: "Find the solution for your operation",
     positioningHeadline: "Equipment selected by people who work with these operations every day.",
     positioningBody:
-      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That hands-on experience means every recommendation looks beyond the machine itself, to what it actually changes in space, transport, productivity and daily routine.",
+      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That hands-on experience means every recommendation looks beyond the machine itself, to how it affects space requirements, transport, productivity and day-to-day operations.",
     catalogEyebrow: "Technical catalog",
     catalogHeadline: "Six technologies. Start with the one that best matches your operation.",
     catalogBody: "Choose a piece of equipment to see its gallery, application, benefits and manufacturer-confirmed specs.",
     matrixHeadline: "The equipment choice starts with the material, not the machine.",
     matrixBody:
-      "Volume, density, moisture, available space and collection frequency all shape the right solution — which is why the process starts with understanding the operation itself.",
+      "Volume, density, moisture, available space and collection frequency all shape the right solution — which is why the process starts with understanding how you work.",
     matrixCta: "Describe my operation",
     partnersEyebrow: "International partnerships",
     partnersHeadline: "International technology, shaped by Brazilian operational experience.",
     partnersBody:
-      "Grupo Almeida has built long-standing ties with European technology providers, including through IFAT in Munich — the world's leading trade fair for environmental solutions. That relationship shapes how Almeida Equipamentos approaches its work.",
-    crossEyebrow: "Technology in real operation",
+      "Grupo Almeida has a long history of engagement with European technologies, including through IFAT in Munich, an internationally recognized trade fair for environmental solutions. This international exposure is an important part of Almeida Equipamentos' positioning.",
+    crossEyebrow: "Field-proven technology",
     crossHeadline: "Every technology in this catalog is already at work inside the group.",
     crossBody:
-      "The same equipment featured here runs Almeida Ambiental's day-to-day operation — collection, sorting and shredding at full scale, not on paper. Every recommendation comes from people who use this technology themselves, not just sell it.",
+      "The same equipment featured here is used in Almeida Ambiental's day-to-day operations — collection, sorting and shredding at full scale, not on paper. Every recommendation comes from people who use this technology themselves, not just sell it.",
     crossCta: "See Almeida Ambiental",
     finalHeadline: "The best machine is the one that fits your operation.",
     finalBody:

@@ -144,7 +144,7 @@ export const FRENTES_EN: Frente[] = [
   {
     id: "coleta",
     eyebrow: "Waste Collection",
-    headline: "Collection that fits the rhythm of the region.",
+    headline: "Collection designed around local operating needs.",
     copy: "Volume, frequency and material type change from one operation to another. Saturno structures collection around these differences and routes waste to the right sorting and processing steps.",
   },
   {
@@ -168,8 +168,8 @@ export const FRENTES_EN: Frente[] = [
   {
     id: "cartonagem",
     eyebrow: "Cardboard Packaging",
-    headline: "Cardboard that goes back into operation.",
-    copy: "Saturno runs a dedicated unit that makes and sells cardboard boxes, with new and used options in different sizes. It's a natural extension of an operation that knows the material from recovery through to reuse.",
+    headline: "Cardboard returned to productive use.",
+    copy: "Saturno runs a dedicated unit that makes and sells cardboard boxes, with new and used options in different sizes. It's a natural extension of work Saturno already does — handling material from recovery through to reuse.",
     tags: ["Different sizes and options, subject to availability"],
     cta: { label: "Ask about sizes and stock", href: CONTACT_ANCHORS.blumenau },
     image: CARTONAGEM_IMAGE_EN,

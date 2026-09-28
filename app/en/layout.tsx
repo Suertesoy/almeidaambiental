@@ -6,9 +6,11 @@ import { playfairDisplay, inter } from "../../lib/fonts";
 export const metadata: Metadata = {
   metadataBase: new URL("https://almeidaambiental.vercel.app"),
   title: "Grupo Almeida",
-  description: "Grupo Almeida's institutional website.",
+  description:
+    "Learn about Grupo Almeida's work in waste management, environmental services and equipment solutions across Santa Catarina, Brazil.",
   alternates: {
-    languages: { "pt-BR": "/", en: "/en" },
+    canonical: "/en",
+    languages: { "pt-BR": "/", en: "/en", "x-default": "/" },
   },
 };
 

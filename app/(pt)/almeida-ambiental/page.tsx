@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Conheça as soluções da Almeida Ambiental em coleta, triagem, classificação, trituração e gestão de diferentes materiais em Santa Catarina.",
   alternates: {
-    languages: { "pt-BR": "/almeida-ambiental", en: "/en/almeida-ambiental" },
+    canonical: "/almeida-ambiental",
+    languages: { "pt-BR": "/almeida-ambiental", en: "/en/almeida-ambiental", "x-default": "/almeida-ambiental" },
   },
 };
 

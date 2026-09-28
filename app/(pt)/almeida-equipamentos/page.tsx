@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Compactadores, prensas, contêineres e tecnologias para tornar operações de resíduos mais eficientes, com soluções Pöttinger, Austropressen, Heger e produção Almeida.",
   alternates: {
-    languages: { "pt-BR": "/almeida-equipamentos", en: "/en/almeida-equipamentos" },
+    canonical: "/almeida-equipamentos",
+    languages: { "pt-BR": "/almeida-equipamentos", en: "/en/almeida-equipamentos", "x-default": "/almeida-equipamentos" },
   },
 };
 

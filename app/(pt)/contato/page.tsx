@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Entre em contato com Almeida Ambiental, Almeida Equipamentos ou Saturno Ambiental e encontre o canal adequado para sua necessidade.",
   alternates: {
-    languages: { "pt-BR": "/contato", en: "/en/contact" },
+    canonical: "/contato",
+    languages: { "pt-BR": "/contato", en: "/en/contact", "x-default": "/contato" },
   },
 };
 

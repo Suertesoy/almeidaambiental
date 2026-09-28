@@ -39,7 +39,7 @@ export const DICTIONARY = {
       groupCompanies: "Group Companies",
       links: "Links",
       institutionalLinksLabel: "Institutional links",
-      institutional: "Institutional",
+      institutional: "About",
       contact: "Contact",
       privacyPolicy: "Privacy Policy",
       locationLine: "São José · Santa Catarina · Brazil",

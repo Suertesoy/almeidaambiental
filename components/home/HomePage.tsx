@@ -124,7 +124,7 @@ const COPY = {
     equipamentosTags: ["Compactors", "Balers", "Shredders", "Containers"],
     equipamentosCta: "See Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
-    saturnoEntryHeadline: "REGIONAL EXPERIENCE. GROUP STRENGTH.",
+    saturnoEntryHeadline: "REGIONAL EXPERTISE. BACKED BY GRUPO ALMEIDA.",
     saturnoAtuacaoAlt: "Abstract texture of layered, compressed paper and cardboard representing Saturno Ambiental",
     saturnoEyebrow: "Saturno Ambiental",
     saturnoHeadline: "ENVIRONMENTAL MANAGEMENT THAT GOES BEYOND COLLECTION",
@@ -137,7 +137,7 @@ const COPY = {
     impactReportCta: "View 2025 Sustainability Report",
     manifestoAlt: "Grupo Almeida",
     manifestoHeadline: "What began with paper and cardboard now connects operations, technology and sustainability.",
-    manifestoBody: "40 years transforming the present, with the future in mind.",
+    manifestoBody: "Four decades of transformation, with the future in mind.",
     manifestoCta: "Get in touch with Grupo Almeida",
   },
 } as const;

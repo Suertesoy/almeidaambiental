@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Discover Almeida Ambiental's solutions in collection, sorting, classification, shredding and management of different waste materials in Santa Catarina, Brazil.",
   alternates: {
-    languages: { "pt-BR": "/almeida-ambiental", en: "/en/almeida-ambiental" },
+    canonical: "/en/almeida-ambiental",
+    languages: { "pt-BR": "/almeida-ambiental", en: "/en/almeida-ambiental", "x-default": "/almeida-ambiental" },
   },
 };
 

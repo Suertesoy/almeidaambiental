@@ -368,7 +368,7 @@ export const MATERIAL_ICONS: Record<string, (props: FunctionalIconProps) => Reac
   "Cardboard": MaterialPapelaoIcon,
   "White paper": MaterialPapelBrancoIcon,
   "Paper": MaterialPapelBrancoIcon,
-  "Color print paper": MaterialGraficaColoridaIcon,
+  "Color-printed paper": MaterialGraficaColoridaIcon,
   "Cement bags": MaterialSacoCimentoIcon,
   "Newspaper": MaterialJornalIcon,
   "Plastic": MaterialPlasticoIcon,

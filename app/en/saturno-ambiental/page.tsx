@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Discover Saturno Ambiental's work in collection, sorting, shredding, cardboard packaging and environmental management services in the Vale do Itajaí region, Brazil.",
   alternates: {
-    languages: { "pt-BR": "/saturno-ambiental", en: "/en/saturno-ambiental" },
+    canonical: "/en/saturno-ambiental",
+    languages: { "pt-BR": "/saturno-ambiental", en: "/en/saturno-ambiental", "x-default": "/saturno-ambiental" },
   },
 };
 

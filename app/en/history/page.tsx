@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Discover Grupo Almeida's journey, from a family operation started in São José in 1985 to the expansion of its units and environmental solutions across Santa Catarina.",
   alternates: {
-    languages: { "pt-BR": "/historia", en: "/en/history" },
+    canonical: "/en/history",
+    languages: { "pt-BR": "/historia", en: "/en/history", "x-default": "/historia" },
   },
 };
 

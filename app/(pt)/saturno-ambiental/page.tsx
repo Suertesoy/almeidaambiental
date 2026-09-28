@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Conheça a atuação da Saturno Ambiental em coleta, triagem, trituração, cartonagem e serviços de gestão ambiental no Vale do Itajaí.",
   alternates: {
-    languages: { "pt-BR": "/saturno-ambiental", en: "/en/saturno-ambiental" },
+    canonical: "/saturno-ambiental",
+    languages: { "pt-BR": "/saturno-ambiental", en: "/en/saturno-ambiental", "x-default": "/saturno-ambiental" },
   },
 };
 

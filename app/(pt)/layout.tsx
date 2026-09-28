@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   title: "Grupo Almeida",
   description: "Site institucional do Grupo Almeida.",
   alternates: {
-    languages: { "pt-BR": "/", en: "/en" },
+    canonical: "/",
+    languages: { "pt-BR": "/", en: "/en", "x-default": "/" },
   },
 };
 

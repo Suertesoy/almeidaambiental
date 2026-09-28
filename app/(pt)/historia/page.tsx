@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   description:
     "Conheça a trajetória do Grupo Almeida, de uma operação familiar iniciada em São José em 1985 à expansão de suas unidades e soluções ambientais em Santa Catarina.",
   alternates: {
-    languages: { "pt-BR": "/historia", en: "/en/history" },
+    canonical: "/historia",
+    languages: { "pt-BR": "/historia", en: "/en/history", "x-default": "/historia" },
   },
 };
 
