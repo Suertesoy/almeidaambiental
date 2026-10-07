@@ -87,6 +87,14 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
 
 22. **Indicadores da Home passam de anuais estáticos para projeção acumulada (2026-10).** A seção Impacto Positivo deixa de exibir os números de 2025 e passa a mostrar uma **estimativa**, não telemetria (a interface não usa "tempo real"). Baseline oficial encerrado em 30/09/2026 (inclusive); a projeção começa em 2026-10-01T00:00:00Z (UTC), e a média diária usa 273 dias. Origem: planilha oficial `Calculadora_Ambiental_Acumulado_2026.xlsx` (01/01 a 30/09/2026, 273 dias) — árvores 557.603; materiais 36.217,742 t; CO₂ 61.432,27 t; água 957.765.723 L. Regra: `valor = baseline + tempo decorrido desde 01/10/2026 × (baseline ÷ 273 dias)`, sempre derivado do relógio absoluto, nunca abaixo do oficial, sem backend/banco/cron. Próximo fechamento oficial: editar só a configuração no topo (data-base = dia seguinte ao último dia incluído) de `lib/impact-projection.ts` (data-base, dias do período, valores) e o texto do período na nota em `components/home/HomePage.tsx`. O CTA do Relatório de Sustentabilidade 2025 segue desabilitado (questão separada). `/home2`, `/home3` e `/home4` são páginas experimentais e continuam com os valores de 2025.
 
+## Fundação editorial (2026-10)
+
+23. **Sistema editorial único para Home e páginas de empresa.** Primitivas (container, tipografia, CTAs, duo, tagRow, ritmo de capítulo) vivem em `components/shared/editorial.module.css`; Home e páginas de empresa as reexportam com `composes`. Não voltar a copiar primitivas entre módulos.
+    - **Casing:** sentence case em H1/H2/H3, inclusive na Home (que deixou de ser uppercase). Caixa alta só em labels curtos — eyebrow, metadata, rótulos de menu/botão — nunca em frase com verbo. Headline: até 3 linhas no desktop e 4 no mobile, largura em `ch`, `text-wrap: balance`, sem `<br>` manual.
+    - **Capítulo é a unidade perceptiva, não o `<section>`.** Dois níveis de respiro: entre capítulos (e entre empresas) o espaçamento é cheio; dentro de um capítulo é metade. Seções de um mesmo capítulo usam `chapterOpen`/`chapterMiddle`/`chapterClose`; a troca de empresa usa `companyOpen`; o fechamento de página usa `pageClose`. Não usar um único padding de seção para tudo.
+    - **Eyebrow = categoria/contexto do capítulo.** Não repete logo nem nome de empresa já visível, não compete com contador e não é decoração. Cada página revê os seus eyebrows na rodada própria.
+    - **Tablet (768–1023px) tem composição própria:** duas colunas com a mídia como coadjuvante; coluna única só abaixo de 768px.
+
 ## Decisões pendentes
 
 - Confirmar com a Almeida Equipamentos se existe e-mail institucional próprio. Não encontrado nem na home atual nem em nenhuma captura arquivada da empresa — `/contato` não exibe e-mail para ela (ver `lib/contact-data.ts`).

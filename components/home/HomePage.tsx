@@ -67,18 +67,18 @@ const ENGENHARIA = {
 
 const COPY = {
   pt: {
-    ambientalEntryHeadlinePrefix: "RESÍDUOS GANHAM UM NOVO ",
-    ambientalEntryHeadlineGold: "DESTINO",
+    ambientalEntryHeadlinePrefix: "Resíduos ganham um novo ",
+    ambientalEntryHeadlineGold: "destino",
     ambientalEntryBody:
       "Há quatro décadas, conhecimento técnico e experiência operacional se encontram na gestão responsável de resíduos.",
     ambientalProcessEyebrow: "Almeida Ambiental",
-    ambientalProcessHeadline: "EFICIÊNCIA EM CADA ETAPA DO PROCESSO",
+    ambientalProcessHeadline: "Eficiência em cada etapa do processo",
     ambientalProcessBody:
       "Da coleta à destinação, a Almeida Ambiental reúne estrutura, tecnologia e experiência para transformar resíduos em valor, com mais eficiência logística, segurança e responsabilidade ambiental.",
     ambientalProcessCta: "Conheça Almeida Ambiental",
     ambientalFrotaAlt: "Operação logística da Almeida Ambiental",
     ambientalProcessAriaLabel: "Etapas da operação da Almeida Ambiental",
-    equipamentosEntryHeadline: "TECNOLOGIA QUE NASCEU DA PRÓPRIA OPERAÇÃO",
+    equipamentosEntryHeadline: "Tecnologia que nasceu da própria operação",
     equipamentosEntryBody:
       "Criada para aperfeiçoar os processos do Grupo Almeida, a Almeida Equipamentos transforma décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.",
     equipamentosEyebrow: "Almeida Equipamentos",
@@ -87,10 +87,10 @@ const COPY = {
     equipamentosTags: ["Compactadores", "Prensas", "Trituradores", "Containers"],
     equipamentosCta: "Conheça Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
-    saturnoEntryHeadline: "EXPERIÊNCIA REGIONAL. FORÇA DE GRUPO.",
+    saturnoEntryHeadline: "Experiência regional. Força de grupo.",
     saturnoAtuacaoAlt: "Materialidade da Saturno Ambiental: camadas de papel e papelão comprimidos",
     saturnoEyebrow: "Saturno Ambiental",
-    saturnoHeadline: "GESTÃO AMBIENTAL QUE VAI ALÉM DA COLETA",
+    saturnoHeadline: "Gestão ambiental que vai além da coleta",
     saturnoBody:
       "Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação construída para unir eficiência operacional e responsabilidade ambiental.",
     saturnoTags: ["Gestão de Resíduos", "Cartonagem", "Consultoria"],
@@ -98,7 +98,7 @@ const COPY = {
     impactEyebrow: "Impacto Positivo · estimativa atualizada",
     impactNote:
       "Estimativa acumulada com base nos dados operacionais de janeiro a setembro de 2026, projetada pela média diária até a próxima atualização oficial.",
-    impactHeadline: "CADA RESÍDUO PROCESSADO VIRA UM NÚMERO QUE A NATUREZA RECONHECE.",
+    impactHeadline: "Cada resíduo processado vira um número que a natureza reconhece.",
     impactReportCta: "Ver Relatório de Sustentabilidade 2025",
     manifestoAlt: "Grupo Almeida",
     manifestoHeadline: "O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.",
@@ -106,18 +106,18 @@ const COPY = {
     manifestoCta: "Entre em contato com o Grupo Almeida",
   },
   en: {
-    ambientalEntryHeadlinePrefix: "WASTE GETS A NEW ",
-    ambientalEntryHeadlineGold: "DESTINATION",
+    ambientalEntryHeadlinePrefix: "Waste gets a new ",
+    ambientalEntryHeadlineGold: "destination",
     ambientalEntryBody:
       "For four decades, technical knowledge and operational experience have come together in responsible waste management.",
     ambientalProcessEyebrow: "Almeida Ambiental",
-    ambientalProcessHeadline: "EFFICIENCY IN EVERY STEP OF THE PROCESS",
+    ambientalProcessHeadline: "Efficiency in every step of the process",
     ambientalProcessBody:
       "From collection to disposal, Almeida Ambiental combines structure, technology and experience to turn waste into value — with greater logistics efficiency, safety and environmental responsibility.",
     ambientalProcessCta: "See Almeida Ambiental",
     ambientalFrotaAlt: "Almeida Ambiental's logistics operation",
     ambientalProcessAriaLabel: "Almeida Ambiental's operating steps",
-    equipamentosEntryHeadline: "TECHNOLOGY BORN FROM THE OPERATION",
+    equipamentosEntryHeadline: "Technology born from the operation",
     equipamentosEntryBody:
       "Created to improve Grupo Almeida's processes, Almeida Equipamentos turns decades of industry experience into technology applied to waste management.",
     equipamentosEyebrow: "Almeida Equipamentos",
@@ -126,10 +126,10 @@ const COPY = {
     equipamentosTags: ["Compactors", "Balers", "Shredders", "Containers"],
     equipamentosCta: "See Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
-    saturnoEntryHeadline: "REGIONAL EXPERTISE. BACKED BY GRUPO ALMEIDA.",
+    saturnoEntryHeadline: "Regional expertise. Backed by Grupo Almeida.",
     saturnoAtuacaoAlt: "Abstract texture of layered, compressed paper and cardboard representing Saturno Ambiental",
     saturnoEyebrow: "Saturno Ambiental",
-    saturnoHeadline: "ENVIRONMENTAL MANAGEMENT THAT GOES BEYOND COLLECTION",
+    saturnoHeadline: "Environmental management that goes beyond collection",
     saturnoBody:
       "Collection, sorting, shredding, cardboard packaging and environmental consulting come together in an operation built around efficiency and environmental responsibility.",
     saturnoTags: ["Waste Management", "Cardboard Packaging", "Consulting"],
@@ -137,7 +137,7 @@ const COPY = {
     impactEyebrow: "Positive Impact · updated estimate",
     impactNote:
       "Accumulated estimate based on operating data from January to September 2026, projected using the daily average until the next official update.",
-    impactHeadline: "WASTE PROCESSED. IMPACT MEASURED.",
+    impactHeadline: "Waste processed. Impact measured.",
     impactReportCta: "View 2025 Sustainability Report",
     manifestoAlt: "Grupo Almeida",
     manifestoHeadline: "What began with paper and cardboard now connects operations, technology and sustainability.",
@@ -201,7 +201,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
             variar por section. */}
         <section
           id="almeida-ambiental"
-          className={`${styles.section} ${styles.ambientalEntrySection} ${boundarySurface}`}
+          className={`${styles.companyOpen} ${styles.ambientalEntrySection} ${boundarySurface}`}
         >
           <BrandBoundaryMark boundary="grupo-ambiental" half="entering" surface="onDark" />
           <div className={styles.container}>
@@ -232,7 +232,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
             inverte a ordem padrão de .duo só abaixo de 1024px), então a
             foto funciona como pausa visual entre o texto e o Process Flow,
             nunca como abertura da dobra. */}
-        <section className={`${styles.section} ${styles.ambientalProcessSection} ${boundarySurface}`}>
+        <section className={`${styles.chapterClose} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
           <div className={styles.container}>
             <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoContentFirst}`}>
@@ -257,7 +257,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
       </div>
 
       {/* ---------------- Almeida Equipamentos / tecnologia ---------------- */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+      <section className={`${styles.companyOpen} ${styles.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
@@ -286,17 +286,16 @@ export default function HomePage({ locale }: { locale: Locale }) {
           repetir, em prosa, exatamente as quatro famílias já listadas
           logo abaixo (.tagRow) — não é perda de informação, é remover
           redundância. O headline vira sentence case só nesta dobra
-          (.headlineSentence sobrescreve o text-transform:uppercase padrão
-          de .headline, mesmo mecanismo já usado por .manifestoHeadline).
+          (sentence case é o padrão de .headline em todo o site).
           `.duoEven` troca a proporção de 8fr/4fr (duoMediaNarrow) para
           6fr/6fr — texto e imagem com peso equilibrado no desktop. */}
-      <section className={`${styles.section} ${styles.toneStoneAlt} ${boundarySurface}`}>
+      <section className={`${styles.chapterClose} ${styles.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="equipamentos-saturno" half="leaving" surface="onLight" />
         <div className={styles.container}>
           <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoEven}`}>
             <div className={styles.duoContent}>
               <p className={styles.eyebrow}>{t.equipamentosEyebrow}</p>
-              <h2 className={`${styles.headline} ${styles.headlineSentence}`}>{t.equipamentosHeadline}</h2>
+              <h2 className={styles.headline}>{t.equipamentosHeadline}</h2>
               <p className={styles.body}>{t.equipamentosBody}</p>
               <ul className={styles.tagRow}>
                 {t.equipamentosTags.map((tag) => (
@@ -341,7 +340,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
       <div className={`${styles.toneStone} ${styles.saturnoTerritory}`}>
         <MaterialSurface surface="saturno-hero" />
 
-        <section className={`${styles.section} ${boundarySurface}`}>
+        <section className={`${styles.companyOpen} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="equipamentos-saturno" half="entering" surface="onDark" />
           <div className={styles.container}>
             {/* Rodada de refino de brand stage (Seção 15): logo à esquerda,
@@ -363,7 +362,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section className={`${styles.section} ${boundarySurface}`}>
+        <section className={`${styles.chapterClose} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
           <div className={styles.container}>
             <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
@@ -421,7 +420,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           Fecha em carvão contra o verde floresta do Footer, em corte reto
           (o antigo .fadeToForest foi removido). Sem fronteira aqui: é o
           mesmo território do bloco de Impacto, não uma troca de empresa. */}
-      <section className={`${styles.section} ${styles.toneCarvao} ${styles.manifesto}`}>
+      <section className={`${styles.pageClose} ${styles.toneCarvao} ${styles.manifesto}`}>
         <div className={styles.container}>
           <Reveal className={styles.manifestoInner}>
             <div className={styles.manifestoMedia}>

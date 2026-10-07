@@ -13,32 +13,20 @@ html:has([data-page="home"]) {
 .page {
   background: var(--color-background);
   overflow-x: clip;
-  /* Ritmo vertical das seções da Home. Era também a altura das faixas de
-     transição cromática entre empresas; essas faixas não existem mais (ver
-     "Fronteira entre territórios" abaixo), então hoje isto é só o
-     padding-block real de .section. */
-  --section-pad-block: clamp(64px, 11vw, 112px);
 }
 
-@media (min-width: 1024px) {
-  .page {
-    --section-pad-block: clamp(96px, 8vw, 140px);
-  }
-}
-
-.container {
-  width: 100%;
-  max-width: 1320px;
-  margin-inline: auto;
-  padding-inline: clamp(20px, 6vw, 64px);
-}
-
-.section {
-  padding-block: var(--section-pad-block);
-  /* Âncora do chevron do Hero (#almeida-ambiental) nunca deve ficar
-     escondida atrás do Header fixo. */
-  scroll-margin-top: var(--anchor-offset);
-}
+/* Primitivas compartilhadas com as páginas de empresa — fonte única em
+   components/shared/editorial.module.css (container, ritmo de capítulo,
+   tipografia, CTAs, duo, tagRow). Reexportadas aqui para manter os nomes de
+   classe dos TSX. */
+.container { composes: container from "../shared/editorial.module.css"; }
+.chapter { composes: chapter from "../shared/editorial.module.css"; }
+.chapterOpen { composes: chapterOpen from "../shared/editorial.module.css"; }
+.chapterMiddle { composes: chapterMiddle from "../shared/editorial.module.css"; }
+.chapterClose { composes: chapterClose from "../shared/editorial.module.css"; }
+.companyOpen { composes: companyOpen from "../shared/editorial.module.css"; }
+.pageClose { composes: pageClose from "../shared/editorial.module.css"; }
+.section { composes: chapter from "../shared/editorial.module.css"; }
 
 /* ---------------- Território contínuo ----------------
    Um wrapper de território agrupa as dobras de uma mesma empresa que devem
@@ -57,23 +45,10 @@ html:has([data-page="home"]) {
   position: relative;
 }
 
-/* Rodada de refino de brand stage (Seção 6): no mobile, a distância entre
-   o fim da entrada (marca + posicionamento) e o começo da segunda dobra
-   (Process Flow + foto de frota) lia como um buraco — as duas dobras têm
-   o `padding-block` cheio de `.section` nas duas pontas que se encontram,
-   dobrando o respiro exatamente onde as duas deveriam ler como capítulos
-   consecutivos do MESMO território. Reduz só o lado que se toca (o
-   padding-bottom de quem sai, o padding-top de quem entra), preservando o
-   padding-block padrão em todo o resto — topo da entrada, base da dobra
-   de processo — e sem tocar em nenhuma outra `section` do site. */
-@media (max-width: 1023px) {
-  .ambientalEntrySection {
-    padding-bottom: clamp(32px, 7vw, 56px);
-  }
-
-  .ambientalProcessSection {
-    padding-top: clamp(32px, 7vw, 56px);
-  }
+/* A âncora do chevron do Hero (#almeida-ambiental) nunca deve ficar escondida
+   atrás do Header fixo. */
+.ambientalEntrySection {
+  scroll-margin-top: var(--anchor-offset);
 }
 
 /* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
@@ -147,60 +122,32 @@ html:has([data-page="home"]) {
    linha de corte (components/shared/BrandBoundaryMark.tsx), aplicado só nas
    quatro fronteiras narrativas desta página — não em toda dobra.
 
-   Por isso .page/--section-pad-block deixou de ter função cromática: ele
-   segue existindo apenas como o padding-block real de .section. */
+   O ritmo vertical entre seções vem dos tokens --space-chapter-* (ver
+   editorial.module.css): cheio entre capítulos, metade dentro do capítulo. */
 
 /* ---------------- Tipografia editorial ----------------
-   Playfair (display) só em headlines/números/manifesto; Inter (corpo) em
-   texto corrido, eyebrows, labels, botões e navegação — corpo em peso
-   regular (400), nunca 600 só para "sobreviver" sobre imagem, porque depois
-   do Hero o texto nunca fica em cima de fotografia. */
+   Escala única, definida em editorial.module.css + tokens em globals.css.
+   Sentence case em H1/H2; uppercase só em eyebrow/labels. Playfair (display)
+   só em headlines/números/manifesto; Inter em corpo, eyebrows, botões. */
 
-.eyebrow {
-  margin: 0 0 var(--gap-eyebrow-title);
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
+.eyebrow { composes: eyebrow from "../shared/editorial.module.css"; }
+.eyebrowAccent { composes: eyebrowAccent from "../shared/editorial.module.css"; }
+.locationLine { composes: locationLine from "../shared/editorial.module.css"; }
+.headline { composes: headline from "../shared/editorial.module.css"; }
+.gold { composes: gold from "../shared/editorial.module.css"; }
+.body { composes: body from "../shared/editorial.module.css"; }
 
-/* Seletivo (Seção 9): só o eyebrow de "Impacto Positivo · 2025" usa o
-   accent — as seis seções de empresa já carregam destaque dourado na
-   própria headline (.gold em palavras como DESTINO/EFICIÊNCIA/TECNOLOGIA),
-   então manter o eyebrow delas em muted evita dourado em toda a página. */
-.eyebrowAccent {
-  color: var(--role-accent, var(--text-accent));
-}
-
-/* Rodada "presença de marca" (feedback direto da cliente): a assinatura de
-   entrada da primeira dobra de cada empresa (Ambiental/Equipamentos/
-   Saturno) deixou de ser um eyebrowMark pequeno dentro da coluna de texto
-   e passou a ser a logo grande no BrandStage ao lado — ver .duoStage/
-   .brandStageLogo abaixo. */
-
-/* Compartilha o grid-area "media" do .duo (mesmo posicionamento de
-   .duoMediaLeft/Right), mas não herda `.duoMedia img` — aquele bloco é
-   tratamento de FOTOGRAFIA (object-fit: cover, 100%/100%), que esticaria e
-   cortaria a logo. BrandStage cuida do resto (centralização, respiro). */
+/* Compartilha o grid-area "media" do .duo, mas não herda `.duoMedia img`
+   — aquele bloco é tratamento de FOTOGRAFIA (object-fit: cover), que
+   esticaria e cortaria a logo. BrandStage cuida do resto. */
 .duoStage {
   grid-area: media;
 }
 
-/* Rodada de refino de brand stage (Seção 5): a largura igual em px das
-   três marcas (clamp(190px,16vw,260px) fixo) ficou conservadora — em
-   telas grandes as três liam pequenas dentro do respiro do BrandStage.
-   A régua agora é PESO ÓPTICO, não largura em pixels: no mobile (largura
-   cheia, uma coluna só) continua em vw fluido; no desktop (coluna própria
-   dentro do .duo) a largura passa a ser um PERCENTUAL da área interna do
-   próprio BrandStage (.stage, ver BrandStage.module.css — a % de um item
-   flex resolve contra o content-box do pai, ou seja, contra a coluna já
-   descontado o padding/respiro do stage). Cada marca recebe seu próprio
-   percentual/teto (modificadores abaixo) porque a mesma largura de coluna
-   não produz o mesmo peso: a Equipamentos é colorida sobre pedra clara
-   (menos contraste que branco sobre verde/oliva) e precisa de mais área
-   para ler com a mesma força. Nunca esticada: height sempre auto. */
+/* A régua da logo no BrandStage é PESO ÓPTICO, não largura em pixels:
+   mobile em vw fluido; desktop como percentual da área interna do stage,
+   com teto por marca (a Equipamentos é colorida sobre pedra clara e precisa
+   de mais área para o mesmo peso). Nunca esticada: height sempre auto. */
 .brandStageLogo {
   display: block;
   width: clamp(200px, 58vw, 340px);
@@ -215,42 +162,9 @@ html:has([data-page="home"]) {
   }
 
   .brandStageLogoEquipamentos {
-    /* Colorida sobre pedra clara: precisa de mais área que branco sobre
-       fundo escuro para o mesmo peso óptico (Seção 12/13 do pedido). */
     width: 94%;
     max-width: 460px;
   }
-}
-
-.locationLine {
-  margin: 0 0 14px;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.headline {
-  margin: 0 0 var(--gap-title-body);
-  max-width: 640px;
-  color: inherit;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(30px, 2.6vw + 16px, 48px);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-
-/* Modificador seletivo (rodada de refino de fluxo/materiais, Seção 29): só
-   o headline da dobra "Almeida Equipamentos / engenharia" muda para
-   sentence case — mesmo mecanismo já usado por .manifestoHeadline, mas
-   como sobrescrita combinável com .headline (que continua uppercase em
-   todas as outras seis dobras de empresa) em vez de uma classe autônoma. */
-.headlineSentence {
-  text-transform: none;
 }
 
 /* ---------------- Declaração de marca sobre superfície material ----------
@@ -270,7 +184,7 @@ html:has([data-page="home"]) {
   max-width: none;
 }
 
-.headlineMonumental {
+.headline.headlineMonumental {
   max-width: 16ch;
   font-size: clamp(38px, 5vw + 12px, 84px);
   line-height: 1.02;
@@ -282,108 +196,22 @@ html:has([data-page="home"]) {
 }
 
 @media (min-width: 1024px) {
-  .headlineMonumental {
+  .headline.headlineMonumental {
     max-width: 14ch;
   }
 }
 
-.gold {
-  color: var(--color-gold-aged);
-}
-
-.body {
-  margin: 0 0 20px;
-  max-width: 56ch;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 400;
-  font-size: clamp(15px, 0.3vw + 14px, 18px);
-  line-height: 1.62;
-}
-
-.body:last-of-type {
-  margin-bottom: var(--gap-body-support);
-}
-
 /* ---------------- CTAs ---------------- */
 
-.ctaRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  /* Fecha o raciocínio (Seção 17) — era 4px, quase colado no tagRow/body
-     anterior. Colapsa com o margin-bottom do irmão anterior. */
-  margin-top: var(--gap-support-cta);
-}
+.ctaRow { composes: ctaRow from "../shared/editorial.module.css"; }
+.btn { composes: btn from "../shared/editorial.module.css"; }
+.btnOutlineOnDark { composes: btnOutlineOnDark from "../shared/editorial.module.css"; }
+.btnOutlineOnLight { composes: btnOutlineOnLight from "../shared/editorial.module.css"; }
+.btnSolidGold { composes: btnSolidGold from "../shared/editorial.module.css"; }
+.editorialLink { composes: btnEditorial from "../shared/editorial.module.css"; }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 52px;
-  padding-inline: 24px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-  background: transparent;
-}
-
-.btnOutlineOnDark {
-  border-color: rgba(247, 246, 241, 0.4);
-  color: var(--color-background);
-}
-
-.btnOutlineOnDark:hover {
-  background: rgba(247, 246, 241, 0.1);
-}
-
-.btnOutlineOnLight {
-  border-color: rgba(21, 21, 15, 0.32);
-  color: var(--color-foreground);
-}
-
-.btnOutlineOnLight:hover {
-  background: rgba(21, 21, 15, 0.06);
-}
-
-.btn:disabled {
-  opacity: 0.48;
-  cursor: not-allowed;
-}
-
-.btn:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* Botões como ação (Checkpoint B, Seção 12/47): no mobile, CTAs que se
-   apresentam como botão ocupam 100% do .container que já envolve o texto
-   acima deles. .editorialLink fica de fora (Seção 13). */
+/* No manifesto (centralizado) os CTAs acompanham o mesmo eixo. */
 @media (max-width: 639px) {
-  .ctaRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn {
-    width: 100%;
-    height: auto;
-    min-height: 52px;
-    padding-block: 14px;
-    white-space: normal;
-    text-align: center;
-  }
-
-  .editorialLink {
-    align-self: flex-start;
-  }
-
   .manifesto .ctaRow {
     align-items: center;
   }
@@ -392,41 +220,6 @@ html:has([data-page="home"]) {
   .manifesto .btn {
     align-self: center;
   }
-}
-
-/* Link editorial (texto + seta): para os cross-links "Conheça Almeida
-   Ambiental/Equipamentos/Saturno Ambiental" — não são a conversão
-   principal da Home, então não competem em peso com um .btn. */
-.editorialLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: inherit;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.editorialLink::after {
-  content: "→";
-  transition: transform 0.15s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .editorialLink::after {
-    transition: none;
-  }
-}
-
-.editorialLink:hover::after {
-  transform: translateX(3px);
-}
-
-.editorialLink:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 4px;
 }
 
 /* ---------------- Hero cinematográfico ---------------- */
@@ -535,7 +328,6 @@ html:has([data-page="home"]) {
   font-size: clamp(40px, 4.2vw + 20px, 84px);
   line-height: 0.98;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.42);
   text-wrap: balance;
 }
@@ -616,100 +408,30 @@ html:has([data-page="home"]) {
 }
 
 /* ---------------- Duo (texto + fotografia) ----------------
-   Uma única primitiva de grid com modificadores de lado e proporção — a
-   variedade de composição por seção (regra 12 da tarefa) vem de combinar
-   esses modificadores, não de um grid genérico repetido oito vezes. No
-   mobile a fotografia sempre entra primeiro (fluxo natural, sem
-   position:absolute), o texto em seguida. */
-.duo {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: "media" "content";
-  gap: clamp(28px, 6vw, 48px);
-  align-items: center;
-}
+   Primitiva única em editorial.module.css (coluna única < 768px, duas
+   colunas de tablet 768–1023px, composição desktop >= 1024px). */
 
-/* Rodada de refino de brand stage (Seção 10): exceção pontual à regra
-   "foto sempre primeiro no mobile" — só para a segunda dobra Ambiental
-   (texto + foto de frota + Process Flow). Ali a foto tem função
-   operacional, não de abertura de capítulo: o texto (headline "Eficiência
-   em cada etapa do processo" + corpo + CTA) precisa vir antes dela. O
-   desktop não muda — .duoMediaRight já resolve "content media" a partir
-   de 1024px, então esta regra só existe abaixo disso. */
-@media (max-width: 1023px) {
+.duo { composes: duo from "../shared/editorial.module.css"; }
+.duoMediaRight { composes: duoMediaRight from "../shared/editorial.module.css"; }
+.duoMediaLeft { composes: duoMediaLeft from "../shared/editorial.module.css"; }
+.duoMediaNarrow { composes: duoMediaNarrow from "../shared/editorial.module.css"; }
+.duoMediaWide { composes: duoMediaWide from "../shared/editorial.module.css"; }
+.duoEven { composes: duoEven from "../shared/editorial.module.css"; }
+.duoContent { composes: duoContent from "../shared/editorial.module.css"; }
+.duoMedia { composes: duoMedia from "../shared/editorial.module.css"; }
+.duoMediaLandscape { composes: duoMediaLandscape from "../shared/editorial.module.css"; }
+.duoMedia4x3 { composes: duoMedia4x3 from "../shared/editorial.module.css"; }
+.duoMediaTall { composes: duoMediaTall from "../shared/editorial.module.css"; }
+.duoMediaSquare { composes: duoMediaSquare from "../shared/editorial.module.css"; }
+
+/* Exceção pontual à regra "mídia primeiro no mobile": na segunda dobra
+   Ambiental (texto + foto de frota + Process Flow) a foto tem função
+   operacional, então o texto vem antes dela. Só abaixo de 768px — de
+   tablet para cima o .duo já resolve "content media". */
+@media (max-width: 767px) {
   .duoContentFirst {
     grid-template-areas: "content" "media";
   }
-}
-
-@media (min-width: 1024px) {
-  .duo {
-    gap: clamp(48px, 5vw, 88px);
-  }
-
-  .duoMediaRight {
-    grid-template-columns: 7fr 5fr;
-    grid-template-areas: "content media";
-  }
-
-  .duoMediaLeft {
-    grid-template-columns: 5fr 7fr;
-    grid-template-areas: "media content";
-  }
-
-  .duoMediaRight.duoMediaNarrow {
-    grid-template-columns: 8fr 4fr;
-  }
-
-  .duoMediaLeft.duoMediaWide {
-    grid-template-columns: 7fr 5fr;
-  }
-
-  .duoMediaLeft.duoMediaNarrow {
-    grid-template-columns: 4fr 8fr;
-  }
-
-  .duoEven {
-    grid-template-columns: 6fr 6fr;
-  }
-}
-
-.duoContent {
-  grid-area: content;
-}
-
-.duoMedia {
-  grid-area: media;
-  position: relative;
-  overflow: hidden;
-}
-
-.duoMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.duoMediaLandscape {
-  aspect-ratio: 16 / 10;
-}
-
-/* Checkpoint B: a terceira dobra usava .duoMediaTall (3/4, retrato) dentro
-   de uma coluna .duoMediaWide (7fr) — width alto x aspect-ratio retrato
-   produzia uma imagem ~930px de altura em 1440px, muito acima da segunda
-   dobra (paisagem, coluna estreita). Paisagem 4:3 na coluna padrão de
-   .duoMediaLeft (5fr) resolve a causa real, não só o sintoma. */
-.duoMedia4x3 {
-  aspect-ratio: 4 / 3;
-}
-
-.duoMediaTall {
-  aspect-ratio: 3 / 4;
-}
-
-.duoMediaSquare {
-  aspect-ratio: 1 / 1;
 }
 
 /* As marcas d'água posicionais desta página (.apresentacaoWatermark,
@@ -732,24 +454,7 @@ html:has([data-page="home"]) {
 
 /* ---------------- Apoio (tags separadas por ponto) ---------------- */
 
-.tagRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 0;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.tagRow li:not(:last-child)::after {
-  content: "·";
-  margin-left: 14px;
-  opacity: 0.6;
-}
+.tagRow { composes: tagRow from "../shared/editorial.module.css"; }
 
 /* ---------------- Impacto positivo (estimativa acumulada) ---------------- */
 

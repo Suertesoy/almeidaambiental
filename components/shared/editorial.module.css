@@ -1,0 +1,410 @@
+/* ==========================================================
+   Fundação editorial — fonte ÚNICA das primitivas que Home e páginas de
+   empresa compartilhavam por cópia (container, tipografia, CTAs, duo,
+   tagRow, ritmo vertical de capítulo).
+
+   Como é consumido: home.module.css e company-page.module.css reexportam
+   cada primitiva com `composes: x from "…/editorial.module.css"`. Os nomes
+   de classe usados nos TSX não mudaram; o CSS é que deixou de existir em
+   duas cópias que divergiam em silêncio (ex.: .headline uppercase na Home,
+   sentence case nas empresas). Diferenças intencionais ficam no módulo da
+   página, como regra composta (.a.b ou .pai .filho) — nunca como
+   redeclaração de uma primitiva no mesmo nível de especificidade, porque a
+   ordem de injeção entre módulos CSS não é estável entre dev e build.
+
+   REGRAS EDITORIAIS (ver DECISOES.md)
+   - Casing: sentence case em H1/H2/H3. Caixa alta só em labels curtos
+     (eyebrow, metadata, rótulos de botão/menu) — nunca em frase com verbo.
+   - Headline: alvo de até 3 linhas no desktop e 4 no mobile. Largura em
+     `ch` (--measure-headline) + text-wrap: balance; sem <br> manual.
+   - Eyebrow: categoria/contexto do capítulo ("Catálogo técnico", "Do
+     resíduo ao novo ciclo"). Não repete logo nem nome da empresa já
+     visível, não compete com contador e não é decoração.
+   - Capítulo é a unidade perceptiva, não o <section> do DOM. Entre
+     capítulos (e entre empresas) o respiro é cheio; dentro de um capítulo
+     ele é metade — ver .chapter* abaixo e os tokens em globals.css.
+   ========================================================== */
+
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 64px);
+}
+
+/* ---------------- Ritmo vertical: dois níveis ----------------
+   boundary = respiro entre capítulos; internal = metade, DENTRO de um
+   capítulo. Um capítulo de duas seções usa open + close: a junção interna
+   soma 2 × internal (≈ um padding de seção), enquanto a troca de capítulo
+   soma 2 × boundary. Tokens: --space-chapter-* em app/globals.css. */
+
+/* Capítulo de uma seção só (era .section). */
+.chapter {
+  padding-block: var(--space-chapter-boundary);
+}
+
+/* Primeira seção de um capítulo que continua na seguinte. */
+.chapterOpen {
+  padding-top: var(--space-chapter-boundary);
+  padding-bottom: var(--space-chapter-internal);
+}
+
+/* Seção intermediária de um capítulo com três ou mais. */
+.chapterMiddle {
+  padding-block: var(--space-chapter-internal);
+}
+
+/* Última seção de um capítulo que começou antes. */
+.chapterClose {
+  padding-top: var(--space-chapter-internal);
+  padding-bottom: var(--space-chapter-boundary);
+}
+
+/* Troca de empresa: primeira seção de um território novo (que continua na
+   seguinte). Respiro de entrada maior que o de troca de capítulo comum. */
+.companyOpen {
+  padding-top: var(--space-company-boundary);
+  padding-bottom: var(--space-chapter-internal);
+}
+
+/* Fechamento de página: CTA/manifesto final antes do rodapé. */
+.pageClose {
+  padding-block: var(--space-page-close);
+}
+
+/* Aliases das três camadas anteriores (ainda consumidas pelas páginas de
+   empresa e por /contato). Mesmos valores de antes. */
+.section {
+  padding-block: var(--space-section-default);
+}
+
+.sectionCompact {
+  padding-block: var(--space-section-compact);
+}
+
+.sectionEditorial {
+  padding-block: var(--space-section-editorial);
+}
+
+/* ---------------- Tipografia editorial ---------------- */
+
+.eyebrow {
+  margin: 0 0 var(--gap-eyebrow-title);
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Modificador seletivo: eyebrow que funciona como marcador categórico
+   forte usa o accent. Aplicado caso a caso pela página, não por padrão. */
+.eyebrowAccent {
+  color: var(--role-accent, var(--text-accent));
+}
+
+.locationLine {
+  margin: 0 0 14px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.headline {
+  margin: 0 0 var(--gap-title-body);
+  max-width: var(--measure-headline);
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: var(--type-headline);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.gold {
+  color: var(--color-gold-aged);
+}
+
+/* Título interno (nome de pilar, de produto, de frente de serviço): um
+   degrau abaixo de .headline, serifada como protagonista. */
+.subheading {
+  margin: 0 0 12px;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: var(--type-subheading);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+/* Números técnicos (telefone, CNPJ): sempre sans serif. */
+.dataNumber {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: clamp(18px, 1.2vw + 14px, 22px);
+  letter-spacing: 0.01em;
+  color: inherit;
+}
+
+.body {
+  margin: 0 0 20px;
+  max-width: var(--measure-body);
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 400;
+  font-size: var(--type-body);
+  line-height: 1.62;
+  text-wrap: pretty;
+}
+
+.body:last-of-type {
+  margin-bottom: var(--gap-body-support);
+}
+
+/* ---------------- CTAs ---------------- */
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  /* Colapsa com o margin-bottom do irmão anterior: o resultado prático é
+     sempre >= --gap-support-cta, nunca a soma dos dois. */
+  margin-top: var(--gap-support-cta);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding-inline: 24px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  background: transparent;
+}
+
+.btnOutlineOnDark {
+  border-color: rgba(247, 246, 241, 0.4);
+  color: var(--color-background);
+}
+
+.btnOutlineOnDark:hover {
+  background: rgba(247, 246, 241, 0.1);
+}
+
+.btnOutlineOnLight {
+  border-color: rgba(21, 21, 15, 0.32);
+  color: var(--color-foreground);
+}
+
+.btnOutlineOnLight:hover {
+  background: rgba(21, 21, 15, 0.06);
+}
+
+.btnSolidGold {
+  background: var(--color-gold-aged);
+  border-color: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+}
+
+.btnSolidGold:hover {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Link editorial (texto + seta): terceiro nível de CTA, para cross-links
+   que não são a conversão principal da tela. Sem caixa, sem altura fixa. */
+.btnEditorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btnEditorial::after {
+  content: "→";
+  transition: transform 0.15s ease;
+}
+
+.btnEditorial:hover::after {
+  transform: translateX(3px);
+}
+
+.btnEditorial:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnEditorial::after {
+    transition: none;
+  }
+}
+
+/* No mobile, CTAs apresentados como botão ocupam 100% do container que já
+   envolve o texto acima deles. O link editorial fica de fora: é link, não
+   botão, e mantém largura de conteúdo. */
+@media (max-width: 639px) {
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+    height: auto;
+    min-height: 52px;
+    padding-block: 14px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .btnEditorial {
+    align-self: flex-start;
+  }
+}
+
+/* ---------------- Duo (texto + fotografia) ----------------
+   Três comportamentos reais, não "mobile alargado":
+   - < 768px: coluna única, mídia primeiro.
+   - 768–1023px (tablet): duas colunas com a mídia como coadjuvante
+     (proporção 7:5), gap menor — o texto ganha largura sem a foto virar um
+     bloco de 700px de altura.
+   - >= 1024px: composição desktop, com os modificadores de proporção. */
+.duo {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas: "media" "content";
+  gap: clamp(28px, 6vw, 48px);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .duo {
+    gap: clamp(32px, 4.5vw, 48px);
+  }
+
+  .duoMediaRight {
+    grid-template-columns: 7fr 5fr;
+    grid-template-areas: "content media";
+  }
+
+  .duoMediaLeft {
+    grid-template-columns: 5fr 7fr;
+    grid-template-areas: "media content";
+  }
+
+  .duoMediaRight.duoMediaNarrow {
+    grid-template-columns: 8fr 4fr;
+  }
+
+  .duoMediaLeft.duoMediaNarrow {
+    grid-template-columns: 4fr 8fr;
+  }
+
+  .duoEven {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .duo {
+    gap: clamp(48px, 5vw, 88px);
+  }
+
+  .duoMediaLeft.duoMediaWide {
+    grid-template-columns: 7fr 5fr;
+  }
+
+  .duoEven {
+    grid-template-columns: 6fr 6fr;
+  }
+}
+
+.duoContent {
+  grid-area: content;
+}
+
+.duoMedia {
+  grid-area: media;
+  position: relative;
+  overflow: hidden;
+}
+
+.duoMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.duoMediaLandscape {
+  aspect-ratio: 16 / 10;
+}
+
+.duoMedia4x3 {
+  aspect-ratio: 4 / 3;
+}
+
+.duoMediaTall {
+  aspect-ratio: 3 / 4;
+}
+
+.duoMediaSquare {
+  aspect-ratio: 1 / 1;
+}
+
+/* Tablet em duas colunas: a mídia vertical/quadrada não precisa esticar a
+   linha inteira — limita a altura sem deformar (object-fit: cover). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .duoMediaTall {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ---------------- Apoio (tags separadas por ponto) ---------------- */
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.tagRow li:not(:last-child)::after {
+  content: "·";
+  margin-left: 14px;
+  opacity: 0.6;
+}

@@ -20,7 +20,7 @@ export default function EditorialCTA({ eyebrow, headline, body, cta, tone = "for
   const toneClass = tone === "carvao" ? styles.toneCarvao : styles.toneForest;
 
   return (
-    <section className={`${styles.section} ${toneClass} ${styles.finalCta}`}>
+    <section className={`${styles.pageClose} ${toneClass} ${styles.finalCta}`}>
       <BrandWatermark mode="dark" className={styles.finalCtaWatermark} />
       <div className={styles.container}>
         {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}

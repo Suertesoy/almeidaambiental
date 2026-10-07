@@ -68,6 +68,29 @@
   --space-section-default: clamp(64px, 11vw, 112px);
   --space-section-editorial: clamp(80px, 12vw, 140px);
 
+  /* ---- Ritmo de capítulo (fundação editorial) ----
+     Dois níveis, derivados dos tokens acima (nada de valor novo):
+     boundary  = respiro cheio entre capítulos (troca de assunto);
+     internal  = metade, entre seções DENTRO do mesmo capítulo percebido;
+     company   = troca de empresa/território;
+     page-close = fechamento antes do rodapé.
+     internal deriva de boundary por calc(), então os dois acompanham o
+     breakpoint sem segundo override. Classes: .chapter* em
+     components/shared/editorial.module.css. */
+  --space-chapter-boundary: var(--space-section-default);
+  --space-chapter-internal: calc(var(--space-section-default) / 2);
+  --space-company-boundary: var(--space-section-editorial);
+  --space-page-close: var(--space-section-editorial);
+
+  /* ---- Escala tipográfica editorial (uma só, Home e empresas) ----
+     Headline com largura em ch (acompanha o corpo da fonte) em vez de px. */
+  --type-eyebrow: 13px;
+  --type-headline: clamp(30px, 2.6vw + 16px, 48px);
+  --type-subheading: clamp(20px, 1.6vw + 12px, 28px);
+  --type-body: clamp(15px, 0.3vw + 14px, 18px);
+  --measure-headline: 22ch;
+  --measure-body: 56ch;
+
   /* Offset único para scroll-margin-top de qualquer alvo de âncora do site —
      header fixo + pequeno respiro editorial. Onde existir uma segunda barra
      sticky (ex.: nav de produtos da Equipamentos), soma-se a altura dela por

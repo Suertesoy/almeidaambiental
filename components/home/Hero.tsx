@@ -15,15 +15,15 @@ const VIDEO_SRC = "/videos/Video_Almeida_15_seg.mp4";
 const COPY = {
   pt: {
     ariaLabel: "Grupo Almeida — 40 anos",
-    headlinePrefix: "TRANSFORMANDO RESÍDUO EM ",
-    headlineGold: "RESULTADO",
+    headlinePrefix: "Transformando resíduo em ",
+    headlineGold: "resultado",
     cta: "Conheça nossa história",
     scrollHint: "Role para baixo",
   },
   en: {
     ariaLabel: "Grupo Almeida — 40 years",
-    headlinePrefix: "TURNING WASTE INTO ",
-    headlineGold: "RESULTS",
+    headlinePrefix: "Turning waste into ",
+    headlineGold: "results",
     cta: "See our story",
     scrollHint: "Scroll down",
   },
