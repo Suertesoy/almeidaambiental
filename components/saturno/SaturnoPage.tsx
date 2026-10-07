@@ -6,6 +6,7 @@ import MaterialCards from "../shared/MaterialCards";
 import EditorialCTA from "../shared/EditorialCTA";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import MaterialSurface from "../shared/MaterialSurface";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { FRENTES, FRENTES_EN, HERO_META, HERO_META_EN, type Frente } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
@@ -28,17 +29,15 @@ const COPY = {
     heroPrimaryCta: "Conheça nossas soluções",
     heroSecondaryCta: "Falar com a Saturno Ambiental",
     positioningHeadline: "Gestão ambiental próxima de quem precisa.",
-    positioningBody1:
-      "A presença da Saturno no Vale do Itajaí fortalece a capacidade regional do Grupo Almeida sem apagar a identidade construída pela empresa em Blumenau. A atuação combina coleta, classificação, processamento, cartonagem e serviços técnicos ambientais.",
-    positioningBody2Strong: "Desde 2022, a Saturno integra o Grupo Almeida",
-    positioningBody2Rest: ", ampliando a presença do grupo no Vale do Itajaí.",
-    servicesEyebrow: "Serviços",
-    servicesHeadline: "Gestão de resíduos com linguagem própria da região.",
+    positioningBody:
+      "Coleta, classificação, processamento, cartonagem e serviços técnicos ambientais na mesma empresa, com a proximidade de quem conhece a rotina das operações da região.",
+    servicesEyebrow: "Como atua",
+    servicesHeadline: "Da coleta à destinação, uma operação em sequência.",
     materialsHeadline: "Materiais que fazem parte da operação.",
-    groupBadge: "Saturno Ambiental · Grupo Almeida",
-    groupHeadline: "Uma marca regional conectada a uma estrutura maior.",
+    groupEyebrow: "Estrutura compartilhada",
+    groupHeadline: "No Grupo Almeida desde 2022, com identidade própria.",
     groupBody:
-      "A integração da Saturno ao Grupo Almeida amplia a capacidade de compartilhar experiência, tecnologia e estrutura entre diferentes regiões de Santa Catarina, preservando a proximidade e o reconhecimento construídos pela marca no Vale do Itajaí.",
+      "Ao integrar o Grupo Almeida, a Saturno passou a compartilhar experiência, tecnologia e estrutura com as demais empresas em Santa Catarina, sem perder a proximidade e o reconhecimento construídos no Vale do Itajaí.",
     groupCta: "Conheça o Grupo Almeida",
     finalHeadline: "Gestão ambiental começa entendendo a realidade da operação.",
     finalBody: "Conte o que sua empresa gera, onde está e qual desafio precisa resolver.",
@@ -51,18 +50,16 @@ const COPY = {
       "In Blumenau and the Vale do Itajaí region, Saturno Ambiental brings together waste management services, operational capacity and environmental solutions backed by Grupo Almeida's experience.",
     heroPrimaryCta: "See our solutions",
     heroSecondaryCta: "Talk to Saturno Ambiental",
-    positioningHeadline: "Environmental management close to the people who need it.",
-    positioningBody1:
-      "Saturno's presence in the Vale do Itajaí region strengthens Grupo Almeida's regional capacity while preserving the identity the company built in Blumenau. Its work spans collection, classification, processing, cardboard packaging and technical environmental services.",
-    positioningBody2Strong: "Saturno has been part of Grupo Almeida since 2022",
-    positioningBody2Rest: ", expanding the group's presence in the Vale do Itajaí region.",
-    servicesEyebrow: "Services",
-    servicesHeadline: "Waste management built on regional know-how.",
+    positioningHeadline: "Environmental management close to those who need it.",
+    positioningBody:
+      "Collection, classification, processing, cardboard packaging and technical environmental services under one roof, with the closeness of a team that knows how local operations run.",
+    servicesEyebrow: "How it works",
+    servicesHeadline: "From collection to disposal, one operation in sequence.",
     materialsHeadline: "Materials handled in the operation.",
-    groupBadge: "Saturno Ambiental · Grupo Almeida",
-    groupHeadline: "A regional brand with the backing of a larger group.",
+    groupEyebrow: "Shared structure",
+    groupHeadline: "In Grupo Almeida since 2022, with its own identity.",
     groupBody:
-      "Joining Grupo Almeida expanded Saturno's ability to share experience, technology and infrastructure across different regions of Santa Catarina — while preserving the closeness and recognition the brand built in the Vale do Itajaí region.",
+      "By joining Grupo Almeida, Saturno began sharing experience, technology and infrastructure with the group's other companies in Santa Catarina, without losing the closeness and recognition it built in the Vale do Itajaí region.",
     groupCta: "See Grupo Almeida",
     finalHeadline: "Environmental management starts with understanding your operation.",
     finalBody: "Tell us what your company generates, where it's located and what challenge needs solving.",
@@ -71,6 +68,13 @@ const COPY = {
 } as const;
 
 /**
+ * Refino por capítulos (feature/refino-saturno): dois capítulos entre Hero e
+ * CTA. (1) Oliva: posicionamento regional → como atua → Cartonagem → Gestão
+ * Ambiental (open/middle/middle/close). (2) Carvão: Materiais + Saturno no
+ * Grupo, numa seção só. O vínculo com o Grupo é dito uma vez, no fim; o
+ * posicionamento fala só da relevância regional. Os comentários abaixo
+ * descrevem rodadas anteriores e valem como histórico.
+ *
  * /saturno-ambiental — identidade regional própria conectada ao Grupo
  * Almeida (Seção 19 em diante): Hero → posicionamento (integração em 2022)
  * → três frentes compartilhadas em tratamento compacto → Cartonagem e
@@ -133,38 +137,27 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           MaterialSurface exige — sem `position: relative` + `z-index: 0` na
           section, o texto estático pinta ATRÁS da textura posicionada, não
           na frente dela. */}
+      {/* Capítulo 1 (oliva): Saturno na região → como atua → Cartonagem →
+          Gestão Ambiental. Quatro seções, UM capítulo (open / middle /
+          middle / close), com a mesma MaterialSurface atravessando todas.
+          Entre elas só o respiro interno; o respiro cheio fica nas pontas. */}
       <div className={`${shared.toneSaturno} ${styles.saturnoTerritory}`}>
         <MaterialSurface surface="saturno-hero" />
 
-        {/* ---------------- Posicionamento ---------------- */}
-        {/* Metade de entrada da fronteira aberta no Hero: o oliva profundo da
-            Saturno termina em corte reto contra o território seguinte (fora
-            deste wrapper) e o símbolo atravessa a linha. No desktop,
-            "headline lateral" evita que a seção vire uma coluna estreita
-            perdida em 1440px (Seção 43). */}
+        {/* Posicionamento regional: o que torna a Saturno relevante AQUI.
+            A tese do vínculo com o Grupo mora só no capítulo final. */}
         <section className={`${shared.chapterOpen} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
           <div className={shared.container}>
-            <div className={styles.positioningGrid}>
+            <div className={styles.splitGrid}>
               <h2 className={shared.headline}>{t.positioningHeadline}</h2>
-              <div className={styles.positioningCopy}>
-                <p className={shared.body}>{t.positioningBody1}</p>
-                <p className={shared.body}>
-                  <strong>{t.positioningBody2Strong}</strong>
-                  {t.positioningBody2Rest}
-                </p>
-              </div>
+              <p className={`${shared.body} ${styles.splitCopy}`}>{t.positioningBody}</p>
             </div>
           </div>
         </section>
 
-        {/* ---------------- Frentes compartilhadas, tratamento compacto ----------------
-            Coleta, Triagem, Trituração/Descaracterização e Destinação — a
-            sequência do processo operacional não deve terminar em
-            Trituração/Descaracterização (correção 2026-08-20, pedido explícito
-            do responsável do projeto). Cartonagem e Gestão Ambiental continuam
-            como capítulos próprios abaixo, fora desta grade compacta. */}
-        <section id="frentes" className={`${shared.chapterClose} ${boundarySurface}`}>
+        {/* Como atua: Coleta → Triagem → Trituração → Destinação, em régua. */}
+        <section id="frentes" className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
             <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.servicesEyebrow}</p>
             <h2 className={shared.headline}>{t.servicesHeadline}</h2>
@@ -180,12 +173,14 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* ---------------- Cartonagem (exclusiva, capítulo próprio) ---------------- */}
-        <section className={`${shared.chapter} ${boundarySurface}`}>
+        {/* Cartonagem: a única fotografia da página (material, não sede).
+            A imagem é ilustrativa e leva o badge. */}
+        <section className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
-            <div className={`${shared.duo} ${shared.duoMediaLeft}`}>
+            <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoEven}`}>
               <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
                 <img src={cartonagem.image!.src} alt={cartonagem.image!.alt} loading="lazy" decoding="async" />
+                <IllustrativeBadge position="bottom-right" locale={locale} />
               </div>
               <div className={shared.duoContent}>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{cartonagem.eyebrow}</p>
@@ -208,26 +203,16 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* ---------------- Gestão Ambiental (exclusiva, frente consultiva) ----------------
-            Era um duo com a fotografia de um "profissional analisando planta"
-            que nunca existiu. Serviço técnico não se prova com a foto de
-            alguém segurando papel: o que este bloco tem de concreto são os
-            oito itens de escopo, e é a eles que a seção dá o espaço agora —
-            headline lateral no desktop (mesma gramática do posicionamento) e
-            a lista técnica ocupando a coluna larga em vez de dividir espaço
-            com uma imagem ilustrativa. */}
-        <section className={`${shared.chapter} ${boundarySurface}`}>
+        {/* Gestão Ambiental: frente consultiva, fecha o capítulo. */}
+        <section className={`${shared.chapterClose} ${boundarySurface}`}>
           <div className={shared.container}>
-            <div className={styles.positioningGrid}>
+            <div className={styles.splitGrid}>
               <div>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{gestaoAmbiental.eyebrow}</p>
                 <h2 className={shared.headline}>{gestaoAmbiental.headline}</h2>
               </div>
-              <div className={styles.positioningCopy}>
+              <div className={styles.splitCopy}>
                 <p className={shared.body}>{gestaoAmbiental.copy}</p>
-                {/* Itens técnicos (Seção 37: PGRS, PGRSS, PAE, treinamentos...)
-                    como lista real e estruturada — divisor + um item por
-                    linha, não parágrafo contínuo nem pílulas soltas. */}
                 {gestaoAmbiental.tags && (
                   <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
                     {gestaoAmbiental.tags.map((tag) => (
@@ -246,41 +231,32 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      {/* ---------------- Materiais ----------------
-          Rodada de refino de fluxo/materiais: a fotografia/materialidade
-          gigante (MaterialSurface "saturno-fluxo") que ocupava o fundo
-          deste bloco competia com a leitura da lista e funcionava só como
-          pano de fundo exclusivo da grade — não é o território Saturno
-          (esse é .saturnoTerritory acima, que permanece intocado), então
-          removê-la daqui não apaga a materialidade da marca. A seção fica
-          headline + respiro + Material Cards, sobre a superfície sólida
-          .toneCarvao, com tons quentes/kraft compatíveis com o território
-          (ver tone="saturno" em MaterialCards.module.css). */}
-      <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
+      {/* Capítulo 2 (carvão): Materiais + Saturno no Grupo, um território
+          contínuo numa seção só. Sem MaterialSurface: a matéria já foi dada
+          pelo capítulo oliva. A separação semântica é o <div> interno; a
+          visual, só um filete e o respiro interno. */}
+      <section className={`${shared.chapter} ${shared.toneCarvao} ${boundarySurface}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>{t.materialsHeadline}</h2>
           <div className={styles.materialsBlock}>
             <MaterialCards tone="saturno" locale={locale} />
           </div>
-        </div>
-      </section>
 
-      {/* ---------------- Saturno + Grupo Almeida ----------------
-          Segunda e ÚLTIMA imagem conceitual da página (Seção 17 da rodada).
-          Este capítulo de fechamento era superfície de carvão inteiramente
-          chapada com uma headline e um parágrafo por cima — o momento certo
-          para a materialidade da marca entrar, e longe o bastante da
-          fotografia real de cartonagem para não competir com ela. */}
-      <section className={`${shared.section} ${shared.toneCarvao} ${boundarySurface}`}>
-        <MaterialSurface surface="saturno-fluxo" />
-        <div className={shared.container}>
-          <span className={styles.groupBadge}>{t.groupBadge}</span>
-          <h2 className={shared.headline}>{t.groupHeadline}</h2>
-          <p className={shared.body}>{t.groupBody}</p>
-          <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref("/historia", locale)}>
-              {t.groupCta}
-            </Link>
+          <div className={styles.groupBlock}>
+            <div className={styles.splitGrid}>
+              <div>
+                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.groupEyebrow}</p>
+                <h2 className={shared.headline}>{t.groupHeadline}</h2>
+              </div>
+              <div className={styles.splitCopy}>
+                <p className={shared.body}>{t.groupBody}</p>
+                <div className={shared.ctaRow}>
+                  <Link className={shared.btnEditorial} href={localizeHref("/historia", locale)}>
+                    {t.groupCta}
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
