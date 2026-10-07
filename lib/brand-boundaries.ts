@@ -74,6 +74,6 @@ export const BRAND_BOUNDARIES: Record<BrandBoundaryId, BrandBoundary> = {
      evitar. */
   "ambiental-processo": {
     side: "left",
-    note: "/almeida-ambiental: materiais (pedra) → o percurso do resíduo (verde floresta).",
+    note: "/almeida-ambiental: território operacional (verde floresta) → materiais (pedra).",
   },
 };

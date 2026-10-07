@@ -60,11 +60,19 @@
   padding-bottom: var(--space-chapter-boundary);
 }
 
-/* Troca de empresa: primeira seção de um território novo (que continua na
-   seguinte). Respiro de entrada maior que o de troca de capítulo comum. */
-.companyOpen {
+/* Capítulo de empresa numa seção só (Home): entrada com respiro de troca de
+   empresa, saída com respiro de capítulo. As linhas internas do capítulo
+   se separam por --space-chapter-internal (.chapterRows). */
+.companyChapter {
   padding-top: var(--space-company-boundary);
-  padding-bottom: var(--space-chapter-internal);
+  padding-bottom: var(--space-chapter-boundary);
+}
+
+/* Linhas de um mesmo capítulo: marca, mensagem, fecho. */
+.chapterRows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-chapter-internal);
 }
 
 /* Fechamento de página: CTA/manifesto final antes do rodapé. */
@@ -127,6 +135,22 @@
 
 .gold {
   color: var(--color-gold-aged);
+}
+
+/* Segunda mensagem de um capítulo (h3): um degrau abaixo de .headline, mas
+   ainda headline — para quando o capítulo tem uma proposta (h2) e uma
+   mensagem de apoio com imagem e CTA. Declarada DEPOIS de .headline no mesmo
+   arquivo para vencer o empate de especificidade. */
+.headlineSecondary {
+  margin: 0 0 var(--gap-title-body);
+  max-width: var(--measure-headline-secondary);
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: var(--type-headline-secondary);
+  line-height: 1.14;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
 }
 
 /* Título interno (nome de pilar, de produto, de frente de serviço): um
@@ -322,6 +346,11 @@
 
   .duoMediaRight.duoMediaNarrow {
     grid-template-columns: 8fr 4fr;
+  }
+
+  /* A mídia é a protagonista da linha: coluna larga para a imagem. */
+  .duoMediaRight.duoMediaDominant {
+    grid-template-columns: 5fr 7fr;
   }
 
   .duoMediaLeft.duoMediaNarrow {

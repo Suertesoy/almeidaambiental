@@ -12,3 +12,10 @@
   min-height: clamp(200px, 24vw, 320px);
   padding: clamp(12px, 2vw, 32px);
 }
+
+/* Linha de marca de um capítulo da Home: a logo continua grande, mas a
+   linha não precisa de uma tela inteira de respiro. */
+.compact {
+  min-height: clamp(96px, 13vw, 190px);
+  padding: clamp(4px, 1vw, 16px);
+}

@@ -87,6 +87,8 @@
   --type-eyebrow: 13px;
   --type-headline: clamp(30px, 2.6vw + 16px, 48px);
   --type-subheading: clamp(20px, 1.6vw + 12px, 28px);
+  --type-headline-secondary: clamp(26px, 1.7vw + 14px, 38px);
+  --measure-headline-secondary: 26ch;
   --type-body: clamp(15px, 0.3vw + 14px, 18px);
   --measure-headline: 22ch;
   --measure-body: 56ch;
