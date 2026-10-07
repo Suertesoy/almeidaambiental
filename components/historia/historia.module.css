@@ -1,8 +1,20 @@
 /* ==========================================================
    /historia — "Quatro décadas, uma linha contínua."
    Escopo via CSS Modules, mesmo mecanismo da Home (nada vaza para outras
-   rotas). Reaproveita os tokens globais de app/globals.css (cores, fontes)
-   — não inventa marca nova para esta página (Seção 32 da tarefa).
+   rotas). Reaproveita os tokens globais de app/globals.css (cores, fontes).
+
+   ARQUITETURA (rodada de refino de História)
+   - A linha dourada (.rail) é UMA só por capítulo, no centro a partir de
+     768px e à esquerda abaixo disso. Os eventos se penduram nela.
+   - O cabeçalho do capítulo ocupa a coluna esquerda da PRIMEIRA linha, ao
+     lado do primeiro evento (que fica à direita). Não existe mais coluna
+     sticky de 300px: ela deixava o H2 em 5–7 linhas e um vazio enorme no
+     lado oposto. Com os eventos em pares a timeline de cada capítulo tem
+     1–1,5 telas, então sticky quase nem chegaria a atuar.
+   - Eventos entram em PARES (esquerda + direita, a direita deslocada por
+     --stagger). Cada lado deixa de ter o outro como vazio.
+   - Escala, mapa e epílogo viram UM capítulo de fechamento (.closing),
+     numa única superfície escura, em vez de três "páginas" separadas.
    ========================================================== */
 
 .page {
@@ -17,11 +29,22 @@
   padding-inline: clamp(20px, 6vw, 64px);
 }
 
-/* ---------------- Voltar para a Home ----------------
-   Um pill discreto fixo (nunca uma barra de largura total competindo com a
-   narrativa), sempre acessível durante a rolagem, com fundo translúcido +
-   blur para manter contraste tanto sobre a fotografia do Hero quanto sobre
-   qualquer tom de capítulo (Seção 5). */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------- Voltar (único retorno à Home) ----------------
+   Pill só com ícone, fixo, translúcido. É a ÚNICA navegação de retorno
+   da página — o CTA "Voltar para a Home" do epílogo foi retirado (duplicava
+   este botão e era a ação principal de encerramento de uma página que
+   merece um fechamento melhor). */
 .backFab {
   position: fixed;
   z-index: 40;
@@ -29,17 +52,14 @@
   left: clamp(14px, 4vw, 28px);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  width: 40px;
   height: 40px;
-  padding-inline: 16px;
   border-radius: 999px;
   background: rgba(8, 10, 8, 0.55);
   border: 1px solid rgba(247, 246, 241, 0.28);
   backdrop-filter: blur(6px);
   color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
   text-decoration: none;
 }
 
@@ -56,18 +76,6 @@
   width: 14px;
   height: 14px;
   transform: rotate(90deg);
-}
-
-@media (max-width: 1023px) {
-  .backFab span {
-    display: none;
-  }
-
-  .backFab {
-    width: 40px;
-    padding-inline: 0;
-    justify-content: center;
-  }
 }
 
 /* ---------------- Hero 1985 ---------------- */
@@ -94,13 +102,12 @@
 .heroScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(6, 8, 6, 0.82) 0%, rgba(6, 8, 6, 0.38) 42%, rgba(6, 8, 6, 0.06) 68%);
+  background: linear-gradient(to top, rgba(6, 8, 6, 0.84) 0%, rgba(6, 8, 6, 0.4) 46%, rgba(6, 8, 6, 0.06) 72%);
   pointer-events: none;
 }
 
 /* Superfície clara que "nasce" por trás da fotografia — cresce conforme o
-   scroll avança (Seção 6: "a fotografia literalmente dá origem à
-   timeline"). Puro CSS: opacidade sobe com a rolagem via scroll-driven
+   scroll avança. Puro CSS: opacidade sobe com a rolagem via scroll-driven
    animation nativa quando suportada; sem suporte, permanece 0 e a
    transição vira só o corte natural entre seções (ainda funcional). */
 .heroSurfaceCue {
@@ -134,7 +141,7 @@
   z-index: 2;
   width: 100%;
   padding-inline: clamp(20px, 6vw, 64px);
-  padding-bottom: clamp(56px, 10vh, 120px);
+  padding-bottom: clamp(64px, 10vh, 120px);
   color: var(--color-background);
 }
 
@@ -148,8 +155,16 @@
   opacity: 0.85;
 }
 
-.heroYear {
+/* O H1 é o conjunto "1985 + frase": o ano monumental abre a leitura e a
+   frase vem logo abaixo num corpo que ainda é maior que qualquer H2 da
+   página (hierarquia: ano > H1 > H2 > ano de evento). */
+.heroTitle {
   margin: 14px 0 0;
+  font-weight: 700;
+}
+
+.heroYear {
+  display: block;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
   font-size: clamp(72px, 11vw + 20px, 168px);
@@ -159,22 +174,25 @@
 }
 
 .heroHeadline {
-  margin: 18px 0 0;
-  max-width: 780px;
+  display: block;
+  margin-top: clamp(14px, 1.6vw, 22px);
+  max-width: 24ch;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(22px, 1.6vw + 16px, 34px);
-  line-height: 1.2;
+  font-size: clamp(28px, 2.4vw + 16px, 50px);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
 .heroLede {
-  margin: 20px 0 0;
-  max-width: 60ch;
+  margin: clamp(14px, 1.4vw, 20px) 0 0;
+  max-width: 48ch;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
-  font-size: clamp(15px, 0.3vw + 14px, 18px);
-  line-height: 1.62;
+  font-size: clamp(16px, 0.3vw + 15px, 19px);
+  line-height: 1.6;
+  text-wrap: pretty;
   opacity: 0.92;
 }
 
@@ -233,41 +251,142 @@
   color: var(--color-background);
 }
 
-.chapterLayout {
-  display: block;
+/* ---------------- Conector entre seções ----------------
+   Carrega a própria linha dourada para que a régua nunca "suma" na
+   transição entre capítulos. Mesma coluna da régua (esquerda no mobile,
+   centro a partir de 768px). Decorativo (aria-hidden). */
+.bridge {
+  --rail: 40px;
+  display: flex;
+  justify-content: flex-start;
+  height: clamp(28px, 3.5vw, 52px);
 }
 
-@media (min-width: 1024px) {
-  .chapterLayout {
-    display: grid;
-    grid-template-columns: minmax(220px, 300px) 1fr;
-    column-gap: clamp(32px, 4vw, 64px);
-    align-items: start;
+.bridgeLine {
+  width: 2px;
+  height: 100%;
+  margin-left: calc(var(--rail) / 2 - 1px);
+  background: rgba(201, 162, 39, 0.35);
+}
+
+@media (min-width: 768px) {
+  .bridge {
+    justify-content: center;
+  }
+
+  .bridgeLine {
+    margin-left: 0;
   }
 }
 
-.chapterHead {
-  margin-bottom: clamp(40px, 6vw, 64px);
-  max-width: 640px;
+.chapterForest .bridgeLine,
+.closing .bridgeLine {
+  background: rgba(201, 162, 39, 0.5);
 }
 
-/* Desktop: o cabeçalho do capítulo fica ao lado da régua, fixo enquanto os
-   eventos daquele capítulo passam ao lado (Seção 15) — puro CSS sticky,
-   sem scroll-jacking; o contêiner que o segura (.chapterLayout) é sempre
-   mais alto que o próprio cabeçalho, então ele solta naturalmente quando o
-   capítulo termina. */
-@media (min-width: 1024px) {
+/* ---------------- Régua (linha do tempo) ---------------- */
+
+.spine {
+  --rail: 40px;
+  --rg: clamp(16px, 4vw, 28px);
+  --stagger: 0px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: var(--rg);
+}
+
+@media (min-width: 768px) {
+  .spine {
+    --rg: clamp(20px, 3vw, 48px);
+    --stagger: clamp(32px, 5vw, 72px);
+    grid-template-columns: minmax(0, 1fr) var(--rail) minmax(0, 1fr);
+  }
+}
+
+/* Posicionamento absoluto: sem grid-template-rows explícito a linha -1 do
+   grid resolve para a linha 1 e o .rail renderizava com altura zero. */
+.rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--rail);
+}
+
+@media (min-width: 768px) {
+  .rail {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.railTrack {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(201, 162, 39, 0.35);
+}
+
+.railFill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  transform-origin: top center;
+  transform: translateX(-50%) scaleY(var(--line-progress, 0));
+  background: var(--color-gold-aged);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .railFill {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+/* Um par = duas linhas lógicas da timeline lado a lado. No mobile o par
+   não existe (display: contents): tudo cai na coluna única à direita da
+   régua. A partir de 768px é uma linha de subgrid com esquerda | régua |
+   direita. */
+.pair {
+  display: contents;
+}
+
+@media (min-width: 768px) {
+  .pair {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: start;
+    padding-block: clamp(14px, 1.8vw, 24px);
+  }
+}
+
+/* ---------------- Cabeçalho do capítulo ---------------- */
+
+.chapterHead {
+  grid-column: 2;
+  margin: 0 0 12px;
+  padding-top: 4px;
+}
+
+@media (min-width: 768px) {
   .chapterHead {
-    position: sticky;
-    top: calc(var(--header-height) + 40px);
-    margin-bottom: 0;
-    max-width: 300px;
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    text-align: right;
   }
 }
 
 .chapterIndex {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -286,208 +405,88 @@
   text-transform: uppercase;
 }
 
+/* Corpo calibrado para a COLUNA, não para a página: ~25 caracteres por
+   linha dão 3 linhas para as quatro headlines em PT e EN, de 768 a 1440px.
+   Mobile: coluna ao lado da régua, até 4 linhas. */
 .chapterHeadline {
   margin: 0;
   color: inherit;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(26px, 2.2vw + 14px, 40px);
+  font-size: clamp(23px, 6vw, 28px);
   line-height: 1.14;
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
-/* ---------------- Régua (linha do tempo) ---------------- */
-
-.spine {
-  position: relative;
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  column-gap: clamp(16px, 4vw, 32px);
-}
-
-@media (min-width: 1024px) {
-  .spine {
-    grid-template-columns: 1fr 48px 1fr;
-    column-gap: clamp(24px, 3vw, 48px);
+@media (min-width: 768px) {
+  .chapterHeadline {
+    font-size: clamp(26px, 3.1vw, 40px);
   }
-}
-
-/* Posicionamento absoluto, não grid-row: 1 / -1 — sem grid-template-rows
-   explícito em .spine, a grade "explícita" de linhas tem zero trilhas, e
-   a linha -1 resolve para a MESMA linha 1 (não a última linha implícita
-   criada pelos .eventRow). Na prática o .rail sempre renderizou com
-   altura zero: a régua nunca existiu visualmente, só os pontos — a causa
-   raiz de "marcadores desconectados". position:absolute com top/bottom:0
-   contorna o problema por completo, sem depender de contagem de linhas. */
-.rail {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-}
-
-@media (min-width: 1024px) {
-  .rail {
-    left: 50%;
-    width: 48px;
-    transform: translateX(-50%);
-  }
-}
-
-.railTrack {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  transform: translateX(-50%);
-  /* Trilha "ainda não percorrida": antes era cinza quase invisível
-     (rgba(21,21,15,0.14)) contra o fundo stone/stone-alt, o que fazia os
-     pontos parecerem soltos entre si. Agora é o próprio dourado, só
-     esmaecido — a régua já lê como uma linha contínua antes mesmo do
-     preenchimento de scroll (.railFill) passar por cima dela. */
-  background: rgba(201, 162, 39, 0.35);
-}
-
-.chapterForest .railTrack {
-  background: rgba(201, 162, 39, 0.45);
-}
-
-.railFill {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 2px;
-  height: 100%;
-  transform-origin: top center;
-  /* width:2px + translateX(-50%) para ficar do mesmo tamanho/posição de
-     .railTrack — antes disso ficava invisível junto com o .rail (altura
-     zero), então esse descompasso (100% da largura da coluna, não 2px)
-     nunca tinha sido notado. */
-  transform: translateX(-50%) scaleY(var(--line-progress, 0));
-  background: linear-gradient(to bottom, var(--color-gold-aged), var(--color-gold-aged));
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .railFill {
-    transform: translateX(-50%) scaleY(1);
-  }
-}
-
-/* ---------------- Conector entre seções ----------------
-   Substitui o padding-block que .chapter/.growthScale/.mapSection tinham
-   antes (mesma altura, clamp(56px, 9vw, 96px) — nenhuma mudança de ritmo
-   vertical) por um bloco que carrega a própria linha dourada, para que a
-   régua nunca "suma" na transição entre um capítulo e o próximo, ou entre
-   um capítulo e o intervalo de GrowthScale/ExpansionMap (Seção 66 da
-   tarefa: linha contínua ligando todos os pontos). Puramente decorativo
-   (aria-hidden), não introduz novo conteúdo semântico nem mexe no motion
-   de scroll existente (.railFill/useLineProgress).
-
-   No desktop, o .rail de verdade não fica no centro do .container: ele
-   mora dentro de .spine, que por sua vez ocupa só a coluna de conteúdo de
-   .chapterLayout (depois da coluna fixa de 220–300px do cabeçalho fixo +
-   gap). .spineBridgeOuter replica esse mesmo deslocamento de duas colunas
-   — vazia a primeira, com o .spineBridge (mesmo grid do .spine) na
-   segunda — para que a linha caia exatamente sob o .rail em qualquer
-   seção, mesmo nas que não têm cabeçalho fixo (GrowthScale/ExpansionMap). */
-.spineBridgeOuter {
-  display: block;
-}
-
-@media (min-width: 1024px) {
-  .spineBridgeOuter {
-    display: grid;
-    grid-template-columns: minmax(220px, 300px) 1fr;
-    column-gap: clamp(32px, 4vw, 64px);
-  }
-}
-
-.spineBridge {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  height: clamp(56px, 9vw, 96px);
-}
-
-@media (min-width: 1024px) {
-  .spineBridge {
-    grid-column: 2;
-    grid-template-columns: 1fr 48px 1fr;
-  }
-}
-
-.spineBridgeLine {
-  grid-column: 1;
-  justify-self: center;
-  width: 2px;
-  height: 100%;
-  background: rgba(201, 162, 39, 0.35);
-}
-
-@media (min-width: 1024px) {
-  .spineBridgeLine {
-    grid-column: 2;
-  }
-}
-
-.chapterForest .spineBridgeLine {
-  background: rgba(201, 162, 39, 0.45);
 }
 
 /* ---------------- Eventos ---------------- */
 
 .eventRow {
+  --dot: 10px;
+  --year-size: clamp(28px, 1.6vw + 20px, 40px);
   position: relative;
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
-  align-items: center;
-  padding-block: clamp(22px, 3.4vw, 36px);
+  grid-column: 2;
+  padding-block: 10px;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .eventRow {
-    padding-block: clamp(32px, 4vw, 56px);
+    grid-row: 1;
+    padding-block: 0;
   }
-}
 
-/* Sem suporte a subgrid (navegador muito antigo): a linha some da régua
-   dedicada e o marcador cai para cima do texto, empilhado — degrada para
-   uma leitura sequencial simples, nunca quebra a página (Seção 16). */
-.eventMarker {
-  grid-column: 1;
-  justify-self: center;
-  align-self: start;
-  margin-top: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .sideRight {
+    grid-column: 3;
+    margin-top: var(--stagger);
+  }
 
-@media (min-width: 1024px) {
-  .eventMarker {
-    grid-column: 2;
-    align-self: center;
+  /* No par de abertura o primeiro evento alinha com o cabeçalho. */
+  .pairLead .sideRight {
     margin-top: 0;
   }
+
+  .pairLead {
+    padding-bottom: clamp(28px, 3.4vw, 48px);
+  }
+
+  .sideLeft {
+    grid-column: 1;
+    text-align: right;
+  }
 }
 
+/* Marcador pendurado na régua: a distância do canto do artigo até o eixo da
+   régua é sempre --rg + metade da régua, nos dois lados. */
 .eventDot {
-  width: 10px;
-  height: 10px;
+  position: absolute;
+  top: calc(var(--year-size) / 2 - var(--dot) / 2 + 10px);
+  left: calc(-1 * (var(--rg) + var(--rail) / 2) - var(--dot) / 2);
+  width: var(--dot);
+  height: var(--dot);
   border-radius: 999px;
   background: var(--color-stone-warm);
   border: 2px solid var(--color-gold-aged);
+  box-sizing: border-box;
   opacity: 0.55;
   transform: scale(0.85);
   transition: opacity 420ms ease, transform 420ms ease, background 420ms ease;
 }
 
-.chapterForest .eventDot {
-  background: var(--color-forest-deep);
+@media (min-width: 768px) {
+  .eventDot {
+    top: calc(var(--year-size) / 2 - var(--dot) / 2);
+  }
+
+  .sideLeft .eventDot {
+    left: auto;
+    right: calc(-1 * (var(--rg) + var(--rail) / 2) - var(--dot) / 2);
+  }
 }
 
 .eventRowActive .eventDot {
@@ -497,27 +496,9 @@
 }
 
 .eventBody {
-  grid-column: 2;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 520ms ease, transform 520ms ease;
-}
-
-@media (min-width: 1024px) {
-  .eventBody {
-    grid-column: 3;
-  }
-
-  .eventRowLeft .eventBody {
-    grid-column: 1;
-    grid-row: 1;
-    text-align: right;
-  }
-
-  .eventRowLeft .eventBody .tagRow,
-  .eventRowLeft .eventBody .eventLocation {
-    justify-content: flex-end;
-  }
 }
 
 .eventRowActive .eventBody {
@@ -537,13 +518,13 @@
   margin: 0 0 6px;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(28px, 1.6vw + 20px, 40px);
+  font-size: var(--year-size);
   line-height: 1;
   color: var(--color-gold-aged);
 }
 
 .eventDateLabel {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -553,9 +534,7 @@
 }
 
 .eventLocation {
-  display: flex;
-  gap: 6px;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   font-weight: 600;
@@ -565,16 +544,19 @@
 
 .eventText {
   margin: 0;
-  max-width: 46ch;
+  max-width: 42ch;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
   font-size: clamp(15px, 0.25vw + 14px, 17px);
-  line-height: 1.6;
+  line-height: 1.55;
+  text-wrap: pretty;
   opacity: 0.9;
 }
 
-.eventRowLeft .eventText {
-  margin-inline-start: auto;
+@media (min-width: 768px) {
+  .sideLeft .eventText {
+    margin-inline-start: auto;
+  }
 }
 
 .eventHighlight {
@@ -584,23 +566,15 @@
 }
 
 .eventImageWrap {
-  grid-column: 2;
-  margin-top: 20px;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
   position: relative;
+  margin-top: 14px;
+  max-width: 340px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
 
-@media (min-width: 1024px) {
-  .eventImageWrap {
-    grid-column: 3;
-    margin-top: 24px;
-    max-width: 420px;
-  }
-
-  .eventRowLeft .eventImageWrap {
-    grid-column: 1;
-    grid-row: 2;
+@media (min-width: 768px) {
+  .sideLeft .eventImageWrap {
     margin-inline-start: auto;
   }
 }
@@ -614,31 +588,90 @@
 
 /* Evento monumental (2026) — mais peso visual, marca o presente. */
 
-.eventMonumental .eventYear {
-  font-size: clamp(48px, 3.4vw + 24px, 96px);
+.eventMonumental {
+  --dot: 16px;
+  --year-size: clamp(56px, 4vw + 24px, 96px);
 }
 
-.eventMonumental .eventDot {
-  width: 16px;
-  height: 16px;
-}
+/* ---------------- Fechamento: escala + mapa + epílogo ---------------- */
 
-/* ---------------- Subnarrativa: crescimento em m² ---------------- */
-
-.growthScale {
+.closing {
   position: relative;
+  background: var(--color-forest-deep);
+  color: var(--color-background);
 }
 
-.growthHead {
-  max-width: 640px;
-  margin-bottom: clamp(32px, 5vw, 56px);
+/* A linha dourada que vinha da timeline termina aqui num nó — o ponto em
+   que a história alcança o presente. */
+.closingNode {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: calc(20px - 7px);
+}
+
+@media (min-width: 768px) {
+  .closingNode {
+    justify-content: center;
+    margin-left: 0;
+  }
+}
+
+.closingNode span {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--color-gold-aged);
+}
+
+.closingBlock {
+  padding-block: clamp(40px, 6vw, 72px);
+}
+
+.closingBlock + .closingBlock {
+  border-top: 1px solid rgba(247, 246, 241, 0.16);
+}
+
+.closingBlock:last-child {
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+
+.closingSplit {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 5vw, 56px);
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .closingSplit {
+    grid-template-columns: 5fr 7fr;
+  }
+
+  .closingSplitEnd {
+    grid-template-columns: 7fr 5fr;
+    align-items: center;
+  }
+}
+
+/* Escala em m² */
+
+.closingHeadline {
+  margin: 0;
+  max-width: 22ch;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(26px, 2vw + 14px, 40px);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 .growthList {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: clamp(16px, 3vw, 32px) clamp(20px, 4vw, 40px);
+  gap: clamp(16px, 2.4vw, 28px) clamp(20px, 3vw, 36px);
 }
 
 .growthItem {
@@ -678,42 +711,110 @@
   white-space: nowrap;
 }
 
-/* Seis passos de escala tipográfica — do menor (1985) ao monumental
-   (2021), para que o crescimento seja sentido, não só lido (Seção 9). */
+/* Seis passos de escala tipográfica — do menor (1985) ao maior (2021),
+   para que o crescimento seja sentido, não só lido. O teto é menor que o
+   anterior (96px): a escala agora divide a linha com a headline. */
 .growthStep0 .growthValue { font-size: clamp(20px, 1.4vw + 12px, 26px); }
 .growthStep1 .growthValue { font-size: clamp(24px, 1.8vw + 12px, 32px); }
-.growthStep2 .growthValue { font-size: clamp(30px, 2.4vw + 12px, 42px); }
-.growthStep3 .growthValue { font-size: clamp(36px, 3vw + 12px, 54px); }
-.growthStep4 .growthValue { font-size: clamp(44px, 3.8vw + 12px, 68px); }
-.growthStep5 .growthValue { font-size: clamp(56px, 5.4vw + 12px, 96px); }
+.growthStep2 .growthValue { font-size: clamp(28px, 2.2vw + 12px, 40px); }
+.growthStep3 .growthValue { font-size: clamp(32px, 2.8vw + 12px, 50px); }
+.growthStep4 .growthValue { font-size: clamp(38px, 3.4vw + 12px, 62px); }
+.growthStep5 .growthValue { font-size: clamp(46px, 4.4vw + 12px, 80px); }
 
-/* ---------------- Mapa de expansão ---------------- */
+/* Epílogo */
 
-.mapSection {
-  position: relative;
+.epilogueEyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
 }
 
-.mapLayout {
+.epilogueHeadline {
+  margin: 0 0 clamp(20px, 2.4vw, 28px);
+  max-width: 20ch;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(26px, 2.6vw + 8px, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* "300 m²" nunca pode quebrar entre o número e a unidade. */
+.nowrapUnit {
+  white-space: nowrap;
+}
+
+.closingText {
+  max-width: 52ch;
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 400;
+  font-size: clamp(15px, 0.3vw + 14px, 18px);
+  line-height: 1.6;
+  text-wrap: pretty;
+  opacity: 0.9;
+}
+
+.statsGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(32px, 5vw, 56px);
-  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 180px));
+  gap: 20px 28px;
 }
 
-@media (min-width: 900px) {
-  .mapLayout {
-    grid-template-columns: 5fr 7fr;
+.statItem {
+  padding-top: 16px;
+  border-top: 1px solid rgba(247, 246, 241, 0.22);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.statsGridActive .statItem {
+  opacity: 1;
+  transform: none;
+}
+
+.statsGridActive .statItem:nth-child(2) { transition-delay: 90ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .statItem {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
+
+.statValue {
+  display: block;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(30px, 2vw + 18px, 44px);
+  color: var(--color-gold-aged);
+  line-height: 1;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  opacity: 0.78;
+}
+
+/* Mapa de expansão */
 
 .mapFrame {
   position: relative;
   width: 100%;
   /* Proporção real do contorno de Santa Catarina (SC_VIEWBOX em
-     lib/geo-santa-catarina.ts), não mais um retrato 4:5 arbitrário — o
-     estado é mais largo do que alto. */
+     lib/geo-santa-catarina.ts). */
   aspect-ratio: 1000 / 700.54;
-  max-width: 460px;
+  max-width: 480px;
   margin-inline: auto;
   border: 1px solid rgba(247, 246, 241, 0.22);
   border-radius: 4px;
@@ -728,8 +829,6 @@
 .mapOutline {
   fill: rgba(247, 246, 241, 0.05);
   stroke: rgba(247, 246, 241, 0.28);
-  /* Mesma escala de unidades de TerritoryMap.module.css (.outline), já
-     que os dois desenham exatamente o mesmo contorno. */
   stroke-width: 1.6;
 }
 
@@ -773,23 +872,18 @@
 }
 
 .mapCaption {
-  margin: 16px 0 0;
+  max-width: 480px;
+  margin: 14px auto 0;
   text-align: center;
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
+  line-height: 1.5;
   opacity: 0.6;
 }
 
-/* ---------------- Epílogo ---------------- */
+/* Continuação: as três empresas do Grupo. Navegação, não conversão. */
 
-.epilogue {
-  background: var(--color-forest-deep);
-  color: var(--color-background);
-  padding-block: clamp(72px, 11vw, 128px);
-  text-align: center;
-}
-
-.epilogueEyebrow {
+.nextLabel {
   margin: 0 0 16px;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
@@ -799,115 +893,47 @@
   opacity: 0.72;
 }
 
-.epilogueHeadline {
-  margin: 0 auto 48px;
-  max-width: 760px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(28px, 2.6vw + 16px, 46px);
-  line-height: 1.14;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-/* "300 m²" nunca pode quebrar entre o número e a unidade (só essa dupla,
-   não a headline inteira — o resto continua livre para balancear). */
-.nowrapUnit {
-  white-space: nowrap;
-}
-
-.statsGrid {
+.nextLinks {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px 24px;
-  max-width: 760px;
-  margin: 0 auto clamp(48px, 7vw, 72px);
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@media (min-width: 720px) {
-  .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
+@media (min-width: 768px) {
+  .nextLinks {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 28px;
   }
 }
 
-.statItem {
-  padding-top: 18px;
+.nextLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 18px;
   border-top: 1px solid rgba(247, 246, 241, 0.22);
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 520ms ease, transform 520ms ease;
-}
-
-.statsGridActive .statItem {
-  opacity: 1;
-  transform: none;
-}
-
-.statsGridActive .statItem:nth-child(2) { transition-delay: 90ms; }
-.statsGridActive .statItem:nth-child(3) { transition-delay: 180ms; }
-.statsGridActive .statItem:nth-child(4) { transition-delay: 270ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  .statItem {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-.statValue {
-  display: block;
+  color: var(--color-background);
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(30px, 2vw + 18px, 44px);
-  color: var(--color-gold-aged);
-  line-height: 1;
-}
-
-.statLabel {
-  display: block;
-  margin-top: 10px;
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
-  opacity: 0.78;
-}
-
-.closingText {
-  max-width: 62ch;
-  margin: 0 auto 40px;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 400;
-  font-size: clamp(15px, 0.3vw + 14px, 18px);
-  line-height: 1.62;
-  opacity: 0.9;
-}
-
-.ctaRow {
-  display: flex;
-  justify-content: center;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 52px;
-  padding-inline: 26px;
-  border-radius: 4px;
-  border: 1px solid rgba(247, 246, 241, 0.4);
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
+  font-size: clamp(19px, 0.8vw + 15px, 24px);
   text-decoration: none;
+  transition: color 200ms ease;
 }
 
-.btn:hover {
-  background: rgba(247, 246, 241, 0.1);
+.nextLink:hover {
+  color: var(--color-gold-aged);
 }
 
-.btn:focus-visible {
+.nextLink:focus-visible {
   outline: 3px solid var(--color-gold-aged);
   outline-offset: 2px;
+}
+
+.nextArrow {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 400;
 }
