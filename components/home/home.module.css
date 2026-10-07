@@ -24,7 +24,7 @@ html:has([data-page="home"]) {
 .chapterOpen { composes: chapterOpen from "../shared/editorial.module.css"; }
 .chapterMiddle { composes: chapterMiddle from "../shared/editorial.module.css"; }
 .chapterClose { composes: chapterClose from "../shared/editorial.module.css"; }
-.companyOpen { composes: companyOpen from "../shared/editorial.module.css"; }
+.companyChapter { composes: companyChapter from "../shared/editorial.module.css"; }
 .pageClose { composes: pageClose from "../shared/editorial.module.css"; }
 .section { composes: chapter from "../shared/editorial.module.css"; }
 
@@ -134,6 +134,9 @@ html:has([data-page="home"]) {
 .eyebrowAccent { composes: eyebrowAccent from "../shared/editorial.module.css"; }
 .locationLine { composes: locationLine from "../shared/editorial.module.css"; }
 .headline { composes: headline from "../shared/editorial.module.css"; }
+.headlineSecondary { composes: headlineSecondary from "../shared/editorial.module.css"; }
+.chapterRows { composes: chapterRows from "../shared/editorial.module.css"; }
+.duoMediaDominant { composes: duoMediaDominant from "../shared/editorial.module.css"; }
 .gold { composes: gold from "../shared/editorial.module.css"; }
 .body { composes: body from "../shared/editorial.module.css"; }
 
@@ -144,61 +147,62 @@ html:has([data-page="home"]) {
   grid-area: media;
 }
 
-/* A régua da logo no BrandStage é PESO ÓPTICO, não largura em pixels:
-   mobile em vw fluido; desktop como percentual da área interna do stage,
-   com teto por marca (a Equipamentos é colorida sobre pedra clara e precisa
-   de mais área para o mesmo peso). Nunca esticada: height sempre auto. */
+/* A régua da logo no BrandStage é PESO ÓPTICO, não largura em pixels. Dentro
+   de um capítulo a marca é a primeira linha, não a dobra inteira: continua
+   grande, mas com teto menor (BrandStage compact). A Equipamentos é colorida
+   sobre pedra clara e precisa de mais área para o mesmo peso. Nunca
+   esticada: height sempre auto. */
 .brandStageLogo {
   display: block;
-  width: clamp(200px, 58vw, 340px);
+  width: clamp(150px, 44vw, 240px);
   max-width: 100%;
   height: auto;
 }
 
-@media (min-width: 1024px) {
+.brandStageLogoEquipamentos {
+  width: clamp(170px, 50vw, 280px);
+}
+
+@media (min-width: 768px) {
   .brandStageLogo {
-    width: 80%;
-    max-width: 360px;
+    width: 82%;
+    max-width: 280px;
   }
 
   .brandStageLogoEquipamentos {
-    width: 94%;
-    max-width: 460px;
+    width: 92%;
+    max-width: 330px;
   }
 }
 
-/* ---------------- Declaração de marca sobre superfície material ----------
-   Dobra da Saturno na Home: local + headline maior que a das dobras
-   narrativas, com o BrandStage grande da logo ao lado (rodada "presença de
-   marca" — antes era uma coluna única sem imagem; a fotografia de
-   "operação" já tinha saído por afirmar uma instalação que não foi
-   fotografada, ver HomePage.tsx).
+@media (min-width: 1024px) {
+  .brandStageLogo {
+    max-width: 320px;
+  }
 
-   O limite de largura é o que impede a coluna de texto de virar um banner:
-   a tipografia cresce, mas continua ancorada à esquerda.
+  .brandStageLogoEquipamentos {
+    max-width: 380px;
+  }
+}
 
-   Esse limite mora na HEADLINE, não no bloco: preso ao bloco, ele
-   quebrava também a linha de localidade ("Blumenau · Vale do / Itajaí"),
-   que é uma linha curta de metadata e não deve quebrar nunca. */
+/* ---------------- Declaração de marca (Saturno) ----------------
+   Local + headline de impacto ao lado da logo. A largura NÃO é presa em ch
+   estreito: a coluna do duo já limita o texto, e o text-wrap: balance
+   distribui as linhas (PT ≈ 2 linhas, EN ≈ 3, sem palavra órfã). A escala é
+   de abertura de capítulo — maior que .headline, menor que um banner. */
 .brandStatement {
   max-width: none;
 }
 
 .headline.headlineMonumental {
-  max-width: 16ch;
-  font-size: clamp(38px, 5vw + 12px, 84px);
-  line-height: 1.02;
-  letter-spacing: -0.018em;
+  max-width: none;
+  font-size: clamp(32px, 2.6vw + 18px, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
 }
 
 .brandStatement .locationLine {
   white-space: nowrap;
-}
-
-@media (min-width: 1024px) {
-  .headline.headlineMonumental {
-    max-width: 14ch;
-  }
 }
 
 /* ---------------- CTAs ---------------- */
@@ -209,18 +213,6 @@ html:has([data-page="home"]) {
 .btnOutlineOnLight { composes: btnOutlineOnLight from "../shared/editorial.module.css"; }
 .btnSolidGold { composes: btnSolidGold from "../shared/editorial.module.css"; }
 .editorialLink { composes: btnEditorial from "../shared/editorial.module.css"; }
-
-/* No manifesto (centralizado) os CTAs acompanham o mesmo eixo. */
-@media (max-width: 639px) {
-  .manifesto .ctaRow {
-    align-items: center;
-  }
-
-  .manifesto .editorialLink,
-  .manifesto .btn {
-    align-self: center;
-  }
-}
 
 /* ---------------- Hero cinematográfico ---------------- */
 
@@ -322,11 +314,11 @@ html:has([data-page="home"]) {
 
 .heroHeadline {
   margin: 18px 0 0;
-  max-width: 760px;
+  max-width: 22ch;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(40px, 4.2vw + 20px, 84px);
-  line-height: 0.98;
+  font-size: clamp(34px, 3.4vw + 20px, 76px);
+  line-height: 1.02;
   letter-spacing: -0.01em;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.42);
   text-wrap: balance;
@@ -424,16 +416,6 @@ html:has([data-page="home"]) {
 .duoMediaTall { composes: duoMediaTall from "../shared/editorial.module.css"; }
 .duoMediaSquare { composes: duoMediaSquare from "../shared/editorial.module.css"; }
 
-/* Exceção pontual à regra "mídia primeiro no mobile": na segunda dobra
-   Ambiental (texto + foto de frota + Process Flow) a foto tem função
-   operacional, então o texto vem antes dela. Só abaixo de 768px — de
-   tablet para cima o .duo já resolve "content media". */
-@media (max-width: 767px) {
-  .duoContentFirst {
-    grid-template-areas: "content" "media";
-  }
-}
-
 /* As marcas d'água posicionais desta página (.apresentacaoWatermark,
    .equipamentosWatermark, .saturnoPresencaWatermark, .saturnoAtuacaoWatermark
    e .impactWatermark) foram removidas nesta rodada. O símbolo deixou de ser
@@ -456,11 +438,19 @@ html:has([data-page="home"]) {
 
 .tagRow { composes: tagRow from "../shared/editorial.module.css"; }
 
-/* ---------------- Impacto positivo (estimativa acumulada) ---------------- */
+/* ---------------- Fechamento: Impacto + Manifesto ----------------
+   Um capítulo só, em carvão: entra com respiro de capítulo e sai com o de
+   fechamento de página. O manifesto é a segunda linha do mesmo capítulo,
+   separada dos números por um filete e pelo respiro interno. */
+
+.closing {
+  padding-top: var(--space-chapter-boundary);
+  padding-bottom: var(--space-page-close);
+}
 
 .impactHead {
   max-width: 760px;
-  margin-bottom: clamp(40px, 6vw, 64px);
+  margin-bottom: clamp(32px, 5vw, 56px);
 }
 
 .impactHead .headline {
@@ -468,18 +458,31 @@ html:has([data-page="home"]) {
   margin-bottom: 0;
 }
 
+/* Valor + unidade formam UM conjunto numérico: número grande, unidade
+   menor na mesma linha de base. Se a largura não comportar os dois (ex.:
+   "980.700.541 litros" em coluna estreita), a unidade quebra para baixo do
+   número como fallback — nunca a escala do número é reduzida por causa da
+   água, e nunca há overflow. */
 .metricsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px 24px;
-  margin-bottom: 32px;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
 }
 
-/* 4 colunas só quando o número completo de água (11 dígitos) cabe sem
-   quebra; abaixo disso a composição é 2×2. */
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   .metricsGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 40px;
+  }
+}
+
+/* 4 colunas só quando o número mais largo (água) e sua unidade cabem em
+   uma linha na coluna. */
+@media (min-width: 1280px) {
+  .metricsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 28px;
   }
 }
 
@@ -491,28 +494,29 @@ html:has([data-page="home"]) {
 }
 
 .metricValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.28em;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(26px, 1.4vw + 16px, 36px);
-  line-height: 1;
+  font-size: clamp(28px, 1.2vw + 20px, 36px);
+  line-height: 1.05;
   /* Algarismos tabulares: a largura não "pula" a cada atualização. */
   font-variant-numeric: tabular-nums;
 }
 
 .metricNumber {
-  display: block;
   white-space: nowrap;
 }
 
 .metricUnit {
-  display: block;
-  margin-top: 8px;
+  white-space: nowrap;
   color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 15px;
+  font-size: 0.5em;
   font-weight: 500;
-  line-height: 15px;
-  min-height: 15px;
+  letter-spacing: 0.01em;
 }
 
 /* Nota metodológica: secundária, não compete com os números. */
@@ -532,59 +536,17 @@ html:has([data-page="home"]) {
   font-size: 13px;
 }
 
-/* ---------------- Manifesto final ---------------- */
-
-.manifesto .container {
-  max-width: 900px;
+/* Manifesto: segunda linha do capítulo de fechamento. A composição segue o
+   resto do site (imagem + texto à esquerda), não um bloco centralizado de
+   outra página. */
+.manifesto .headlineSecondary {
+  max-width: none;
 }
 
-.manifestoInner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.manifestoMedia {
-  position: relative;
-  width: 100%;
-  max-width: 560px;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  margin-bottom: clamp(40px, 6vw, 64px);
-}
-
-.manifestoMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Consolidação de territórios (Seção 19): a frase é o manifesto do Grupo,
-   não uma headline institucional de dobra — sentence case lê como fala
-   humana, uppercase lia como grito. text-transform:none é a mudança real;
-   o conteúdo em lib/../HomePage.tsx já foi escrito em sentence case, mas
-   sem isto o CSS forçava caixa alta por cima do texto de qualquer forma. */
-.manifestoHeadline {
-  margin: 0 0 24px;
-  max-width: 720px;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(28px, 2.6vw + 16px, 46px);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  text-transform: none;
-}
-
-.manifesto .body {
-  max-width: 52ch;
-  margin-inline: auto;
-  text-align: center;
-}
-
-.manifesto .ctaRow {
-  justify-content: center;
+.manifesto {
+  margin-top: var(--space-chapter-internal);
+  padding-top: var(--space-chapter-internal);
+  border-top: 1px solid rgba(247, 246, 241, 0.14);
 }
 
 @media (prefers-reduced-motion: reduce) {

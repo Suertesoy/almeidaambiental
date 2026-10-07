@@ -13,19 +13,28 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 3vw, 20px);
+  /* Mobile em 3 colunas: os 12 materiais cabem em 4 linhas curtas em vez de
+     6 cartões altos. Abaixo de 340px cai para 2 colunas. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
-@media (max-width: 359px) {
+@media (max-width: 339px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tablet em diante: 4 colunas (12 = 4×3). */
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 2vw, 20px);
   }
 }
 
 @media (min-width: 960px) {
   .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: clamp(20px, 2.2vw, 32px);
   }
 }
@@ -35,8 +44,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(14px, 2.4vw, 20px);
-  padding: clamp(26px, 4vw, 40px) clamp(12px, 2vw, 20px);
+  gap: clamp(8px, 1.6vw, 20px);
+  padding: clamp(14px, 3vw, 40px) clamp(6px, 1.4vw, 20px);
   text-align: center;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -45,8 +54,8 @@
 
 .icon {
   flex: none;
-  width: clamp(36px, 9vw, 44px);
-  height: clamp(36px, 9vw, 44px);
+  width: clamp(28px, 7vw, 44px);
+  height: clamp(28px, 7vw, 44px);
   color: inherit;
   opacity: 0.85;
   transition: opacity 200ms ease;
@@ -63,7 +72,7 @@
   color: inherit;
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: clamp(13px, 1vw + 10px, 15px);
+  font-size: clamp(12px, 0.6vw + 9px, 15px);
   letter-spacing: 0.01em;
   line-height: 1.3;
 }

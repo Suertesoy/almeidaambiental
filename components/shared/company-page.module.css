@@ -22,7 +22,7 @@
 .chapterOpen { composes: chapterOpen from "./editorial.module.css"; }
 .chapterMiddle { composes: chapterMiddle from "./editorial.module.css"; }
 .chapterClose { composes: chapterClose from "./editorial.module.css"; }
-.companyOpen { composes: companyOpen from "./editorial.module.css"; }
+.companyChapter { composes: companyChapter from "./editorial.module.css"; }
 .pageClose { composes: pageClose from "./editorial.module.css"; }
 
 /* Cada tom expõe os papéis de texto como custom properties (--role-*), não
@@ -87,6 +87,9 @@
 .eyebrowAccent { composes: eyebrowAccent from "./editorial.module.css"; }
 .locationLine { composes: locationLine from "./editorial.module.css"; }
 .headline { composes: headline from "./editorial.module.css"; }
+.headlineSecondary { composes: headlineSecondary from "./editorial.module.css"; }
+.chapterRows { composes: chapterRows from "./editorial.module.css"; }
+.duoMediaDominant { composes: duoMediaDominant from "./editorial.module.css"; }
 .gold { composes: gold from "./editorial.module.css"; }
 .subheading { composes: subheading from "./editorial.module.css"; }
 .dataNumber { composes: dataNumber from "./editorial.module.css"; }

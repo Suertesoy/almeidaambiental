@@ -4,6 +4,8 @@ import styles from "./BrandStage.module.css";
 type BrandStageProps = {
   children: ReactNode;
   className?: string;
+  /** Linha de marca dentro de um capítulo (menos respiro vertical). */
+  compact?: boolean;
 };
 
 /**
@@ -14,6 +16,10 @@ type BrandStageProps = {
  * carrega a posição no grid do chamador (ex.: grid-area da dobra); a logo
  * específica e a cor de fundo continuam decisão de quem consome.
  */
-export default function BrandStage({ children, className }: BrandStageProps) {
-  return <div className={`${styles.stage}${className ? ` ${className}` : ""}`}>{children}</div>;
+export default function BrandStage({ children, className, compact }: BrandStageProps) {
+  return (
+    <div className={`${styles.stage}${compact ? ` ${styles.compact}` : ""}${className ? ` ${className}` : ""}`}>
+      {children}
+    </div>
+  );
 }

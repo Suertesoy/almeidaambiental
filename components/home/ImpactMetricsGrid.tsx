@@ -113,14 +113,16 @@ export default function ImpactMetricsGrid({ locale, active }: { locale: Locale; 
           phase === "idle" ? 0 : phase === "counting" ? projected * progress : projected;
         return (
           <div key={metric.id} className={styles.metricItem}>
+            {/* Número e unidade formam um conjunto só (mesma linha de base). */}
             <span className={styles.metricValue}>
               <span aria-hidden="true" className={styles.metricNumber}>
                 {formatImpactNumber(metric, value, locale)}
               </span>
-              {/* Linha da unidade sempre presente: mantém os rótulos alinhados entre os cards. */}
-              <span aria-hidden="true" className={styles.metricUnit}>
-                {unit}
-              </span>
+              {unit && (
+                <span aria-hidden="true" className={styles.metricUnit}>
+                  {unit}
+                </span>
+              )}
             </span>
             <span className={styles.metricLabel}>{label}</span>
           </div>
