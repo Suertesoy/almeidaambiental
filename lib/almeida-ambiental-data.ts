@@ -13,21 +13,21 @@ export const HERO_IMAGE = img(
   "almeida-ambiental",
   "hero",
   "/almeida-ambiental/patio-industrial.webp",
-  "Pátio industrial de reciclagem com fardos de papelão organizados, empilhadeira em operação e galpão moderno ao fundo"
+  "Imagem ilustrativa de um pátio industrial de reciclagem com fardos de papelão organizados, empilhadeira e galpão moderno ao fundo"
 );
 
 export const POSITIONING_IMAGE = img(
   "almeida-ambiental",
   "posicionamento",
   "/almeida-ambiental/detalhe-classificacao.webp",
-  "Detalhe de mãos com luvas de trabalho classificando papelão e papel em esteira de triagem"
+  "Imagem ilustrativa: mãos com luvas de trabalho classificando papelão e papel sobre uma esteira de triagem"
 );
 
 export const MATERIALS_IMAGE = img(
   "almeida-ambiental",
   "materiais",
   "/almeida-ambiental/materiais-composicao.webp",
-  "Composição editorial de matérias-primas recicláveis: papelão, papel, plástico, madeira e metal sobre fundo neutro"
+  "Composição editorial ilustrativa de matérias-primas recicláveis: papelão, papel, plástico, madeira e metal sobre fundo neutro"
 );
 
 export type Pillar = {
@@ -54,8 +54,8 @@ export const PILLARS: Pillar[] = [
     image: img(
       "almeida-ambiental",
       "pilar-coleta",
-      "/almeida-ambiental/coleta-rollon.webp",
-      "Caminhão roll-on/roll-off operando em pátio industrial durante a coleta de resíduos"
+      "/almeida-ambiental/coleta-reciclaveis.webp",
+      "Imagem ilustrativa de um contêiner roll-on/roll-off carregado de papelão e fardos de plástico sendo movimentado por um caminhão em pátio industrial"
     ),
   },
   {
@@ -67,8 +67,8 @@ export const PILLARS: Pillar[] = [
     image: img(
       "almeida-ambiental",
       "pilar-triagem",
-      "/almeida-ambiental/triagem-esteira.webp",
-      "Esteira de triagem industrial com trabalhadores classificando papel, plástico e embalagens"
+      "/almeida-ambiental/triagem-esteira-epi.webp",
+      "Imagem ilustrativa de mãos com luvas e jaqueta de alta visibilidade separando papelão, papel e plástico sobre uma esteira de triagem"
     ),
   },
   {
@@ -82,7 +82,7 @@ export const PILLARS: Pillar[] = [
       "almeida-ambiental",
       "pilar-trituracao",
       "/almeida-ambiental/triturador.webp",
-      "Triturador industrial processando papel em fragmentos dentro de galpão"
+      "Imagem ilustrativa de um triturador industrial processando papel em fragmentos dentro de galpão"
     ),
   },
 ];
@@ -103,14 +103,14 @@ export const HERO_IMAGE_EN = img(
   "almeida-ambiental",
   "hero",
   "/almeida-ambiental/patio-industrial.webp",
-  "Industrial recycling yard with organized cardboard bales, a forklift in operation and a modern warehouse in the background"
+  "Illustrative image of an industrial recycling yard with organized cardboard bales, a forklift and a modern warehouse in the background"
 );
 
 export const POSITIONING_IMAGE_EN = img(
   "almeida-ambiental",
   "posicionamento",
   "/almeida-ambiental/detalhe-classificacao.webp",
-  "Close-up of gloved hands sorting cardboard and paper on a sorting conveyor belt"
+  "Illustrative image: gloved hands sorting cardboard and paper on a sorting conveyor belt"
 );
 
 export const PILLARS_EN: Pillar[] = [
@@ -123,8 +123,8 @@ export const PILLARS_EN: Pillar[] = [
     image: img(
       "almeida-ambiental",
       "pilar-coleta",
-      "/almeida-ambiental/coleta-rollon.webp",
-      "Roll-on/roll-off truck operating in an industrial yard during waste collection"
+      "/almeida-ambiental/coleta-reciclaveis.webp",
+      "Illustrative image of a roll-on/roll-off container loaded with cardboard and plastic bales being handled by a truck in an industrial yard"
     ),
   },
   {
@@ -136,8 +136,8 @@ export const PILLARS_EN: Pillar[] = [
     image: img(
       "almeida-ambiental",
       "pilar-triagem",
-      "/almeida-ambiental/triagem-esteira.webp",
-      "Industrial sorting line with workers classifying paper, plastic and packaging"
+      "/almeida-ambiental/triagem-esteira-epi.webp",
+      "Illustrative image of gloved hands and a high-visibility jacket sorting cardboard, paper and plastic on a sorting conveyor belt"
     ),
   },
   {
@@ -151,7 +151,7 @@ export const PILLARS_EN: Pillar[] = [
       "almeida-ambiental",
       "pilar-trituracao",
       "/almeida-ambiental/triturador.webp",
-      "Industrial shredder processing paper into fragments inside a warehouse"
+      "Illustrative image of an industrial shredder processing paper into fragments inside a warehouse"
     ),
   },
 ];

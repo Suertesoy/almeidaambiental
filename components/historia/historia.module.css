@@ -99,6 +99,15 @@
   object-position: center 42%;
 }
 
+/* Mobile retrato: o recorte central de uma foto 3:2 corta o jipe e deixa só
+   a porta do galpão. 55% mantém a prensa (âncora da cena) e a frente do
+   veículo dentro do quadro. */
+@media (max-width: 767px) {
+  .heroImage {
+    object-position: 55% 42%;
+  }
+}
+
 .heroScrim {
   position: absolute;
   inset: 0;
@@ -565,12 +574,21 @@
   opacity: 1;
 }
 
+/* Proporção por orientação do arquivo — nada de 16:9 forçado: as peças
+   paisagem nascem em 3:2 e o retrato de 1993 em 3:4, então o recorte quase
+   não come imagem. A largura sobe de 340px para dar presença ao marco visual
+   sem competir com o ano (o texto segue em 42ch). */
 .eventImageWrap {
   position: relative;
-  margin-top: 14px;
-  max-width: 340px;
-  aspect-ratio: 16 / 9;
+  margin-top: 16px;
+  max-width: min(100%, 440px);
+  aspect-ratio: 3 / 2;
   overflow: hidden;
+}
+
+.eventImagePortrait {
+  max-width: min(100%, 300px);
+  aspect-ratio: 3 / 4;
 }
 
 @media (min-width: 768px) {

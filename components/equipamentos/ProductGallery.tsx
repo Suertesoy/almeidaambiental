@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./product-gallery.module.css";
 import { CloseIcon } from "../icons";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import type { EditorialImage, EditorialVideo } from "../../lib/media";
 import type { Locale } from "../../lib/i18n/locale";
 
@@ -107,6 +108,7 @@ export default function ProductGallery({ image, gallery, video, locale }: Produc
                 aria-label={t.zoomImage(slide.image.alt)}
               >
                 <img src={slide.image.src} alt={slide.image.alt} loading="lazy" decoding="async" />
+                {slide.image.sourceType !== "archive" && <IllustrativeBadge locale={locale} />}
               </button>
             </div>
           ) : (

@@ -40,7 +40,7 @@ export const CARTONAGEM_IMAGE = img(
   "saturno-ambiental",
   "cartonagem",
   "/saturno-ambiental/cartonagem-caixas.webp",
-  "Caixas de papelão novas e usadas organizadas em diferentes tamanhos dentro de galpão"
+  "Imagem ilustrativa de caixas de papelão novas e usadas organizadas em diferentes tamanhos dentro de galpão"
 );
 
 /**
@@ -131,7 +131,7 @@ export const CARTONAGEM_IMAGE_EN = img(
   "saturno-ambiental",
   "cartonagem",
   "/saturno-ambiental/cartonagem-caixas.webp",
-  "New and used cardboard boxes organized in different sizes inside a warehouse"
+  "Illustrative image of new and used cardboard boxes organized in different sizes inside a warehouse"
 );
 
 export const HERO_META_EN = [

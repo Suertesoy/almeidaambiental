@@ -45,13 +45,15 @@ export default function TimelineEventRow({
         </p>
 
         {event.image && (
-          <div className={styles.eventImageWrap}>
+          <div
+            className={`${styles.eventImageWrap} ${event.image.orientation === "portrait" ? styles.eventImagePortrait : ""}`}
+          >
             <img
               src={event.image.src}
               alt={event.image.alt}
               loading="lazy"
               decoding="async"
-              style={{ objectPosition: event.image.orientation === "portrait" ? "center 30%" : "center" }}
+              style={{ objectPosition: event.image.orientation === "portrait" ? "center 35%" : "center" }}
             />
             {event.image.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
           </div>
