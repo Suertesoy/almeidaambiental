@@ -751,7 +751,7 @@ html:has([data-page="home"]) {
   opacity: 0.6;
 }
 
-/* ---------------- Impacto positivo 2025 ---------------- */
+/* ---------------- Impacto positivo (estimativa acumulada) ---------------- */
 
 .impactHead {
   max-width: 760px;
@@ -767,10 +767,12 @@ html:has([data-page="home"]) {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 28px 24px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
-@media (min-width: 720px) {
+/* 4 colunas só quando o número completo de água (11 dígitos) cabe sem
+   quebra; abaixo disso a composição é 2×2. */
+@media (min-width: 1024px) {
   .metricsGrid {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -786,8 +788,36 @@ html:has([data-page="home"]) {
 .metricValue {
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(28px, 1.8vw + 18px, 40px);
+  font-size: clamp(26px, 1.4vw + 16px, 36px);
   line-height: 1;
+  /* Algarismos tabulares: a largura não "pula" a cada atualização. */
+  font-variant-numeric: tabular-nums;
+}
+
+.metricNumber {
+  display: block;
+  white-space: nowrap;
+}
+
+.metricUnit {
+  display: block;
+  margin-top: 8px;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 15px;
+  min-height: 15px;
+}
+
+/* Nota metodológica: secundária, não compete com os números. */
+.metricsNote {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .metricLabel {

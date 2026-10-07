@@ -13,8 +13,8 @@ import ProcessSteps from "../shared/ProcessSteps";
 import MaterialSurface from "../shared/MaterialSurface";
 import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS, FLOW_STEPS_EN } from "../../lib/almeida-ambiental-data";
-import { CountUpMetric, useEnterOnce } from "../AnimatedMetric";
-import { IMPACT_METRICS, IMPACT_METRICS_EN } from "../shared/impactMetrics";
+import { useEnterOnce } from "../AnimatedMetric";
+import ImpactMetricsGrid from "./ImpactMetricsGrid";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
@@ -95,7 +95,9 @@ const COPY = {
       "Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação construída para unir eficiência operacional e responsabilidade ambiental.",
     saturnoTags: ["Gestão de Resíduos", "Cartonagem", "Consultoria"],
     saturnoCta: "Conheça Saturno Ambiental",
-    impactEyebrow: "Impacto Positivo · 2025",
+    impactEyebrow: "Impacto Positivo · estimativa atualizada",
+    impactNote:
+      "Estimativa acumulada com base nos dados operacionais de janeiro a setembro de 2026, projetada pela média diária até a próxima atualização oficial.",
     impactHeadline: "CADA RESÍDUO PROCESSADO VIRA UM NÚMERO QUE A NATUREZA RECONHECE.",
     impactReportCta: "Ver Relatório de Sustentabilidade 2025",
     manifestoAlt: "Grupo Almeida",
@@ -132,7 +134,9 @@ const COPY = {
       "Collection, sorting, shredding, cardboard packaging and environmental consulting come together in an operation built around efficiency and environmental responsibility.",
     saturnoTags: ["Waste Management", "Cardboard Packaging", "Consulting"],
     saturnoCta: "See Saturno Ambiental",
-    impactEyebrow: "Positive Impact · 2025",
+    impactEyebrow: "Positive Impact · updated estimate",
+    impactNote:
+      "Accumulated estimate based on operating data from January to September 2026, projected using the daily average until the next official update.",
     impactHeadline: "WASTE PROCESSED. IMPACT MEASURED.",
     impactReportCta: "View 2025 Sustainability Report",
     manifestoAlt: "Grupo Almeida",
@@ -160,7 +164,6 @@ const COPY = {
 export default function HomePage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
   const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
-  const impactMetrics = locale === "en" ? IMPACT_METRICS_EN : IMPACT_METRICS;
   const impactoRef = useRef<HTMLDivElement>(null);
   const impactoActive = useEnterOnce([impactoRef]);
 
@@ -387,7 +390,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      {/* ---------------- Impacto positivo 2025 ---------------- */}
+      {/* ---------------- Impacto positivo (estimativa acumulada) ---------------- */}
       <section
         className={`${styles.section} ${styles.toneCarvao} ${boundarySurface}`}
         ref={impactoRef}
@@ -400,23 +403,8 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </Reveal>
 
           <Reveal>
-            <div className={styles.metricsGrid}>
-              {impactMetrics.map((metric) => (
-                <div key={metric.label} className={styles.metricItem}>
-                  <span className={styles.metricValue}>
-                    <CountUpMetric
-                      target={metric.target}
-                      format={metric.format}
-                      suffix={metric.suffix}
-                      display={metric.display}
-                      active={impactoActive}
-                      locale={locale}
-                    />
-                  </span>
-                  <span className={styles.metricLabel}>{metric.label}</span>
-                </div>
-              ))}
-            </div>
+            <ImpactMetricsGrid locale={locale} active={impactoActive} />
+            <p className={styles.metricsNote}>{t.impactNote}</p>
 
             {/* Relatório de Sustentabilidade 2025 ainda não disponível — ver
                 DECISOES.md. Botão desabilitado em vez de link quebrado. */}
