@@ -74,3 +74,7 @@ test("textos: unidade e rótulo corretos por idioma", () => {
   assert.equal(IMPACT_TEXT.pt.water.unit, "litros");
   assert.equal(IMPACT_TEXT.en.water.unit, "liters");
 });
+
+test("data-base: acumulado inclui 30/09, projeção começa em 01/10/2026 UTC", () => {
+  assert.equal(IMPACT_BASELINE_AT, "2026-10-01T00:00:00Z");
+});

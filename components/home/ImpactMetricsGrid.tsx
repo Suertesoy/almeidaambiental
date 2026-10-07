@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Locale } from "../../lib/i18n/locale";
 import {
   IMPACT_METRICS,
@@ -12,7 +12,10 @@ import styles from "./home.module.css";
 
 const COUNT_MS = 1400;
 const TICK_MS = 250;
-const NBSP = "\u00A0";
+const A11Y_NOTE: Record<Locale, string> = {
+  pt: "Estimativa acumulada, atualizada automaticamente com base nos dados operacionais de janeiro a setembro de 2026.",
+  en: "Accumulated estimate, automatically updated based on operating data from January to September 2026.",
+};
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
@@ -36,6 +39,7 @@ export default function ImpactMetricsGrid({ locale, active }: { locale: Locale; 
   const [progress, setProgress] = useState(0);
   const [nowMs, setNowMs] = useState(0);
   const text = IMPACT_TEXT[locale];
+  const noteId = useId();
   const startedRef = useRef(false);
   const phaseRef = useRef<Phase>("ssr");
   phaseRef.current = phase;
@@ -95,11 +99,15 @@ export default function ImpactMetricsGrid({ locale, active }: { locale: Locale; 
   }, [phase]);
 
   return (
-    <div className={styles.metricsGrid}>
+    <div className={styles.metricsGrid} role="group" aria-describedby={noteId}>
+      {/* Descrição estável (não é live region): os números animados são
+          aria-hidden, então leitores de tela nunca recebem um valor diferente
+          do exibido nem anúncios a cada atualização. */}
+      <span id={noteId} className="sr-only">
+        {A11Y_NOTE[locale]}
+      </span>
       {IMPACT_METRICS.map((metric) => {
         const { label, unit } = text[metric.id];
-        const unitSuffix = unit ? NBSP + unit : "";
-        const official = formatImpactNumber(metric, metric.baseline, locale) + unitSuffix;
         const projected = phase === "ssr" ? metric.baseline : getProjectedValue(metric, nowMs);
         const value =
           phase === "idle" ? 0 : phase === "counting" ? projected * progress : projected;
@@ -112,9 +120,6 @@ export default function ImpactMetricsGrid({ locale, active }: { locale: Locale; 
               {/* Linha da unidade sempre presente: mantém os rótulos alinhados entre os cards. */}
               <span aria-hidden="true" className={styles.metricUnit}>
                 {unit}
-              </span>
-              <span className="sr-only">
-                {locale === "en" ? `Estimated cumulative: ${official} ${label}` : `Estimativa acumulada: ${official} ${label}`}
               </span>
             </span>
             <span className={styles.metricLabel}>{label}</span>

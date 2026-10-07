@@ -7,16 +7,19 @@ import type { Locale } from "./i18n/locale";
  * Almeida, projetado pela média diária do próprio período.
  *
  * PRÓXIMA ATUALIZAÇÃO OFICIAL: edite só este bloco —
- *   • IMPACT_BASELINE_AT   → fim do período fechado (instante UTC, ISO)
+ *   • IMPACT_BASELINE_AT   → instante UTC em que o período fechado termina
+ *                            (dia seguinte ao último dia incluído)
  *   • IMPACT_BASELINE_DAYS → nº de dias do período usado na média
  *   • `baseline` de cada item de IMPACT_METRICS → acumulado oficial
  * e atualize o texto do período em `IMPACT_NOTE` (components/home/HomePage.tsx).
  * Nenhum componente React precisa mudar.
  *
- * Fonte: Calculadora_Ambiental_Acumulado_2026.xlsx (01/01/2026 a 30/09/2026).
+ * Fonte: Calculadora_Ambiental_Acumulado_2026.xlsx (01/01/2026 a 30/09/2026,
+ * INCLUSIVE — o dia 30/09 já está no acumulado oficial; por isso a projeção
+ * começa à 00:00 UTC de 01/10/2026, e a média é baseline ÷ 273 dias).
  * Referência temporal em UTC (não depende do fuso do visitante).
  */
-export const IMPACT_BASELINE_AT = "2026-09-30T00:00:00Z";
+export const IMPACT_BASELINE_AT = "2026-10-01T00:00:00Z";
 export const IMPACT_BASELINE_DAYS = 273;
 
 export type ImpactMetricId = "trees" | "materials" | "co2" | "water";
