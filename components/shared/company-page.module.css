@@ -11,28 +11,19 @@
    dela.
    ========================================================== */
 
-.container {
-  width: 100%;
-  max-width: 1320px;
-  margin-inline: auto;
-  padding-inline: clamp(20px, 6vw, 64px);
-}
-
-/* Três camadas de spacing (tokens em app/globals.css) em vez de valores
-   arbitrários por seção: compact para subseções internas (materiais,
-   fluxo), default para o ritmo padrão de seção, editorial para capítulos
-   com mais peso narrativo. */
-.section {
-  padding-block: var(--space-section-default);
-}
-
-.sectionCompact {
-  padding-block: var(--space-section-compact);
-}
-
-.sectionEditorial {
-  padding-block: var(--space-section-editorial);
-}
+/* Primitivas (container, ritmo de capítulo, tipografia, CTAs, duo, tagRow)
+   vivem em editorial.module.css — fonte única, também usada pela Home. Aqui
+   só as reexportamos, para que os nomes de classe dos TSX não mudem. */
+.container { composes: container from "./editorial.module.css"; }
+.section { composes: section from "./editorial.module.css"; }
+.sectionCompact { composes: sectionCompact from "./editorial.module.css"; }
+.sectionEditorial { composes: sectionEditorial from "./editorial.module.css"; }
+.chapter { composes: chapter from "./editorial.module.css"; }
+.chapterOpen { composes: chapterOpen from "./editorial.module.css"; }
+.chapterMiddle { composes: chapterMiddle from "./editorial.module.css"; }
+.chapterClose { composes: chapterClose from "./editorial.module.css"; }
+.companyOpen { composes: companyOpen from "./editorial.module.css"; }
+.pageClose { composes: pageClose from "./editorial.module.css"; }
 
 /* Cada tom expõe os papéis de texto como custom properties (--role-*), não
    só a cor "primary" via `color`. Custom properties atravessam a fronteira
@@ -90,317 +81,48 @@
   background: var(--color-stone-warm-alt);
 }
 
-/* ---------------- Tipografia editorial ---------------- */
+/* ---------------- Tipografia, CTAs e duo (reexportados) ---------------- */
 
-.eyebrow {
-  margin: 0 0 var(--gap-eyebrow-title);
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
+.eyebrow { composes: eyebrow from "./editorial.module.css"; }
+.eyebrowAccent { composes: eyebrowAccent from "./editorial.module.css"; }
+.locationLine { composes: locationLine from "./editorial.module.css"; }
+.headline { composes: headline from "./editorial.module.css"; }
+.gold { composes: gold from "./editorial.module.css"; }
+.subheading { composes: subheading from "./editorial.module.css"; }
+.dataNumber { composes: dataNumber from "./editorial.module.css"; }
+.body { composes: body from "./editorial.module.css"; }
 
-/* Modificador seletivo (Seção 9): eyebrows que funcionam como marcador
-   institucional/categórico forte usam o accent dourado atenuado em vez do
-   muted padrão. Aplicado caso a caso pela página, não por padrão — a
-   maioria dos eyebrows continua .eyebrow puro. */
-.eyebrowAccent {
-  color: var(--role-accent, var(--text-accent));
-}
+.ctaRow { composes: ctaRow from "./editorial.module.css"; }
+.btn { composes: btn from "./editorial.module.css"; }
+.btnOutlineOnDark { composes: btnOutlineOnDark from "./editorial.module.css"; }
+.btnOutlineOnLight { composes: btnOutlineOnLight from "./editorial.module.css"; }
+.btnSolidGold { composes: btnSolidGold from "./editorial.module.css"; }
+.btnEditorial { composes: btnEditorial from "./editorial.module.css"; }
 
-.locationLine {
-  margin: 0 0 14px;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
+.duo { composes: duo from "./editorial.module.css"; }
+.duoMediaRight { composes: duoMediaRight from "./editorial.module.css"; }
+.duoMediaLeft { composes: duoMediaLeft from "./editorial.module.css"; }
+.duoMediaNarrow { composes: duoMediaNarrow from "./editorial.module.css"; }
+.duoMediaWide { composes: duoMediaWide from "./editorial.module.css"; }
+.duoEven { composes: duoEven from "./editorial.module.css"; }
+.duoContent { composes: duoContent from "./editorial.module.css"; }
+.duoMedia { composes: duoMedia from "./editorial.module.css"; }
+.duoMediaLandscape { composes: duoMediaLandscape from "./editorial.module.css"; }
+.duoMedia4x3 { composes: duoMedia4x3 from "./editorial.module.css"; }
+.duoMediaTall { composes: duoMediaTall from "./editorial.module.css"; }
+.duoMediaSquare { composes: duoMediaSquare from "./editorial.module.css"; }
 
-.headline {
-  margin: 0 0 var(--gap-title-body);
-  max-width: 640px;
-  color: inherit;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(30px, 2.6vw + 16px, 48px);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.gold {
-  color: var(--color-gold-aged);
-}
-
-/* Camada "Subheading / Editorial Heading": para títulos internos que hoje
-   usavam .headline (48px) fora de contexto de título principal de seção —
-   ex. nome de cada pilar, cada produto, cada frente de serviço. Mantém a
-   serifada como protagonista, só um degrau abaixo de .headline. */
-.subheading {
-  margin: 0 0 12px;
-  color: inherit;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(20px, 1.6vw + 12px, 28px);
-  line-height: 1.16;
-  letter-spacing: -0.005em;
-  text-wrap: balance;
-}
-
-/* Camada "Dados técnicos": números que precisam ser lidos rápido e sem
-   ambiguidade (telefone, CNPJ) — sempre sans serif, nunca a serifada
-   editorial. */
-.dataNumber {
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: clamp(18px, 1.2vw + 14px, 22px);
-  letter-spacing: 0.01em;
-  color: inherit;
-}
-
-.body {
-  margin: 0 0 20px;
-  max-width: 56ch;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 400;
-  font-size: clamp(15px, 0.3vw + 14px, 18px);
-  line-height: 1.62;
-}
-
-.body:last-of-type {
-  margin-bottom: var(--gap-body-support);
-}
-
-/* ---------------- CTAs ---------------- */
-
-.ctaRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  /* Fecha o raciocínio (Seção 17: "bloco técnico → CTA"): antes eram 4px,
-     quase colado no specsList/tagRow anterior. Colapsa com o margin-bottom
-     do irmão anterior (24px de .body/.tagRow), então o resultado prático
-     já é sempre >= 32px, nunca 24+32 somados. */
-  margin-top: var(--gap-support-cta);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 52px;
-  padding-inline: 24px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-  background: transparent;
-}
-
-.btnOutlineOnDark {
-  border-color: rgba(247, 246, 241, 0.4);
-  color: var(--color-background);
-}
-
-.btnOutlineOnDark:hover {
-  background: rgba(247, 246, 241, 0.1);
-}
-
-.btnOutlineOnLight {
-  border-color: rgba(21, 21, 15, 0.32);
-  color: var(--color-foreground);
-}
-
-.btnOutlineOnLight:hover {
-  background: rgba(21, 21, 15, 0.06);
-}
-
-.btnSolidGold {
-  background: var(--color-gold-aged);
-  border-color: var(--color-gold-aged);
-  color: var(--color-forest-deep);
-}
-
-.btnSolidGold:hover {
-  opacity: 0.9;
-}
-
-/* Botões como ação (Checkpoint B, Seção 12): no mobile, CTAs que se
-   apresentam como botão ocupam 100% do .container/.duoContent que já
-   envolve o texto acima deles — nunca 100vw, nunca um container paralelo.
-   .btnEditorial fica de fora (Seção 13): é link, não botão, e mantém
-   largura de conteúdo mesmo dentro de um .ctaRow empilhado. */
+/* O .finalCta centraliza texto (headline/body) — no mobile o link editorial
+   acompanha o mesmo eixo em vez de colar na borda esquerda do container. */
 @media (max-width: 639px) {
-  .ctaRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn {
-    width: 100%;
-    height: auto;
-    min-height: 52px;
-    padding-block: 14px;
-    white-space: normal;
-    text-align: center;
-  }
-
-  .btnEditorial {
-    align-self: flex-start;
-  }
-
-  /* .finalCta centraliza texto (headline/body) — o link editorial acompanha
-     o mesmo eixo em vez de colar na borda esquerda do container. */
   .finalCta .btnEditorial {
     align-self: center;
   }
 }
 
-.btn:disabled {
-  opacity: 0.48;
-  cursor: not-allowed;
-}
-
-.btn:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* Terceiro nível de CTA: link editorial (texto + seta), para cross-links
-   que não são a conversão principal da tela (ex. "Conheça a Almeida
-   Equipamentos"). Não é um .btn — sem caixa, sem altura fixa. */
-.btnEditorial {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: inherit;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btnEditorial::after {
-  content: "→";
-  transition: transform 0.15s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .btnEditorial::after {
-    transition: none;
-  }
-}
-
-.btnEditorial:hover::after {
-  transform: translateX(3px);
-}
-
-.btnEditorial:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 4px;
-}
-
-/* ---------------- Duo (texto + fotografia) ---------------- */
-
-.duo {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas: "media" "content";
-  gap: clamp(28px, 6vw, 48px);
-  align-items: center;
-}
-
-@media (min-width: 1024px) {
-  .duo {
-    gap: clamp(48px, 5vw, 88px);
-  }
-
-  .duoMediaRight {
-    grid-template-columns: 7fr 5fr;
-    grid-template-areas: "content media";
-  }
-
-  .duoMediaLeft {
-    grid-template-columns: 5fr 7fr;
-    grid-template-areas: "media content";
-  }
-
-  .duoMediaRight.duoMediaNarrow {
-    grid-template-columns: 8fr 4fr;
-  }
-
-  .duoMediaLeft.duoMediaWide {
-    grid-template-columns: 7fr 5fr;
-  }
-
-  .duoMediaLeft.duoMediaNarrow {
-    grid-template-columns: 4fr 8fr;
-  }
-
-  .duoEven {
-    grid-template-columns: 6fr 6fr;
-  }
-}
-
-.duoContent {
-  grid-area: content;
-}
-
-.duoMedia {
-  grid-area: media;
-  position: relative;
-  overflow: hidden;
-}
-
-.duoMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.duoMediaLandscape {
-  aspect-ratio: 16 / 10;
-}
-
-.duoMediaTall {
-  aspect-ratio: 3 / 4;
-}
-
-.duoMediaSquare {
-  aspect-ratio: 1 / 1;
-}
-
 /* ---------------- Apoio (tags separadas por ponto) ---------------- */
 
-.tagRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 0;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.tagRow li:not(:last-child)::after {
-  content: "·";
-  margin-left: 14px;
-  opacity: 0.6;
-}
+.tagRow { composes: tagRow from "./editorial.module.css"; }
 
 /* Lista real (Seções 23/37): um item por linha, marcador discreto — para
    listas de apoio mais longas ou técnicas (specs de produto, itens de
@@ -489,7 +211,7 @@
 
 .finalCta .body {
   max-width: 52ch;
-  margin-inline: auto 24px;
+  margin-inline: auto;
   text-align: center;
 }
 

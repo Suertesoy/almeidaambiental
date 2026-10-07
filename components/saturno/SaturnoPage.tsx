@@ -142,7 +142,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
             deste wrapper) e o símbolo atravessa a linha. No desktop,
             "headline lateral" evita que a seção vire uma coluna estreita
             perdida em 1440px (Seção 43). */}
-        <section className={`${shared.section} ${boundarySurface}`}>
+        <section className={`${shared.chapterOpen} ${boundarySurface}`}>
           <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
           <div className={shared.container}>
             <div className={styles.positioningGrid}>
@@ -164,7 +164,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
             Trituração/Descaracterização (correção 2026-08-20, pedido explícito
             do responsável do projeto). Cartonagem e Gestão Ambiental continuam
             como capítulos próprios abaixo, fora desta grade compacta. */}
-        <section id="frentes" className={`${shared.sectionCompact} ${boundarySurface}`}>
+        <section id="frentes" className={`${shared.chapterClose} ${boundarySurface}`}>
           <div className={shared.container}>
             <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.servicesEyebrow}</p>
             <h2 className={shared.headline}>{t.servicesHeadline}</h2>
@@ -181,7 +181,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         </section>
 
         {/* ---------------- Cartonagem (exclusiva, capítulo próprio) ---------------- */}
-        <section className={`${shared.sectionEditorial} ${boundarySurface}`}>
+        <section className={`${shared.chapter} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft}`}>
               <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
@@ -216,7 +216,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
             headline lateral no desktop (mesma gramática do posicionamento) e
             a lista técnica ocupando a coluna larga em vez de dividir espaço
             com uma imagem ilustrativa. */}
-        <section className={`${shared.sectionEditorial} ${boundarySurface}`}>
+        <section className={`${shared.chapter} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={styles.positioningGrid}>
               <div>

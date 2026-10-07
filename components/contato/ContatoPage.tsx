@@ -201,7 +201,7 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
       })}
 
       {/* ---------------- Fechamento ---------------- */}
-      <section className={`${shared.section} ${shared.toneCarvao} ${shared.finalCta}`}>
+      <section className={`${shared.pageClose} ${shared.toneCarvao} ${shared.finalCta}`}>
         <div className={shared.container}>
           <h2 className={shared.finalCtaHeadline}>{t.finalHeadline}</h2>
           <p className={shared.body}>{t.finalBody}</p>

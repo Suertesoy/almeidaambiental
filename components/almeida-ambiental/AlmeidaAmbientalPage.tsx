@@ -131,7 +131,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
       <div className={`${shared.toneForest} ${styles.materialTerritory}`}>
         <MaterialSurface surface="ambiental-materia" />
 
-        <section className={`${shared.section} ${boundarySurface}`}>
+        <section className={`${shared.chapterOpen} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow}`}>
               <div className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
@@ -148,7 +148,10 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
         {/* Serviços: três pilares */}
         <div id="servicos">
           {pillars.map((pillar, index) => (
-            <section key={pillar.id} className={`${shared.section} ${boundarySurface}`}>
+            <section
+              key={pillar.id}
+              className={`${index === pillars.length - 1 ? shared.chapterClose : shared.chapterMiddle} ${boundarySurface}`}
+            >
               <div className={shared.container}>
                 <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
                   <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
