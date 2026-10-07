@@ -213,9 +213,10 @@
   gap: 0;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 560px) {
   .matrixGrid {
     grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(24px, 4vw, 48px);
   }
 }
 
@@ -226,7 +227,7 @@
 }
 
 .matrixItem {
-  padding: 20px 0;
+  padding: 16px 0 18px;
   border-top: 1px solid rgba(21, 21, 15, 0.16);
 }
 
@@ -265,44 +266,50 @@
 
 .matrixProducts {
   margin: 0;
-  color: var(--role-muted, var(--text-muted));
+  color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 /* ---------------- Parcerias internacionais ---------------- */
 
+/* A imagem de feira é coadjuvante (ilustrativa, aguarda acervo real): paisagem
+   curta no mobile, 4:3 na coluna estreita do tablet/desktop. */
 .partnersMedia {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  margin-bottom: clamp(32px, 5vw, 48px);
+  aspect-ratio: 16 / 10;
 }
 
-.partnersMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+@media (min-width: 768px) {
+  .partnersMedia {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Posicionamento: paisagem no mobile (a mídia vem primeiro e não pode empurrar
+   o texto), quadrada nas colunas de tablet/desktop. */
+.positioningMedia {
+  aspect-ratio: 16 / 10;
+}
+
+@media (min-width: 768px) {
+  .positioningMedia {
+    aspect-ratio: 1 / 1;
+  }
 }
 
 .partnersList {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(24px, 5vw, 56px);
+  gap: 8px clamp(20px, 3vw, 40px);
   align-items: baseline;
+  margin-top: 28px;
 }
 
 .partnerName {
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(22px, 2vw + 12px, 34px);
+  font-size: clamp(20px, 1.2vw + 14px, 28px);
   letter-spacing: -0.01em;
 }
 
-/* Espaço antes do CTA que fecha a matriz material→tecnologia (era um
-   style inline na página). */
-.matrixCtaRow {
-  margin-top: clamp(32px, 5vw, 48px);
-}

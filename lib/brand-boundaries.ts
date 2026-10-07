@@ -28,7 +28,7 @@ export type BrandBoundaryId =
   | "saturno-impacto"
   /* Páginas internas — só mudanças narrativas de grande importância */
   | "saturno-territorio"
-  | "equipamentos-catalogo"
+  | "equipamentos-abertura"
   | "ambiental-processo";
 
 export type BrandBoundary = {
@@ -58,9 +58,9 @@ export const BRAND_BOUNDARIES: Record<BrandBoundaryId, BrandBoundary> = {
     side: "left",
     note: "/saturno-ambiental: abertura editorial → território material da Saturno.",
   },
-  "equipamentos-catalogo": {
+  "equipamentos-abertura": {
     side: "right",
-    note: "/almeida-equipamentos: posicionamento → catálogo técnico explorável.",
+    note: "/almeida-equipamentos: o Hero fotográfico não hospeda a metade de saída; o símbolo emerge da borda do capítulo claro de posicionamento e catálogo.",
   },
   /* Acrescentada na auditoria de fronteiras da rodada de materialidade
      (Seção 21): /almeida-ambiental era a única página de empresa sem
