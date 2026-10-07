@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://almeidaambiental.vercel.app"),
   title: "Grupo Almeida",
   description: "Site institucional do Grupo Almeida.",
+  icons: { icon: "/brand/simbolo-grupo-almeida-color.svg" },
   alternates: {
     canonical: "/",
     languages: { "pt-BR": "/", en: "/en", "x-default": "/" },

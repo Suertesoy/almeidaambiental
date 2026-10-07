@@ -6,6 +6,7 @@ import { playfairDisplay, inter } from "../../lib/fonts";
 export const metadata: Metadata = {
   metadataBase: new URL("https://almeidaambiental.vercel.app"),
   title: "Grupo Almeida",
+  icons: { icon: "/brand/simbolo-grupo-almeida-color.svg" },
   description:
     "Learn about Grupo Almeida's work in waste management, environmental services and equipment solutions across Santa Catarina, Brazil.",
   alternates: {
