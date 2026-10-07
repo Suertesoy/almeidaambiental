@@ -42,8 +42,10 @@ function withViewTransition(mutate: () => void) {
  * promessa, texto, "ideal para", benefícios, specs e CTA, tudo aberto de
  * uma vez, seis vezes) por descoberta primeiro e profundidade sob demanda.
  *
- * Mobile: cada equipamento aparece como imagem grande + nome + uma frase +
- * "Ver detalhes"; tocar abre a experiência completa em tela cheia.
+ * Mobile (< 768px): cada equipamento é uma linha com miniatura + fabricante +
+ * nome + uma frase + "Ver detalhes"; tocar abre a experiência completa em
+ * tela cheia. Tablet (768–1023px): os mesmos itens numa grade de duas colunas
+ * de cartões (ver product-explorer.module.css).
  *
  * Desktop: os mesmos itens viram a coluna esquerda de um master-detail —
  * selecionar troca a imagem grande, o nome e o resumo com uma transição

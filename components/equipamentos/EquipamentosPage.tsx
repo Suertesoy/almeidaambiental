@@ -28,38 +28,48 @@ import type { Locale } from "../../lib/i18n/locale";
 
 const MODALITIES = { pt: ["Compra", "Locação", "Consignação"], en: ["Purchase", "Rental", "Consignment"] } as const;
 
+/*
+ * Distribuição das mensagens (rodada de refino de Equipamentos): cada bloco
+ * diz uma coisa que o anterior não disse.
+ *   Hero         → o que a tecnologia entrega (volume, eficiência)
+ *   Posicionamento → como a empresa avalia (a única vez que "operação" é tese)
+ *   Catálogo     → o que existe
+ *   Como escolher → por que compactar importa (transporte) e por onde começar (material)
+ *   Parcerias    → de onde vem a tecnologia
+ *   Grupo        → prova de uso (a mesma tecnologia trabalha na Ambiental)
+ *   Fechamento   → ação: material, volume e espaço
+ */
 const COPY = {
   pt: {
     heroEyebrow: "Almeida Equipamentos",
-    heroTitle: "Tecnologia para movimentar menos volume e mais eficiência.",
+    heroTitle: "Tecnologia para movimentar menos volume com mais eficiência.",
     heroLede:
       "Equipamentos para compactação, prensagem, desidratação e armazenagem desenvolvidos a partir de necessidades reais da gestão de resíduos.",
-    heroSubcopy: "Tecnologias internacionais, produção própria e experiência operacional dentro do Grupo Almeida.",
+    heroSubcopy: "Tecnologias internacionais e produção própria do Grupo Almeida.",
     heroPrimaryCta: "Conheça as tecnologias",
     heroSecondaryCta: "Encontre a solução para sua operação",
-    positioningHeadline: "Equipamentos escolhidos por quem também vive a operação.",
+    positioningHeadline: "Escolher um equipamento é avaliar o que ele muda na operação.",
     positioningBody:
-      "A Almeida Equipamentos nasceu da proximidade entre tecnologia e gestão de resíduos. O conhecimento construído na operação ambiental permite avaliar não apenas a máquina, mas o que ela muda em espaço, transporte, produtividade e rotina.",
+      "A Almeida Equipamentos nasceu da proximidade entre tecnologia e gestão de resíduos. Por isso a conversa vai além da máquina: considera espaço, transporte, produtividade e a rotina de quem opera.",
     catalogEyebrow: "Catálogo técnico",
-    catalogHeadline: "Seis tecnologias. Comece pela que se parece com a sua operação.",
+    catalogHeadline: "Seis tecnologias. Cada uma resolve um tipo de problema.",
     catalogBody:
       "Escolha um equipamento para ver galeria, aplicação, benefícios e as especificações confirmadas pelo fabricante.",
-    matrixHeadline: "O equipamento começa pelo material, não pela máquina.",
+    densityEyebrow: "Como escolher",
+    matrixHeadline: "A escolha começa pelo material, não pela máquina.",
     matrixBody:
-      "Volume, densidade, umidade, espaço disponível e frequência de coleta mudam completamente a solução. Por isso, a escolha começa entendendo a operação.",
-    matrixCta: "Descrever minha operação",
+      "Volume, densidade, umidade, espaço disponível e frequência de coleta mudam a solução. Veja por onde começar para cada material.",
     partnersEyebrow: "Parcerias internacionais",
     partnersHeadline: "Tecnologia internacional aplicada à experiência brasileira.",
     partnersBody:
       "A presença histórica do Grupo Almeida em contato com tecnologias europeias — incluindo a feira IFAT, em Munique, referência mundial em soluções ambientais — é parte relevante do posicionamento da Almeida Equipamentos.",
-    crossEyebrow: "Tecnologia em operação real",
-    crossHeadline: "Antes de chegar ao catálogo, cada tecnologia já opera dentro do próprio grupo.",
+    crossHeadline: "A mesma tecnologia do catálogo já trabalha dentro do Grupo.",
     crossBody:
-      "Os mesmos equipamentos apresentados aqui sustentam a operação diária da Almeida Ambiental — coleta, triagem e trituração em escala real, não em teoria. É essa proximidade entre quem vende a tecnologia e quem também vive a operação que orienta cada recomendação.",
+      "Na Almeida Ambiental, coleta, triagem e trituração em escala real mostram como cada equipamento se comporta no dia a dia. Esse uso orienta o que a Almeida Equipamentos recomenda.",
     crossCta: "Conheça a Almeida Ambiental",
-    finalHeadline: "A melhor máquina é a que faz sentido para a sua operação.",
+    finalHeadline: "Diga o material, o volume e o espaço. Ajudamos a encontrar o equipamento certo.",
     finalBody:
-      "Conte qual material você processa, o volume aproximado e o espaço disponível. A equipe da Almeida Equipamentos pode orientar a solução mais adequada.",
+      "A equipe da Almeida Equipamentos avalia o seu cenário e orienta a solução, seja por compra, locação ou consignação.",
     finalCta: "Falar com a Almeida Equipamentos",
   },
   en: {
@@ -67,31 +77,30 @@ const COPY = {
     heroTitle: "Technology that reduces volume and improves operational efficiency.",
     heroLede:
       "Equipment for compaction, baling, dewatering and storage, designed around the practical realities of waste management.",
-    heroSubcopy: "International technology, in-house production and operational experience within Grupo Almeida.",
+    heroSubcopy: "International technology and in-house production by Grupo Almeida.",
     heroPrimaryCta: "See the technologies",
     heroSecondaryCta: "Find the solution for your operation",
-    positioningHeadline: "Equipment selected by people who work with these operations every day.",
+    positioningHeadline: "Choosing equipment means weighing its impact on your operation.",
     positioningBody:
-      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That hands-on experience means every recommendation looks beyond the machine itself, to how it affects space requirements, transport, productivity and day-to-day operations.",
+      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That is why the conversation goes beyond the machine: space, transport, productivity and the daily routine of the people who run it.",
     catalogEyebrow: "Technical catalog",
-    catalogHeadline: "Six technologies. Start with the one that best matches your operation.",
+    catalogHeadline: "Six technologies. Each solves a different kind of problem.",
     catalogBody: "Choose a piece of equipment to see its gallery, application, benefits and manufacturer-confirmed specs.",
-    matrixHeadline: "The equipment choice starts with the material, not the machine.",
+    densityEyebrow: "How to choose",
+    matrixHeadline: "The choice starts with the material, not the machine.",
     matrixBody:
-      "Volume, density, moisture, available space and collection frequency all shape the right solution — which is why the process starts with understanding how you work.",
-    matrixCta: "Describe my operation",
+      "Volume, density, moisture, available space and collection frequency all shape the solution. See where to start for each material.",
     partnersEyebrow: "International partnerships",
     partnersHeadline: "International technology, shaped by Brazilian operational experience.",
     partnersBody:
       "Grupo Almeida has a long history of engagement with European technologies, including through IFAT in Munich, an internationally recognized trade fair for environmental solutions. This international exposure is an important part of Almeida Equipamentos' positioning.",
-    crossEyebrow: "Field-proven technology",
-    crossHeadline: "Every technology in this catalog is already at work inside the group.",
+    crossHeadline: "The same technology in this catalog already works inside the Group.",
     crossBody:
-      "The same equipment featured here is used in Almeida Ambiental's day-to-day operations — collection, sorting and shredding at full scale, not on paper. Every recommendation comes from people who use this technology themselves, not just sell it.",
+      "At Almeida Ambiental, collection, sorting and shredding at full scale show how each piece of equipment performs day to day. That experience shapes what Almeida Equipamentos recommends.",
     crossCta: "See Almeida Ambiental",
-    finalHeadline: "The best machine is the one that fits your operation.",
+    finalHeadline: "Tell us your material, volume and space. We'll help find the right equipment.",
     finalBody:
-      "Tell us what material you process, your approximate volume and the space available, and the Almeida Equipamentos team can help you find the right fit.",
+      "The Almeida Equipamentos team looks at your situation and recommends a solution, whether by purchase, rental or consignment.",
     finalCta: "Talk to Almeida Equipamentos",
   },
 } as const;
@@ -101,17 +110,16 @@ const COPY = {
  * virtual: sem preço, sem carrinho, sem quantidade, sem favorito, sem
  * badge promocional.
  *
- * Hero técnico → posicionamento (Compra/Locação/Consignação) → catálogo
- * técnico explorável (ProductExplorer, portfólio EXATO de seis itens) →
- * "eficiência que aparece no transporte" → "qual tecnologia para qual
- * material" → parcerias internacionais → cross-link → CTA final.
+ * Três capítulos entre o Hero e o fechamento (capítulo é a unidade
+ * perceptiva, não o <section> — ver editorial.module.css):
  *
- * Rodada de refino editorial: os seis capítulos de produto em sequência
- * vertical e a barra sticky de navegação entre eles deram lugar ao
- * explorador de catálogo — descoberta primeiro, profundidade sob demanda
- * (ver ProductExplorer.tsx / ProductDetail.tsx). A fronteira
- * "equipamentos-catalogo" marca a entrada nesse território com o símbolo
- * atravessando o corte entre as duas superfícies.
+ *   A. O que oferecemos   (pedra)      posicionamento + catálogo explorável
+ *   B. Como escolher      (pedra alt.) eficiência de transporte + material → tecnologia
+ *   C. De onde vem        (pedra)      parcerias internacionais + prova de uso no Grupo
+ *
+ * Dentro de cada capítulo o respiro é metade (chapterOpen/chapterClose) e a
+ * superfície não muda; o tom só troca quando o capítulo troca. O catálogo
+ * (ProductExplorer) é descoberta primeiro, profundidade sob demanda.
  */
 export default function EquipamentosPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
@@ -135,9 +143,9 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
       />
 
-      {/* ---------------- Posicionamento ---------------- */}
-      <section className={`${shared.section} ${shared.toneStone} ${boundarySurface}`}>
-        <BrandBoundaryMark boundary="equipamentos-catalogo" half="leaving" surface="onLight" />
+      {/* ============ Capítulo A — O que oferecemos ============ */}
+      <section className={`${shared.chapterOpen} ${shared.toneStone} ${boundarySurface}`}>
+        <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />
         <div className={shared.container}>
           <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
             <div className={shared.duoContent}>
@@ -154,20 +162,14 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
                 outra de mobile via `mobileSrc` no dado — ver lib/media.ts.
                 Hoje serve a mesma imagem nos dois, enquadrada por
                 objectPosition. */}
-            <div className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
+            <div className={`${shared.duoMedia} ${styles.positioningMedia}`}>
               <EditorialPicture image={detalheMecanicoImage} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- Catálogo técnico explorável ---------------- */}
-      <section
-        id="produtos"
-        className={`${shared.section} ${shared.toneStoneAlt} ${boundarySurface}`}
-        aria-labelledby="produtos-heading"
-      >
-        <BrandBoundaryMark boundary="equipamentos-catalogo" half="entering" surface="onLight" />
+      <section id="produtos" className={`${shared.chapterClose} ${shared.toneStone}`} aria-labelledby="produtos-heading">
         <div className={shared.container}>
           <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.catalogEyebrow}</p>
           <h2 id="produtos-heading" className={shared.headline}>
@@ -179,14 +181,13 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* ---------------- Eficiência que aparece no transporte ---------------- */}
-      <LogisticsEfficiency locale={locale} />
+      {/* ============ Capítulo B — Como escolher ============ */}
+      <LogisticsEfficiency locale={locale} eyebrow={t.densityEyebrow} />
 
-      {/* ---------------- Qual tecnologia para qual material ----------------
-          Consolidação de territórios (Seção 11): usava toneForest, a cor
-          da Almeida Ambiental — a Equipamentos pediu um único ambiente
-          claro e contínuo, sem tons emprestados de outra empresa. */}
-      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
+      {/* Material → tecnologia. Responde "para que serve" (por material); o
+          catálogo acima responde "o que existe". Sem CTA próprio: o único
+          convite à conversa fica no fechamento da página. */}
+      <section className={`${shared.chapterClose} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
           <h2 className={shared.headline}>{t.matrixHeadline}</h2>
           <p className={shared.body}>{t.matrixBody}</p>
@@ -209,38 +210,36 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
               );
             })}
           </div>
-          <div className={`${shared.ctaRow} ${styles.matrixCtaRow}`}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref(CONTACT_ANCHORS.saoJose, locale)}>
-              {t.matrixCta}
-            </Link>
+        </div>
+      </section>
+
+      {/* ============ Capítulo C — De onde vem a tecnologia ============ */}
+      <section className={`${shared.chapterOpen} ${shared.toneStone}`}>
+        <div className={shared.container}>
+          <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
+            <div className={shared.duoContent}>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.partnersEyebrow}</p>
+              <h2 className={shared.headline}>{t.partnersHeadline}</h2>
+              <p className={shared.body}>{t.partnersBody}</p>
+              <div className={styles.partnersList}>
+                {PARTNERS.map((partner) => (
+                  <span key={partner} className={styles.partnerName}>
+                    {partner}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* Imagem ilustrativa de feira: aguarda acervo real da IFAT. */}
+            <div className={`${shared.duoMedia} ${styles.partnersMedia}`}>
+              <EditorialPicture image={feiraImage} />
+              <IllustrativeBadge locale={locale} />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- Parcerias internacionais ---------------- */}
-      <section className={`${shared.section} ${shared.toneStone}`}>
+      <section className={`${shared.chapterClose} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.partnersEyebrow}</p>
-          <h2 className={shared.headline}>{t.partnersHeadline}</h2>
-          <div className={styles.partnersMedia}>
-            <EditorialPicture image={feiraImage} />
-            <IllustrativeBadge locale={locale} />
-          </div>
-          <p className={shared.body}>{t.partnersBody}</p>
-          <div className={styles.partnersList}>
-            {PARTNERS.map((partner) => (
-              <span key={partner} className={styles.partnerName}>
-                {partner}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Cross-link: Almeida Ambiental ---------------- */}
-      <section className={`${shared.section} ${shared.toneStoneAlt}`}>
-        <div className={shared.container}>
-          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.crossEyebrow}</p>
           <h2 className={shared.headline}>{t.crossHeadline}</h2>
           <p className={shared.body}>{t.crossBody}</p>
           <div className={shared.ctaRow}>

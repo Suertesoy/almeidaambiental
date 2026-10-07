@@ -101,6 +101,11 @@ Não registrar aqui: ajustes individuais de CSS, coordenadas, breakpoints experi
     - **Símbolo do Grupo:** BrandBoundaryMark só para costura entre territórios; BrandWatermark pontual (CTA final); MaterialSurface.symbol só quando fizer parte da materialidade (hoje, nenhum).
     - **Imagens ilustrativas** (inclusive nos pilares da Ambiental) levam IllustrativeBadge.
 
+25. **Almeida Equipamentos em três capítulos (2026-10).** Entre o Hero e o fechamento a página tem três capítulos, não oito seções: A "O que oferecemos" (posicionamento + catálogo, pedra), B "Como escolher" (eficiência de transporte + material → tecnologia, pedra alternativa), C "De onde vem a tecnologia" (parcerias + prova de uso dentro do Grupo, pedra). O tom só muda quando o capítulo muda; dentro dele o respiro é metade.
+    - **Catálogo (ProductExplorer) tem três composições num só DOM:** linha com miniatura < 768px, grade de 2 colunas de cartões em 768–1023px, master-detail ≥ 1024px. Nada de carrossel; informação essencial (fabricante, nome, frase, specs confirmadas) continua visível em todas.
+    - **Mensagens distribuídas, não repetidas:** "avaliamos o que a máquina muda na operação" é tese do posicionamento (uma vez); o cross-link com a Almeida Ambiental é prova de uso; o fechamento é ação (material, volume, espaço). O CTA "Voltar para a Home" não é usado; contato é único ponto de conversão (matriz sem CTA próprio).
+    - **Imagens:** macro de engenharia mantém-se; a imagem de feira (IFAT) é ilustrativa e **aguarda acervo real** — não gerar substituto.
+
 ## Decisões pendentes
 
 - Confirmar com a Almeida Equipamentos se existe e-mail institucional próprio. Não encontrado nem na home atual nem em nenhuma captura arquivada da empresa — `/contato` não exibe e-mail para ela (ver `lib/contact-data.ts`).

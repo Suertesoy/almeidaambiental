@@ -8,7 +8,6 @@ import type { Locale } from "../../lib/i18n/locale";
 
 const COPY = {
   pt: {
-    eyebrow: "Eficiência logística",
     headline: "Eficiência que aparece no transporte.",
     body: "Quanto maior a densidade, melhor o aproveitamento de espaço, armazenamento e transporte.",
     chartAriaLabel:
@@ -17,7 +16,6 @@ const COPY = {
     note: "* Referência técnica do Compactador de Fuso Pöttinger. A relação varia conforme material, equipamento, configuração e operação.",
   },
   en: {
-    eyebrow: "Logistics efficiency",
     headline: "Efficiency that carries through to transport.",
     body: "The higher the density, the better the use of space, storage and transport.",
     chartAriaLabel:
@@ -34,12 +32,11 @@ const COPY = {
  * biblioteca) — ver DENSITY_STAGES em lib/equipamentos-data.ts para o
  * porquê de não haver kg nas barras.
  *
- * Consolidação de territórios (Seção 11 da rodada): usava toneForest —
- * a cor de identidade da Almeida AMBIENTAL, não da Equipamentos, que
- * pediu para ser "um único ambiente claro e contínuo". Passa a usar a
- * mesma superfície stone das seções vizinhas.
+ * Abre o capítulo "Como escolher" (junto da matriz material → tecnologia):
+ * superfície clara própria do capítulo, respiro de entrada cheio e de saída
+ * pela metade. O eyebrow é o contexto do capítulo, recebido da página.
  */
-export default function LogisticsEfficiency({ locale }: { locale: Locale }) {
+export default function LogisticsEfficiency({ locale, eyebrow }: { locale: Locale; eyebrow: string }) {
   const t = COPY[locale];
   const densityStages = locale === "en" ? DENSITY_STAGES_EN : DENSITY_STAGES;
   const chartRef = useRef<HTMLDivElement>(null);
@@ -63,11 +60,11 @@ export default function LogisticsEfficiency({ locale }: { locale: Locale }) {
 
   return (
     <section
-      className={`${shared.section} ${shared.toneStone} ${styles.densitySection}`}
+      className={`${shared.chapterOpen} ${shared.toneStoneAlt}`}
       aria-labelledby="densidade-heading"
     >
       <div className={shared.container}>
-        <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
+        <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{eyebrow}</p>
         <h2 id="densidade-heading" className={shared.headline}>
           {t.headline}
         </h2>
