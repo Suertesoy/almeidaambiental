@@ -3,9 +3,7 @@ import styles from "./historia.module.css";
 import { ChevronDownIcon } from "../icons";
 import HeroDecades from "./HeroDecades";
 import ChapterSection from "./ChapterSection";
-import GrowthScale from "./GrowthScale";
-import ExpansionMap from "./ExpansionMap";
-import Epilogue from "./Epilogue";
+import ClosingChapter from "./ClosingChapter";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
 
@@ -16,30 +14,33 @@ const COPY = {
 
 /**
  * "Quatro décadas, uma linha contínua." Orquestra a experiência de
- * /historia na ordem narrativa da Seção 4 da tarefa: abertura 1985 →
- * ORIGEM → EVOLUÇÃO → (subnarrativa de crescimento) → EXPANSÃO (com o
- * mapa como quebra de ritmo) → NOVO CICLO → epílogo.
+ * /historia: abertura 1985 → ORIGEM → EVOLUÇÃO → EXPANSÃO → NOVO CICLO
+ * (a linha dourada nunca se interrompe) → fechamento único com escala,
+ * epílogo + mapa e as empresas do Grupo. O botão fixo é o único retorno à
+ * Home da página.
  */
 export default function HistoriaPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
 
   return (
     <div className={styles.page} data-page="historia">
-      <Link className={styles.backFab} href={localizeHref("/", locale)} aria-label={t.backAriaLabel}>
+      <Link
+        className={styles.backFab}
+        href={localizeHref("/", locale)}
+        aria-label={t.backAriaLabel}
+        title={t.back}
+      >
         <ChevronDownIcon />
-        <span>{t.back}</span>
       </Link>
 
       <HeroDecades locale={locale} />
 
       <ChapterSection chapter="origem" locale={locale} />
       <ChapterSection chapter="evolucao" locale={locale} />
-      <GrowthScale locale={locale} />
-      <ExpansionMap locale={locale} />
       <ChapterSection chapter="expansao" locale={locale} />
       <ChapterSection chapter="novo-ciclo" locale={locale} />
 
-      <Epilogue locale={locale} />
+      <ClosingChapter locale={locale} />
     </div>
   );
 }

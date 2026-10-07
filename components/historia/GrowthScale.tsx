@@ -16,12 +16,12 @@ const STEP_CLASS = [
 
 const COPY = {
   pt: {
-    eyebrow: "Uma história em metros quadrados",
+    eyebrow: "Em metros quadrados",
     headline: "De 300 m² a 5.500 m²: quatro décadas de escala.",
     numberLocale: "pt-BR",
   },
   en: {
-    eyebrow: "A story measured in square meters",
+    eyebrow: "In square meters",
     headline: "From 300 m² to 5,500 m²: four decades of scale.",
     numberLocale: "en-US",
   },
@@ -51,40 +51,25 @@ function GrowthItem({
 }
 
 /**
- * Subnarrativa tipográfica de crescimento (Seção 9): os mesmos seis marcos
- * de área construída já presentes nos eventos da timeline, aqui isolados
- * numa escala visual — o número cresce de tamanho junto com o metro
- * quadrado, para que o crescimento seja sentido, não só lido.
+ * Subnarrativa tipográfica de crescimento: os mesmos seis marcos de área
+ * construída já presentes nos eventos da timeline, isolados numa escala
+ * visual — o número cresce de tamanho junto com o metro quadrado. Primeiro
+ * bloco do fechamento (ClosingChapter): a timeline termina e a página passa
+ * a falar de dimensão.
  */
 export default function GrowthScale({ locale }: { locale: Locale }) {
   const t = COPY[locale];
   return (
-    <section className={`${styles.growthScale} ${styles.chapterStone}`} aria-labelledby="growth-scale-heading">
-      <div className={styles.container}>
-        <div className={styles.spineBridgeOuter}>
-          <div className={styles.spineBridge} aria-hidden="true">
-            <span className={styles.spineBridgeLine} />
-          </div>
-        </div>
-
-        <div className={styles.growthHead}>
-          <p className={styles.eyebrow}>{t.eyebrow}</p>
-          <h2 id="growth-scale-heading" className={styles.chapterHeadline}>
-            {t.headline}
-          </h2>
-        </div>
-        <div className={styles.growthList}>
-          {GROWTH_SCALE.map((item, index) => (
-            <GrowthItem key={item.year} year={item.year} sqm={item.sqm} index={index} numberLocale={t.numberLocale} />
-          ))}
-        </div>
-
-        <div className={styles.spineBridgeOuter}>
-          <div className={styles.spineBridge} aria-hidden="true">
-            <span className={styles.spineBridgeLine} />
-          </div>
-        </div>
+    <div className={`${styles.closingBlock} ${styles.closingSplit}`}>
+      <div>
+        <p className={styles.eyebrow}>{t.eyebrow}</p>
+        <h2 className={styles.closingHeadline}>{t.headline}</h2>
       </div>
-    </section>
+      <div className={styles.growthList}>
+        {GROWTH_SCALE.map((item, index) => (
+          <GrowthItem key={item.year} year={item.year} sqm={item.sqm} index={index} numberLocale={t.numberLocale} />
+        ))}
+      </div>
+    </div>
   );
 }

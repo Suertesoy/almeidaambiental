@@ -77,7 +77,7 @@ export const CHAPTER_META: Record<
   origem: {
     index: "01",
     eyebrow: "Origem",
-    headline: "Os primeiros passos de uma história construída ano após ano.",
+    headline: "Os primeiros passos de uma história construída ano a ano.",
     tone: "stone",
   },
   evolucao: {
@@ -89,12 +89,12 @@ export const CHAPTER_META: Record<
   expansao: {
     index: "03",
     eyebrow: "Expansão",
-    headline: "De uma operação em São José para uma presença cada vez maior em Santa Catarina.",
+    headline: "De São José a uma presença cada vez maior em Santa Catarina.",
     tone: "stone",
   },
   "novo-ciclo": {
     index: "04",
-    eyebrow: "Novo Ciclo",
+    eyebrow: "Novo ciclo",
     headline: "Quatro décadas depois, a história continua sendo construída.",
     tone: "stoneAlt",
   },
@@ -408,11 +408,12 @@ export const MAP_LOCATIONS: Array<{ name: string; year: number; x: number; y: nu
  */
 export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição ilustrativa de um pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, em preto e branco");
 
+/* Só os números que a escala de m² (GROWTH_SCALE) ainda não mostra: os
+   5.500 m² da sede e os 3.000 m² de Araquari já aparecem na escala e no
+   texto dos próprios eventos — repeti-los no epílogo era redundância. */
 export const EPILOGUE_STATS = [
   { value: "40+", label: "anos de história" },
   { value: "5", label: "unidades" },
-  { value: "5.500 m²", label: "na sede de São José" },
-  { value: "3.000 m²", label: "na nova unidade de Araquari" },
 ];
 
 /* ==========================================================
@@ -441,12 +442,12 @@ export const CHAPTER_META_EN: Record<
   expansao: {
     index: "03",
     eyebrow: "Expansion",
-    headline: "From a single operation in São José to a growing presence across Santa Catarina.",
+    headline: "From São José to a growing presence across Santa Catarina.",
     tone: "stone",
   },
   "novo-ciclo": {
     index: "04",
-    eyebrow: "New Cycle",
+    eyebrow: "New cycle",
     headline: "Four decades later, the story keeps being written.",
     tone: "stoneAlt",
   },
@@ -719,6 +720,4 @@ export const HERO_IMAGE_EN = img(
 export const EPILOGUE_STATS_EN = [
   { value: "40+", label: "years of history" },
   { value: "5", label: "units" },
-  { value: "5,500 m²", label: "at the São José headquarters" },
-  { value: "3,000 m²", label: "at the new Araquari unit" },
 ];
