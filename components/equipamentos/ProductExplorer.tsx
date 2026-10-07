@@ -5,6 +5,7 @@ import { flushSync } from "react-dom";
 import shared from "../shared/company-page.module.css";
 import styles from "./product-explorer.module.css";
 import ProductDetail from "./ProductDetail";
+import IllustrativeBadge from "../shared/IllustrativeBadge";
 import type { Product } from "../../lib/equipamentos-data";
 import type { Locale } from "../../lib/i18n/locale";
 
@@ -124,6 +125,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
                       decoding="async"
                       className={product.id === selected.id && !detail ? styles.transitionHero : undefined}
                     />
+                    <IllustrativeBadge locale={locale} position="bottom-left" />
                   </span>
                   <span className={styles.itemManufacturer}>{product.manufacturer}</span>
                   <span className={styles.itemName}>{product.name}</span>
@@ -177,6 +179,9 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
               <span className={styles.stageIndexTotal}>/ {String(products.length).padStart(2, "0")}</span>
             </span>
             <span className={styles.stageManufacturer}>{selected.manufacturer}</span>
+            {/* Render ilustrativo, não fotografia do modelo: o definitivo vem
+                de press kit/fabricante. */}
+            <IllustrativeBadge locale={locale} position="bottom-right" />
           </div>
         </div>
       </div>

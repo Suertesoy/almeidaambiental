@@ -74,7 +74,8 @@ const COPY = {
     ambientalProcessBody:
       "Da coleta à destinação, estrutura, tecnologia e experiência para transformar resíduos em valor, com eficiência logística, segurança e responsabilidade ambiental.",
     ambientalProcessCta: "Conheça Almeida Ambiental",
-    ambientalFrotaAlt: "Pátio industrial com fardos de papelão organizados e empilhadeira em operação",
+    ambientalFrotaAlt:
+      "Imagem ilustrativa de um pátio industrial de reciclagem com fardos de papelão organizados e empilhadeira",
     ambientalProcessAriaLabel: "Etapas da operação da Almeida Ambiental",
     equipamentosEntryHeadline: "Tecnologia que nasceu da própria operação",
     equipamentosEntryBody:
@@ -95,7 +96,8 @@ const COPY = {
     impactNote:
       "Estimativa acumulada com base nos dados operacionais de janeiro a setembro de 2026, projetada pela média diária até a próxima atualização oficial.",
     impactHeadline: "Cada resíduo processado vira um número que a natureza reconhece.",
-    manifestoAlt: "Grupo Almeida",
+    manifestoAlt:
+      "Imagem ilustrativa de um galpão industrial de reciclagem com fardos de papelão empilhados e uma empilhadeira, representando a operação do Grupo",
     manifestoHeadline: "O que começou com papel e papelão hoje conecta operação, tecnologia e sustentabilidade.",
     manifestoBody: "Há 40 anos transformando o presente, pensando no futuro.",
     manifestoCta: "Entre em contato com o Grupo Almeida",
@@ -109,7 +111,8 @@ const COPY = {
     ambientalProcessBody:
       "From collection to disposal, structure, technology and experience to turn waste into value, with logistics efficiency, safety and environmental responsibility.",
     ambientalProcessCta: "See Almeida Ambiental",
-    ambientalFrotaAlt: "Industrial yard with organized cardboard bales and a forklift in operation",
+    ambientalFrotaAlt:
+      "Illustrative image of an industrial recycling yard with organized cardboard bales and a forklift",
     ambientalProcessAriaLabel: "Almeida Ambiental's operating steps",
     equipamentosEntryHeadline: "Technology born from the operation",
     equipamentosEntryBody:
@@ -130,7 +133,8 @@ const COPY = {
     impactNote:
       "Accumulated estimate based on operating data from January to September 2026, projected using the daily average until the next official update.",
     impactHeadline: "Waste processed. Impact measured.",
-    manifestoAlt: "Grupo Almeida",
+    manifestoAlt:
+      "Illustrative image of an industrial recycling warehouse with stacked cardboard bales and a forklift, representing the Group's operations",
     manifestoHeadline: "What began with paper and cardboard now connects operations, technology and sustainability.",
     manifestoBody: "Four decades of transformation, with the future in mind.",
     manifestoCta: "Get in touch with Grupo Almeida",
@@ -337,8 +341,12 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </div>
 
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow} ${styles.manifesto}`}>
-            <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-              <SectionMedia imageSrc={IMG_MANIFESTO} alt={t.manifestoAlt} objectPosition="center 40%" />
+            {/* Asset 4:5 (retrato) — o slot paisagem 16:10 descartava metade da
+                altura. Quadrado preserva ~80% e mantém empilhadeira e fardos
+                no quadro. Ilustrativa (IA): foto real futura é preferível. */}
+            <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
+              <SectionMedia imageSrc={IMG_MANIFESTO} alt={t.manifestoAlt} objectPosition="center 62%" />
+              <IllustrativeBadge locale={locale} />
             </div>
             <div className={styles.duoContent}>
               <h2 className={styles.headlineSecondary}>{t.manifestoHeadline}</h2>

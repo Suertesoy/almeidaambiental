@@ -25,7 +25,8 @@
  * complexo industrial gerado é apresentar como documentação de um imóvel
  * específico algo que nunca foi fotografado — e, no caso de 2022, fazer um
  * prédio inventado passar pela instalação da Saturno. Nenhuma foi
- * substituída por outra imagem: os eventos continuam com data, cidade,
+ * substituída por outra FOTO de imóvel (2022 recebeu só a materialidade
+ * abstrata da Saturno, como pausa visual): os eventos continuam com data, cidade,
  * área construída e texto íntegros, e a área construída continua no
  * infográfico de evolução (GROWTH_SCALE). Só o prédio falso saiu.
  *
@@ -133,7 +134,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Aquisição do primeiro caminhão Mercedes Benz 608 e instalação da segunda prensa vertical.",
     highlights: ["Mercedes Benz 608", "segunda prensa vertical"],
-    image: img("/historia/expansao-logistica-1988.webp", "Reconstituição de caminhão de carga do final dos anos 1980, representando a ampliação da frota da Almeida"),
+    image: img("/historia/expansao-logistica-1988.webp", "Reconstituição ilustrativa de caminhão de carga do final dos anos 1980, representando a ampliação da frota da Almeida"),
     side: "left",
   },
   {
@@ -171,7 +172,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação da primeira prensa horizontal, permitindo a produção de fardos de 400 kg.",
     highlights: ["primeira prensa horizontal", "400 kg"],
-    image: img("/historia/prensa-fardos-1993.webp", "Reconstituição de prensa horizontal industrial e fardos de papelão compactado, anos 1990"),
+    image: img("/historia/prensa-fardos-1993.webp", "Reconstituição ilustrativa de prensa horizontal industrial e fardos de papelão compactado, anos 1990", "portrait"),
     side: "right",
   },
 
@@ -190,7 +191,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Instalação do primeiro triturador, aumentando a capacidade de processamento dos materiais.",
     highlights: ["primeiro triturador"],
-    image: img("/historia/triturador-2000.webp", "Reconstituição de triturador industrial e esteiras de processamento de recicláveis"),
+    image: img("/historia/triturador-2000.webp", "Reconstituição ilustrativa de triturador industrial e esteiras de processamento de recicláveis"),
     side: "right",
   },
   {
@@ -237,6 +238,12 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação de uma nova prensa importada, permitindo a produção de fardos de 1.100 kg.",
     highlights: ["1.100 kg"],
+    /* Materialidade, não documento: macro de um fardo prensado com cintas de
+       aço, sem prédio, pessoas ou modelo de prensa identificável. */
+    image: img(
+      "/historia/prensa-fardo-1100-2009.webp",
+      "Representação ilustrativa de um grande fardo de papelão prensado, preso por cintas de aço, evocando o marco tecnológico da prensa importada de 1.100 kg"
+    ),
     side: "left",
   },
   {
@@ -256,7 +263,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação do primeiro compactador de resíduos por rosca sem fim importado. Esse acontecimento também marca o início da parceria com a Pöttinger.",
     highlights: ["compactador de resíduos por rosca sem fim importado", "Pöttinger"],
-    image: img("/historia/tecnologia-2013.webp", "Reconstituição de compactador industrial importado, representando a modernização tecnológica do início dos anos 2010"),
+    image: img("/historia/tecnologia-2013.webp", "Reconstituição ilustrativa de compactador industrial importado, representando a modernização tecnológica do início dos anos 2010"),
     side: "left",
   },
   {
@@ -313,9 +320,14 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "expansao",
     description: "Aquisição da empresa Saturno, em Blumenau, fortalecendo a presença regional.",
     highlights: ["Saturno", "Blumenau"],
-    /* Sem imagem: ver "prédios gerados" no cabeçalho deste arquivo. Este
-       era o caso mais grave — uma operação gerada fazendo as vezes da
-       instalação real da Saturno em Blumenau. */
+    /* A imagem é a MATERIALIDADE da Saturno (papel e papelão comprimidos),
+       reaproveitada de lib/material-surfaces.ts — nunca a instalação de
+       Blumenau, que seguia sendo o caso mais grave de "prédio gerado" (ver
+       cabeçalho). Pausa visual, não documento do evento. */
+    image: img(
+      "/materialidade/saturno-fluxo.webp",
+      "Imagem ilustrativa da materialidade da Saturno Ambiental: camadas de papelão ondulado e papel fragmentado em close, sem relação com uma instalação específica"
+    ),
     location: "Blumenau",
     side: "left",
   },
@@ -515,7 +527,8 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     highlights: ["first horizontal baler", "400 kg"],
     image: img(
       "/historia/prensa-fardos-1993.webp",
-      "Illustrative reconstruction of an industrial horizontal baler and compacted cardboard bales, 1990s"
+      "Illustrative reconstruction of an industrial horizontal baler and compacted cardboard bales, 1990s",
+      "portrait"
     ),
     side: "right",
   },
@@ -582,6 +595,10 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Almeida installs a new imported baler, producing 1,100 kg bales.",
     highlights: ["1,100 kg"],
+    image: img(
+      "/historia/prensa-fardo-1100-2009.webp",
+      "Illustrative representation of a large pressed cardboard bale held by steel straps, evoking the technological milestone of the imported 1,100 kg baler"
+    ),
     side: "left",
   },
   {
@@ -659,6 +676,10 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "expansao",
     description: "Almeida acquires Saturno, in Blumenau, strengthening the group's regional presence.",
     highlights: ["Saturno", "Blumenau"],
+    image: img(
+      "/materialidade/saturno-fluxo.webp",
+      "Illustrative image of Saturno Ambiental's materiality: close-up layers of corrugated cardboard and shredded paper, unrelated to any specific facility"
+    ),
     location: "Blumenau",
     side: "left",
   },

@@ -283,18 +283,30 @@ export const HERO_IMAGE_EN = img(
   "Large industrial compaction equipment integrated into a modern facility, illustrative visualization"
 );
 
+/*
+ * Slot de posicionamento: a macro de engenharia (peça de materialidade
+ * compartilhada com a Home) substitui detalhe-mecanico.webp — um close
+ * vermelho/amarelo, cores fora da paleta, que lia como fotografia de uma
+ * máquina específica e não levava selo. A macro é abstrata (aço grafite,
+ * sem máquina inteira), no mesmo regime de materialidade da Home: sem selo.
+ * objectPosition 38% mantém o eixo roscado no quadro quadrado.
+ */
 export const DETALHE_MECANICO_IMAGE = img(
   "almeida-equipamentos",
   "detalhe-mecanico",
-  "/almeida-equipamentos/detalhe-mecanico.webp",
-  "Close técnico de estrutura mecânica e painel metálico de equipamento industrial"
+  "/materialidade/equipamentos-engenharia-desktop.webp",
+  "Macro editorial de engenharia industrial pesada: eixo roscado, rolamentos e engrenagens usinadas em aço grafite",
+  "landscape",
+  { objectPosition: "38% 50%" }
 );
 
 export const DETALHE_MECANICO_IMAGE_EN = img(
   "almeida-equipamentos",
   "detalhe-mecanico",
-  "/almeida-equipamentos/detalhe-mecanico.webp",
-  "Technical close-up of mechanical structure and metal panel on industrial equipment"
+  "/materialidade/equipamentos-engenharia-desktop.webp",
+  "Industrial engineering macro: threaded shaft, bearings and machined gears in graphite steel",
+  "landscape",
+  { objectPosition: "38% 50%" }
 );
 
 export const FEIRA_IMAGE = img(
