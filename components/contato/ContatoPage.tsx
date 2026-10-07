@@ -85,7 +85,7 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
   return (
     <div className={styles.page} data-page="contato">
       {/* ---------------- Hero ---------------- */}
-      <section className={`${shared.sectionCompact} ${shared.toneForest} ${styles.heroSection}`}>
+      <section className={`${shared.toneForest} ${styles.heroSection}`}>
         <div className={shared.container}>
           <Reveal>
             <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
@@ -115,14 +115,14 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
         const hasLocation = Boolean(region.addressLines && region.addressLines.length > 0);
 
         return (
-          <section key={region.id} id={region.id} className={`${shared.section} ${shared.toneStone} ${styles.unitBlock}`}>
+          <section key={region.id} id={region.id} className={`${shared.chapterMiddle} ${shared.toneStone} ${styles.unitBlock}`}>
             <div className={shared.container}>
               <Reveal>
                 <div className={`${styles.unitGrid} ${!hasLocation ? styles.unitGridNoLocation : ""}`}>
                   <div className={styles.unitIdentity}>
                     <p className={shared.eyebrow}>{region.eyebrow}</p>
-                    <h2 className={shared.headline}>{region.headline}</h2>
-                    <p className={shared.body}>{region.description}</p>
+                    <h2 className={`${shared.subheading} ${styles.unitTitle}`}>{region.headline}</h2>
+                    <p className={`${shared.body} ${styles.unitDescription}`}>{region.description}</p>
                     {region.note && <p className={styles.unitNote}>{region.note}</p>}
                   </div>
 
@@ -154,12 +154,12 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
 
                       <div className={styles.mapActions}>
                         {region.mapHref && (
-                          <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
+                          <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
                             {t.openInGoogleMaps}
                           </a>
                         )}
                         {region.wazeHref && (
-                          <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
+                          <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
                             {t.openInWaze}
                           </a>
                         )}
@@ -205,12 +205,12 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
         <div className={shared.container}>
           <h2 className={shared.finalCtaHeadline}>{t.finalHeadline}</h2>
           <p className={shared.body}>{t.finalBody}</p>
-          <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/", locale)}>
-              {t.backToHome}
-            </Link>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref("/historia", locale)}>
+          <div className={styles.closeLinks}>
+            <Link className={shared.btnEditorial} href={localizeHref("/historia", locale)}>
               {t.ourStory}
+            </Link>
+            <Link className={shared.btnEditorial} href={localizeHref("/", locale)}>
+              {t.backToHome}
             </Link>
           </div>
         </div>

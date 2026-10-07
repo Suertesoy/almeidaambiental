@@ -29,30 +29,31 @@
    não overflow escondido) só a partir de 1024px — sectionCompact continua
    inalterado para as demais páginas/Heroes. Fora de escopo desta correção
    (pedido explícito): o Hero mobile permanece exatamente como estava. */
+/* Rodada de refino (2026-10): o Hero deixa de depender de sectionCompact
+   (cujo padding-top não considerava o Header fixo) e ancora SEMPRE o topo a
+   --header-height + respiro, em todos os breakpoints — o mesmo princípio da
+   correção desktop acima, agora também no mobile/tablet. O fundo usa o
+   respiro compacto do sistema. */
 .heroSection {
-}
-
-@media (min-width: 1024px) {
-  .heroSection {
-    padding-top: calc(var(--header-height) + 40px);
-  }
+  padding-top: calc(var(--header-height) + clamp(32px, 5vw, 48px));
+  padding-bottom: var(--space-section-compact);
 }
 
 .heroTitle {
-  margin: 12px 0 0;
-  max-width: 640px;
+  margin: 0 0 var(--gap-title-body);
+  max-width: 24ch;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(28px, 2.6vw + 16px, 46px);
-  line-height: 1.12;
+  font-size: var(--type-headline);
+  line-height: 1.1;
   letter-spacing: -0.01em;
   text-wrap: balance;
   color: inherit;
 }
 
 .heroLede {
-  margin-top: 12px;
-  max-width: 56ch;
+  margin: 0;
+  max-width: 48ch;
 }
 
 /* ---------------- Diretório compacto ----------------
@@ -142,7 +143,7 @@
     "cnpj"
     "location"
     "channels";
-  row-gap: clamp(28px, 5vw, 40px);
+  row-gap: clamp(24px, 4vw, 32px);
 }
 
 .unitGridNoLocation {
@@ -174,6 +175,7 @@
     column-gap: clamp(40px, 5vw, 64px);
     row-gap: 0;
     align-items: start;
+    grid-template-rows: auto auto 1fr;
     grid-template-areas:
       "identity location"
       "cnpj     location"
@@ -189,12 +191,22 @@
   }
 
   .unitCnpj {
-    margin-top: 20px;
+    margin-top: 16px;
   }
 
   .unitChannels {
-    margin-top: 28px;
+    margin-top: 32px;
   }
+}
+
+/* Nome da unidade: rótulo de identificação, não manchete — usa a escala de
+   subheading (≤28px), não a de headline (48px). */
+.unitTitle {
+  margin-bottom: 12px;
+}
+
+.unitDescription {
+  margin-bottom: 0;
 }
 
 /* CNPJ é metadata legal secundária (Seção 14 da tarefa) — recuada, nunca
@@ -218,7 +230,7 @@
 /* ---------------- Localização + Google Maps real ---------------- */
 
 .addressText {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
   font-size: 15px;
@@ -228,7 +240,7 @@
 .mapFrame {
   position: relative;
   width: 100%;
-  height: 280px;
+  height: 200px;
   border-radius: 4px;
   overflow: hidden;
   background: var(--color-muted);
@@ -261,13 +273,13 @@
 
 @media (min-width: 640px) {
   .mapFrame {
-    height: 320px;
+    height: 260px;
   }
 }
 
 @media (min-width: 1024px) {
   .mapFrame {
-    height: 380px;
+    height: 340px;
   }
 }
 
@@ -278,11 +290,32 @@
   display: block;
 }
 
+/* "Como chegar" é ação secundária: links editoriais (texto + seta) lado a
+   lado, com alvo de toque de 44px — a ação principal da unidade é o canal
+   de contato. */
 .mapActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
+  column-gap: 24px;
+  margin-top: 4px;
+}
+
+.mapLink {
+  min-height: 44px;
+  font-size: 14px;
+}
+
+/* Fechamento: navegação discreta, sem CTA primário. */
+.closeLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 28px;
+  margin-top: var(--gap-support-cta);
+}
+
+.closeLinks a {
+  min-height: 44px;
 }
 
 /* ---------------- Canais de contato ----------------
@@ -313,6 +346,23 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+}
+
+/* Texto à esquerda e ação à direita onde há largura (tablet e desktop
+   largo); entre 1024 e 1279px a coluna de identidade é estreita e o canal
+   empilha, para o número não quebrar. */
+@media (min-width: 640px) and (max-width: 1023px), (min-width: 1280px) {
+  .channelRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 520px;
+    gap: 20px;
+  }
+}
+
+.channelMeta {
+  white-space: nowrap;
 }
 
 .channelText {
