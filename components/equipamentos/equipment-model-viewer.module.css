@@ -28,6 +28,11 @@
   );
 }
 
+/* Recorta apenas a espreita lateral do carrossel espacial sem gerar overflow na página */
+.rootChoreography {
+  overflow: hidden;
+}
+
 .root:focus-visible {
   outline: 2px solid var(--color-gold-aged, #8a6d3b);
   outline-offset: -2px;
@@ -52,6 +57,12 @@
 
 .canvasLayerReady {
   opacity: 1;
+}
+
+.canvasLayerPassive {
+  pointer-events: none;
+  touch-action: auto;
+  cursor: default;
 }
 
 /* Na coreografia compartilhada não há interação manual e não captura rolagem */

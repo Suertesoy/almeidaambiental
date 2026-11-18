@@ -27,8 +27,8 @@ export type Equipment3DConfig = {
   };
   /** Intensidade da iluminação de estúdio (baseada em estudio.js). */
   environmentIntensity: number;
-  /** Identificação discreta quando o modelo representa uma variante específica (ex.: APV 100). */
-  modelBadge?: string;
+  /** Legenda editorial discreta quando o GLB representa uma variante específica. */
+  modelCaption?: Record<Locale, string>;
   /** Nome editorial exibido na legenda discreta da coreografia. */
   displayName: Record<Locale, string>;
   camera: Equipment3DCameraConfig;
@@ -73,7 +73,10 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowUrl: "/models/equipamentos/apv-100/sombra-contato.png",
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.8,
-    modelBadge: "APV 100",
+    modelCaption: {
+      pt: "Modelo 3D apresentado: APV 100",
+      en: "3D model shown: APV 100",
+    },
     displayName: {
       pt: "APV 100",
       en: "APV 100",

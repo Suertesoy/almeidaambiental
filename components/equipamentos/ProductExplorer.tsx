@@ -12,20 +12,20 @@ import type { Product } from "../../lib/equipamentos-data";
 import type { Locale } from "../../lib/i18n/locale";
 
 const COPY = {
-  pt: { viewDetailsOf: (name: string) => `Ver detalhes de ${name}`, viewDetails: "Ver detalhes" },
-  en: { viewDetailsOf: (name: string) => `View details for ${name}`, viewDetails: "View details" },
+  pt: {
+    viewDetails: "Ver detalhes",
+    viewDetailsOf: (name: string) => `Ver detalhes de ${name}`,
+    applications: "Aplicações",
+    benefits: "Benefícios",
+  },
+  en: {
+    viewDetails: "View details",
+    viewDetailsOf: (name: string) => `View details for ${name}`,
+    applications: "Applications",
+    benefits: "Benefits",
+  },
 } as const;
 
-/**
- * Abrir/fechar o detalhe com a sensação de "a própria imagem cresceu",
- * não um modal aparecendo do nada (Seção 13 da rodada de territórios
- * visuais). View Transitions API quando o navegador suporta e a pessoa
- * não pediu menos movimento — caso contrário, o estado muda direto e o
- * <dialog> abre/fecha exatamente como antes, sem nenhuma diferença visual.
- * `flushSync` é necessário porque a API tira uma "foto" do DOM logo depois
- * do callback: sem ele, o React adiaria o re-render e a transição
- * capturaria o estado antigo. Nenhuma biblioteca nova — só a API nativa.
- */
 function withViewTransition(mutate: () => void) {
   const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
   const prefersReducedMotion =
@@ -39,30 +39,18 @@ function withViewTransition(mutate: () => void) {
 }
 
 /**
- * Catálogo técnico explorável da Almeida Equipamentos.
+ * Vitrine editorial do catálogo Almeida Equipamentos.
  *
- * Substitui os seis capítulos de produto em sequência vertical (nome,
- * promessa, texto, "ideal para", benefícios, specs e CTA, tudo aberto de
- * uma vez, seis vezes) por descoberta primeiro e profundidade sob demanda.
- *
- * Mobile (< 768px): cada equipamento é uma linha com miniatura + fabricante +
- * nome + uma frase + "Ver detalhes"; tocar abre a experiência completa em
- * tela cheia. Tablet (768–1023px): os mesmos itens numa grade de duas colunas
- * de cartões (ver product-explorer.module.css).
- *
- * Desktop: os mesmos itens viram a coluna esquerda de um master-detail —
- * selecionar troca a imagem grande, o nome e o resumo com uma transição
- * curta; "Ver detalhes" abre a mesma experiência ampliada. Não é o mobile
- * esticado nem um celular gigante no meio da tela.
- *
- * O breakpoint é lido no clique (não na renderização) para não introduzir
- * divergência entre servidor e cliente: no desktop o toque seleciona; no
- * mobile, onde não existe palco para receber a seleção, o mesmo toque já
- * abre o detalhe.
+ * Apresenta os seis equipamentos com protagonismo visual:
+ * - Os três modelos com GLB validado recebem apresentação 3D com rotação
+ *   suave automática e fundo transparente integrado à superfície da página.
+ * - Os demais preservam suas mídias estáticas em composição igualmente ampla.
+ * - No mobile, cada bloco segue a ordem: identificação → visual amplo →
+ *   descrição, aplicações, benefícios e specs comprovadas → "Ver detalhes".
+ * - No desktop, alterna a assimetria entre visual e coluna editorial.
  */
 export default function ProductExplorer({ locale, products }: { locale: Locale; products: Product[] }) {
   const t = COPY[locale];
-  const [selected, setSelected] = useState<Product>(products[0]);
   const [detail, setDetail] = useState<Product | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
@@ -73,137 +61,112 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
 
   const closeDetail = useCallback(() => {
     withViewTransition(() => setDetail(null));
-    // Devolve o foco a quem abriu — o <dialog> nativo cuida do resto.
     triggerRef.current?.focus();
     triggerRef.current = null;
   }, []);
 
-  const selectedIndex = products.findIndex((product) => product.id === selected.id);
-  const selected3D = getEquipment3DConfig(selected.id);
-
-  const handleItemClick = (product: Product, event: React.MouseEvent<HTMLButtonElement>) => {
-    setSelected(product);
-    const isDesktop =
-      typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
-    if (!isDesktop) openDetail(product, event.currentTarget);
-  };
-
   return (
     <>
-      <div className={styles.explorer}>
-        <div className={styles.master}>
-          {/* Bloco do selecionado — só desktop. No mobile essa informação
-              já vive dentro de cada cartão da lista. */}
-          <div className={styles.selected}>
-            <div key={selected.id} className={styles.swap}>
-              <p className={styles.selectedManufacturer}>{selected.manufacturer}</p>
-              <h3 className={styles.selectedName}>{selected.name}</h3>
-              <p className={styles.selectedSummary}>{selected.headline}</p>
-            </div>
-            <div className={styles.selectedCta}>
-              <button
-                type="button"
-                className={`${shared.btn} ${shared.btnOutlineOnLight}`}
-                onClick={(event) => openDetail(selected, event.currentTarget)}
-              >
-                {t.viewDetailsOf(selected.name)}
-              </button>
-            </div>
-          </div>
+      <div className={styles.showcase}>
+        {products.map((product, index) => {
+          const model3D = getEquipment3DConfig(product.id);
+          const isReverse = index % 2 === 1;
 
-          <ul className={styles.list}>
-            {products.map((product) => {
-              const card3D = getEquipment3DConfig(product.id);
-              return (
-                <li key={product.id}>
+          return (
+            <article
+              key={product.id}
+              className={`${styles.showcaseItem} ${isReverse ? styles.showcaseItemReverse : ""}`}
+            >
+              <header className={styles.itemHeader}>
+                <div className={styles.itemMetaRow}>
+                  <span className={styles.itemIndex}>
+                    {String(index + 1).padStart(2, "0")}
+                    <span className={styles.itemIndexTotal}>
+                      / {String(products.length).padStart(2, "0")}
+                    </span>
+                  </span>
+                  <span className={styles.itemManufacturer}>{product.manufacturer}</span>
+                </div>
+                <h3 className={styles.itemName}>{product.name}</h3>
+                <p className={styles.itemHeadline}>{product.headline}</p>
+              </header>
+
+              <div className={styles.itemMediaWrap}>
+                {model3D ? (
+                  <div className={`${styles.itemMedia} ${styles.itemMedia3D}`}>
+                    <EquipmentModelStage
+                      config={model3D}
+                      locale={locale}
+                      variant="catalog"
+                      autoRotate
+                      interactive={false}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.itemMedia}>
+                    <img
+                      src={product.image.src}
+                      alt={product.image.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className={!detail ? styles.transitionHero : undefined}
+                    />
+                    <IllustrativeBadge locale={locale} position="bottom-right" />
+                  </div>
+                )}
+
+                {model3D?.modelCaption && (
+                  <p className={styles.modelCaption}>{model3D.modelCaption[locale]}</p>
+                )}
+              </div>
+
+              <div className={styles.itemBody}>
+                <p className={styles.itemCopy}>{product.copy}</p>
+
+                <div className={styles.itemHighlights}>
+                  <div className={styles.highlightGroup}>
+                    <p className={styles.highlightLabel}>{t.applications}</p>
+                    <ul className={styles.tagList}>
+                      {product.idealFor.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className={styles.highlightGroup}>
+                    <p className={styles.highlightLabel}>{t.benefits}</p>
+                    <ul className={styles.benefitList}>
+                      {product.benefits.slice(0, 3).map((benefit) => (
+                        <li key={benefit}>{benefit}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {product.confirmedSpecs && product.confirmedSpecs.length > 0 && (
+                  <ul className={styles.itemSpecs}>
+                    {product.confirmedSpecs.map((spec) => (
+                      <li key={spec} className={styles.itemSpec}>
+                        {spec}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className={styles.itemCta}>
                   <button
                     type="button"
-                    className={styles.itemButton}
-                    aria-current={product.id === selected.id ? "true" : undefined}
-                    onClick={(event) => handleItemClick(product, event)}
+                    className={`${shared.btn} ${shared.btnOutlineOnLight}`}
+                    aria-label={t.viewDetailsOf(product.name)}
+                    onClick={(event) => openDetail(product, event.currentTarget)}
                   >
-                    <span className={`${styles.cardMedia} ${card3D ? styles.cardMedia3D : ""}`}>
-                      <img
-                        src={card3D ? card3D.posterUrl : product.image.src}
-                        alt={card3D ? card3D.posterAlt[locale] : product.image.alt}
-                        loading="lazy"
-                        decoding="async"
-                        className={product.id === selected.id && !detail ? styles.transitionHero : undefined}
-                      />
-                      {card3D?.modelBadge ? (
-                        <span className={styles.cardModelBadge}>{card3D.modelBadge}</span>
-                      ) : (
-                        !card3D && <IllustrativeBadge locale={locale} position="bottom-left" />
-                      )}
-                    </span>
-                  <span className={styles.itemManufacturer}>{product.manufacturer}</span>
-                  <span className={styles.itemName}>{product.name}</span>
-                  <span className={styles.itemSummary}>{product.headline}</span>
-                  {/* Faixa de informações confirmadas — só existe quando o
-                      equipamento realmente tem spec validada em fonte
-                      oficial do fabricante (ver lib/equipamentos-data.ts).
-                      Sem dado, nenhuma faixa é renderizada: nada de linha
-                      vazia nem de número aproximado para emparelhar os
-                      cartões. */}
-                  {product.confirmedSpecs && product.confirmedSpecs.length > 0 && (
-                    <span className={styles.itemSpecs}>
-                      {product.confirmedSpecs.map((spec) => (
-                        <span key={spec} className={styles.itemSpec}>
-                          {spec}
-                        </span>
-                      ))}
-                    </span>
-                  )}
-                  <span className={styles.itemCue}>{t.viewDetails}</span>
-                </button>
-              </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        {/* Palco: vitrine técnica, não um cartão com a imagem dentro.
-            O estúdio é o do PRÓPRIO render — ver o comentário em
-            product-explorer.module.css. Por cima dele vêm as marcas de
-            canto de desenho técnico e a metadata do equipamento. */}
-        <div className={styles.stage} aria-hidden={selected3D ? undefined : "true"}>
-          <div className={`${styles.stageMedia} ${selected3D ? styles.stageMedia3D : ""}`}>
-            <span className={`${styles.stageTick} ${styles.tickTl}`} />
-            <span className={`${styles.stageTick} ${styles.tickTr}`} />
-            <span className={`${styles.stageTick} ${styles.tickBl}`} />
-            <span className={`${styles.stageTick} ${styles.tickBr}`} />
-
-            {selected3D ? (
-              <EquipmentModelStage
-                key={selected.id}
-                config={selected3D}
-                locale={locale}
-                variant="catalog"
-                className={styles.stageProduct}
-              />
-            ) : (
-              <img
-                key={selected.id}
-                className={`${styles.stageProduct} ${styles.swap} ${!detail ? styles.transitionHero : ""}`}
-                src={selected.image.src}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-
-            <span className={styles.stageIndex}>
-              {String(selectedIndex + 1).padStart(2, "0")}
-              <span className={styles.stageIndexTotal}>/ {String(products.length).padStart(2, "0")}</span>
-            </span>
-            <span
-              className={`${styles.stageManufacturer} ${selected3D ? styles.stageManufacturerTop : ""}`}
-            >
-              {selected.manufacturer}
-            </span>
-            {!selected3D && <IllustrativeBadge locale={locale} position="bottom-right" />}
-          </div>
-        </div>
+                    {t.viewDetails}
+                  </button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       <ProductDetail product={detail} onClose={closeDetail} locale={locale} />

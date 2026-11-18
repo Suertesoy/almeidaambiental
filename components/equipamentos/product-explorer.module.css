@@ -1,247 +1,284 @@
 /* ==========================================================
-   Explorador de catálogo técnico da Almeida Equipamentos.
+   Vitrine editorial do catálogo Almeida Equipamentos.
 
-   Substitui os seis capítulos de produto (uma seção inteira por
-   equipamento, com bloco técnico e specs despejados na primeira leitura) e
-   a barra sticky de navegação entre eles.
-
-   A lógica agora é de revelação progressiva:
-     1. descubro o equipamento (imagem + nome + uma frase),
-     2. escolho aprofundar,
-     3. só então vejo galeria, aplicação, benefícios e specs.
-
-   Não é e-commerce: nenhum preço, carrinho, quantidade, favorito ou
-   badge promocional existe aqui — e uma única ação por equipamento.
-
-   Um só DOM para todos os breakpoints. No mobile cada item é uma linha com
-   miniatura; no tablet, um cartão numa grade de duas colunas; a partir de
-   1024px os mesmos itens viram a coluna esquerda de um master-detail e a
-   imagem grande passa para o palco à direita. Nada é duplicado só para
-   mudar de layout.
+   Cada um dos seis equipamentos recebe um bloco protagonista próprio,
+   valorizando escala, formato e diferenças entre as máquinas:
+   - Mobile (< 1024px): identificação → visual amplo → descrição,
+     aplicações, benefícios e specs comprovadas → "Ver detalhes".
+   - Desktop (>= 1024px): composição assimétrica alternada entre
+     visual protagonista e coluna de leitura confortável.
    ========================================================== */
 
-.explorer {
+.showcase {
   margin-top: clamp(32px, 5vw, 56px);
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(44px, 7vw, 88px);
 }
 
-@media (min-width: 1024px) {
-  .explorer {
-    /* 4/8 e não 5/7: a crítica da rodada era "lista à esquerda + card
-       comum à direita". A lista é índice, não conteúdo — ela precisa do
-       espaço de um índice, e o palco precisa do espaço de uma vitrine. */
-    grid-template-columns: 4fr 8fr;
-    gap: clamp(40px, 4vw, 72px);
-    align-items: start;
-  }
+.showcaseItem {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3vw, 24px);
+  padding-top: clamp(32px, 5vw, 56px);
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
 }
 
-.master {
+.showcaseItem:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.itemHeader {
+  order: 1;
   min-width: 0;
 }
 
-/* ---------------- Bloco do item selecionado (só desktop) ---------------- */
+.itemMediaWrap {
+  order: 2;
+  min-width: 0;
+}
 
-.selected {
-  display: none;
+.itemBody {
+  order: 3;
+  min-width: 0;
 }
 
 @media (min-width: 1024px) {
-  .selected {
-    display: block;
-    margin-bottom: 28px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid rgba(21, 21, 15, 0.16);
+  .showcaseItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.85fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(40px, 5vw, 72px);
+    row-gap: 16px;
+    align-items: start;
+  }
+
+  .showcaseItemReverse {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.18fr);
+  }
+
+  .itemMediaWrap {
+    order: 0;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .itemHeader {
+    order: 0;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .itemBody {
+    order: 0;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .showcaseItemReverse .itemMediaWrap {
+    grid-column: 2;
+  }
+
+  .showcaseItemReverse .itemHeader,
+  .showcaseItemReverse .itemBody {
+    grid-column: 1;
   }
 }
 
-.selectedManufacturer {
-  margin: 0 0 6px;
+.itemMetaRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.itemIndex {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--color-gold-aged);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.itemIndexTotal {
+  color: var(--role-muted, var(--text-muted));
+  font-size: 11px;
+}
+
+.itemManufacturer {
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.selectedName {
-  margin: 0 0 10px;
+.itemName {
+  margin: 0;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(24px, 1.6vw + 16px, 32px);
+  font-size: clamp(26px, 2.2vw + 16px, 36px);
   line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
-.selectedSummary {
-  margin: 0;
+.itemHeadline {
+  margin: 10px 0 0;
   max-width: 44ch;
-  color: var(--role-secondary, var(--text-secondary));
+  color: var(--role-primary, var(--text-primary));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: clamp(16px, 0.35vw + 15px, 19px);
+  font-weight: 500;
+  line-height: 1.45;
 }
 
-.selectedCta {
-  margin-top: 22px;
-}
+/* ---------------- Apresentação visual protagonista ---------------- */
 
-/* Transição curta e funcional ao trocar de equipamento — nunca um efeito
-   de entrada chamativo. */
-.swap {
-  animation: explorer-swap 200ms ease-out both;
-}
-
-@keyframes explorer-swap {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-}
-
-/* ---------------- Lista de equipamentos ----------------
-   Três composições, um só DOM:
-
-     < 768px     índice com miniatura — imagem 4:3 à esquerda, texto à direita.
-                 Seis equipamentos em ~1,5 tela em vez de seis cartões de 540px.
-     768–1023px  grade de duas colunas de cartões (imagem em cima), três
-                 linhas — não o cartão do mobile esticado até 700px.
-     >= 1024px   índice de master-detail (palco à direita). */
-
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.itemButton {
-  display: grid;
-  grid-template-columns: clamp(112px, 32vw, 148px) minmax(0, 1fr);
-  column-gap: 16px;
-  align-content: start;
-  width: 100%;
-  margin: 0;
-  padding: 18px 0 20px;
-  border: 0;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.itemButton:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 3px;
-}
-
-.itemButton > * {
-  grid-column: 2;
-}
-
-/* Imagem de descoberta. 4:3 é a proporção nativa dos renders, então `cover`
-   preenche sem cortar nada e sem deixar moldura (mesma decisão do palco). */
-.cardMedia {
-  grid-column: 1;
-  grid-row: 1 / span 6;
-  display: block;
+.itemMedia {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: rgba(21, 21, 15, 0.05);
+  border-radius: 2px;
+  background: rgba(21, 21, 15, 0.04);
 }
 
-.cardMedia img {
+.itemMedia img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.cardMedia3D {
-  background: radial-gradient(
-    ellipse 74% 66% at 50% 52%,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(21, 21, 15, 0.03) 100%
-  );
+.itemMedia3D {
+  overflow: visible;
+  background: transparent;
+  min-height: 290px;
 }
 
-.cardMedia3D img {
-  object-fit: contain;
-  padding: 6px;
+@media (min-width: 1024px) {
+  .itemMedia3D {
+    min-height: 380px;
+  }
 }
 
-.cardModelBadge {
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  z-index: 2;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: rgba(245, 243, 238, 0.88);
-  border: 1px solid rgba(21, 21, 15, 0.12);
-  color: rgba(21, 21, 15, 0.8);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.itemManufacturer {
-  display: block;
-  margin: 0 0 3px;
+.modelCaption {
+  margin: 8px 0 0;
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------- Corpo editorial ---------------- */
+
+.itemCopy {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.itemHighlights {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .itemHighlights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+.highlightGroup {
+  min-width: 0;
+}
+
+.highlightLabel {
+  margin: 0 0 8px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.itemName {
-  display: block;
+.tagList {
+  list-style: none;
   margin: 0;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 19px;
-  line-height: 1.15;
-}
-
-.itemSummary {
-  display: block;
-  margin: 6px 0 0;
-  max-width: 42ch;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* Faixa de informações confirmadas. Existe só quando o equipamento tem
-   spec validada — ver ProductExplorer.tsx. Tipografia de metadata técnica,
-   nunca de badge promocional: sem fundo colorido, sem pílula, sem ícone. */
-.itemSpecs {
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-top: 10px;
-  padding-top: 8px;
+  gap: 6px;
+}
+
+.tagList li {
+  padding: 4px 10px;
+  border: 1px solid rgba(21, 21, 15, 0.18);
+  border-radius: 999px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--role-secondary, var(--text-secondary));
+}
+
+.benefitList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.benefitList li {
+  position: relative;
+  padding-left: 14px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--role-secondary, var(--text-secondary));
+}
+
+.benefitList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 1px;
+  background: var(--color-gold-aged);
+}
+
+.itemSpecs {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 14px 0 0;
   border-top: 1px solid rgba(21, 21, 15, 0.14);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
 }
 
 .itemSpec {
   position: relative;
-  padding-left: 13px;
-  color: var(--role-muted, var(--text-muted));
+  padding-left: 14px;
+  color: var(--role-primary, var(--text-primary));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 
 .itemSpec::before {
@@ -254,281 +291,20 @@
   background: var(--color-gold-aged);
 }
 
-.itemCue {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  color: inherit;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
+.itemCta {
+  margin-top: 22px;
 }
 
-.itemCue::after {
-  content: "→";
-}
-
-/* ---- Tablet: grade de cartões ---- */
-@media (min-width: 768px) {
-  .list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: clamp(28px, 4vw, 40px);
-  }
-
-  .itemButton {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 20px 0 26px;
-  }
-
-  .itemButton > * {
-    grid-column: auto;
-  }
-
-  .cardMedia {
-    grid-row: auto;
-    margin-bottom: 16px;
-  }
-
-  .itemName {
-    font-size: 22px;
-  }
-
-  .itemSummary {
-    margin-top: 8px;
-    font-size: 15px;
-  }
-
-  .itemSpecs {
-    margin-top: 12px;
-    padding-top: 10px;
-  }
-
-  .itemCue {
-    margin-top: auto;
-    padding-top: 14px;
-    font-size: 15px;
-  }
-}
-
-/* ---- Desktop: índice de master-detail ---- */
-@media (min-width: 1024px) {
-  .list {
-    display: block;
-  }
-
-  .itemButton {
-    display: block;
-    height: auto;
-    padding: 16px 0;
-  }
-
-  .cardMedia,
-  .itemSummary,
-  .itemSpecs,
-  .itemCue {
-    display: none;
-  }
-
-  .itemName {
-    font-size: 19px;
-    transition: color 160ms ease;
-  }
-
-  .itemButton:hover .itemName {
-    color: var(--color-gold-aged);
-  }
-
-  .itemButton[aria-current="true"] {
-    border-top-color: var(--color-gold-aged);
-  }
-
-  .itemButton[aria-current="true"] .itemName {
-    color: var(--color-gold-aged);
-  }
-}
-
-/* ---------------- Palco (desktop) ---------------- */
-
-.stage {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .stage {
-    display: block;
-    position: sticky;
-    top: calc(var(--header-height) + 24px);
-  }
-}
-
-/* ---------------- Vitrine técnica ----------------
-   O palco era um retângulo cinza com a imagem dentro — na prática, um
-   card comum ao lado de uma lista, que é exatamente a leitura que a
-   rodada pediu para eliminar.
-
-   O que faz dele uma vitrine e não um card:
-
-     · a imagem preenche o palco inteiro, sem moldura em volta;
-     · marcas de canto — quatro cantoneiras finas, vocabulário de desenho
-       técnico, não moldura decorativa;
-     · metadata impressa — índice e fabricante sobre a própria vitrine,
-       como marcação de prancha.
-
-   Sem borda externa, sem raio, sem sombra: nada que devolva a silhueta de
-   cartão.
-
-   ---------------- O estúdio é o do próprio render ----------------
-   Primeira tentativa: o palco tinha superfície própria (gradiente + linha
-   de horizonte + símbolo ao fundo) e a imagem entrava por cima com
-   `contain` e respiro. Na revisão visual do gate isso ficou pior, não
-   melhor — os renders não são recortados em transparência, cada um traz o
-   seu próprio fundo de estúdio, e a foto virava um retângulo claro
-   flutuando dentro de outro retângulo: exatamente a leitura de "card
-   comum" que o palco deveria eliminar.
-
-   Pior: os fundos dos seis renders não são iguais entre si (amostrados nos
-   cantos superiores: #d2d2d2, #bebebe, #bababa), então nenhuma cor de
-   palco emendaria com todos.
-
-   A solução é deixar de disputar. O palco assume a proporção NATIVA dos
-   renders (1400 × 1056 = 4:3) e a imagem entra com `cover`. Como as
-   proporções batem exatamente, nada é cortado, não sobra moldura, e o
-   fundo infinito que já existe dentro do render passa a SER a superfície
-   da vitrine. O que o site acrescenta por cima é justamente o que o render
-   não tem: as marcas de canto e a metadata técnica.
-
-   O fundo abaixo é só o que aparece enquanto a imagem carrega. */
-
-.stageMedia {
-  position: relative;
+.itemCta button {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  isolation: isolate;
-  background: rgba(21, 21, 15, 0.05);
 }
 
-.stageMedia3D {
-  background: transparent;
-  overflow: visible;
-}
-
-/* Cantoneiras de prancha técnica. */
-.stageTick {
-  position: absolute;
-  z-index: 2;
-  width: 14px;
-  height: 14px;
-  border: 0 solid rgba(21, 21, 15, 0.32);
-  pointer-events: none;
-}
-
-.tickTl {
-  top: 14px;
-  left: 14px;
-  border-top-width: 1px;
-  border-left-width: 1px;
-}
-
-.tickTr {
-  top: 14px;
-  right: 14px;
-  border-top-width: 1px;
-  border-right-width: 1px;
-}
-
-.tickBl {
-  bottom: 14px;
-  left: 14px;
-  border-bottom-width: 1px;
-  border-left-width: 1px;
-}
-
-.tickBr {
-  bottom: 14px;
-  right: 14px;
-  border-bottom-width: 1px;
-  border-right-width: 1px;
-}
-
-.stageProduct {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.stageIndex {
-  position: absolute;
-  z-index: 2;
-  top: 30px;
-  left: 30px;
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  color: var(--color-gold-aged);
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1;
-}
-
-.stageIndexTotal {
-  color: var(--role-muted, var(--text-muted));
-  font-size: 11px;
-}
-
-.stageManufacturer {
-  position: absolute;
-  z-index: 2;
-  bottom: 28px;
-  left: 30px;
-  color: var(--role-muted, var(--text-muted));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-.stageManufacturerTop {
-  bottom: auto;
-  left: auto;
-  top: 30px;
-  right: 30px;
-}
-
-.stageIndex {
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .swap {
-    animation: none;
-  }
-
-  .itemName {
-    transition: none;
+@media (min-width: 640px) {
+  .itemCta button {
+    width: auto;
   }
 }
 
-/* ---------------- Transição para o detalhe (Seção 13) ----------------
-   `view-transition-name` marca QUAL imagem a View Transitions API deve
-   morfar entre os dois estados do DOM (antes/depois do <dialog> abrir) —
-   a mesma imagem principal reaparece em ProductGallery.tsx com o mesmo
-   nome (ver .slide:first-child img em product-gallery.module.css). Como
-   só um elemento pode ostentar um nome por vez, a classe só é aplicada
-   via JS (ProductExplorer.tsx) enquanto o detalhe está FECHADO — assim
-   que abre, esta imagem perde o nome e a da galeria assume, exatamente a
-   troca "antes/depois" que a API precisa para animar. Sem suporte no
-   navegador ou com prefers-reduced-motion, a classe fica inerte (nenhum
-   efeito visual) e o <dialog> abre normalmente. */
 .transitionHero {
   view-transition-name: product-hero;
 }

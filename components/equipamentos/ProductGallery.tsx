@@ -141,6 +141,12 @@ export default function ProductGallery({ productId, image, gallery, video, local
         )}
       </div>
 
+      {model3D?.modelCaption && (
+        <p style={{ margin: "8px 0 0", fontSize: "12px", opacity: 0.72 }}>
+          {model3D.modelCaption[locale]}
+        </p>
+      )}
+
       {slides.length > 1 && (
         <div className={styles.thumbs}>
           {slides.map((slide, index) => (

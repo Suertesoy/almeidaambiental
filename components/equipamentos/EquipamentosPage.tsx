@@ -11,8 +11,6 @@ import ProductExplorer from "./ProductExplorer";
 import EquipmentChoreographyStage from "./EquipmentChoreographyStage";
 import { MATERIAL_ICONS } from "../icons";
 import {
-  DETALHE_MECANICO_IMAGE,
-  DETALHE_MECANICO_IMAGE_EN,
   FEIRA_IMAGE,
   FEIRA_IMAGE_EN,
   PRODUCTS,
@@ -41,10 +39,8 @@ const MODALITIES = { pt: ["Compra", "Locação", "Consignação"], en: ["Purchas
 const COPY = {
   pt: {
     heroEyebrow: "Almeida Equipamentos",
-    heroTitle: "Tecnologia para movimentar menos volume com mais eficiência.",
-    heroLede:
-      "Equipamentos para compactação, prensagem, desidratação e armazenagem desenvolvidos a partir de necessidades reais da gestão de resíduos.",
-    heroSubcopy: "Tecnologias internacionais e produção própria do Grupo Almeida.",
+    heroTitle: "Menos volume. Mais eficiência.",
+    heroLede: "Tecnologia aplicada à movimentação e compactação de resíduos.",
     heroPrimaryCta: "Conheça as tecnologias",
     heroSecondaryCta: "Encontre a solução para sua operação",
     positioningHeadline: "Escolher um equipamento é avaliar o que ele muda na operação.",
@@ -73,10 +69,8 @@ const COPY = {
   },
   en: {
     heroEyebrow: "Almeida Equipamentos",
-    heroTitle: "Technology that reduces volume and improves operational efficiency.",
-    heroLede:
-      "Equipment for compaction, baling, dewatering and storage, designed around the practical realities of waste management.",
-    heroSubcopy: "International technology and in-house production by Grupo Almeida.",
+    heroTitle: "Less volume. More efficiency.",
+    heroLede: "Technology applied to waste handling and compaction.",
     heroPrimaryCta: "See the technologies",
     heroSecondaryCta: "Find the solution for your operation",
     positioningHeadline: "Choosing equipment means weighing its impact on your operation.",
@@ -122,7 +116,6 @@ const COPY = {
  */
 export default function EquipamentosPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const detalheMecanicoImage = locale === "en" ? DETALHE_MECANICO_IMAGE_EN : DETALHE_MECANICO_IMAGE;
   const feiraImage = locale === "en" ? FEIRA_IMAGE_EN : FEIRA_IMAGE;
   const products = locale === "en" ? PRODUCTS_EN : PRODUCTS;
   const materialAssociations = locale === "en" ? MATERIAL_ASSOCIATIONS_EN : MATERIAL_ASSOCIATIONS;
@@ -137,7 +130,6 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
               <p className={styles.heroEyebrow}>{t.heroEyebrow}</p>
               <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
               <p className={styles.heroLede}>{t.heroLede}</p>
-              <p className={styles.heroSubcopy}>{t.heroSubcopy}</p>
               <div className={styles.heroCtas}>
                 <a className={`${shared.btn} ${shared.btnSolidGold}`} href="#produtos">
                   {t.heroPrimaryCta}
@@ -166,25 +158,15 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
       <section className={`${shared.chapterOpen} ${shared.toneStone} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />
         <div className={shared.container}>
-          <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
-            <Reveal className={shared.duoContent}>
-              <h2 className={shared.headline}>{t.positioningHeadline}</h2>
-              <p className={shared.body}>{t.positioningBody}</p>
-              <ul className={styles.modalityTags}>
-                {modalities.map((modality) => (
-                  <li key={modality}>{modality}</li>
-                ))}
-              </ul>
-            </Reveal>
-            {/* Materialidade mecânica (engenharia/precisão): slot já
-                preparado para receber uma composição própria de desktop e
-                outra de mobile via `mobileSrc` no dado — ver lib/media.ts.
-                Hoje serve a mesma imagem nos dois, enquadrada por
-                objectPosition. */}
-            <Reveal className={`${shared.duoMedia} ${styles.positioningMedia}`} style={{ transitionDelay: "90ms" }}>
-              <EditorialPicture image={detalheMecanicoImage} />
-            </Reveal>
-          </div>
+          <Reveal className={styles.positioningBlock}>
+            <h2 className={shared.headline}>{t.positioningHeadline}</h2>
+            <p className={shared.body}>{t.positioningBody}</p>
+            <ul className={styles.modalityTags}>
+              {modalities.map((modality) => (
+                <li key={modality}>{modality}</li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </section>
 

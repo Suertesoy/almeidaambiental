@@ -267,16 +267,41 @@ html:has([data-page="home"]) {
 .equipamentosFooterMeta {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
+  width: 100%;
+  min-width: 0;
 }
 
 .equipamentosFooterMeta .tagRow {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
   margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.equipamentosFooterMeta .tagRow::-webkit-scrollbar {
+  display: none;
+}
+
+.equipamentosFooterMeta .tagRow li {
+  font-size: clamp(11px, 3vw, 13px);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .equipamentosFooterMeta .ctaRow {
   margin-top: 0;
+  width: 100%;
+}
+
+.equipamentosFooterMeta .ctaRow .btn {
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -293,6 +318,19 @@ html:has([data-page="home"]) {
 
   .equipamentosFooterMeta .tagRow {
     justify-content: flex-end;
+    flex-wrap: wrap;
+    width: auto;
+    gap: 10px 18px;
+    overflow-x: visible;
+  }
+
+  .equipamentosFooterMeta .tagRow li {
+    font-size: 13px;
+  }
+
+  .equipamentosFooterMeta .ctaRow,
+  .equipamentosFooterMeta .ctaRow .btn {
+    width: auto;
   }
 }
 

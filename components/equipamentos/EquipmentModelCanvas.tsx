@@ -15,6 +15,7 @@ import {
 export type EquipmentModelCanvasProps = {
   config: Equipment3DConfig;
   autoRotate?: boolean;
+  interactive?: boolean;
   paused?: boolean;
   resetSignal: number;
   keyboardCommand?: { seq: number; dAz: number; dEl: number } | null;
@@ -27,6 +28,7 @@ export type EquipmentModelCanvasProps = {
 export default function EquipmentModelCanvas({
   config,
   autoRotate = false,
+  interactive = true,
   paused = false,
   resetSignal,
   keyboardCommand,
@@ -79,7 +81,10 @@ export default function EquipmentModelCanvas({
     renderer.domElement.style.display = "block";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
-    renderer.domElement.style.touchAction = "pan-y";
+    renderer.domElement.style.touchAction = interactive ? "pan-y" : "auto";
+    if (!interactive) {
+      renderer.domElement.style.pointerEvents = "none";
+    }
 
     container.appendChild(renderer.domElement);
 
@@ -101,6 +106,7 @@ export default function EquipmentModelCanvas({
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
+    controls.enabled = interactive;
     controls.enableDamping = true;
     controls.dampingFactor = 0.065;
     controls.enablePan = false;
@@ -273,7 +279,7 @@ export default function EquipmentModelCanvas({
       cameraRef.current = null;
       initialPoseRef.current = null;
     };
-  }, [config, autoRotate]);
+  }, [config, autoRotate, interactive]);
 
   useEffect(() => {
     if (resetSignal === 0) return;

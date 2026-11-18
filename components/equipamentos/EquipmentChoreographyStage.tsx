@@ -84,7 +84,7 @@ export default function EquipmentChoreographyStage({
   return (
     <div
       ref={rootRef}
-      className={`${styles.root} ${variant === "home" ? styles.rootHome : ""} ${className ?? ""}`}
+      className={`${styles.root} ${styles.rootChoreography} ${variant === "home" ? styles.rootHome : ""} ${className ?? ""}`}
       role="region"
       aria-label={current.label[locale]}
     >

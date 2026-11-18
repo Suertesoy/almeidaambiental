@@ -26,16 +26,20 @@ type PreparedModel = {
   config: Equipment3DConfig;
   group: THREE.Group;
   boxSize: THREE.Vector3;
+  rxz: number;
 };
 
-const CYCLE_DURATION_MS = 6000;
-const FADE_IN_MS = 750;
-const FADE_OUT_MS = 700;
-const ROTATION_SWEEP_RAD = THREE.MathUtils.degToRad(36);
-const SLIDE_DISTANCE_M = 0.22;
+const HOLD_MS = 3200;
+const TRANSITION_MS = 1000;
+const CYCLE_MS = HOLD_MS + TRANSITION_MS;
+const ROTATION_SWEEP_RAD = THREE.MathUtils.degToRad(26);
 
-function easeInOutSine(t: number): number {
-  return -(Math.cos(Math.PI * t) - 1) / 2;
+function easeInOutCubic(t: number): number {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 async function loadPreparedModel(
@@ -67,7 +71,7 @@ async function loadPreparedModel(
       transparent: true,
       depthWrite: false,
       toneMapped: false,
-      opacity: 0.9,
+      opacity: 0.88,
     });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
@@ -78,7 +82,13 @@ async function loadPreparedModel(
     // Sombra de contato é opcional
   }
 
-  return { index, config, group, boxSize: size };
+  return {
+    index,
+    config,
+    group,
+    boxSize: size,
+    rxz: Math.hypot(size.x / 2, size.z / 2),
+  };
 }
 
 export default function EquipmentChoreographyCanvas({
@@ -121,7 +131,6 @@ export default function EquipmentChoreographyCanvas({
     renderer.domElement.style.display = "block";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
-    renderer.domElement.style.opacity = "0";
 
     container.appendChild(renderer.domElement);
 
@@ -142,35 +151,49 @@ export default function EquipmentChoreographyCanvas({
     const texLoader = new THREE.TextureLoader();
 
     let active: PreparedModel | null = null;
-    let nextPrepared: PreparedModel | null = null;
+    let next: PreparedModel | null = null;
     let nextLoadingIndex: number | null = null;
+    let nextPeekProgress = 1;
     let cycleElapsedMs = 0;
     let lastFrameTime = performance.now();
 
-    const applyCameraForModel = (model: PreparedModel) => {
+    const getFramingFor = (model: PreparedModel) => {
       const w = Math.max(container.clientWidth, 1);
       const h = Math.max(container.clientHeight, 1);
       const aspect = w / h;
-      camera.fov = model.config.camera.fov;
-      camera.aspect = aspect;
-      camera.updateProjectionMatrix();
-      scene.environmentIntensity = model.config.environmentIntensity;
-
       const framing = computeFraming(
         model.boxSize,
         aspect,
         model.config.camera,
         paddingMultiplier
       );
-      camera.position.copy(framing.position);
-      camera.lookAt(framing.target);
-      positionStudioLights(camera, framing.target, keyLight, rimLight);
+      const fovRad = THREE.MathUtils.degToRad(model.config.camera.fov);
+      const visibleHalfW = framing.distance * Math.tan(fovRad / 2) * aspect;
+      // Posiciona o próximo modelo parcialmente visível na borda direita, sem invadir o centro
+      const lateralOffset = Math.max(visibleHalfW * 0.96 + model.rxz * 0.34, model.rxz * 1.85);
+      return { ...framing, aspect, lateralOffset };
     };
 
-    const preloadNext = (currentIndex: number) => {
+    const applyCameraPose = (
+      fov: number,
+      aspect: number,
+      position: THREE.Vector3,
+      target: THREE.Vector3,
+      envIntensity: number
+    ) => {
+      camera.fov = fov;
+      camera.aspect = aspect;
+      camera.updateProjectionMatrix();
+      camera.position.copy(position);
+      camera.lookAt(target);
+      scene.environmentIntensity = envIntensity;
+      positionStudioLights(camera, target, keyLight, rimLight);
+    };
+
+    const ensureNextLoaded = (currentIndex: number) => {
       if (configs.length < 2) return;
       const targetIndex = (currentIndex + 1) % configs.length;
-      if (nextLoadingIndex === targetIndex || nextPrepared?.index === targetIndex) return;
+      if (nextLoadingIndex === targetIndex || next?.index === targetIndex) return;
       nextLoadingIndex = targetIndex;
 
       loadPreparedModel(loader, texLoader, configs[targetIndex], targetIndex)
@@ -179,17 +202,23 @@ export default function EquipmentChoreographyCanvas({
             disposeObjectTree(prepared.group);
             return;
           }
-          if (nextPrepared) {
-            disposeObjectTree(nextPrepared.group);
+          if (next) {
+            scene.remove(next.group);
+            disposeObjectTree(next.group);
           }
-          nextPrepared = prepared;
+          next = prepared;
+          nextPeekProgress = 0;
+          if (active) {
+            const framing = getFramingFor(active);
+            prepared.group.position.x = framing.lateralOffset * 1.4;
+          }
+          scene.add(prepared.group);
         })
         .catch(() => {
           nextLoadingIndex = null;
         });
     };
 
-    // Carrega o primeiro equipamento da sequência
     loadPreparedModel(loader, texLoader, configs[0], 0)
       .then((first) => {
         if (disposed) {
@@ -198,7 +227,16 @@ export default function EquipmentChoreographyCanvas({
         }
         active = first;
         scene.add(first.group);
-        applyCameraForModel(first);
+
+        const framing = getFramingFor(first);
+        applyCameraPose(
+          first.config.camera.fov,
+          framing.aspect,
+          framing.position,
+          framing.target,
+          first.config.environmentIntensity
+        );
+
         callbacksRef.current.onActiveChange(0);
         renderer.render(scene, camera);
 
@@ -206,7 +244,7 @@ export default function EquipmentChoreographyCanvas({
           readySignaled = true;
           callbacksRef.current.onReady();
         }
-        preloadNext(0);
+        ensureNextLoaded(0);
       })
       .catch(() => {
         if (!disposed) callbacksRef.current.onError();
@@ -218,7 +256,14 @@ export default function EquipmentChoreographyCanvas({
       const h = Math.max(container.clientHeight, 1);
       renderer.setSize(w, h, false);
       if (active) {
-        applyCameraForModel(active);
+        const framing = getFramingFor(active);
+        applyCameraPose(
+          active.config.camera.fov,
+          framing.aspect,
+          framing.position,
+          framing.target,
+          active.config.environmentIntensity
+        );
       }
     });
     resizeObserver.observe(container);
@@ -246,48 +291,75 @@ export default function EquipmentChoreographyCanvas({
 
       cycleElapsedMs += dt;
 
-      // Não inicia a transição de saída antes de o próximo GLB estar pronto
-      const fadeOutStart = CYCLE_DURATION_MS - FADE_OUT_MS;
-      if (cycleElapsedMs >= fadeOutStart && configs.length > 1 && !nextPrepared) {
-        cycleElapsedMs = fadeOutStart - 16;
-        preloadNext(active.index);
+      // Só inicia o deslocamento de saída quando o próximo modelo estiver em cena
+      if (cycleElapsedMs >= HOLD_MS && configs.length > 1 && !next) {
+        cycleElapsedMs = HOLD_MS - 16;
+        ensureNextLoaded(active.index);
       }
 
-      if (cycleElapsedMs >= CYCLE_DURATION_MS && nextPrepared) {
+      if (cycleElapsedMs >= CYCLE_MS && next) {
         scene.remove(active.group);
         disposeObjectTree(active.group);
 
-        active = nextPrepared;
-        nextPrepared = null;
+        active = next;
+        active.group.position.x = 0;
+        next = null;
         nextLoadingIndex = null;
         cycleElapsedMs = 0;
 
-        scene.add(active.group);
-        applyCameraForModel(active);
         callbacksRef.current.onActiveChange(active.index);
-        preloadNext(active.index);
+        ensureNextLoaded(active.index);
       }
 
-      const progress = Math.min(cycleElapsedMs / CYCLE_DURATION_MS, 1);
-      const eased = easeInOutSine(progress);
-      active.group.rotation.y = -ROTATION_SWEEP_RAD * 0.35 + ROTATION_SWEEP_RAD * eased;
+      const activeFraming = getFramingFor(active);
 
-      // Opacidade e deslocamento espacial sutil na entrada e na saída
-      let opacity = 1;
-      let slideX = 0;
+      // Rotação suave do equipamento central
+      const rotProgress = Math.min(cycleElapsedMs / CYCLE_MS, 1);
+      active.group.rotation.y =
+        -ROTATION_SWEEP_RAD * 0.3 + ROTATION_SWEEP_RAD * easeInOutCubic(rotProgress);
 
-      if (cycleElapsedMs < FADE_IN_MS) {
-        const t = easeInOutSine(cycleElapsedMs / FADE_IN_MS);
-        opacity = t;
-        slideX = (1 - t) * SLIDE_DISTANCE_M;
-      } else if (cycleElapsedMs > fadeOutStart && nextPrepared) {
-        const t = easeInOutSine(Math.min((cycleElapsedMs - fadeOutStart) / FADE_OUT_MS, 1));
-        opacity = 1 - t;
-        slideX = -t * SLIDE_DISTANCE_M;
+      if (cycleElapsedMs >= HOLD_MS && next) {
+        const t = easeInOutCubic(Math.min((cycleElapsedMs - HOLD_MS) / TRANSITION_MS, 1));
+        const nextFraming = getFramingFor(next);
+        const span = Math.max(activeFraming.lateralOffset, nextFraming.lateralOffset);
+
+        active.group.position.x = -t * span;
+        next.group.position.x = (1 - t) * span;
+        next.group.rotation.y = -ROTATION_SWEEP_RAD * 0.3;
+
+        const interpPos = activeFraming.position.clone().lerp(nextFraming.position, t);
+        const interpTarget = activeFraming.target.clone().lerp(nextFraming.target, t);
+        const interpFov = THREE.MathUtils.lerp(
+          active.config.camera.fov,
+          next.config.camera.fov,
+          t
+        );
+        const interpEnv = THREE.MathUtils.lerp(
+          active.config.environmentIntensity,
+          next.config.environmentIntensity,
+          t
+        );
+
+        applyCameraPose(interpFov, activeFraming.aspect, interpPos, interpTarget, interpEnv);
+      } else {
+        active.group.position.x = 0;
+        applyCameraPose(
+          active.config.camera.fov,
+          activeFraming.aspect,
+          activeFraming.position,
+          activeFraming.target,
+          active.config.environmentIntensity
+        );
+
+        if (next) {
+          nextPeekProgress = Math.min(nextPeekProgress + dt / 550, 1);
+          const peekEase = easeOutCubic(nextPeekProgress);
+          const startX = activeFraming.lateralOffset * 1.4;
+          next.group.position.x = THREE.MathUtils.lerp(startX, activeFraming.lateralOffset, peekEase);
+          next.group.rotation.y = -ROTATION_SWEEP_RAD * 0.3;
+        }
       }
 
-      active.group.position.x = slideX;
-      renderer.domElement.style.opacity = String(opacity);
       renderer.render(scene, camera);
     };
 
@@ -302,8 +374,9 @@ export default function EquipmentChoreographyCanvas({
         scene.remove(active.group);
         disposeObjectTree(active.group);
       }
-      if (nextPrepared) {
-        disposeObjectTree(nextPrepared.group);
+      if (next) {
+        scene.remove(next.group);
+        disposeObjectTree(next.group);
       }
       scene.environment = null;
       envTexture.dispose();

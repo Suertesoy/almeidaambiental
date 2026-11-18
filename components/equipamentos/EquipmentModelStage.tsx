@@ -15,8 +15,10 @@ export type EquipmentModelStageProps = {
   locale: Locale;
   /** "home" | "catalog" | "gallery" para ajustar respiro. */
   variant?: "home" | "catalog" | "gallery";
-  /** Rotação inicial lenta e controlada (para ao menor toque). */
+  /** Rotação inicial lenta e controlada. */
   autoRotate?: boolean;
+  /** Permite rotação manual por mouse, toque e teclado. */
+  interactive?: boolean;
   /** Classe extra opcional para o wrapper raiz. */
   className?: string;
 };
@@ -40,6 +42,7 @@ export default function EquipmentModelStage({
   locale,
   variant = "catalog",
   autoRotate = false,
+  interactive = true,
   className,
 }: EquipmentModelStageProps) {
   const t = COPY[locale];
@@ -141,10 +144,10 @@ export default function EquipmentModelStage({
     <div
       ref={rootRef}
       className={`${styles.root} ${variantClass} ${className ?? ""}`}
-      tabIndex={!hasError ? 0 : undefined}
+      tabIndex={interactive && !hasError ? 0 : undefined}
       role="region"
-      aria-label={`${config.label[locale]}. ${t.controlsHelp}`}
-      onKeyDown={handleKeyDown}
+      aria-label={interactive ? `${config.label[locale]}. ${t.controlsHelp}` : config.label[locale]}
+      onKeyDown={interactive ? handleKeyDown : undefined}
     >
       {/* Poster estático imediato e fallback automático */}
       <div
@@ -168,18 +171,16 @@ export default function EquipmentModelStage({
           key={config.glbUrl}
           config={config}
           autoRotate={autoRotate}
+          interactive={interactive}
           resetSignal={resetSignal}
           keyboardCommand={keyboardCommand}
           onReady={handleReady}
           onError={handleError}
           onUserInteract={handleUserInteract}
-          className={`${styles.canvasLayer} ${isReady ? styles.canvasLayerReady : ""}`}
+          className={`${styles.canvasLayer} ${!interactive ? styles.canvasLayerPassive : ""} ${
+            isReady ? styles.canvasLayerReady : ""
+          }`}
         />
-      )}
-
-      {/* Identificação discreta quando o modelo representa uma variante específica */}
-      {config.modelBadge && (
-        <span className={styles.modelBadge}>{config.modelBadge}</span>
       )}
     </div>
   );
