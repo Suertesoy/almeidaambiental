@@ -9,14 +9,13 @@
   width: 100%;
   height: 100%;
   min-height: 280px;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
-  /* Fundo de estúdio alinhado ao tom pedra institucional */
+  /* Fundo transparente com halo radial suave que se dissolve na superfície da página */
   background: radial-gradient(
-    ellipse 84% 76% at 50% 46%,
-    #f3f1ec 0%,
-    #e8e4dc 56%,
-    #dcd7cd 100%
+    ellipse 66% 58% at 50% 54%,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0) 74%
   );
   user-select: none;
   -webkit-user-select: none;
@@ -24,10 +23,9 @@
 
 .rootHome {
   background: radial-gradient(
-    ellipse 86% 78% at 50% 48%,
-    #f5f3ee 0%,
-    #eae6de 58%,
-    #dfd9ce 100%
+    ellipse 68% 60% at 50% 52%,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0) 74%
   );
 }
 
@@ -83,8 +81,35 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: clamp(16px, 4%, 36px);
+  padding: clamp(20px, 6%, 44px);
   display: block;
+}
+
+/* Identificação discreta do modelo quando representa uma variante (ex.: APV 100) */
+.modelBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 4;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(245, 243, 238, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(21, 21, 15, 0.1);
+  color: rgba(21, 21, 15, 0.76);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.rootCatalog .modelBadge {
+  top: auto;
+  bottom: 62px;
+  left: 24px;
 }
 
 /* Indicador discreto enquanto o GLB carrega */

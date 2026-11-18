@@ -59,7 +59,7 @@ export default function ChapterSection({ chapter, locale }: { chapter: Chapter; 
           </div>
 
           <div className={`${styles.pair} ${styles.pairLead}`}>
-            <Reveal>
+            <Reveal className={styles.chapterHeadReveal}>
               <header className={styles.chapterHead}>
                 <span className={styles.chapterIndex}>{meta.index} / 04</span>
                 <p className={styles.eyebrow}>{meta.eyebrow}</p>

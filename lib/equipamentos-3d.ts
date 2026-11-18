@@ -27,6 +27,8 @@ export type Equipment3DConfig = {
   };
   /** Intensidade da iluminação de estúdio (baseada em estudio.js). */
   environmentIntensity: number;
+  /** Identificação discreta quando o modelo representa uma variante específica (ex.: APV 100). */
+  modelBadge?: string;
   camera: Equipment3DCameraConfig;
   label: Record<Locale, string>;
   posterAlt: Record<Locale, string>;
@@ -44,8 +46,8 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     camera: {
       azimuthDeg: 36,
       elevationDeg: 18,
-      fov: 24,
-      padding: 1.22,
+      fov: 26,
+      padding: 1.32,
       targetYOffsetRatio: 0.02,
     },
     label: {
@@ -65,11 +67,12 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowUrl: "/models/equipamentos/apv-100/sombra-contato.png",
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.8,
+    modelBadge: "APV 100",
     camera: {
       azimuthDeg: 34,
       elevationDeg: 10,
-      fov: 22,
-      padding: 1.22,
+      fov: 25,
+      padding: 1.34,
       targetYOffsetRatio: 0.0,
     },
     label: {
@@ -92,8 +95,8 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     camera: {
       azimuthDeg: 40,
       elevationDeg: 14,
-      fov: 25,
-      padding: 1.2,
+      fov: 26,
+      padding: 1.3,
       targetYOffsetRatio: 0.02,
     },
     label: {

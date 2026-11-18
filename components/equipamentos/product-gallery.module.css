@@ -41,6 +41,19 @@
   background: rgba(21, 21, 15, 0.05);
 }
 
+.slide3D {
+  aspect-ratio: 1 / 1;
+  min-height: 300px;
+  overflow: visible;
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  .slide3D {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 .slideImageButton {
   position: relative;
   display: block;

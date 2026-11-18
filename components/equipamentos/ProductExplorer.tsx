@@ -112,24 +112,30 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
           </div>
 
           <ul className={styles.list}>
-            {products.map((product) => (
-              <li key={product.id}>
-                <button
-                  type="button"
-                  className={styles.itemButton}
-                  aria-current={product.id === selected.id ? "true" : undefined}
-                  onClick={(event) => handleItemClick(product, event)}
-                >
-                  <span className={styles.cardMedia}>
-                    <img
-                      src={product.image.src}
-                      alt={product.image.alt}
-                      loading="lazy"
-                      decoding="async"
-                      className={product.id === selected.id && !detail ? styles.transitionHero : undefined}
-                    />
-                    <IllustrativeBadge locale={locale} position="bottom-left" />
-                  </span>
+            {products.map((product) => {
+              const card3D = getEquipment3DConfig(product.id);
+              return (
+                <li key={product.id}>
+                  <button
+                    type="button"
+                    className={styles.itemButton}
+                    aria-current={product.id === selected.id ? "true" : undefined}
+                    onClick={(event) => handleItemClick(product, event)}
+                  >
+                    <span className={`${styles.cardMedia} ${card3D ? styles.cardMedia3D : ""}`}>
+                      <img
+                        src={card3D ? card3D.posterUrl : product.image.src}
+                        alt={card3D ? card3D.posterAlt[locale] : product.image.alt}
+                        loading="lazy"
+                        decoding="async"
+                        className={product.id === selected.id && !detail ? styles.transitionHero : undefined}
+                      />
+                      {card3D?.modelBadge ? (
+                        <span className={styles.cardModelBadge}>{card3D.modelBadge}</span>
+                      ) : (
+                        !card3D && <IllustrativeBadge locale={locale} position="bottom-left" />
+                      )}
+                    </span>
                   <span className={styles.itemManufacturer}>{product.manufacturer}</span>
                   <span className={styles.itemName}>{product.name}</span>
                   <span className={styles.itemSummary}>{product.headline}</span>
@@ -151,7 +157,8 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
                   <span className={styles.itemCue}>{t.viewDetails}</span>
                 </button>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
 
@@ -160,7 +167,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
             product-explorer.module.css. Por cima dele vêm as marcas de
             canto de desenho técnico e a metadata do equipamento. */}
         <div className={styles.stage} aria-hidden={selected3D ? undefined : "true"}>
-          <div className={styles.stageMedia}>
+          <div className={`${styles.stageMedia} ${selected3D ? styles.stageMedia3D : ""}`}>
             <span className={`${styles.stageTick} ${styles.tickTl}`} />
             <span className={`${styles.stageTick} ${styles.tickTr}`} />
             <span className={`${styles.stageTick} ${styles.tickBl}`} />

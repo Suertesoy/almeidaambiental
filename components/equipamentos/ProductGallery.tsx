@@ -105,7 +105,10 @@ export default function ProductGallery({ productId, image, gallery, video, local
       <div className={styles.track} ref={trackRef}>
         {slides.map((slide, index) =>
           slide.kind === "image" ? (
-            <div key={slide.key} className={styles.slide}>
+            <div
+              key={slide.key}
+              className={`${styles.slide} ${index === 0 && model3D ? styles.slide3D : ""}`}
+            >
               {index === 0 && model3D ? (
                 <EquipmentModelStage config={model3D} locale={locale} variant="gallery" />
               ) : (

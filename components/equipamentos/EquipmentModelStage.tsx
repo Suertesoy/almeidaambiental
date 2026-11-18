@@ -197,6 +197,11 @@ export default function EquipmentModelStage({
         />
       )}
 
+      {/* Indicador discreto quando o modelo representa uma variante específica */}
+      {config.modelBadge && (
+        <span className={styles.modelBadge}>{config.modelBadge}</span>
+      )}
+
       {/* Indicador discreto de carregamento */}
       {shouldMountCanvas && showInteractive && !isReady && (
         <div className={styles.loadingPill} aria-live="polite">

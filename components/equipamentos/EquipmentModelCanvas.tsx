@@ -81,8 +81,9 @@ function createStudioEnvironment(renderer: THREE.WebGLRenderer): THREE.Texture {
 }
 
 /**
- * Calcula a posição e o alvo iniciais da câmera a partir do bounding box
- * real do equipamento e do aspect ratio atual do container.
+ * Calcula a posição e o alvo iniciais da câmera garantindo que o equipamento
+ * não corte nas bordas em nenhum ângulo de rotação horizontal (360°) nem
+ * em viewports estreitas (mobile).
  */
 function computeFraming(
   boxSize: THREE.Vector3,
@@ -99,34 +100,18 @@ function computeFraming(
     Math.cos(azRad) * Math.cos(elRad)
   ).normalize();
 
-  const worldUp = new THREE.Vector3(0, 1, 0);
-  const right = new THREE.Vector3().crossVectors(worldUp, dir).normalize();
-  const up = new THREE.Vector3().crossVectors(dir, right).normalize();
-
-  const hx = boxSize.x / 2;
-  const hy = boxSize.y / 2;
-  const hz = boxSize.z / 2;
-
-  let maxHalfW = 0;
-  let maxHalfH = 0;
-  let maxHalfD = 0;
-
-  for (const sx of [-1, 1]) {
-    for (const sy of [-1, 1]) {
-      for (const sz of [-1, 1]) {
-        const corner = new THREE.Vector3(sx * hx, sy * hy, sz * hz);
-        maxHalfW = Math.max(maxHalfW, Math.abs(corner.dot(right)));
-        maxHalfH = Math.max(maxHalfH, Math.abs(corner.dot(up)));
-        maxHalfD = Math.max(maxHalfD, Math.abs(corner.dot(dir)));
-      }
-    }
-  }
+  // Raio horizontal máximo em qualquer ângulo de giro Y + altura máxima projetada
+  const rxz = Math.hypot(boxSize.x / 2, boxSize.z / 2);
+  const ry = boxSize.y / 2;
+  const maxHalfW = rxz;
+  const maxHalfH = Math.max(ry, ry * Math.cos(elRad) + rxz * Math.sin(elRad));
 
   const tanHalfFov = Math.tan(fovRad / 2);
   const safeAspect = Math.max(aspect, 0.55);
   const distV = maxHalfH / tanHalfFov;
   const distH = maxHalfW / (tanHalfFov * safeAspect);
-  const distance = Math.max(distV, distH) * config.padding + maxHalfD * 0.35;
+  const responsivePadding = aspect < 1.15 ? config.padding * 1.12 : config.padding;
+  const distance = Math.max(distV, distH) * responsivePadding + rxz * 0.65;
 
   const target = new THREE.Vector3(0, boxSize.y * (0.5 + (config.targetYOffsetRatio ?? 0)), 0);
   const position = target.clone().addScaledVector(dir, distance);
