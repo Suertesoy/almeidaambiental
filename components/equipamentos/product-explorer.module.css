@@ -457,6 +457,18 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  pointer-events: none;
+}
+
+.stageManufacturerTop {
+  bottom: auto;
+  left: auto;
+  top: 30px;
+  right: 30px;
+}
+
+.stageIndex {
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

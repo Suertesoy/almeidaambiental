@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./product-gallery.module.css";
 import { CloseIcon } from "../icons";
+import EquipmentModelStage from "./EquipmentModelStage";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
+import { getEquipment3DConfig } from "../../lib/equipamentos-3d";
 import type { EditorialImage, EditorialVideo } from "../../lib/media";
 import type { Locale } from "../../lib/i18n/locale";
 
@@ -12,6 +14,8 @@ type Slide =
   | { kind: "video"; key: string; video: EditorialVideo };
 
 export type ProductGalleryProps = {
+  /** Identificador do equipamento para habilitar o visualizador 3D quando disponível. */
+  productId?: string;
   /** Imagem principal — sempre existe. */
   image: EditorialImage;
   /** Fotos adicionais e detalhes. Ausente hoje; nada é renderizado por ela. */
@@ -54,8 +58,9 @@ const COPY = {
  * em visualização ampliada num <dialog> nativo — foco, Escape e camada
  * superior por conta do navegador.
  */
-export default function ProductGallery({ image, gallery, video, locale }: ProductGalleryProps) {
+export default function ProductGallery({ productId, image, gallery, video, locale }: ProductGalleryProps) {
   const t = COPY[locale];
+  const model3D = productId ? getEquipment3DConfig(productId) : null;
   const slides: Slide[] = [
     { kind: "image", key: image.src, image },
     ...(gallery ?? []).map((extra): Slide => ({ kind: "image", key: extra.src, image: extra })),
@@ -98,18 +103,22 @@ export default function ProductGallery({ image, gallery, video, locale }: Produc
   return (
     <div className={styles.gallery}>
       <div className={styles.track} ref={trackRef}>
-        {slides.map((slide) =>
+        {slides.map((slide, index) =>
           slide.kind === "image" ? (
             <div key={slide.key} className={styles.slide}>
-              <button
-                type="button"
-                className={styles.slideImageButton}
-                onClick={() => setZoomed(slide.image)}
-                aria-label={t.zoomImage(slide.image.alt)}
-              >
-                <img src={slide.image.src} alt={slide.image.alt} loading="lazy" decoding="async" />
-                {slide.image.sourceType !== "archive" && <IllustrativeBadge locale={locale} />}
-              </button>
+              {index === 0 && model3D ? (
+                <EquipmentModelStage config={model3D} locale={locale} variant="gallery" />
+              ) : (
+                <button
+                  type="button"
+                  className={styles.slideImageButton}
+                  onClick={() => setZoomed(slide.image)}
+                  aria-label={t.zoomImage(slide.image.alt)}
+                >
+                  <img src={slide.image.src} alt={slide.image.alt} loading="lazy" decoding="async" />
+                  {slide.image.sourceType !== "archive" && <IllustrativeBadge locale={locale} />}
+                </button>
+              )}
             </div>
           ) : (
             <div key={slide.key} className={styles.slide}>

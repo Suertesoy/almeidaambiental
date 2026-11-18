@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./company-page.module.css";
 import BrandWatermark from "./BrandWatermark";
+import Reveal from "./Reveal";
 
 export type EditorialCTAProps = {
   eyebrow?: string;
@@ -23,14 +24,16 @@ export default function EditorialCTA({ eyebrow, headline, body, cta, tone = "for
     <section className={`${styles.pageClose} ${toneClass} ${styles.finalCta}`}>
       <BrandWatermark mode="dark" className={styles.finalCtaWatermark} />
       <div className={styles.container}>
-        {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
-        <h2 className={styles.finalCtaHeadline}>{headline}</h2>
-        <p className={styles.body}>{body}</p>
-        <div className={styles.ctaRow}>
-          <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={cta.href}>
-            {cta.label}
-          </Link>
-        </div>
+        <Reveal>
+          {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
+          <h2 className={styles.finalCtaHeadline}>{headline}</h2>
+          <p className={styles.body}>{body}</p>
+          <div className={styles.ctaRow}>
+            <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={cta.href}>
+              {cta.label}
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

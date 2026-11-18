@@ -8,10 +8,11 @@ import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
-import BrandStage from "../shared/BrandStage";
 import ProcessSteps from "../shared/ProcessSteps";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import MaterialSurface from "../shared/MaterialSurface";
+import EquipmentModelStage from "../equipamentos/EquipmentModelStage";
+import { getEquipment3DConfig } from "../../lib/equipamentos-3d";
 import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS, FLOW_STEPS_EN } from "../../lib/almeida-ambiental-data";
 import { useEnterOnce } from "../AnimatedMetric";
@@ -19,6 +20,8 @@ import ImpactMetricsGrid from "./ImpactMetricsGrid";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
+
+const HOME_EQUIPAMENTOS_3D = getEquipment3DConfig("compactador-fuso");
 
 /* IMG_EQUIPAMENTOS_TECNOLOGIA saiu na rodada de presença de marca: a
    fotografia da dobra de ENTRADA da Almeida Equipamentos deu lugar à logo
@@ -169,9 +172,8 @@ export default function HomePage({ locale }: { locale: Locale }) {
       <Hero locale={locale} />
 
       {/* ---------------- Capítulo: Almeida Ambiental ----------------
-          Uma superfície (MaterialSurface do território) e uma section.
-          Linhas: marca + proposta → operação (foto + texto + CTA) → Process
-          Flow como fecho do capítulo. */}
+          Assinatura monocromática branca centralizada → tese editorial →
+          operação em duo assimétrico → Process Flow finito. */}
       <div className={`${styles.toneForest} ${styles.ambientalTerritory}`}>
         <MaterialSurface surface="ambiental-materia" />
 
@@ -183,24 +185,24 @@ export default function HomePage({ locale }: { locale: Locale }) {
           <BrandBoundaryMark boundary="ambiental-equipamentos" half="leaving" surface="onDark" />
           <div className={styles.container}>
             <div className={styles.chapterRows}>
-              <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-                <BrandStage compact className={styles.duoStage}>
+              <div className={styles.chapterHeader}>
+                <Reveal className={styles.chapterSignature}>
                   <BrandMark
                     brand={BRANDS["almeida-ambiental"]}
                     variant="branca"
-                    className={styles.brandStageLogo}
+                    className={styles.signatureLogo}
                   />
-                </BrandStage>
-                <div className={styles.duoContent}>
+                </Reveal>
+                <Reveal className={styles.chapterIntro} style={{ transitionDelay: "70ms" }}>
                   <h2 className={styles.headline}>
                     {t.ambientalEntryHeadlinePrefix}
                     <span className={styles.gold}>{t.ambientalEntryHeadlineGold}</span>
                   </h2>
                   <p className={styles.body}>{t.ambientalEntryBody}</p>
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
 
-              <Reveal className={`${styles.duo} ${styles.duoMediaRight}`}>
+              <Reveal className={`${styles.duo} ${styles.duoMediaRight}`} style={{ transitionDelay: "120ms" }}>
                 <div className={styles.duoContent}>
                   <h3 className={styles.headlineSecondary}>{t.ambientalProcessHeadline}</h3>
                   <p className={styles.body}>{t.ambientalProcessBody}</p>
@@ -223,32 +225,54 @@ export default function HomePage({ locale }: { locale: Locale }) {
       </div>
 
       {/* ---------------- Capítulo: Almeida Equipamentos ----------------
-          Marca + proposta → engenharia. A macro de engenharia ganha a coluna
-          dominante (7fr) para ter peso de peça editorial, e o texto fica na
-          coluna estreita. */}
+          Assinatura monocromática preta centralizada → palco amplo preparado
+          para o futuro visualizador 3D (usando a mídia atual sem placeholders) →
+          rodapé editorial com proposta, categorias e CTA. */}
       <section className={`${styles.companyChapter} ${styles.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-equipamentos" half="entering" surface="onLight" />
         <BrandBoundaryMark boundary="equipamentos-saturno" half="leaving" surface="onLight" />
         <div className={styles.container}>
           <div className={styles.chapterRows}>
-            <Reveal className={`${styles.duo} ${styles.duoMediaLeft}`}>
-              <BrandStage compact className={styles.duoStage}>
+            <div className={styles.chapterHeader}>
+              <Reveal className={styles.chapterSignature}>
                 <BrandMark
                   brand={BRANDS["almeida-equipamentos"]}
-                  variant="original"
-                  className={`${styles.brandStageLogo} ${styles.brandStageLogoEquipamentos}`}
+                  variant="preta"
+                  className={`${styles.signatureLogo} ${styles.signatureLogoEquipamentos}`}
                 />
-              </BrandStage>
-              <div className={styles.duoContent}>
+              </Reveal>
+              <Reveal className={styles.chapterIntro} style={{ transitionDelay: "70ms" }}>
                 <h2 className={styles.headline}>{t.equipamentosEntryHeadline}</h2>
                 <p className={styles.body}>{t.equipamentosEntryBody}</p>
+              </Reveal>
+            </div>
+
+            <Reveal className={styles.equipamentosStage} style={{ transitionDelay: "120ms" }}>
+              <div className={styles.equipamentosStageFrame} data-stage="3d-ready">
+                {HOME_EQUIPAMENTOS_3D ? (
+                  <EquipmentModelStage
+                    config={HOME_EQUIPAMENTOS_3D}
+                    locale={locale}
+                    variant="home"
+                    autoRotate
+                  />
+                ) : (
+                  <SectionMedia
+                    imageSrc={ENGENHARIA.src}
+                    mobileSrc={ENGENHARIA.mobileSrc}
+                    alt={ENGENHARIA_ALT[locale]}
+                    objectPosition="center"
+                  />
+                )}
               </div>
             </Reveal>
 
-            <Reveal className={`${styles.duo} ${styles.duoMediaRight} ${styles.duoMediaDominant}`}>
-              <div className={styles.duoContent}>
+            <Reveal className={styles.equipamentosFooter} style={{ transitionDelay: "160ms" }}>
+              <div className={styles.equipamentosFooterCopy}>
                 <h3 className={styles.headlineSecondary}>{t.equipamentosHeadline}</h3>
                 <p className={styles.body}>{t.equipamentosBody}</p>
+              </div>
+              <div className={styles.equipamentosFooterMeta}>
                 <ul className={styles.tagRow}>
                   {t.equipamentosTags.map((tag) => (
                     <li key={tag}>{tag}</li>
@@ -260,22 +284,14 @@ export default function HomePage({ locale }: { locale: Locale }) {
                   </Link>
                 </div>
               </div>
-              <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                <SectionMedia
-                  imageSrc={ENGENHARIA.src}
-                  mobileSrc={ENGENHARIA.mobileSrc}
-                  alt={ENGENHARIA_ALT[locale]}
-                  objectPosition="center"
-                />
-              </div>
             </Reveal>
           </div>
         </div>
       </section>
 
       {/* ---------------- Capítulo: Saturno Ambiental ----------------
-          Marca + presença regional → atuação. A materialidade pertence ao
-          território (wrapper), não à dobra. */}
+          Assinatura monocromática branca centralizada → declaração tipográfica
+          regional → materialidade e atuação em duo assimétrico. */}
       <div className={`${styles.toneStone} ${styles.saturnoTerritory}`}>
         <MaterialSurface surface="saturno-hero" />
 
@@ -284,21 +300,21 @@ export default function HomePage({ locale }: { locale: Locale }) {
           <BrandBoundaryMark boundary="saturno-impacto" half="leaving" surface="onDark" />
           <div className={styles.container}>
             <div className={styles.chapterRows}>
-              <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.brandStatement}`}>
-                <BrandStage compact className={styles.duoStage}>
+              <div className={`${styles.chapterHeader} ${styles.saturnoHeader}`}>
+                <Reveal className={styles.chapterSignature}>
                   <BrandMark
                     brand={BRANDS["saturno-ambiental"]}
                     variant="branca"
-                    className={styles.brandStageLogo}
+                    className={styles.signatureLogo}
                   />
-                </BrandStage>
-                <div className={styles.duoContent}>
+                </Reveal>
+                <Reveal className={`${styles.chapterIntro} ${styles.brandStatement}`} style={{ transitionDelay: "70ms" }}>
                   <p className={styles.locationLine}>{t.saturnoLocationLine}</p>
                   <h2 className={`${styles.headline} ${styles.headlineMonumental}`}>{t.saturnoEntryHeadline}</h2>
-                </div>
-              </Reveal>
+                </Reveal>
+              </div>
 
-              <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`}>
+              <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`} style={{ transitionDelay: "120ms" }}>
                 <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
                   <SectionMedia imageSrc={IMG_SATURNO_ATUACAO} alt={t.saturnoAtuacaoAlt} objectPosition="center" />
                 </div>

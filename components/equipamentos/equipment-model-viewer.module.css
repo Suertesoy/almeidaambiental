@@ -1,0 +1,249 @@
+/* ==========================================================
+   Visualizador 3D editorial — Almeida Equipamentos.
+   Inspirado em apresentações de produto com profundidade natural,
+   sem molduras pesadas, grades técnicas ou aparência de CAD.
+   ========================================================== */
+
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+  isolation: isolate;
+  /* Fundo de estúdio alinhado ao tom pedra institucional */
+  background: radial-gradient(
+    ellipse 84% 76% at 50% 46%,
+    #f3f1ec 0%,
+    #e8e4dc 56%,
+    #dcd7cd 100%
+  );
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rootHome {
+  background: radial-gradient(
+    ellipse 86% 78% at 50% 48%,
+    #f5f3ee 0%,
+    #eae6de 58%,
+    #dfd9ce 100%
+  );
+}
+
+.root:focus-visible {
+  outline: 2px solid var(--color-gold-aged, #8a6d3b);
+  outline-offset: -2px;
+}
+
+.canvasLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Permite arraste horizontal para girar e preserva rolagem vertical no mobile */
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.canvasLayer:active {
+  cursor: grabbing;
+}
+
+.canvasLayerReady {
+  opacity: 1;
+}
+
+.canvasLayerHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.posterLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.posterLayerHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.posterImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(16px, 4%, 36px);
+  display: block;
+}
+
+/* Indicador discreto enquanto o GLB carrega */
+.loadingPill {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(245, 243, 238, 0.84);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(21, 21, 15, 0.72);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.loadingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold-aged, #8a6d3b);
+  animation: pulseDot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Barra inferior discreta: dica de interação + controles */
+.hud {
+  position: absolute;
+  inset-inline: 14px;
+  bottom: 14px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.rootCatalog .hud {
+  inset-inline: 24px;
+  bottom: 22px;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(245, 243, 238, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(21, 21, 15, 0.08);
+  color: rgba(21, 21, 15, 0.78);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: opacity 280ms ease;
+}
+
+.hintFaded {
+  opacity: 0.62;
+}
+
+.controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  pointer-events: auto;
+}
+
+.controlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(21, 21, 15, 0.12);
+  background: rgba(245, 243, 238, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(21, 21, 15, 0.86);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.controlBtn:hover {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(21, 21, 15, 0.24);
+}
+
+.controlBtn:focus-visible {
+  outline: 2px solid var(--color-gold-aged, #8a6d3b);
+  outline-offset: 2px;
+}
+
+.controlBtnIcon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 639px) {
+  .hud {
+    inset-inline: 10px;
+    bottom: 10px;
+    gap: 6px;
+  }
+
+  .hint {
+    padding: 5px 9px;
+    font-size: 10px;
+  }
+
+  .controlBtn {
+    min-height: 30px;
+    padding: 5px 9px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvasLayer,
+  .posterLayer,
+  .hint,
+  .controlBtn {
+    transition: none;
+  }
+
+  .loadingDot {
+    animation: none;
+  }
+}

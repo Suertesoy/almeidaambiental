@@ -7,6 +7,7 @@ import EditorialCTA from "../shared/EditorialCTA";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import MaterialSurface from "../shared/MaterialSurface";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
+import Reveal from "../shared/Reveal";
 import { FRENTES, FRENTES_EN, HERO_META, HERO_META_EN, type Frente } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
@@ -150,8 +151,12 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           <BrandBoundaryMark boundary="saturno-territorio" half="entering" surface="onDark" />
           <div className={shared.container}>
             <div className={styles.splitGrid}>
-              <h2 className={shared.headline}>{t.positioningHeadline}</h2>
-              <p className={`${shared.body} ${styles.splitCopy}`}>{t.positioningBody}</p>
+              <Reveal>
+                <h2 className={shared.headline}>{t.positioningHeadline}</h2>
+              </Reveal>
+              <Reveal style={{ transitionDelay: "70ms" }}>
+                <p className={`${shared.body} ${styles.splitCopy}`}>{t.positioningBody}</p>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -159,17 +164,21 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         {/* Como atua: Coleta → Triagem → Trituração → Destinação, em régua. */}
         <section id="frentes" className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
-            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.servicesEyebrow}</p>
-            <h2 className={shared.headline}>{t.servicesHeadline}</h2>
-            <div className={styles.frentesCompactGrid}>
-              {compactFrentes.map((frente, index) => (
-                <div key={frente.id} className={styles.frentesCompactItem}>
-                  <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
-                  <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
-                  <p className={styles.frentesCompactCopy}>{frente.copy}</p>
-                </div>
-              ))}
-            </div>
+            <Reveal>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.servicesEyebrow}</p>
+              <h2 className={shared.headline}>{t.servicesHeadline}</h2>
+            </Reveal>
+            <Reveal style={{ transitionDelay: "80ms" }}>
+              <div className={styles.frentesCompactGrid}>
+                {compactFrentes.map((frente, index) => (
+                  <div key={frente.id} className={styles.frentesCompactItem}>
+                    <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
+                    <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
+                    <p className={styles.frentesCompactCopy}>{frente.copy}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
           </div>
         </section>
 
@@ -178,11 +187,11 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         <section className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoEven}`}>
-              <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
+              <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
                 <img src={cartonagem.image!.src} alt={cartonagem.image!.alt} loading="lazy" decoding="async" />
                 <IllustrativeBadge position="bottom-right" locale={locale} />
-              </div>
-              <div className={shared.duoContent}>
+              </Reveal>
+              <Reveal className={shared.duoContent} style={{ transitionDelay: "80ms" }}>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{cartonagem.eyebrow}</p>
                 <h2 className={shared.headline}>{cartonagem.headline}</h2>
                 <p className={shared.body}>{cartonagem.copy}</p>
@@ -198,7 +207,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
                     {cartonagem.cta!.label}
                   </Link>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -207,11 +216,11 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         <section className={`${shared.chapterClose} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={styles.splitGrid}>
-              <div>
+              <Reveal>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{gestaoAmbiental.eyebrow}</p>
                 <h2 className={shared.headline}>{gestaoAmbiental.headline}</h2>
-              </div>
-              <div className={styles.splitCopy}>
+              </Reveal>
+              <Reveal className={styles.splitCopy} style={{ transitionDelay: "80ms" }}>
                 <p className={shared.body}>{gestaoAmbiental.copy}</p>
                 {gestaoAmbiental.tags && (
                   <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
@@ -225,7 +234,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
                     {gestaoAmbiental.cta!.label}
                   </Link>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -237,25 +246,27 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           visual, só um filete e o respiro interno. */}
       <section className={`${shared.chapter} ${shared.toneCarvao} ${boundarySurface}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>{t.materialsHeadline}</h2>
-          <div className={styles.materialsBlock}>
+          <Reveal>
+            <h2 className={shared.headline}>{t.materialsHeadline}</h2>
+          </Reveal>
+          <Reveal className={styles.materialsBlock} style={{ transitionDelay: "80ms" }}>
             <MaterialCards tone="saturno" locale={locale} />
-          </div>
+          </Reveal>
 
           <div className={styles.groupBlock}>
             <div className={styles.splitGrid}>
-              <div>
+              <Reveal>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.groupEyebrow}</p>
                 <h2 className={shared.headline}>{t.groupHeadline}</h2>
-              </div>
-              <div className={styles.splitCopy}>
+              </Reveal>
+              <Reveal className={styles.splitCopy} style={{ transitionDelay: "80ms" }}>
                 <p className={shared.body}>{t.groupBody}</p>
                 <div className={shared.ctaRow}>
                   <Link className={shared.btnEditorial} href={localizeHref("/historia", locale)}>
                     {t.groupCta}
                   </Link>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>

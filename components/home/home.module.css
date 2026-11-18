@@ -140,69 +140,159 @@ html:has([data-page="home"]) {
 .gold { composes: gold from "../shared/editorial.module.css"; }
 .body { composes: body from "../shared/editorial.module.css"; }
 
-/* Compartilha o grid-area "media" do .duo, mas não herda `.duoMedia img`
-   — aquele bloco é tratamento de FOTOGRAFIA (object-fit: cover), que
-   esticaria e cortaria a logo. BrandStage cuida do resto. */
-.duoStage {
-  grid-area: media;
+/* ---------------- Cabeçalho de capítulo (Direção 3 — Híbrida) ----------------
+   As três empresas abandonam o BrandStage na coluna 5fr e abrem com uma
+   assinatura monocromática centralizada, liberando a largura editorial
+   para a tese e para a composição própria de cada capítulo. */
+.chapterHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(24px, 4vw, 36px);
 }
 
-/* A régua da logo no BrandStage é PESO ÓPTICO, não largura em pixels. Dentro
-   de um capítulo a marca é a primeira linha, não a dobra inteira: continua
-   grande, mas com teto menor (BrandStage compact). A Equipamentos é colorida
-   sobre pedra clara e precisa de mais área para o mesmo peso. Nunca
-   esticada: height sempre auto. */
-.brandStageLogo {
+.chapterSignature {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.signatureLogo {
   display: block;
-  width: clamp(150px, 44vw, 240px);
+  width: clamp(150px, 38vw, 210px);
   max-width: 100%;
   height: auto;
 }
 
-.brandStageLogoEquipamentos {
-  width: clamp(170px, 50vw, 280px);
+.signatureLogoEquipamentos {
+  width: clamp(170px, 44vw, 240px);
+}
+
+.chapterIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 62ch;
+}
+
+.chapterIntro .headline {
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+.chapterIntro .body {
+  max-width: 54ch;
+  margin-inline: auto;
+  margin-bottom: 0;
 }
 
 @media (min-width: 768px) {
-  .brandStageLogo {
-    width: 82%;
-    max-width: 280px;
+  .signatureLogo {
+    width: clamp(180px, 16vw, 230px);
   }
 
-  .brandStageLogoEquipamentos {
-    width: 92%;
-    max-width: 330px;
+  .signatureLogoEquipamentos {
+    width: clamp(200px, 19vw, 265px);
   }
 }
 
-@media (min-width: 1024px) {
-  .brandStageLogo {
-    max-width: 320px;
-  }
-
-  .brandStageLogoEquipamentos {
-    max-width: 380px;
-  }
-}
-
-/* ---------------- Declaração de marca (Saturno) ----------------
-   Local + headline de impacto ao lado da logo. A largura NÃO é presa em ch
-   estreito: a coluna do duo já limita o texto, e o text-wrap: balance
-   distribui as linhas (PT ≈ 2 linhas, EN ≈ 3, sem palavra órfã). A escala é
-   de abertura de capítulo — maior que .headline, menor que um banner. */
+/* ---------------- Declaração de marca (Saturno) ---------------- */
 .brandStatement {
-  max-width: none;
+  max-width: min(100%, 72ch);
 }
 
 .headline.headlineMonumental {
-  max-width: none;
-  font-size: clamp(32px, 2.6vw + 18px, 58px);
+  max-width: 18ch;
+  font-size: clamp(34px, 3vw + 18px, 60px);
   line-height: 1.06;
   letter-spacing: -0.015em;
 }
 
 .brandStatement .locationLine {
   white-space: nowrap;
+  margin-bottom: 12px;
+}
+
+/* ---------------- Palco de Equipamentos (preparado para 3D) ----------------
+   Largura protagonista centrada e proporção 16:9 limpa para receber o
+   futuro visualizador GLB sem alterar a arquitetura ao redor. */
+.equipamentosStage {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+}
+
+.equipamentosStageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+@media (min-width: 1024px) {
+  .equipamentosStageFrame {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.equipamentosStageFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.equipamentosFooter {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 1040px;
+  width: 100%;
+  margin-inline: auto;
+  padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid rgba(21, 21, 15, 0.12);
+}
+
+.equipamentosFooterCopy .headlineSecondary {
+  max-width: 24ch;
+}
+
+.equipamentosFooterCopy .body {
+  margin-bottom: 0;
+}
+
+.equipamentosFooterMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.equipamentosFooterMeta .tagRow {
+  margin-bottom: 20px;
+}
+
+.equipamentosFooterMeta .ctaRow {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .equipamentosFooter {
+    grid-template-columns: 7fr 5fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .equipamentosFooterMeta {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .equipamentosFooterMeta .tagRow {
+    justify-content: flex-end;
+  }
 }
 
 /* ---------------- CTAs ---------------- */
@@ -338,10 +428,19 @@ html:has([data-page="home"]) {
   font-size: 15px;
   text-decoration: none;
   backdrop-filter: blur(2px);
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .heroCta:hover {
   background: rgba(247, 246, 241, 0.12);
+  border-color: rgba(247, 246, 241, 0.78);
+}
+
+.heroCta:active {
+  transform: translateY(1px);
 }
 
 .heroCta:focus-visible {
@@ -371,6 +470,13 @@ html:has([data-page="home"]) {
   color: var(--color-background);
   text-decoration: none;
   font-family: var(--font-inter), var(--font-body);
+  opacity: 0.88;
+  transition: opacity 200ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroScrollHint:hover {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
 }
 
 .heroScrollHint span {
@@ -550,7 +656,17 @@ html:has([data-page="home"]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroPoster {
+  .heroPoster,
+  .heroCta,
+  .heroScrollHint {
     transition: none;
+  }
+
+  .heroCta:active {
+    transform: none;
+  }
+
+  .heroScrollHint:hover {
+    transform: translateX(-50%);
   }
 }

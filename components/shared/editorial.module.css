@@ -217,6 +217,16 @@
   cursor: pointer;
   white-space: nowrap;
   background: transparent;
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .btnOutlineOnDark {
@@ -226,6 +236,7 @@
 
 .btnOutlineOnDark:hover {
   background: rgba(247, 246, 241, 0.1);
+  border-color: rgba(247, 246, 241, 0.68);
 }
 
 .btnOutlineOnLight {
@@ -235,6 +246,7 @@
 
 .btnOutlineOnLight:hover {
   background: rgba(21, 21, 15, 0.06);
+  border-color: rgba(21, 21, 15, 0.56);
 }
 
 .btnSolidGold {
@@ -269,11 +281,12 @@
   font-size: 15px;
   text-decoration: none;
   cursor: pointer;
+  transition: color 200ms ease, opacity 200ms ease;
 }
 
 .btnEditorial::after {
   content: "→";
-  transition: transform 0.15s ease;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .btnEditorial:hover::after {
@@ -286,8 +299,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btnEditorial,
   .btnEditorial::after {
     transition: none;
+  }
+
+  .btn:active:not(:disabled),
+  .btnEditorial:hover::after {
+    transform: none;
   }
 }
 

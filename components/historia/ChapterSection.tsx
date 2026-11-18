@@ -2,6 +2,7 @@
 
 import styles from "./historia.module.css";
 import TimelineEventRow from "./TimelineEventRow";
+import Reveal from "../shared/Reveal";
 import { useLineProgress } from "./useLineProgress";
 import {
   CHAPTER_META,
@@ -58,13 +59,15 @@ export default function ChapterSection({ chapter, locale }: { chapter: Chapter; 
           </div>
 
           <div className={`${styles.pair} ${styles.pairLead}`}>
-            <header className={styles.chapterHead}>
-              <span className={styles.chapterIndex}>{meta.index} / 04</span>
-              <p className={styles.eyebrow}>{meta.eyebrow}</p>
-              <h2 id={`chapter-${chapter}`} className={styles.chapterHeadline}>
-                {meta.headline}
-              </h2>
-            </header>
+            <Reveal>
+              <header className={styles.chapterHead}>
+                <span className={styles.chapterIndex}>{meta.index} / 04</span>
+                <p className={styles.eyebrow}>{meta.eyebrow}</p>
+                <h2 id={`chapter-${chapter}`} className={styles.chapterHeadline}>
+                  {meta.headline}
+                </h2>
+              </header>
+            </Reveal>
             {lead && <TimelineEventRow event={lead} locale={locale} side="right" />}
           </div>
 

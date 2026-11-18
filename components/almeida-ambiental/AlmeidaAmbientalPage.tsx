@@ -7,6 +7,7 @@ import MaterialSurface from "../shared/MaterialSurface";
 import EditorialCTA from "../shared/EditorialCTA";
 import ProcessSteps from "../shared/ProcessSteps";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
+import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import {
   HERO_IMAGE,
@@ -135,20 +136,20 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
           <div className={shared.container}>
             <div className={shared.chapterRows}>
               <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow}`}>
-                <div className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
+                <Reveal className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
                   <img src={positioningImage.src} alt={positioningImage.alt} loading="lazy" decoding="async" />
                   {positioningImage.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
-                </div>
-                <div className={shared.duoContent}>
+                </Reveal>
+                <Reveal className={shared.duoContent} style={{ transitionDelay: "80ms" }}>
                   <h2 className={shared.headline}>{t.positioningHeadline}</h2>
                   <p className={shared.body}>{t.positioningBody}</p>
-                </div>
+                </Reveal>
               </div>
 
-              <div>
+              <Reveal style={{ transitionDelay: "120ms" }}>
                 <h3 className={shared.subheading}>{t.processHeadline}</h3>
                 <ProcessSteps steps={processSteps} ariaLabel={t.processAriaLabel} />
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -165,11 +166,11 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
                 {isLast && <BrandBoundaryMark boundary="ambiental-processo" half="leaving" surface="onDark" />}
                 <div className={shared.container}>
                   <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
-                    <div className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
+                    <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`} style={{ transitionDelay: "80ms" }}>
                       <img src={pillar.image.src} alt={pillar.image.alt} loading="lazy" decoding="async" />
                       {pillar.image.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
-                    </div>
-                    <div className={shared.duoContent}>
+                    </Reveal>
+                    <Reveal className={shared.duoContent}>
                       {/* Um só rótulo acima do título: número + categoria. */}
                       <p className={shared.eyebrow}>
                         <span className={styles.pillarIndex}>{t.pillarCounter(index)}</span>
@@ -185,7 +186,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
                         </ul>
                       )}
                       {pillar.subcopy && <p className={shared.body}>{pillar.subcopy}</p>}
-                    </div>
+                    </Reveal>
                   </div>
                 </div>
               </section>
@@ -198,26 +199,30 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
       <section className={`${shared.chapter} ${shared.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-processo" half="entering" surface="onLight" />
         <div className={shared.container}>
-          <h2 className={shared.headline}>{t.materialsHeadline}</h2>
-          <p className={shared.body}>{t.materialsBody}</p>
+          <Reveal>
+            <h2 className={shared.headline}>{t.materialsHeadline}</h2>
+            <p className={shared.body}>{t.materialsBody}</p>
+          </Reveal>
           {/* Material Cards: a mesma lista validada (lib/materials.ts) como
               coleção visual — ícone primeiro, nome depois. */}
-          <div className={styles.atlasBlock}>
+          <Reveal className={styles.atlasBlock} style={{ transitionDelay: "90ms" }}>
             <MaterialCards tone="ambiental" locale={locale} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ---------------- Relação com o Grupo: Almeida Equipamentos ---------------- */}
       <section className={`${shared.chapter} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>{t.crossHeadline}</h2>
-          <p className={shared.body}>{t.crossBody}</p>
-          <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
-              {t.crossCta}
-            </Link>
-          </div>
+          <Reveal>
+            <h2 className={shared.headline}>{t.crossHeadline}</h2>
+            <p className={shared.body}>{t.crossBody}</p>
+            <div className={shared.ctaRow}>
+              <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
+                {t.crossCta}
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

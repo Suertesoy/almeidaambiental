@@ -5,6 +5,7 @@ import CompanyHero from "../shared/CompanyHero";
 import EditorialCTA from "../shared/EditorialCTA";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import EditorialPicture from "../shared/EditorialPicture";
+import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductExplorer from "./ProductExplorer";
@@ -148,7 +149,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
         <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />
         <div className={shared.container}>
           <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
-            <div className={shared.duoContent}>
+            <Reveal className={shared.duoContent}>
               <h2 className={shared.headline}>{t.positioningHeadline}</h2>
               <p className={shared.body}>{t.positioningBody}</p>
               <ul className={styles.modalityTags}>
@@ -156,26 +157,28 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
                   <li key={modality}>{modality}</li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
             {/* Materialidade mecânica (engenharia/precisão): slot já
                 preparado para receber uma composição própria de desktop e
                 outra de mobile via `mobileSrc` no dado — ver lib/media.ts.
                 Hoje serve a mesma imagem nos dois, enquadrada por
                 objectPosition. */}
-            <div className={`${shared.duoMedia} ${styles.positioningMedia}`}>
+            <Reveal className={`${shared.duoMedia} ${styles.positioningMedia}`} style={{ transitionDelay: "90ms" }}>
               <EditorialPicture image={detalheMecanicoImage} />
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       <section id="produtos" className={`${shared.chapterClose} ${shared.toneStone}`} aria-labelledby="produtos-heading">
         <div className={shared.container}>
-          <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.catalogEyebrow}</p>
-          <h2 id="produtos-heading" className={shared.headline}>
-            {t.catalogHeadline}
-          </h2>
-          <p className={shared.body}>{t.catalogBody}</p>
+          <Reveal>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.catalogEyebrow}</p>
+            <h2 id="produtos-heading" className={shared.headline}>
+              {t.catalogHeadline}
+            </h2>
+            <p className={shared.body}>{t.catalogBody}</p>
+          </Reveal>
 
           <ProductExplorer locale={locale} products={products} />
         </div>
@@ -189,27 +192,31 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
           convite à conversa fica no fechamento da página. */}
       <section className={`${shared.chapterClose} ${shared.toneStoneAlt}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>{t.matrixHeadline}</h2>
-          <p className={shared.body}>{t.matrixBody}</p>
-          <div className={styles.matrixGrid}>
-            {materialAssociations.map((assoc) => {
-              const MaterialIcon = MATERIAL_ICONS[assoc.material];
-              return (
-                <div key={assoc.material} className={styles.matrixItem}>
-                  <div className={styles.matrixHead}>
-                    {MaterialIcon && <MaterialIcon className={styles.matrixIcon} />}
-                    <p className={styles.matrixMaterial}>{assoc.material}</p>
+          <Reveal>
+            <h2 className={shared.headline}>{t.matrixHeadline}</h2>
+            <p className={shared.body}>{t.matrixBody}</p>
+          </Reveal>
+          <Reveal style={{ transitionDelay: "80ms" }}>
+            <div className={styles.matrixGrid}>
+              {materialAssociations.map((assoc) => {
+                const MaterialIcon = MATERIAL_ICONS[assoc.material];
+                return (
+                  <div key={assoc.material} className={styles.matrixItem}>
+                    <div className={styles.matrixHead}>
+                      {MaterialIcon && <MaterialIcon className={styles.matrixIcon} />}
+                      <p className={styles.matrixMaterial}>{assoc.material}</p>
+                    </div>
+                    <p className={styles.matrixProducts}>
+                      {assoc.products
+                        .map((id) => products.find((product) => product.id === id)?.name)
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
                   </div>
-                  <p className={styles.matrixProducts}>
-                    {assoc.products
-                      .map((id) => products.find((product) => product.id === id)?.name)
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -217,7 +224,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
       <section className={`${shared.chapterOpen} ${shared.toneStone}`}>
         <div className={shared.container}>
           <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
-            <div className={shared.duoContent}>
+            <Reveal className={shared.duoContent}>
               <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.partnersEyebrow}</p>
               <h2 className={shared.headline}>{t.partnersHeadline}</h2>
               <p className={shared.body}>{t.partnersBody}</p>
@@ -228,25 +235,27 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
                   </span>
                 ))}
               </div>
-            </div>
+            </Reveal>
             {/* Imagem ilustrativa de feira: aguarda acervo real da IFAT. */}
-            <div className={`${shared.duoMedia} ${styles.partnersMedia}`}>
+            <Reveal className={`${shared.duoMedia} ${styles.partnersMedia}`} style={{ transitionDelay: "90ms" }}>
               <EditorialPicture image={feiraImage} />
               <IllustrativeBadge locale={locale} />
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       <section className={`${shared.chapterClose} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <h2 className={shared.headline}>{t.crossHeadline}</h2>
-          <p className={shared.body}>{t.crossBody}</p>
-          <div className={shared.ctaRow}>
-            <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-ambiental", locale)}>
-              {t.crossCta}
-            </Link>
-          </div>
+          <Reveal>
+            <h2 className={shared.headline}>{t.crossHeadline}</h2>
+            <p className={shared.body}>{t.crossBody}</p>
+            <div className={shared.ctaRow}>
+              <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-ambiental", locale)}>
+                {t.crossCta}
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

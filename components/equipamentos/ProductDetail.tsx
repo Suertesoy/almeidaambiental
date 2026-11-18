@@ -88,7 +88,13 @@ export default function ProductDetail({ product, onClose, locale }: ProductDetai
 
           <div className={styles.body}>
             <div className={styles.layout}>
-              <ProductGallery image={product.image} gallery={product.gallery} video={product.video} locale={locale} />
+              <ProductGallery
+                productId={product.id}
+                image={product.image}
+                gallery={product.gallery}
+                video={product.video}
+                locale={locale}
+              />
 
               <div className={styles.info}>
                 <p className={styles.manufacturer}>{product.manufacturer}</p>

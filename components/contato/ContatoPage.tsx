@@ -98,15 +98,17 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
       {/* ---------------- Diretório compacto ---------------- */}
       <nav className={`${shared.sectionCompact} ${shared.toneStone} ${styles.directoryNav}`} aria-label={t.directoryAriaLabel}>
         <div className={shared.container}>
-          <ul className={styles.directoryChips}>
-            {DIRECTORY.map((item) => (
-              <li key={item.id}>
-                <a className={styles.directoryChip} href={`#${item.id}`}>
-                  {item.title}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <Reveal>
+            <ul className={styles.directoryChips}>
+              {DIRECTORY.map((item) => (
+                <li key={item.id}>
+                  <a className={styles.directoryChip} href={`#${item.id}`}>
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </nav>
 

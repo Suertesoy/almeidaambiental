@@ -61,10 +61,29 @@
   backdrop-filter: blur(6px);
   color: var(--color-background);
   text-decoration: none;
+  transition:
+    background-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .backFab:hover {
   background: rgba(8, 10, 8, 0.72);
+  border-color: rgba(247, 246, 241, 0.48);
+}
+
+.backFab:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backFab {
+    transition: none;
+  }
+
+  .backFab:active {
+    transform: none;
+  }
 }
 
 .backFab:focus-visible {
@@ -229,8 +248,15 @@
 }
 
 @keyframes historia-hint-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -484,7 +510,10 @@
   box-sizing: border-box;
   opacity: 0.55;
   transform: scale(0.85);
-  transition: opacity 420ms ease, transform 420ms ease, background 420ms ease;
+  transition:
+    opacity 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 460ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (min-width: 768px) {
@@ -506,8 +535,10 @@
 
 .eventBody {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 520ms ease, transform 520ms ease;
+  transform: translateY(12px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .eventRowActive .eventBody {
@@ -516,6 +547,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .eventDot {
+    transition: none;
+  }
+
   .eventBody {
     opacity: 1;
     transform: none;
@@ -584,6 +619,16 @@
   max-width: min(100%, 440px);
   aspect-ratio: 3 / 2;
   overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 680ms cubic-bezier(0.22, 1, 0.36, 1) 90ms,
+    transform 680ms cubic-bezier(0.22, 1, 0.36, 1) 90ms;
+}
+
+.eventRowActive .eventImageWrap {
+  opacity: 1;
+  transform: none;
 }
 
 .eventImagePortrait {
@@ -602,6 +647,22 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transform: scale(1.025);
+  transition: transform 860ms cubic-bezier(0.22, 1, 0.36, 1) 90ms;
+}
+
+.eventRowActive .eventImageWrap img {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .eventImageWrap,
+  .eventImageWrap img {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* Evento monumental (2026) — mais peso visual, marca o presente. */
@@ -645,7 +706,7 @@
   padding-block: clamp(40px, 6vw, 72px);
 }
 
-.closingBlock + .closingBlock {
+.closingBlock+.closingBlock {
   border-top: 1px solid rgba(247, 246, 241, 0.16);
 }
 
@@ -732,12 +793,29 @@
 /* Seis passos de escala tipográfica — do menor (1985) ao maior (2021),
    para que o crescimento seja sentido, não só lido. O teto é menor que o
    anterior (96px): a escala agora divide a linha com a headline. */
-.growthStep0 .growthValue { font-size: clamp(20px, 1.4vw + 12px, 26px); }
-.growthStep1 .growthValue { font-size: clamp(24px, 1.8vw + 12px, 32px); }
-.growthStep2 .growthValue { font-size: clamp(28px, 2.2vw + 12px, 40px); }
-.growthStep3 .growthValue { font-size: clamp(32px, 2.8vw + 12px, 50px); }
-.growthStep4 .growthValue { font-size: clamp(38px, 3.4vw + 12px, 62px); }
-.growthStep5 .growthValue { font-size: clamp(46px, 4.4vw + 12px, 80px); }
+.growthStep0 .growthValue {
+  font-size: clamp(20px, 1.4vw + 12px, 26px);
+}
+
+.growthStep1 .growthValue {
+  font-size: clamp(24px, 1.8vw + 12px, 32px);
+}
+
+.growthStep2 .growthValue {
+  font-size: clamp(28px, 2.2vw + 12px, 40px);
+}
+
+.growthStep3 .growthValue {
+  font-size: clamp(32px, 2.8vw + 12px, 50px);
+}
+
+.growthStep4 .growthValue {
+  font-size: clamp(38px, 3.4vw + 12px, 62px);
+}
+
+.growthStep5 .growthValue {
+  font-size: clamp(46px, 4.4vw + 12px, 80px);
+}
 
 /* Epílogo */
 
@@ -797,7 +875,9 @@
   transform: none;
 }
 
-.statsGridActive .statItem:nth-child(2) { transition-delay: 90ms; }
+.statsGridActive .statItem:nth-child(2) {
+  transition-delay: 90ms;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .statItem {
@@ -821,7 +901,7 @@
   margin-top: 10px;
   font-family: var(--font-inter), var(--font-body);
   font-size: 13px;
-  opacity: 0.78;
+  color: var(--text-on-dark-secondary);
 }
 
 /* Mapa de expansão */
@@ -834,8 +914,6 @@
   aspect-ratio: 1000 / 700.54;
   max-width: 480px;
   margin-inline: auto;
-  border: 1px solid rgba(247, 246, 241, 0.22);
-  border-radius: 4px;
 }
 
 .mapSvg {
@@ -877,8 +955,7 @@
 .mapPointYear {
   font-family: var(--font-inter), var(--font-body);
   font-size: 22px;
-  fill: var(--color-background);
-  opacity: 0.62;
+  fill: var(--text-on-dark-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -896,7 +973,7 @@
   font-family: var(--font-inter), var(--font-body);
   font-size: 12px;
   line-height: 1.5;
-  opacity: 0.6;
+  color: var(--text-on-dark-muted);
 }
 
 /* Continuação: as três empresas do Grupo. Navegação, não conversão. */

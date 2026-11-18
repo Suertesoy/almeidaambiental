@@ -5,7 +5,9 @@ import { flushSync } from "react-dom";
 import shared from "../shared/company-page.module.css";
 import styles from "./product-explorer.module.css";
 import ProductDetail from "./ProductDetail";
+import EquipmentModelStage from "./EquipmentModelStage";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
+import { getEquipment3DConfig } from "../../lib/equipamentos-3d";
 import type { Product } from "../../lib/equipamentos-data";
 import type { Locale } from "../../lib/i18n/locale";
 
@@ -77,6 +79,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
   }, []);
 
   const selectedIndex = products.findIndex((product) => product.id === selected.id);
+  const selected3D = getEquipment3DConfig(selected.id);
 
   const handleItemClick = (product: Product, event: React.MouseEvent<HTMLButtonElement>) => {
     setSelected(product);
@@ -155,33 +158,43 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
         {/* Palco: vitrine técnica, não um cartão com a imagem dentro.
             O estúdio é o do PRÓPRIO render — ver o comentário em
             product-explorer.module.css. Por cima dele vêm as marcas de
-            canto de desenho técnico e a metadata do equipamento.
-            aria-hidden porque tudo aqui duplica, em forma visual, o que o
-            bloco .selected já anuncia como texto. */}
-        <div className={styles.stage} aria-hidden="true">
+            canto de desenho técnico e a metadata do equipamento. */}
+        <div className={styles.stage} aria-hidden={selected3D ? undefined : "true"}>
           <div className={styles.stageMedia}>
             <span className={`${styles.stageTick} ${styles.tickTl}`} />
             <span className={`${styles.stageTick} ${styles.tickTr}`} />
             <span className={`${styles.stageTick} ${styles.tickBl}`} />
             <span className={`${styles.stageTick} ${styles.tickBr}`} />
 
-            <img
-              key={selected.id}
-              className={`${styles.stageProduct} ${styles.swap} ${!detail ? styles.transitionHero : ""}`}
-              src={selected.image.src}
-              alt=""
-              loading="lazy"
-              decoding="async"
-            />
+            {selected3D ? (
+              <EquipmentModelStage
+                key={selected.id}
+                config={selected3D}
+                locale={locale}
+                variant="catalog"
+                className={styles.stageProduct}
+              />
+            ) : (
+              <img
+                key={selected.id}
+                className={`${styles.stageProduct} ${styles.swap} ${!detail ? styles.transitionHero : ""}`}
+                src={selected.image.src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            )}
 
             <span className={styles.stageIndex}>
               {String(selectedIndex + 1).padStart(2, "0")}
               <span className={styles.stageIndexTotal}>/ {String(products.length).padStart(2, "0")}</span>
             </span>
-            <span className={styles.stageManufacturer}>{selected.manufacturer}</span>
-            {/* Render ilustrativo, não fotografia do modelo: o definitivo vem
-                de press kit/fabricante. */}
-            <IllustrativeBadge locale={locale} position="bottom-right" />
+            <span
+              className={`${styles.stageManufacturer} ${selected3D ? styles.stageManufacturerTop : ""}`}
+            >
+              {selected.manufacturer}
+            </span>
+            {!selected3D && <IllustrativeBadge locale={locale} position="bottom-right" />}
           </div>
         </div>
       </div>
