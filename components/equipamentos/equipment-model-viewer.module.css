@@ -1,7 +1,7 @@
 /* ==========================================================
-   Visualizador 3D editorial — Almeida Equipamentos.
-   Inspirado em apresentações de produto com profundidade natural,
-   sem molduras pesadas, grades técnicas ou aparência de CAD.
+   Visualizadores 3D editoriais — Almeida Equipamentos.
+   Apresentação limpa e integrada à superfície da página, sem
+   caixas fechadas, grades técnicas ou controles escritos.
    ========================================================== */
 
 .root {
@@ -11,7 +11,6 @@
   min-height: 280px;
   overflow: visible;
   isolation: isolate;
-  /* Fundo transparente com halo radial suave que se dissolve na superfície da página */
   background: radial-gradient(
     ellipse 66% 58% at 50% 54%,
     rgba(255, 255, 255, 0.28) 0%,
@@ -55,9 +54,22 @@
   opacity: 1;
 }
 
-.canvasLayerHidden {
+/* Na coreografia compartilhada não há interação manual e não captura rolagem */
+.canvasChoreography {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
   opacity: 0;
+  transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
+  touch-action: auto;
+  cursor: default;
+}
+
+.canvasChoreographyReady {
+  opacity: 1;
 }
 
 .posterLayer {
@@ -69,7 +81,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .posterLayerHidden {
@@ -108,167 +120,55 @@
 
 .rootCatalog .modelBadge {
   top: auto;
-  bottom: 62px;
+  bottom: 24px;
   left: 24px;
 }
 
-/* Indicador discreto enquanto o GLB carrega */
-.loadingPill {
+/* Legenda tipográfica discreta da coreografia */
+.choreographyCaption {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
   z-index: 4;
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(245, 243, 238, 0.84);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: rgba(21, 21, 15, 0.72);
+  padding: 4px 12px;
+  color: rgba(21, 21, 15, 0.68);
   font-family: var(--font-inter), var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
   pointer-events: none;
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.loadingDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-gold-aged, #8a6d3b);
-  animation: pulseDot 1.2s ease-in-out infinite;
+.choreographyCaptionHidden {
+  opacity: 0;
 }
 
-@keyframes pulseDot {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* Barra inferior discreta: dica de interação + controles */
-.hud {
-  position: absolute;
-  inset-inline: 14px;
-  bottom: 14px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  pointer-events: none;
-}
-
-.rootCatalog .hud {
-  inset-inline: 24px;
-  bottom: 22px;
-}
-
-.hint {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(245, 243, 238, 0.76);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(21, 21, 15, 0.08);
-  color: rgba(21, 21, 15, 0.78);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: opacity 280ms ease;
-}
-
-.hintFaded {
-  opacity: 0.62;
-}
-
-.controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-  pointer-events: auto;
-}
-
-.controlBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 32px;
-  padding: 6px 11px;
-  border-radius: 999px;
-  border: 1px solid rgba(21, 21, 15, 0.12);
-  background: rgba(245, 243, 238, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: rgba(21, 21, 15, 0.86);
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
-}
-
-.controlBtn:hover {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(21, 21, 15, 0.24);
-}
-
-.controlBtn:focus-visible {
-  outline: 2px solid var(--color-gold-aged, #8a6d3b);
-  outline-offset: 2px;
-}
-
-.controlBtnIcon {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
+.choreographyIndex {
+  color: var(--color-gold-aged, #8a6d3b);
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 @media (max-width: 639px) {
-  .hud {
-    inset-inline: 10px;
-    bottom: 10px;
-    gap: 6px;
-  }
-
-  .hint {
-    padding: 5px 9px;
-    font-size: 10px;
-  }
-
-  .controlBtn {
-    min-height: 30px;
-    padding: 5px 9px;
-    font-size: 10px;
+  .choreographyCaption {
+    bottom: 0;
+    font-size: 11px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .canvasLayer,
+  .canvasChoreography,
   .posterLayer,
-  .hint,
-  .controlBtn {
+  .choreographyCaption {
     transition: none;
-  }
-
-  .loadingDot {
-    animation: none;
   }
 }

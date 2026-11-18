@@ -1,7 +1,6 @@
 import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./equipamentos.module.css";
-import CompanyHero from "../shared/CompanyHero";
 import EditorialCTA from "../shared/EditorialCTA";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import EditorialPicture from "../shared/EditorialPicture";
@@ -9,10 +8,9 @@ import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductExplorer from "./ProductExplorer";
+import EquipmentChoreographyStage from "./EquipmentChoreographyStage";
 import { MATERIAL_ICONS } from "../icons";
 import {
-  HERO_IMAGE,
-  HERO_IMAGE_EN,
   DETALHE_MECANICO_IMAGE,
   DETALHE_MECANICO_IMAGE_EN,
   FEIRA_IMAGE,
@@ -124,7 +122,6 @@ const COPY = {
  */
 export default function EquipamentosPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const heroImage = locale === "en" ? HERO_IMAGE_EN : HERO_IMAGE;
   const detalheMecanicoImage = locale === "en" ? DETALHE_MECANICO_IMAGE_EN : DETALHE_MECANICO_IMAGE;
   const feiraImage = locale === "en" ? FEIRA_IMAGE_EN : FEIRA_IMAGE;
   const products = locale === "en" ? PRODUCTS_EN : PRODUCTS;
@@ -133,16 +130,37 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
 
   return (
     <div className={styles.page} data-page="almeida-equipamentos">
-      <CompanyHero
-        locale={locale}
-        eyebrow={t.heroEyebrow}
-        title={t.heroTitle}
-        lede={t.heroLede}
-        subcopy={t.heroSubcopy}
-        image={heroImage}
-        primaryCta={{ label: t.heroPrimaryCta, href: "#produtos" }}
-        secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
-      />
+      <section className={`${styles.hero} ${shared.toneStone}`} aria-label={t.heroEyebrow}>
+        <div className={shared.container}>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroCopy}>
+              <p className={styles.heroEyebrow}>{t.heroEyebrow}</p>
+              <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
+              <p className={styles.heroLede}>{t.heroLede}</p>
+              <p className={styles.heroSubcopy}>{t.heroSubcopy}</p>
+              <div className={styles.heroCtas}>
+                <a className={`${shared.btn} ${shared.btnSolidGold}`} href="#produtos">
+                  {t.heroPrimaryCta}
+                </a>
+                <Link
+                  className={`${shared.btn} ${shared.btnOutlineOnLight}`}
+                  href={localizeHref(CONTACT_ANCHORS.saoJose, locale)}
+                >
+                  {t.heroSecondaryCta}
+                </Link>
+              </div>
+            </div>
+
+            <div className={styles.heroStage}>
+              <EquipmentChoreographyStage
+                locale={locale}
+                variant="hero"
+                paddingMultiplier={1.04}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ============ Capítulo A — O que oferecemos ============ */}
       <section className={`${shared.chapterOpen} ${shared.toneStone} ${boundarySurface}`}>

@@ -13,7 +13,7 @@ const EquipmentModelCanvas = dynamic(() => import("./EquipmentModelCanvas"), {
 export type EquipmentModelStageProps = {
   config: Equipment3DConfig;
   locale: Locale;
-  /** "home" | "catalog" | "gallery" para ajustar respiro do HUD. */
+  /** "home" | "catalog" | "gallery" para ajustar respiro. */
   variant?: "home" | "catalog" | "gallery";
   /** Rotação inicial lenta e controlada (para ao menor toque). */
   autoRotate?: boolean;
@@ -23,29 +23,18 @@ export type EquipmentModelStageProps = {
 
 const COPY = {
   pt: {
-    dragHint: "Arraste para explorar",
-    loading: "Carregando 3D",
-    resetView: "Vista inicial",
-    resetViewAria: "Retornar à orientação inicial do equipamento",
-    staticMode: "Imagem",
-    staticModeAria: "Alternar para visualização estática",
-    interactiveMode: "Ver em 3D",
-    interactiveModeAria: "Ativar visualização 3D interativa",
     controlsHelp: "Use o mouse, toque ou setas do teclado para girar e R para reiniciar a vista.",
   },
   en: {
-    dragHint: "Drag to explore",
-    loading: "Loading 3D",
-    resetView: "Reset view",
-    resetViewAria: "Return equipment to initial orientation",
-    staticMode: "Image",
-    staticModeAria: "Switch to static image view",
-    interactiveMode: "View in 3D",
-    interactiveModeAria: "Enable interactive 3D view",
     controlsHelp: "Use mouse, touch, or arrow keys to rotate and R to reset view.",
   },
 } as const;
 
+/**
+ * Visualizador 3D interativo simplificado para o catálogo e detalhe do produto:
+ * sem botões ou avisos escritos; descoberta natural via cursor/toque,
+ * acessibilidade completa por teclado e fallback automático com poster.
+ */
 export default function EquipmentModelStage({
   config,
   locale,
@@ -59,8 +48,6 @@ export default function EquipmentModelStage({
   const [shouldMountCanvas, setShouldMountCanvas] = useState(false);
   const [readyKey, setReadyKey] = useState<string | null>(null);
   const [errorKey, setErrorKey] = useState<string | null>(null);
-  const [staticMode, setStaticMode] = useState(false);
-  const [interacted, setInteracted] = useState(false);
   const [resetSignal, setResetSignal] = useState(0);
   const [keyboardCommand, setKeyboardCommand] = useState<{
     seq: number;
@@ -70,15 +57,11 @@ export default function EquipmentModelStage({
 
   const isReady = readyKey === config.glbUrl;
   const hasError = errorKey === config.glbUrl;
-  const showInteractive = !staticMode && !hasError;
 
-  // Reinicia estados visuais quando troca de equipamento
   useEffect(() => {
-    setInteracted(false);
     setResetSignal(0);
   }, [config.glbUrl]);
 
-  // Só inicializa o canvas 3D quando o palco se aproxima da viewport
   useEffect(() => {
     const el = rootRef.current;
     if (!el || shouldMountCanvas) return;
@@ -109,9 +92,7 @@ export default function EquipmentModelStage({
     setErrorKey(config.glbUrl);
   }, [config.glbUrl]);
 
-  const handleUserInteract = useCallback(() => {
-    setInteracted(true);
-  }, []);
+  const handleUserInteract = useCallback(() => {}, []);
 
   const handleReset = useCallback(() => {
     setResetSignal((n) => n + 1);
@@ -119,7 +100,7 @@ export default function EquipmentModelStage({
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (!showInteractive || !isReady) return;
+      if (hasError || !isReady) return;
       const step = 0.16;
       switch (event.key) {
         case "ArrowLeft":
@@ -146,7 +127,7 @@ export default function EquipmentModelStage({
           break;
       }
     },
-    [showInteractive, isReady, handleReset]
+    [hasError, isReady, handleReset]
   );
 
   const variantClass =
@@ -160,17 +141,17 @@ export default function EquipmentModelStage({
     <div
       ref={rootRef}
       className={`${styles.root} ${variantClass} ${className ?? ""}`}
-      tabIndex={showInteractive ? 0 : undefined}
+      tabIndex={!hasError ? 0 : undefined}
       role="region"
       aria-label={`${config.label[locale]}. ${t.controlsHelp}`}
       onKeyDown={handleKeyDown}
     >
-      {/* Poster estático imediato antes do WebGL e como alternativa estática */}
+      {/* Poster estático imediato e fallback automático */}
       <div
         className={`${styles.posterLayer} ${
-          showInteractive && isReady ? styles.posterLayerHidden : ""
+          !hasError && isReady ? styles.posterLayerHidden : ""
         }`}
-        aria-hidden={showInteractive && isReady ? "true" : undefined}
+        aria-hidden={!hasError && isReady ? "true" : undefined}
       >
         <img
           src={config.posterUrl}
@@ -182,12 +163,11 @@ export default function EquipmentModelStage({
       </div>
 
       {/* Canvas 3D carregado sob demanda */}
-      {shouldMountCanvas && showInteractive && (
+      {shouldMountCanvas && !hasError && (
         <EquipmentModelCanvas
           key={config.glbUrl}
           config={config}
           autoRotate={autoRotate}
-          paused={staticMode}
           resetSignal={resetSignal}
           keyboardCommand={keyboardCommand}
           onReady={handleReady}
@@ -197,86 +177,10 @@ export default function EquipmentModelStage({
         />
       )}
 
-      {/* Indicador discreto quando o modelo representa uma variante específica */}
+      {/* Identificação discreta quando o modelo representa uma variante específica */}
       {config.modelBadge && (
         <span className={styles.modelBadge}>{config.modelBadge}</span>
       )}
-
-      {/* Indicador discreto de carregamento */}
-      {shouldMountCanvas && showInteractive && !isReady && (
-        <div className={styles.loadingPill} aria-live="polite">
-          <span className={styles.loadingDot} aria-hidden="true" />
-          <span>{t.loading}</span>
-        </div>
-      )}
-
-      {/* HUD discreto: dica + controles acessíveis */}
-      <div className={styles.hud}>
-        {showInteractive && (
-          <span className={`${styles.hint} ${interacted ? styles.hintFaded : ""}`} aria-hidden="true">
-            <OrbitIcon />
-            <span>{t.dragHint}</span>
-          </span>
-        )}
-
-        <div className={styles.controls}>
-          {showInteractive && isReady && (
-            <button
-              type="button"
-              className={styles.controlBtn}
-              onClick={handleReset}
-              aria-label={t.resetViewAria}
-            >
-              <ResetIcon />
-              <span>{t.resetView}</span>
-            </button>
-          )}
-
-          {!hasError && (
-            <button
-              type="button"
-              className={styles.controlBtn}
-              onClick={() => setStaticMode((prev) => !prev)}
-              aria-pressed={staticMode}
-              aria-label={staticMode ? t.interactiveModeAria : t.staticModeAria}
-            >
-              <span>{staticMode ? t.interactiveMode : t.staticMode}</span>
-            </button>
-          )}
-        </div>
-      </div>
     </div>
-  );
-}
-
-function OrbitIcon() {
-  return (
-    <svg
-      className={styles.controlBtnIcon}
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      aria-hidden="true"
-    >
-      <ellipse cx="8" cy="8" rx="6.2" ry="2.8" />
-      <path d="M5.6 10.6 3.9 10.7 4.7 12.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ResetIcon() {
-  return (
-    <svg
-      className={styles.controlBtnIcon}
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      aria-hidden="true"
-    >
-      <path d="M3.2 7.2A5 5 0 1 1 4.5 11.4" strokeLinecap="round" />
-      <path d="M3.2 3.8v3.5h3.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }

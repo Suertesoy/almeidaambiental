@@ -10,6 +10,92 @@
   overflow-x: clip;
 }
 
+/* ---------------- Hero com coreografia 3D protagonista ---------------- */
+
+.hero {
+  padding-top: calc(var(--header-height) + clamp(28px, 4vw, 56px));
+  padding-bottom: clamp(40px, 6vw, 72px);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 4vw, 48px);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.15fr);
+    gap: clamp(32px, 4vw, 56px);
+  }
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.heroEyebrow {
+  margin: 0;
+  color: var(--color-gold-aged);
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin: 14px 0 0;
+  max-width: 15.5em;
+  color: inherit;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(32px, 3.2vw + 16px, 58px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.heroLede {
+  margin: 18px 0 0;
+  max-width: 48ch;
+  color: var(--role-body, var(--text-body));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: clamp(16px, 0.35vw + 15px, 19px);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.heroSubcopy {
+  margin: 10px 0 0;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(24px, 3vw, 32px);
+}
+
+.heroStage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 290px;
+}
+
+@media (min-width: 1024px) {
+  .heroStage {
+    aspect-ratio: 16 / 11;
+    min-height: 420px;
+  }
+}
+
 .modalityTags {
   display: flex;
   flex-wrap: wrap;

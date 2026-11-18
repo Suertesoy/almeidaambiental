@@ -11,8 +11,7 @@ import BrandMark from "../shared/BrandMark";
 import ProcessSteps from "../shared/ProcessSteps";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import MaterialSurface from "../shared/MaterialSurface";
-import EquipmentModelStage from "../equipamentos/EquipmentModelStage";
-import { getEquipment3DConfig } from "../../lib/equipamentos-3d";
+import EquipmentChoreographyStage from "../equipamentos/EquipmentChoreographyStage";
 import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS, FLOW_STEPS_EN } from "../../lib/almeida-ambiental-data";
 import { useEnterOnce } from "../AnimatedMetric";
@@ -20,8 +19,6 @@ import ImpactMetricsGrid from "./ImpactMetricsGrid";
 import { MATERIAL_IMAGES, MATERIAL_SURFACES } from "../../lib/material-surfaces";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
-
-const HOME_EQUIPAMENTOS_3D = getEquipment3DConfig("compactador-fuso");
 
 /* IMG_EQUIPAMENTOS_TECNOLOGIA saiu na rodada de presença de marca: a
    fotografia da dobra de ENTRADA da Almeida Equipamentos deu lugar à logo
@@ -249,21 +246,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
 
             <Reveal className={styles.equipamentosStage} style={{ transitionDelay: "120ms" }}>
               <div className={styles.equipamentosStageFrame} data-stage="3d-ready">
-                {HOME_EQUIPAMENTOS_3D ? (
-                  <EquipmentModelStage
-                    config={HOME_EQUIPAMENTOS_3D}
-                    locale={locale}
-                    variant="home"
-                    autoRotate
-                  />
-                ) : (
-                  <SectionMedia
-                    imageSrc={ENGENHARIA.src}
-                    mobileSrc={ENGENHARIA.mobileSrc}
-                    alt={ENGENHARIA_ALT[locale]}
-                    objectPosition="center"
-                  />
-                )}
+                <EquipmentChoreographyStage locale={locale} variant="home" />
               </div>
             </Reveal>
 

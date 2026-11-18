@@ -29,6 +29,8 @@ export type Equipment3DConfig = {
   environmentIntensity: number;
   /** Identificação discreta quando o modelo representa uma variante específica (ex.: APV 100). */
   modelBadge?: string;
+  /** Nome editorial exibido na legenda discreta da coreografia. */
+  displayName: Record<Locale, string>;
   camera: Equipment3DCameraConfig;
   label: Record<Locale, string>;
   posterAlt: Record<Locale, string>;
@@ -43,6 +45,10 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowUrl: "/models/equipamentos/compactador-fuso/sombra-contato.png",
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.75,
+    displayName: {
+      pt: "Compactador de Fuso",
+      en: "Screw Compactor",
+    },
     camera: {
       azimuthDeg: 36,
       elevationDeg: 18,
@@ -68,6 +74,10 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.8,
     modelBadge: "APV 100",
+    displayName: {
+      pt: "APV 100",
+      en: "APV 100",
+    },
     camera: {
       azimuthDeg: 34,
       elevationDeg: 10,
@@ -92,6 +102,10 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowUrl: "/models/equipamentos/compactador-hidraulico/sombra-contato.png",
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.75,
+    displayName: {
+      pt: "Compactador Hidráulico",
+      en: "Hydraulic Compactor",
+    },
     camera: {
       azimuthDeg: 40,
       elevationDeg: 14,
@@ -112,4 +126,20 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
 
 export function getEquipment3DConfig(productId: string): Equipment3DConfig | null {
   return EQUIPMENT_3D_MODELS[productId] ?? null;
+}
+
+/**
+ * Ordem da coreografia compartilhada (Home e Hero de Almeida Equipamentos).
+ * Novos equipamentos aprovados entram nesta sequência apenas por configuração.
+ */
+export const CHOREOGRAPHY_SEQUENCE: string[] = [
+  "compactador-fuso",
+  "apv-90-100",
+  "compactador-hidraulico",
+];
+
+export function getChoreographyConfigs(): Equipment3DConfig[] {
+  return CHOREOGRAPHY_SEQUENCE.map((id) => EQUIPMENT_3D_MODELS[id]).filter(
+    (item): item is Equipment3DConfig => Boolean(item)
+  );
 }
