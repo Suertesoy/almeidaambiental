@@ -8,7 +8,8 @@ import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark"
 import MaterialSurface from "../shared/MaterialSurface";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import Reveal from "../shared/Reveal";
-import { FRENTES, FRENTES_EN, HERO_META, HERO_META_EN, type Frente } from "../../lib/saturno-data";
+import { img } from "../../lib/media";
+import { FRENTES, FRENTES_EN, type Frente } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
@@ -115,8 +116,18 @@ const COPY = {
  */
 export default function SaturnoPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const heroMeta = locale === "en" ? HERO_META_EN : HERO_META;
   const { compact: compactFrentes, cartonagem, gestaoAmbiental } = pickFrentes(locale === "en" ? FRENTES_EN : FRENTES);
+  const heroImage = {
+    ...img(
+      "saturno-ambiental",
+      "hero-aerea",
+      "/images/captacao-2026/almeida-foto-visao-superior-drone-desktop.webp",
+      locale === "en"
+        ? "Aerial view of Grupo Almeida operational facility with container yard and industrial warehouse"
+        : "Vista aérea de estrutura operacional do Grupo Almeida com pátio de contêineres e galpão industrial"
+    ),
+    sourceType: "archive" as const,
+  };
 
   return (
     <div className={styles.page} data-page="saturno-ambiental">
@@ -125,9 +136,11 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         eyebrow={t.heroEyebrow}
         title={t.heroTitle}
         lede={t.heroLede}
-        surface="saturno"
-        material="saturno-hero"
-        meta={heroMeta}
+        image={heroImage}
+        mobileImageSrc="/images/captacao-2026/almeida-foto-visao-superior-drone-mobile.webp"
+        imagePosition="45% 48%"
+        mobileImagePosition="44% 45%"
+        scrimTone="saturno"
         boundary={{ id: "saturno-territorio", surface: "onDark" }}
         primaryCta={{ label: t.heroPrimaryCta, href: "#frentes" }}
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.blumenau, locale) }}

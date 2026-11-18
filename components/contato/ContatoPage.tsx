@@ -87,11 +87,32 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
       {/* ---------------- Hero ---------------- */}
       <section className={`${shared.toneForest} ${styles.heroSection}`}>
         <div className={shared.container}>
-          <Reveal>
-            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
-            <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
-            <p className={`${shared.body} ${styles.heroLede}`}>{t.heroLede}</p>
-          </Reveal>
+          <div className={styles.heroGrid}>
+            <Reveal className={styles.heroCopy}>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
+              <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
+              <p className={`${shared.body} ${styles.heroLede}`}>{t.heroLede}</p>
+            </Reveal>
+
+            <Reveal className={styles.heroOfficeMedia} style={{ transitionDelay: "80ms" }}>
+              <picture>
+                <source
+                  media="(max-width: 767px)"
+                  srcSet="/images/captacao-2026/foto-escritorio-contatos-mobile.webp"
+                />
+                <img
+                  src="/images/captacao-2026/foto-escritorio-contatos-desktop.webp"
+                  alt={
+                    locale === "en"
+                      ? "Administrative and customer service office of Grupo Almeida"
+                      : "Escritório administrativo e de atendimento do Grupo Almeida"
+                  }
+                  loading="eager"
+                  decoding="async"
+                />
+              </picture>
+            </Reveal>
+          </div>
         </div>
       </section>
 

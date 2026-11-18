@@ -169,8 +169,12 @@ export default function EquipmentChoreographyCanvas({
       );
       const fovRad = THREE.MathUtils.degToRad(model.config.camera.fov);
       const visibleHalfW = framing.distance * Math.tan(fovRad / 2) * aspect;
-      // Posiciona o próximo modelo parcialmente visível na borda direita, sem invadir o centro
-      const lateralOffset = Math.max(visibleHalfW * 0.96 + model.rxz * 0.34, model.rxz * 1.85);
+      // Em telas largas/full-bleed, mantém o próximo equipamento reconhecível na lateral
+      // sem invadir o centro e permite travessia ampla até sair suavemente da viewport
+      const lateralOffset =
+        aspect > 1.8
+          ? Math.max(visibleHalfW * 0.72, model.rxz * 2.4)
+          : Math.max(visibleHalfW * 0.96 + model.rxz * 0.34, model.rxz * 1.85);
       return { ...framing, aspect, lateralOffset };
     };
 

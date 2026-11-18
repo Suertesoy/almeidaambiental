@@ -9,12 +9,17 @@
 import { img } from "./media";
 import { CORE_MATERIALS } from "./materials";
 
-export const HERO_IMAGE = img(
-  "almeida-ambiental",
-  "hero",
-  "/almeida-ambiental/patio-industrial.webp",
-  "Imagem ilustrativa de um pátio industrial de reciclagem com fardos de papelão organizados, empilhadeira e galpão moderno ao fundo"
-);
+export const HERO_IMAGE_MOBILE = "/images/captacao-2026/foto-hero-almeida-mobile.webp";
+
+export const HERO_IMAGE = {
+  ...img(
+    "almeida-ambiental",
+    "hero",
+    "/images/captacao-2026/foto-hero-almeida-desktop.webp",
+    "Equipe da Almeida Ambiental reunida no pátio operacional entre contêineres e caminhões"
+  ),
+  sourceType: "archive" as const,
+};
 
 export const POSITIONING_IMAGE = img(
   "almeida-ambiental",
@@ -99,12 +104,15 @@ export const PRESENCE_LOCATIONS = ["São José", "Chapecó", "Araquari", "Joinvi
    compartilham o mesmo arquivo de imagem; só o alt muda de idioma.
    ========================================================== */
 
-export const HERO_IMAGE_EN = img(
-  "almeida-ambiental",
-  "hero",
-  "/almeida-ambiental/patio-industrial.webp",
-  "Illustrative image of an industrial recycling yard with organized cardboard bales, a forklift and a modern warehouse in the background"
-);
+export const HERO_IMAGE_EN = {
+  ...img(
+    "almeida-ambiental",
+    "hero",
+    "/images/captacao-2026/foto-hero-almeida-desktop.webp",
+    "Almeida Ambiental team gathered in the operational yard among containers and trucks"
+  ),
+  sourceType: "archive" as const,
+};
 
 export const POSITIONING_IMAGE_EN = img(
   "almeida-ambiental",

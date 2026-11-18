@@ -78,7 +78,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: var(--hero-pos-mobile, center);
+}
+
+@media (min-width: 768px) {
+  .media,
+  .poster {
+    object-position: var(--hero-pos-desktop, center);
+  }
 }
 
 .scrim {
@@ -86,6 +93,26 @@
   inset: 0;
   background: linear-gradient(to top, rgba(8, 10, 8, 0.72) 0%, rgba(8, 10, 8, 0.32) 42%, rgba(8, 10, 8, 0.04) 68%);
   pointer-events: none;
+}
+
+/* Graduação suave verde institucional sem escurecer excessivamente as pessoas */
+.scrimForest {
+  background: linear-gradient(
+    to top,
+    rgba(11, 28, 19, 0.78) 0%,
+    rgba(15, 39, 27, 0.34) 40%,
+    rgba(15, 39, 27, 0.08) 72%
+  );
+}
+
+/* Graduação suave para a fotografia aérea na Saturno Ambiental */
+.scrimSaturno {
+  background: linear-gradient(
+    to top,
+    rgba(12, 22, 19, 0.8) 0%,
+    rgba(18, 32, 27, 0.38) 44%,
+    rgba(18, 32, 27, 0.1) 76%
+  );
 }
 
 .content {

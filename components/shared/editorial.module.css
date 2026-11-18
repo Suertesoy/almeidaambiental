@@ -406,7 +406,8 @@
   overflow: hidden;
 }
 
-.duoMedia img {
+.duoMedia img,
+.duoMedia video {
   width: 100%;
   height: 100%;
   object-fit: cover;

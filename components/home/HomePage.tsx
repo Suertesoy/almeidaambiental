@@ -37,8 +37,10 @@ const IMG_AMBIENTAL_OPERACAO = "/almeida-ambiental/patio-industrial.webp";
    Saturno. No lugar entra a materialidade própria da marca (mesma peça do
    capítulo de fechamento de /saturno-ambiental) como imagem emoldurada,
    não como fotografia de operação. */
-const IMG_SATURNO_ATUACAO = MATERIAL_SURFACES["saturno-fluxo"].desktop!;
-const IMG_MANIFESTO = "/images/home-variants/editorial/grupo-manifesto.webp";
+const IMG_SATURNO_ATUACAO = "/images/captacao-2026/foto-forca-de-grupo-desktop.webp";
+const IMG_SATURNO_ATUACAO_MOBILE = "/images/captacao-2026/foto-forca-de-grupo-mobile.webp";
+const IMG_MANIFESTO = "/images/captacao-2026/foto-ampla-almeida-dentro-galpao-desktop.webp";
+const IMG_MANIFESTO_MOBILE = "/images/captacao-2026/foto-ampla-almeida-dentro-galpao-mobile.webp";
 
 /**
  * Engenharia da Almeida Equipamentos como PEÇA editorial (Seção 5 da
@@ -299,7 +301,16 @@ export default function HomePage({ locale }: { locale: Locale }) {
 
               <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`} style={{ transitionDelay: "120ms" }}>
                 <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-                  <SectionMedia imageSrc={IMG_SATURNO_ATUACAO} alt={t.saturnoAtuacaoAlt} objectPosition="center" />
+                  <SectionMedia
+                    imageSrc={IMG_SATURNO_ATUACAO}
+                    mobileSrc={IMG_SATURNO_ATUACAO_MOBILE}
+                    alt={
+                      locale === "en"
+                        ? "Grupo Almeida truck fleet and containers in operation"
+                        : "Frota de caminhões e contêineres do Grupo Almeida em operação"
+                    }
+                    objectPosition="center 62%"
+                  />
                 </div>
                 <div className={styles.duoContent}>
                   <h3 className={styles.headlineSecondary}>{t.saturnoHeadline}</h3>
@@ -340,12 +351,17 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </div>
 
           <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow} ${styles.manifesto}`}>
-            {/* Asset 4:5 (retrato) — o slot paisagem 16:10 descartava metade da
-                altura. Quadrado preserva ~80% e mantém empilhadeira e fardos
-                no quadro. Ilustrativa (IA): foto real futura é preferível. */}
-            <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-              <SectionMedia imageSrc={IMG_MANIFESTO} alt={t.manifestoAlt} objectPosition="center 62%" />
-              <IllustrativeBadge locale={locale} />
+            <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
+              <SectionMedia
+                imageSrc={IMG_MANIFESTO}
+                mobileSrc={IMG_MANIFESTO_MOBILE}
+                alt={
+                  locale === "en"
+                    ? "Wide interior view of Grupo Almeida operational warehouse with sorting and recycling processes"
+                    : "Vista ampla do interior do galpão operacional do Grupo Almeida com processos de triagem e reciclagem"
+                }
+                objectPosition="center 52%"
+              />
             </div>
             <div className={styles.duoContent}>
               <h2 className={styles.headlineSecondary}>{t.manifestoHeadline}</h2>

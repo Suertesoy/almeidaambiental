@@ -9,9 +9,11 @@ import ProcessSteps from "../shared/ProcessSteps";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
+import AmbientVideo from "../shared/AmbientVideo";
 import {
   HERO_IMAGE,
   HERO_IMAGE_EN,
+  HERO_IMAGE_MOBILE,
   POSITIONING_IMAGE,
   POSITIONING_IMAGE_EN,
   PILLARS,
@@ -115,6 +117,10 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
         title={t.heroTitle}
         lede={t.heroLede}
         image={heroImage}
+        mobileImageSrc={HERO_IMAGE_MOBILE}
+        imagePosition="center 54%"
+        mobileImagePosition="51% 58%"
+        scrimTone="forest"
         primaryCta={{ label: t.heroPrimaryCta, href: "#servicos" }}
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
       />
@@ -167,8 +173,32 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
                 <div className={shared.container}>
                   <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
                     <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`} style={{ transitionDelay: "80ms" }}>
-                      <img src={pillar.image.src} alt={pillar.image.alt} loading="lazy" decoding="async" />
-                      {pillar.image.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
+                      {index === 1 ? (
+                        <AmbientVideo
+                          src="/videos/captacao-2026/triagem1-almeida.mp4"
+                          poster="/images/captacao-2026/triagem1-almeida-poster.webp"
+                          ariaLabel={
+                            locale === "en"
+                              ? "Real sorting and classification operation at Almeida Ambiental"
+                              : "Operação real de triagem e classificação na Almeida Ambiental"
+                          }
+                        />
+                      ) : index === 2 ? (
+                        <AmbientVideo
+                          src="/videos/captacao-2026/trituracao-almeida.mp4"
+                          poster="/images/captacao-2026/trituracao-almeida-poster.webp"
+                          ariaLabel={
+                            locale === "en"
+                              ? "Real shredding and destruction operation at Almeida Ambiental"
+                              : "Operação real de trituração e descaracterização na Almeida Ambiental"
+                          }
+                        />
+                      ) : (
+                        <>
+                          <img src={pillar.image.src} alt={pillar.image.alt} loading="lazy" decoding="async" />
+                          {pillar.image.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
+                        </>
+                      )}
                     </Reveal>
                     <Reveal className={shared.duoContent}>
                       {/* Um só rótulo acima do título: número + categoria. */}

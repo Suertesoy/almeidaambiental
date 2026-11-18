@@ -24,7 +24,10 @@ html:has([data-page="home"]) {
 .chapterOpen { composes: chapterOpen from "../shared/editorial.module.css"; }
 .chapterMiddle { composes: chapterMiddle from "../shared/editorial.module.css"; }
 .chapterClose { composes: chapterClose from "../shared/editorial.module.css"; }
-.companyChapter { composes: companyChapter from "../shared/editorial.module.css"; }
+.companyChapter {
+  composes: companyChapter from "../shared/editorial.module.css";
+  overflow-x: clip;
+}
 .pageClose { composes: pageClose from "../shared/editorial.module.css"; }
 .section { composes: chapter from "../shared/editorial.module.css"; }
 
@@ -233,8 +236,16 @@ html:has([data-page="home"]) {
 }
 
 @media (min-width: 1024px) {
+  .equipamentosStage {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
   .equipamentosStageFrame {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: auto;
+    height: clamp(380px, 34vw, 520px);
   }
 }
 

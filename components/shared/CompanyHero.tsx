@@ -29,6 +29,13 @@ export type CompanyHeroProps = {
    * exibir uma instalação que não existe.
    */
   image?: EditorialImage;
+  /** Versão mobile otimizada da fotografia principal. */
+  mobileImageSrc?: string;
+  /** Enquadramento da imagem no desktop e no mobile (CSS object-position). */
+  imagePosition?: string;
+  mobileImagePosition?: string;
+  /** Graduação de cor suave no scrim para integrar ao território da empresa. */
+  scrimTone?: "neutral" | "forest" | "saturno";
   /** Superfície do Hero tipográfico. Ignorada quando existe fotografia. */
   surface?: "forest" | "saturno";
   /**
@@ -70,6 +77,10 @@ export default function CompanyHero({
   lede,
   subcopy,
   image,
+  mobileImageSrc,
+  imagePosition,
+  mobileImagePosition,
+  scrimTone = "neutral",
   surface = "forest",
   material,
   meta,
@@ -98,8 +109,32 @@ export default function CompanyHero({
 
       {image && (
         <>
-          <img src={image.src} alt={image.alt} className={styles.media} loading="eager" fetchPriority="high" />
-          <div className={styles.scrim} aria-hidden="true" />
+          <picture>
+            {mobileImageSrc && <source media="(max-width: 767px)" srcSet={mobileImageSrc} />}
+            <img
+              src={image.src}
+              alt={image.alt}
+              className={styles.media}
+              style={
+                {
+                  "--hero-pos-desktop": imagePosition ?? "center",
+                  "--hero-pos-mobile": mobileImagePosition ?? imagePosition ?? "center",
+                } as React.CSSProperties
+              }
+              loading="eager"
+              fetchPriority="high"
+            />
+          </picture>
+          <div
+            className={`${styles.scrim} ${
+              scrimTone === "forest"
+                ? styles.scrimForest
+                : scrimTone === "saturno"
+                  ? styles.scrimSaturno
+                  : ""
+            }`}
+            aria-hidden="true"
+          />
           {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" locale={locale} />}
         </>
       )}
