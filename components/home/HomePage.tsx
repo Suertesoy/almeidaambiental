@@ -12,6 +12,7 @@ import ProcessSteps from "../shared/ProcessSteps";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import MaterialSurface from "../shared/MaterialSurface";
 import EquipmentChoreographyStage from "../equipamentos/EquipmentChoreographyStage";
+import AmbientVideo from "../shared/AmbientVideo";
 import { BRANDS } from "../../lib/brands";
 import { FLOW_STEPS, FLOW_STEPS_EN } from "../../lib/almeida-ambiental-data";
 import { useEnterOnce } from "../AnimatedMetric";
@@ -212,8 +213,16 @@ export default function HomePage({ locale }: { locale: Locale }) {
                   </div>
                 </div>
                 <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                  <SectionMedia imageSrc={IMG_AMBIENTAL_OPERACAO} alt={t.ambientalFrotaAlt} objectPosition="68% 50%" />
-                  <IllustrativeBadge locale={locale} />
+                  <AmbientVideo
+                    src="/videos/captacao-2026/visao-geral.mp4"
+                    poster="/images/captacao-2026/visao-geral-poster.webp"
+                    ariaLabel={
+                      locale === "en"
+                        ? "Overview of waste handling and sorting operations at Almeida Ambiental"
+                        : "Visão geral da operação de movimentação e triagem de resíduos na Almeida Ambiental"
+                    }
+                    style={{ objectPosition: "center 54%" }}
+                  />
                 </div>
               </Reveal>
 
@@ -300,16 +309,16 @@ export default function HomePage({ locale }: { locale: Locale }) {
               </div>
 
               <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`} style={{ transitionDelay: "120ms" }}>
-                <div className={`${styles.duoMedia} ${styles.duoMediaSquare}`}>
-                  <SectionMedia
-                    imageSrc={IMG_SATURNO_ATUACAO}
-                    mobileSrc={IMG_SATURNO_ATUACAO_MOBILE}
-                    alt={
+                <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
+                  <AmbientVideo
+                    src="/videos/captacao-2026/cada-etapa.mp4"
+                    poster="/images/captacao-2026/cada-etapa-poster.webp"
+                    ariaLabel={
                       locale === "en"
-                        ? "Grupo Almeida truck fleet and containers in operation"
-                        : "Frota de caminhões e contêineres do Grupo Almeida em operação"
+                        ? "Material unloading and operational movement at Grupo Almeida"
+                        : "Movimentação e descarregamento de materiais na operação do Grupo Almeida"
                     }
-                    objectPosition="center 62%"
+                    style={{ objectPosition: "56% 52%" }}
                   />
                 </div>
                 <div className={styles.duoContent}>

@@ -179,7 +179,18 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
                 <div className={shared.container}>
                   <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
                     <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`} style={{ transitionDelay: "80ms" }}>
-                      {index === 1 ? (
+                      {index === 0 ? (
+                        <AmbientVideo
+                          src="/videos/captacao-2026/caminhao-coleta.mp4"
+                          poster="/images/captacao-2026/caminhao-coleta-poster.webp"
+                          ariaLabel={
+                            locale === "en"
+                              ? "Waste collection truck and driver starting route at Almeida Ambiental"
+                              : "Caminhão de coleta e operador iniciando rota na Almeida Ambiental"
+                          }
+                          style={{ objectPosition: "58% 46%" }}
+                        />
+                      ) : index === 1 ? (
                         <AmbientVideo
                           src="/videos/captacao-2026/triagem1-almeida.mp4"
                           poster="/images/captacao-2026/triagem1-almeida-poster.webp"
