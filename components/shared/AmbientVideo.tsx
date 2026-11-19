@@ -6,7 +6,10 @@ export type AmbientVideoProps = {
   src: string;
   poster: string;
   ariaLabel: string;
+  /** Quando true (ex.: Hero), inicia imediatamente com preload="auto". */
+  priority?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 };
 
 /**
@@ -21,7 +24,9 @@ export default function AmbientVideo({
   src,
   poster,
   ariaLabel,
+  priority = false,
   className,
+  style,
 }: AmbientVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -38,6 +43,10 @@ export default function AmbientVideo({
   useEffect(() => {
     const video = videoRef.current;
     if (!video || reducedMotion) return;
+
+    if (priority) {
+      video.play().catch(() => {});
+    }
 
     if (typeof IntersectionObserver === "undefined") {
       video.play().catch(() => {});
@@ -59,7 +68,7 @@ export default function AmbientVideo({
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [reducedMotion, src]);
+  }, [reducedMotion, priority, src]);
 
   if (reducedMotion) {
     return (
@@ -67,7 +76,9 @@ export default function AmbientVideo({
         src={poster}
         alt={ariaLabel}
         className={className}
-        loading="lazy"
+        style={style}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : undefined}
         decoding="async"
       />
     );
@@ -78,13 +89,15 @@ export default function AmbientVideo({
       ref={videoRef}
       src={src}
       poster={poster}
+      autoPlay={priority}
       muted
       playsInline
       loop
-      preload="none"
+      preload={priority ? "auto" : "none"}
       disablePictureInPicture
       aria-label={ariaLabel}
       className={className}
+      style={style}
     />
   );
 }

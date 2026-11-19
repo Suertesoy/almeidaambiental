@@ -11,11 +11,6 @@ import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import AmbientVideo from "../shared/AmbientVideo";
 import {
-  HERO_IMAGE,
-  HERO_IMAGE_EN,
-  HERO_IMAGE_MOBILE,
-  POSITIONING_IMAGE,
-  POSITIONING_IMAGE_EN,
   PILLARS,
   PILLARS_EN,
   FLOW_STEPS,
@@ -104,8 +99,6 @@ const COPY = {
  */
 export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const heroImage = locale === "en" ? HERO_IMAGE_EN : HERO_IMAGE;
-  const positioningImage = locale === "en" ? POSITIONING_IMAGE_EN : POSITIONING_IMAGE;
   const pillars = locale === "en" ? PILLARS_EN : PILLARS;
   const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
 
@@ -116,10 +109,16 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
         eyebrow={t.heroEyebrow}
         title={t.heroTitle}
         lede={t.heroLede}
-        image={heroImage}
-        mobileImageSrc={HERO_IMAGE_MOBILE}
-        imagePosition="center 54%"
-        mobileImagePosition="51% 58%"
+        video={{
+          src: "/videos/captacao-2026/hero-almeida.mp4",
+          poster: "/images/captacao-2026/hero-almeida-poster.webp",
+          label:
+            locale === "en"
+              ? "External structure and operations of Almeida Ambiental"
+              : "Estrutura externa e operação da Almeida Ambiental",
+        }}
+        imagePosition="center 50%"
+        mobileImagePosition="45% 52%"
         scrimTone="forest"
         primaryCta={{ label: t.heroPrimaryCta, href: "#servicos" }}
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
@@ -142,9 +141,16 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
           <div className={shared.container}>
             <div className={shared.chapterRows}>
               <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow}`}>
-                <Reveal className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
-                  <img src={positioningImage.src} alt={positioningImage.alt} loading="lazy" decoding="async" />
-                  {positioningImage.sourceType === "illustrative" && <IllustrativeBadge locale={locale} />}
+                <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
+                  <AmbientVideo
+                    src="/videos/captacao-2026/triagem2.mp4"
+                    poster="/images/captacao-2026/triagem2-poster.webp"
+                    ariaLabel={
+                      locale === "en"
+                        ? "Real material sorting and separation operation at Almeida Ambiental"
+                        : "Operação real de separação e triagem de materiais na Almeida Ambiental"
+                    }
+                  />
                 </Reveal>
                 <Reveal className={shared.duoContent} style={{ transitionDelay: "80ms" }}>
                   <h2 className={shared.headline}>{t.positioningHeadline}</h2>

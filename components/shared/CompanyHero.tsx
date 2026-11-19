@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "./CompanyHero.module.css";
 import IllustrativeBadge from "./IllustrativeBadge";
 import MaterialSurface from "./MaterialSurface";
+import AmbientVideo from "./AmbientVideo";
 import BrandBoundaryMark, {
   boundarySurface,
   type BrandBoundarySurface,
@@ -29,6 +30,12 @@ export type CompanyHeroProps = {
    * exibir uma instalação que não existe.
    */
   image?: EditorialImage;
+  /** Vídeo ambiente de abertura (opcional; substitui a fotografia quando presente). */
+  video?: {
+    src: string;
+    poster: string;
+    label: string;
+  };
   /** Versão mobile otimizada da fotografia principal. */
   mobileImageSrc?: string;
   /** Enquadramento da imagem no desktop e no mobile (CSS object-position). */
@@ -77,6 +84,7 @@ export default function CompanyHero({
   lede,
   subcopy,
   image,
+  video,
   mobileImageSrc,
   imagePosition,
   mobileImagePosition,
@@ -88,7 +96,7 @@ export default function CompanyHero({
   primaryCta,
   secondaryCta,
 }: CompanyHeroProps) {
-  const editorial = !image;
+  const editorial = !image && !video;
   const surfaceClass = surface === "saturno" ? styles.surfaceSaturno : styles.surfaceForest;
 
   return (
@@ -107,7 +115,34 @@ export default function CompanyHero({
 
       {boundary && <BrandBoundaryMark boundary={boundary.id} half="leaving" surface={boundary.surface} />}
 
-      {image && (
+      {video ? (
+        <>
+          <AmbientVideo
+            src={video.src}
+            poster={video.poster}
+            ariaLabel={video.label}
+            priority
+            className={styles.media}
+            style={
+              {
+                "--hero-pos-desktop": imagePosition ?? "center",
+                "--hero-pos-mobile": mobileImagePosition ?? imagePosition ?? "center",
+              } as React.CSSProperties
+            }
+          />
+          <div
+            className={`${styles.scrim} ${
+              scrimTone === "forest"
+                ? styles.scrimForest
+                : scrimTone === "saturno"
+                  ? styles.scrimSaturno
+                  : ""
+            }`}
+            aria-hidden="true"
+          />
+        </>
+      ) : (
+        image && (
         <>
           <picture>
             {mobileImageSrc && <source media="(max-width: 767px)" srcSet={mobileImageSrc} />}
@@ -137,7 +172,7 @@ export default function CompanyHero({
           />
           {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" locale={locale} />}
         </>
-      )}
+      ))}
 
       <div className={`${styles.content} ${editorial ? styles.editorialContent : ""}`}>
         <p className={styles.eyebrow}>{eyebrow}</p>
