@@ -115,40 +115,14 @@ export default function CompanyHero({
 
       {boundary && <BrandBoundaryMark boundary={boundary.id} half="leaving" surface={boundary.surface} />}
 
-      {video ? (
-        <>
-          <AmbientVideo
-            src={video.src}
-            poster={video.poster}
-            ariaLabel={video.label}
-            priority
-            className={styles.media}
-            style={
-              {
-                "--hero-pos-desktop": imagePosition ?? "center",
-                "--hero-pos-mobile": mobileImagePosition ?? imagePosition ?? "center",
-              } as React.CSSProperties
-            }
-          />
-          <div
-            className={`${styles.scrim} ${
-              scrimTone === "forest"
-                ? styles.scrimForest
-                : scrimTone === "saturno"
-                  ? styles.scrimSaturno
-                  : ""
-            }`}
-            aria-hidden="true"
-          />
-        </>
-      ) : (
-        image && (
-        <>
-          <picture>
-            {mobileImageSrc && <source media="(max-width: 767px)" srcSet={mobileImageSrc} />}
-            <img
-              src={image.src}
-              alt={image.alt}
+      {(video || image) && (
+        <div className={styles.backdrop} data-layer="background">
+          {video ? (
+            <AmbientVideo
+              src={video.src}
+              poster={video.poster}
+              ariaLabel={video.label}
+              priority
               className={styles.media}
               style={
                 {
@@ -156,10 +130,30 @@ export default function CompanyHero({
                   "--hero-pos-mobile": mobileImagePosition ?? imagePosition ?? "center",
                 } as React.CSSProperties
               }
-              loading="eager"
-              fetchPriority="high"
             />
-          </picture>
+          ) : (
+            image && (
+              <>
+                <picture>
+                  {mobileImageSrc && <source media="(max-width: 767px)" srcSet={mobileImageSrc} />}
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className={styles.media}
+                    style={
+                      {
+                        "--hero-pos-desktop": imagePosition ?? "center",
+                        "--hero-pos-mobile": mobileImagePosition ?? imagePosition ?? "center",
+                      } as React.CSSProperties
+                    }
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </picture>
+                {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" locale={locale} />}
+              </>
+            )
+          )}
           <div
             className={`${styles.scrim} ${
               scrimTone === "forest"
@@ -170,9 +164,8 @@ export default function CompanyHero({
             }`}
             aria-hidden="true"
           />
-          {image.sourceType !== "archive" && <IllustrativeBadge position="top-right" locale={locale} />}
-        </>
-      ))}
+        </div>
+      )}
 
       <div className={`${styles.content} ${editorial ? styles.editorialContent : ""}`}>
         <p className={styles.eyebrow}>{eyebrow}</p>
