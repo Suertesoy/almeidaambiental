@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrandMark from "./shared/BrandMark";
+import { InstagramIcon } from "./icons";
 import { BRANDS } from "../lib/brands";
 import type { Locale } from "../lib/i18n/locale";
 import { localizeHref } from "../lib/i18n/routes";
@@ -9,6 +10,8 @@ import { dict } from "../lib/i18n/dictionary";
  *  quatro empresas/unidades abaixo têm CNPJ. Não inventar razão social,
  *  endereço ou telefone além do que foi fornecido. Nomes de empresa e
  *  localização (cidade/UF) são nomes próprios — não traduzidos. */
+const INSTAGRAM_URL = "https://www.instagram.com/almeidaambientall/";
+
 const COMPANIES = [
   { name: "Almeida Ambiental", location: "São José / SC", cnpj: "04.910.399/0001-07" },
   { name: "Almeida Ambiental", location: "Araquari / Joinville", cnpj: "04.910.399/0002-80" },
@@ -47,23 +50,34 @@ export default function Footer({ locale }: { locale: Locale }) {
             </ul>
           </div>
 
-          <nav className="footer-col footer-col-links" aria-label={t.institutionalLinksLabel}>
-            <p className="footer-heading">{t.links}</p>
-            <ul className="footer-links-list">
-              {/* "Institucional" e "Política de Privacidade" ainda não têm rota
-                  própria definida na arquitetura do site: permanecem como
-                  texto até existirem. */}
-              <li>
-                <span>{t.institutional}</span>
-              </li>
-              <li>
-                <Link href={localizeHref("/contato", locale)}>{t.contact}</Link>
-              </li>
-              <li>
-                <span>{t.privacyPolicy}</span>
-              </li>
-            </ul>
-          </nav>
+          <div className="footer-col footer-col-links">
+            <nav className="footer-links-nav" aria-label={t.institutionalLinksLabel}>
+              <p className="footer-heading">{t.links}</p>
+              <ul className="footer-links-list">
+                {/* "Institucional" e "Política de Privacidade" ainda não têm rota
+                    própria definida na arquitetura do site: permanecem como
+                    texto até existirem. */}
+                <li>
+                  <span>{t.institutional}</span>
+                </li>
+                <li>
+                  <Link href={localizeHref("/contato", locale)}>{t.contact}</Link>
+                </li>
+                <li>
+                  <span>{t.privacyPolicy}</span>
+                </li>
+              </ul>
+            </nav>
+            <a
+              className="footer-social"
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t.instagramLabel}
+            >
+              <InstagramIcon />
+            </a>
+          </div>
         </div>
 
         <div className="footer-bottom">

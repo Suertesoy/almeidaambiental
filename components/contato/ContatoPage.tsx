@@ -1,7 +1,9 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./contato.module.css";
 import Reveal from "../shared/Reveal";
+import UnitNav from "./UnitNav";
 import { PhoneIcon, WhatsAppIcon } from "../icons";
 import { REGIONS, REGIONS_EN, type Channel } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
@@ -21,6 +23,8 @@ const COPY = {
     heroTitle: "Encontre o canal certo para sua operação.",
     heroLede: "Atendimento direto para São José, Araquari / Joinville e Blumenau.",
     directoryAriaLabel: "Diretório de unidades",
+    progressLabel: "Progresso pelas unidades",
+    progressTemplate: "Unidade {index} de {total}: {title}",
     channelsLabel: "Canais de contato",
     openInGoogleMaps: "Abrir no Google Maps",
     openInWaze: "Abrir no Waze",
@@ -40,6 +44,8 @@ const COPY = {
     heroTitle: "Find the right channel for your operation.",
     heroLede: "Direct service for São José, Araquari / Joinville and Blumenau.",
     directoryAriaLabel: "Unit directory",
+    progressLabel: "Progress through units",
+    progressTemplate: "Unit {index} of {total}: {title}",
     channelsLabel: "Contact channels",
     openInGoogleMaps: "Open in Google Maps",
     openInWaze: "Open in Waze",
@@ -55,6 +61,27 @@ const COPY = {
     talkTo: (label: string) => `Talk to ${label}`,
   },
 } as const;
+
+/** Endereço em linhas semânticas: cada linha é um bloco que quebra de forma
+ *  natural (text-wrap: balance) e cada trecho separado por " — " (e o CEP)
+ *  é um bloco inline que não se parte no meio — sem <br> nem largura fixa.
+ *  O travessão fica colado ao trecho anterior (NBSP) para nunca abrir linha. */
+function AddressLine({ line }: { line: string }) {
+  const parts = line.split(" — ");
+  return (
+    <span className={styles.addressLine}>
+      {parts.map((part, index) => (
+        <Fragment key={part}>
+          <span className={styles.addressPart}>
+            {part}
+            {index < parts.length - 1 ? " —" : null}
+          </span>
+          {index < parts.length - 1 ? " " : null}
+        </Fragment>
+      ))}
+    </span>
+  );
+}
 
 function channelCopy(channel: Channel, locale: Locale) {
   const t = COPY[locale];
@@ -116,112 +143,101 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* ---------------- Diretório compacto ---------------- */}
-      <nav className={`${shared.sectionCompact} ${shared.toneStone} ${styles.directoryNav}`} aria-label={t.directoryAriaLabel}>
-        <div className={shared.container}>
-          <Reveal>
-            <ul className={styles.directoryChips}>
-              {DIRECTORY.map((item) => (
-                <li key={item.id}>
-                  <a className={styles.directoryChip} href={`#${item.id}`}>
-                    {item.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </nav>
+      {/* ---------------- Diretório sticky + Unidades ---------------- */}
+      <div className={styles.units}>
+        <UnitNav
+          items={DIRECTORY}
+          ariaLabel={t.directoryAriaLabel}
+          progressLabel={t.progressLabel}
+          progressTemplate={t.progressTemplate}
+        />
 
-      {/* ---------------- Unidades ---------------- */}
-      {regions.map((region) => {
-        const hasLocation = Boolean(region.addressLines && region.addressLines.length > 0);
+        {regions.map((region) => {
+          const hasLocation = Boolean(region.addressLines && region.addressLines.length > 0);
 
-        return (
-          <section key={region.id} id={region.id} className={`${shared.chapterMiddle} ${shared.toneStone} ${styles.unitBlock}`}>
-            <div className={shared.container}>
-              <Reveal>
-                <div className={`${styles.unitGrid} ${!hasLocation ? styles.unitGridNoLocation : ""}`}>
-                  <div className={styles.unitIdentity}>
-                    <p className={shared.eyebrow}>{region.eyebrow}</p>
-                    <h2 className={`${shared.subheading} ${styles.unitTitle}`}>{region.headline}</h2>
-                    <p className={`${shared.body} ${styles.unitDescription}`}>{region.description}</p>
-                    {region.note && <p className={styles.unitNote}>{region.note}</p>}
-                  </div>
+          return (
+            <section key={region.id} id={region.id} tabIndex={-1} className={`${shared.chapterMiddle} ${shared.toneStone} ${styles.unitBlock}`}>
+              <div className={shared.container}>
+                <Reveal>
+                  <div className={`${styles.unitGrid} ${!hasLocation ? styles.unitGridNoLocation : ""}`}>
+                    <div className={styles.unitIdentity}>
+                      <p className={`${shared.eyebrow} ${styles.unitEyebrow}`}>{region.eyebrow}</p>
+                      <h2 className={`${shared.subheading} ${styles.unitTitle}`}>{region.headline}</h2>
+                      <p className={`${shared.body} ${styles.unitDescription}`}>{region.description}</p>
+                      {region.note && <p className={styles.unitNote}>{region.note}</p>}
+                    </div>
 
-                  <p className={styles.unitCnpj}>
-                    {region.cnpjLabel}: {region.cnpj}
-                  </p>
+                    <p className={styles.unitCnpj}>
+                      {region.cnpjLabel}: <span className={styles.nowrap}>{region.cnpj}</span>
+                    </p>
 
-                  {hasLocation && (
-                    <div className={styles.unitLocation}>
-                      <p className={styles.addressText}>
-                        {region.addressLines!.map((line, lineIndex) => (
-                          <span key={line}>
-                            {line}
-                            {lineIndex < region.addressLines!.length - 1 && <br />}
-                          </span>
-                        ))}
-                      </p>
+                    {hasLocation && (
+                      <div className={styles.unitLocation}>
+                        <p className={styles.addressText}>
+                          {region.addressLines!.map((line) => (
+                            <AddressLine key={line} line={line} />
+                          ))}
+                        </p>
 
-                      {region.mapEmbedSrc && (
-                        <div className={styles.mapFrame}>
-                          <iframe
-                            src={region.mapEmbedSrc}
-                            title={region.mapEmbedTitle ?? (locale === "en" ? `Map — ${region.headline}` : `Mapa — ${region.headline}`)}
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                          />
+                        {region.mapEmbedSrc && (
+                          <div className={styles.mapFrame}>
+                            <iframe
+                              src={region.mapEmbedSrc}
+                              title={region.mapEmbedTitle ?? (locale === "en" ? `Map — ${region.headline}` : `Mapa — ${region.headline}`)}
+                              loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade"
+                            />
+                          </div>
+                        )}
+
+                        <div className={styles.mapActions}>
+                          {region.mapHref && (
+                            <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
+                              {t.openInGoogleMaps}
+                            </a>
+                          )}
+                          {region.wazeHref && (
+                            <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
+                              {t.openInWaze}
+                            </a>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    )}
 
-                      <div className={styles.mapActions}>
-                        {region.mapHref && (
-                          <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
-                            {t.openInGoogleMaps}
-                          </a>
-                        )}
-                        {region.wazeHref && (
-                          <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
-                            {t.openInWaze}
-                          </a>
-                        )}
+                    <div className={styles.unitChannels}>
+                      <span className={styles.channelGroupLabel}>{t.channelsLabel}</span>
+                      <div className={styles.channelList}>
+                        {region.channels.map((channel) => {
+                          const { meta, cta } = channelCopy(channel, locale);
+                          const isWhatsApp = channel.action === "whatsapp";
+                          return (
+                            <div key={channel.href} className={styles.channelRow}>
+                              <div className={styles.channelText}>
+                                <span className={styles.channelName}>{channel.label}</span>
+                                <span className={styles.channelMeta}>{meta}</span>
+                              </div>
+                              <a
+                                className={`${shared.btn} ${shared.btnSolidGold}`}
+                                href={isWhatsApp ? withMessage(channel.href, region.whatsappMessage) : channel.href}
+                                target={isWhatsApp ? "_blank" : undefined}
+                                rel={isWhatsApp ? "noopener noreferrer" : undefined}
+                              >
+                                {isWhatsApp ? <WhatsAppIcon /> : <PhoneIcon />}
+                                {cta}
+                              </a>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  )}
-
-                  <div className={styles.unitChannels}>
-                    <span className={styles.channelGroupLabel}>{t.channelsLabel}</span>
-                    <div className={styles.channelList}>
-                      {region.channels.map((channel) => {
-                        const { meta, cta } = channelCopy(channel, locale);
-                        const isWhatsApp = channel.action === "whatsapp";
-                        return (
-                          <div key={channel.href} className={styles.channelRow}>
-                            <div className={styles.channelText}>
-                              <span className={styles.channelName}>{channel.label}</span>
-                              <span className={styles.channelMeta}>{meta}</span>
-                            </div>
-                            <a
-                              className={isWhatsApp ? `${shared.btn} ${styles.btnWhatsApp}` : `${shared.btn} ${shared.btnOutlineOnLight}`}
-                              href={isWhatsApp ? withMessage(channel.href, region.whatsappMessage) : channel.href}
-                              target={isWhatsApp ? "_blank" : undefined}
-                              rel={isWhatsApp ? "noopener noreferrer" : undefined}
-                            >
-                              {isWhatsApp ? <WhatsAppIcon /> : <PhoneIcon />}
-                              {cta}
-                            </a>
-                          </div>
-                        );
-                      })}
-                    </div>
                   </div>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        );
-      })}
+                </Reveal>
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
       {/* ---------------- Fechamento ---------------- */}
       <section className={`${shared.pageClose} ${shared.toneCarvao} ${shared.finalCta}`}>

@@ -109,82 +109,114 @@
   max-width: 48ch;
 }
 
-/* ---------------- Diretório compacto ----------------
-   Reconstrução: três controles compactos e clicáveis (não hyperlink de
-   texto simples, não botões de 90px) — pílulas horizontais, uma linha no
-   desktop, scroll horizontal no mobile em vez de empilhar três blocos
-   altos. Sem numeração 01/02/03 (não acrescentava informação real). */
-.directoryNav {
-  padding-block: clamp(20px, 4vw, 32px);
-  border-bottom: 1px solid rgba(21, 21, 15, 0.1);
+/* ---------------- Navegação sticky das unidades ----------------
+   Fica presa logo abaixo do Header fixo (--header-height) durante as três
+   unidades — o wrapper .units termina antes do CTA final, então ela solta
+   ali. Barra de progresso amarela (--color-gold-aged, o mesmo amarelo dos
+   CTAs) preenchida pelo scroll (UnitNav.tsx). Controles retangulares de 4px
+   de raio, como .btn — sem cápsulas, sem cinza. */
+.units {
+  --unit-nav-height: 68px;
 }
 
-.directoryChips {
+.unitNav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 5;
+  background: var(--color-stone-warm);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.12);
+}
+
+.unitNavInner {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 64px);
+}
+
+.unitNavList {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 10px 0 11px;
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
-.directoryChips::-webkit-scrollbar {
+.unitNavList::-webkit-scrollbar {
   display: none;
 }
 
+.unitNavItem {
+  flex: none;
+}
+
 @media (min-width: 640px) {
-  .directoryChips {
-    flex-wrap: wrap;
+  .unitNavList {
     overflow-x: visible;
   }
 }
 
-.directoryChip {
-  flex: none;
+.unitNavLink {
   display: inline-flex;
   align-items: center;
   height: 44px;
-  padding-inline: 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(21, 21, 15, 0.26);
-  color: var(--text-primary);
+  padding-inline: 18px;
+  border-radius: 4px;
+  border: 1px solid rgba(21, 21, 15, 0.32);
+  color: var(--color-foreground);
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   white-space: nowrap;
   text-decoration: none;
   transition:
     background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
     border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.directoryChip:hover {
+.unitNavLink:hover {
   background: rgba(21, 21, 15, 0.06);
-  border-color: rgba(21, 21, 15, 0.42);
+  border-color: rgba(21, 21, 15, 0.56);
 }
 
-.directoryChip:active {
-  transform: translateY(1px);
+.unitNavLink[data-active="true"] {
+  background: var(--color-gold-aged);
+  border-color: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+}
+
+.unitNavLink:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.unitProgress {
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 3px;
+  background: rgba(21, 21, 15, 0.14);
+  overflow: hidden;
+}
+
+.unitProgressFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-gold-aged);
+  transform-origin: left center;
+  transition: transform 180ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-  .directoryChip,
-  .mapFrame {
+  .unitNavLink,
+  .mapFrame,
+  .unitProgressFill {
     transition: none;
   }
-
-  .directoryChip:active {
-    transform: none;
-  }
-}
-
-.directoryChip:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
 }
 
 /* ---------------- Bloco de unidade ----------------
@@ -194,7 +226,12 @@
    canais de contato. Sem alternância de fundo por unidade — só spacing e
    divisor separam um bloco do próximo. */
 .unitBlock {
-  scroll-margin-top: var(--anchor-offset);
+  /* Header fixo + navegação sticky: o título da unidade nunca fica por baixo.
+     html já tem scroll-padding-top: var(--header-height) (globals.css), então
+     aqui entra só a altura da barra sticky — somar o header de novo dobraria
+     o recuo. */
+  scroll-margin-top: var(--unit-nav-height);
+  outline: none;
 }
 
 .unitBlock+.unitBlock {
@@ -277,6 +314,16 @@
   margin-bottom: 12px;
 }
 
+/* Mobile/tablet (coluna única): rótulo e nome da unidade são identificação
+   curta e ficam centralizados; descrição, endereço e canais (texto corrido)
+   seguem à esquerda. No desktop (duas colunas) tudo à esquerda. */
+@media (max-width: 1023px) {
+  .unitEyebrow,
+  .unitTitle {
+    text-align: center;
+  }
+}
+
 .unitDescription {
   margin-bottom: 0;
 }
@@ -300,6 +347,19 @@
 }
 
 /* ---------------- Localização + Google Maps real ---------------- */
+
+.addressLine {
+  display: block;
+  text-wrap: balance;
+}
+
+.addressPart {
+  display: inline-block;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
 
 .addressText {
   margin: 0 0 12px;
@@ -463,26 +523,4 @@
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
-}
-
-/* Exceção consciente à paleta institucional (Seção 12 da tarefa): verde
-   tradicional da marca WhatsApp, pelo valor de reconhecimento imediato da
-   plataforma. Restrita a esta página — não um token global novo. composes
-   importa a classe já hasheada de .btn (layout/altura/radius/largura 100%
-   no mobile), só a cor muda aqui. */
-.btnWhatsApp {
-  composes: btn from "../shared/company-page.module.css";
-  background: #25d366;
-  border-color: #25d366;
-  color: #ffffff;
-}
-
-.btnWhatsApp:hover {
-  background: #1fb958;
-  border-color: #1fb958;
-}
-
-.btnWhatsApp:focus-visible {
-  outline: 3px solid #128c42;
-  outline-offset: 2px;
 }
