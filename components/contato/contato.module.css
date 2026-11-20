@@ -585,3 +585,19 @@
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
 }
+
+/* Rodada 7 — desktop: botões de canal com largura uniforme (coluna de ações
+   alinhada entre linhas) e Google Maps/Waze ocupando a largura do mapa. */
+@media (min-width: 1280px) {
+  .channelRow > a {
+    flex: none;
+    width: 240px;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mapActions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

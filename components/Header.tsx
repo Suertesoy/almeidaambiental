@@ -57,6 +57,23 @@ export default function Header() {
             <BrandMark brand={activeBrand} variant="branca" className="logo-image" />
           </Link>
 
+          <nav className="header-nav" aria-label={t.header.mainMenu}>
+            <ul className="header-nav-list">
+              {menuItems.map((item) => {
+                const href = item.kind === "brand" ? localizeHref(item.brand.href, locale) : item.href;
+                const label = item.kind === "brand" ? item.brand.name : item.label;
+                const key = item.kind === "brand" ? item.brand.id : item.href;
+                return (
+                  <li key={key}>
+                    <Link href={href} className="header-nav-link" aria-current={isCurrentRoute(href) ? "page" : undefined}>
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
           <div className="header-right">
             <div className="lang-area" role="group" aria-label={t.header.languageGroupLabel}>
               <Link
@@ -74,17 +91,6 @@ export default function Header() {
                 <img src="/brand/flag-us.png" alt="" className="lang-flag" aria-hidden="true" /> EN
               </Link>
             </div>
-
-            <button
-              type="button"
-              className="hamburger-btn"
-              aria-expanded={menuOpen}
-              aria-controls="site-menu"
-              aria-label={menuOpen ? t.header.closeMenu : t.header.openMenu}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
-            </button>
           </div>
         </div>
 

@@ -129,9 +129,16 @@
     align-self: end;
   }
 
+  /* Desktop: o palco sangra até a borda direita da viewport (os
+     equipamentos laterais saem da tela, não de uma caixa) e esmaece na
+     borda esquerda, onde encontra o texto — nenhum corte seco. */
   .heroStage {
     grid-area: stage;
     min-height: 430px;
+    width: auto;
+    margin-right: calc(-1 * max(clamp(20px, 6vw, 64px), (100vw - 1320px) / 2 + clamp(20px, 6vw, 64px)));
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14%);
+    mask-image: linear-gradient(to right, transparent 0, #000 14%);
   }
 
   .heroCopy {
@@ -141,6 +148,14 @@
 
   .heroLogo {
     width: clamp(190px, 16vw, 260px);
+  }
+}
+
+/* >= 1280px: coluna de texto larga o bastante para os dois CTAs lado a
+   lado (primário + secundário), o palco continua sangrando à direita. */
+@media (min-width: 1280px) {
+  .heroGrid {
+    grid-template-columns: minmax(580px, 0.9fr) minmax(0, 1.2fr);
   }
 }
 

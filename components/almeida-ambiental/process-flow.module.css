@@ -217,12 +217,14 @@
   .main {
     max-width: none;
     margin: 0;
-    grid-template-columns: auto var(--link-w) auto var(--link-w) auto var(--link-w) minmax(0, auto) var(--link-w) auto;
+    /* Rodada 7: os conectores são elásticos (1fr, piso --link-w) — o diagrama
+       ocupa toda a largura do container em vez de ficar encostado à esquerda. */
+    grid-template-columns: auto minmax(var(--link-w), 1fr) auto minmax(var(--link-w), 1fr) auto minmax(var(--link-w), 1fr) minmax(0, auto) minmax(var(--link-w), 1fr) auto;
     grid-template-areas:
       "diag ldiag coleta lcoleta triagem fork tritura merge destino"
       "diag ldiag coleta lcoleta triagem fork descar merge destino";
     align-items: center;
-    justify-content: start;
+    justify-content: stretch;
     row-gap: 14px;
   }
 
