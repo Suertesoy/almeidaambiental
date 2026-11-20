@@ -154,3 +154,71 @@ export function disposeObjectTree(root: THREE.Object3D) {
     }
   });
 }
+
+/**
+ * Enquadramento justo para o visualizador INTERATIVO do catálogo.
+ *
+ * Diferente de `computeFraming` (usado pela coreografia, que continua
+ * intocado), aqui a distância não vem de uma folga multiplicativa fixa: é a
+ * MENOR distância em que os 8 cantos da caixa envolvente (mais pontos extras,
+ * ex.: a sombra de contato) ficam dentro de `fill` da meia-largura/meia-altura
+ * do quadro — em TODOS os azimutes (varredura de 360°) e nas elevações
+ * informadas, com projeção em perspectiva exata (profundidade de cada ponto).
+ * Resultado: o equipamento ocupa a fração pretendida do palco no pior ângulo e
+ * não é cortado ao girar, sem depender de um fator de segurança grosseiro.
+ */
+export function computeFitFraming(
+  boxSize: THREE.Vector3,
+  aspect: number,
+  cameraConfig: Equipment3DConfig["camera"],
+  opts: { fill: number; elevationsDeg: number[]; extraPoints?: THREE.Vector3[]; azimuthStepDeg?: number }
+) {
+  const fovRad = THREE.MathUtils.degToRad(cameraConfig.fov);
+  const tanV = Math.tan(fovRad / 2);
+  const tanH = tanV * Math.max(aspect, 0.4);
+  const target = new THREE.Vector3(0, boxSize.y * (0.5 + (cameraConfig.targetYOffsetRatio ?? 0)), 0);
+
+  const points: THREE.Vector3[] = [];
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      for (const y of [0, boxSize.y]) {
+        points.push(new THREE.Vector3((sx * boxSize.x) / 2, y, (sz * boxSize.z) / 2));
+      }
+    }
+  }
+  if (opts.extraPoints) points.push(...opts.extraPoints);
+  const rel = points.map((p) => p.clone().sub(target));
+
+  const dir = new THREE.Vector3();
+  const right = new THREE.Vector3();
+  const up = new THREE.Vector3();
+  const worldUp = new THREE.Vector3(0, 1, 0);
+  const step = opts.azimuthStepDeg ?? 10;
+  let distance = 0;
+
+  for (const elDeg of opts.elevationsDeg) {
+    const el = THREE.MathUtils.degToRad(elDeg);
+    for (let azDeg = 0; azDeg < 360; azDeg += step) {
+      const az = THREE.MathUtils.degToRad(azDeg);
+      dir.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)).normalize();
+      right.crossVectors(worldUp, dir).normalize();
+      up.crossVectors(dir, right).normalize();
+      for (const q of rel) {
+        const along = q.dot(dir);
+        const x = Math.abs(q.dot(right));
+        const y = Math.abs(q.dot(up));
+        distance = Math.max(distance, along + x / (opts.fill * tanH), along + y / (opts.fill * tanV));
+      }
+    }
+  }
+
+  const azRad = THREE.MathUtils.degToRad(cameraConfig.azimuthDeg);
+  const elRad = THREE.MathUtils.degToRad(cameraConfig.elevationDeg);
+  const startDir = new THREE.Vector3(
+    Math.sin(azRad) * Math.cos(elRad),
+    Math.sin(elRad),
+    Math.cos(azRad) * Math.cos(elRad)
+  ).normalize();
+  const position = target.clone().addScaledVector(startDir, distance);
+  return { position, target, distance };
+}

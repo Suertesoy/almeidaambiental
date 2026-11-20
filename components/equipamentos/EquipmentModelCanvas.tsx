@@ -6,11 +6,38 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Equipment3DConfig } from "../../lib/equipamentos-3d";
 import {
-  computeFraming,
+  computeFitFraming,
   createStudioEnvironment,
   disposeObjectTree,
   positionStudioLights,
 } from "../../lib/three-studio";
+
+/* ---- Enquadramento (catálogo) ----
+   Fração da meia-largura/meia-altura do palco que o equipamento pode ocupar
+   NO PIOR ângulo da varredura de 360° (ver computeFitFraming). No ângulo
+   típico ele ocupa um pouco menos — por isso o valor é alto. Mobile usa
+   menos: palco pequeno e rolagem por toque pedem mais respiro. */
+const FIT_FILL_DESKTOP = 0.96;
+const FIT_FILL_MOBILE = 0.88;
+const MOBILE_STAGE_MAX_WIDTH = 640;
+/* Faixa de elevação permitida (arraste, hover e teclado) em relação à
+   elevação inicial do modelo. O enquadramento é calculado para ela inteira,
+   então nenhuma inclinação permitida corta o equipamento. */
+const ELEVATION_BELOW_DEG = 14;
+const ELEVATION_ABOVE_DEG = 20;
+
+/* ---- Hover: o cursor empurra o modelo ----
+   Cada pixel de movimento do mouse (sem botão) acrescenta rotação PENDENTE;
+   a cada frame uma fração dela é aplicada (amortecimento exponencial, TAU).
+   Isso dá inércia (continua um instante após o cursor parar e desacelera
+   sozinho) e é relativo, então ao entrar, sair ou voltar de um arraste não há
+   salto de orientação. */
+const HOVER_DEG_PER_PX_AZ = 0.26;
+const HOVER_DEG_PER_PX_EL = 0.1;
+const HOVER_MAX_PENDING_AZ = 75;
+const HOVER_MAX_PENDING_EL = 14;
+const HOVER_TAU_MS = 220;
+const HOVER_RESUME_DELAY_MS = 280;
 
 export type EquipmentModelCanvasProps = {
   config: Equipment3DConfig;
@@ -104,6 +131,21 @@ export default function EquipmentModelCanvas({
     const rimLight = new THREE.DirectionalLight(0xffffff, 0.45);
     scene.add(keyLight, keyLight.target, rimLight, rimLight.target);
 
+    let needsRender = true;
+    const frameFor = (size: THREE.Vector3) => {
+      const w = Math.max(container.clientWidth, 1);
+      const h = Math.max(container.clientHeight, 1);
+      const base = config.camera.elevationDeg;
+      return computeFitFraming(size, w / h, config.camera, {
+        fill: w < MOBILE_STAGE_MAX_WIDTH ? FIT_FILL_MOBILE : FIT_FILL_DESKTOP,
+        elevationsDeg: [
+          Math.max(2, base - ELEVATION_BELOW_DEG),
+          base,
+          Math.min(60, base + ELEVATION_ABOVE_DEG),
+        ],
+      });
+    };
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
     controls.enabled = interactive;
@@ -116,12 +158,86 @@ export default function EquipmentModelCanvas({
     controls.enablePan = false;
     controls.enableZoom = false;
     controls.rotateSpeed = 0.72;
-    controls.minPolarAngle = Math.PI * 0.12;
-    controls.maxPolarAngle = Math.PI * 0.485;
+    const baseElevation = config.camera.elevationDeg;
+    const elevationLow = Math.max(2, baseElevation - ELEVATION_BELOW_DEG);
+    const elevationHigh = Math.min(60, baseElevation + ELEVATION_ABOVE_DEG);
+    controls.minPolarAngle = THREE.MathUtils.degToRad(90 - elevationHigh);
+    controls.maxPolarAngle = THREE.MathUtils.degToRad(90 - elevationLow);
     controls.autoRotate = Boolean(autoRotate && !prefersReducedMotion && !userInteractedRef.current);
     controls.autoRotateSpeed = 0.55;
 
+    // Hover: só mouse real (hover + ponteiro fino), nunca toque, e nunca com
+    // movimento reduzido. O arraste (OrbitControls) tem prioridade absoluta: o
+    // hover é suspenso durante ele e por um instante depois (inércia do
+    // próprio OrbitControls), e nunca soma força ao mesmo tempo.
+    const hoverEnabled =
+      interactive &&
+      !prefersReducedMotion &&
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const hover = {
+      pendingAz: 0,
+      pendingEl: 0,
+      lastX: 0,
+      lastY: 0,
+      tracking: false,
+      dragging: false,
+      resumeAt: 0,
+      travelled: 0,
+    };
+    const canvasEl = renderer.domElement;
+    const onHoverMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse" || hover.dragging || resetAnimRef.current.active) {
+        hover.tracking = false;
+        return;
+      }
+      if (hover.tracking) {
+        const dx = event.clientX - hover.lastX;
+        const dy = event.clientY - hover.lastY;
+        hover.pendingAz = THREE.MathUtils.clamp(
+          hover.pendingAz + dx * HOVER_DEG_PER_PX_AZ,
+          -HOVER_MAX_PENDING_AZ,
+          HOVER_MAX_PENDING_AZ
+        );
+        hover.pendingEl = THREE.MathUtils.clamp(
+          hover.pendingEl + dy * HOVER_DEG_PER_PX_EL,
+          -HOVER_MAX_PENDING_EL,
+          HOVER_MAX_PENDING_EL
+        );
+        hover.travelled += Math.abs(dx) + Math.abs(dy);
+        // A rotação automática lenta cede ao cursor (um único sistema por vez).
+        if (hover.travelled > 4 && !userInteractedRef.current) {
+          userInteractedRef.current = true;
+          controls.autoRotate = false;
+          callbacksRef.current.onUserInteract();
+        }
+      }
+      hover.lastX = event.clientX;
+      hover.lastY = event.clientY;
+      hover.tracking = true;
+    };
+    const onHoverLeave = () => {
+      hover.tracking = false;
+    };
+    if (hoverEnabled) {
+      canvasEl.addEventListener("pointermove", onHoverMove);
+      canvasEl.addEventListener("pointerleave", onHoverLeave);
+    }
+    const handleControlEnd = () => {
+      hover.dragging = false;
+      hover.tracking = false;
+      hover.resumeAt = performance.now() + HOVER_RESUME_DELAY_MS;
+    };
+    controls.addEventListener("end", handleControlEnd);
+    const handleControlChange = () => {
+      needsRender = true;
+    };
+    controls.addEventListener("change", handleControlChange);
+
     const handleControlStart = () => {
+      hover.dragging = true;
+      hover.pendingAz = 0;
+      hover.pendingEl = 0;
+      hover.tracking = false;
       resetAnimRef.current.active = false;
       if (!userInteractedRef.current) {
         userInteractedRef.current = true;
@@ -152,14 +268,13 @@ export default function EquipmentModelCanvas({
         root.position.set(-center.x, -box.min.y, -center.z);
         modelGroup.add(root);
 
-        const currentAspect =
-          Math.max(container.clientWidth, 1) / Math.max(container.clientHeight, 1);
-        const framing = computeFraming(size, currentAspect, config.camera);
+        const framing = frameFor(size);
         camera.position.copy(framing.position);
         controls.target.copy(framing.target);
         controls.minDistance = framing.distance * 0.7;
         controls.maxDistance = framing.distance * 1.4;
         controls.update();
+        needsRender = true;
 
         initialPoseRef.current = {
           position: framing.position.clone(),
@@ -192,6 +307,7 @@ export default function EquipmentModelCanvas({
             shadowMesh.position.y = 0.001;
             shadowMesh.renderOrder = -1;
             modelGroup.add(shadowMesh);
+            needsRender = true;
           },
           undefined,
           () => {
@@ -216,9 +332,10 @@ export default function EquipmentModelCanvas({
       camera.aspect = nextAspect;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
+      needsRender = true;
 
       if (boxSize) {
-        const framing = computeFraming(boxSize, nextAspect, config.camera);
+        const framing = frameFor(boxSize);
         initialPoseRef.current = {
           position: framing.position.clone(),
           target: framing.target.clone(),
@@ -235,16 +352,47 @@ export default function EquipmentModelCanvas({
     const intersectionObserver = new IntersectionObserver(
       (entries) => {
         isVisible = entries[0]?.isIntersecting ?? true;
+        if (isVisible) {
+          lastFrameTime = performance.now();
+          needsRender = true;
+        }
       },
       { threshold: 0.05 }
     );
     intersectionObserver.observe(container);
 
-    const animate = () => {
+    let lastFrameTime = performance.now();
+    const animate = (now: number) => {
       if (disposed) return;
       rafId = window.requestAnimationFrame(animate);
 
+      const dt = Math.min(now - lastFrameTime, 64);
+      lastFrameTime = now;
       if (!isVisible || pausedRef.current) return;
+
+      // Hover: aplica uma fração da rotação pendente, no MESMO passo em que
+      // o OrbitControls atualiza a câmera (nunca dois laços concorrentes).
+      if (
+        hoverEnabled &&
+        !hover.dragging &&
+        now >= hover.resumeAt &&
+        (Math.abs(hover.pendingAz) > 0.01 || Math.abs(hover.pendingEl) > 0.01)
+      ) {
+        const k = 1 - Math.exp(-dt / HOVER_TAU_MS);
+        const stepAz = hover.pendingAz * k;
+        const stepEl = hover.pendingEl * k;
+        hover.pendingAz -= stepAz;
+        hover.pendingEl -= stepEl;
+        const offset = camera.position.clone().sub(controls.target);
+        const spherical = new THREE.Spherical().setFromVector3(offset);
+        spherical.theta -= THREE.MathUtils.degToRad(stepAz);
+        const nextPhi = spherical.phi - THREE.MathUtils.degToRad(stepEl);
+        const clampedPhi = THREE.MathUtils.clamp(nextPhi, controls.minPolarAngle, controls.maxPolarAngle);
+        if (clampedPhi !== nextPhi) hover.pendingEl = 0;
+        spherical.phi = clampedPhi;
+        offset.setFromSpherical(spherical);
+        camera.position.copy(controls.target).add(offset);
+      }
 
       if (resetAnimRef.current.active && initialPoseRef.current) {
         camera.position.lerp(initialPoseRef.current.position, 0.14);
@@ -260,6 +408,10 @@ export default function EquipmentModelCanvas({
       }
 
       controls.update();
+      // Só redesenha quando algo mudou (câmera, resize, volta à viewport):
+      // sem movimento, o laço fica ocioso e não consome GPU.
+      if (!needsRender) return;
+      needsRender = false;
       positionStudioLights(camera, controls.target, keyLight, rimLight);
       renderer.render(scene, camera);
     };
@@ -271,6 +423,10 @@ export default function EquipmentModelCanvas({
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       controls.removeEventListener("start", handleControlStart);
+      controls.removeEventListener("end", handleControlEnd);
+      controls.removeEventListener("change", handleControlChange);
+      canvasEl.removeEventListener("pointermove", onHoverMove);
+      canvasEl.removeEventListener("pointerleave", onHoverLeave);
       controls.dispose();
       disposeObjectTree(modelGroup);
       scene.environment = null;

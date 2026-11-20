@@ -16,6 +16,8 @@ import type { ReactElement } from "react";
 const COPY = {
   pt: {
     navLabel: "Navegar entre os equipamentos do catálogo",
+    hintFine: "Mova para explorar. Arraste para girar.",
+    hintCoarse: "Arraste para girar.",
     description: "Descrição",
     applications: "Aplicações",
     benefits: "Benefícios",
@@ -29,6 +31,8 @@ const COPY = {
   },
   en: {
     navLabel: "Browse the catalog equipment",
+    hintFine: "Move to explore. Drag to rotate.",
+    hintCoarse: "Drag to rotate.",
     description: "Description",
     applications: "Applications",
     benefits: "Benefits",
@@ -115,7 +119,12 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
                 </div>
               )}
 
-              {model3D?.modelCaption && <p className={styles.modelCaption}>{model3D.modelCaption[locale]}</p>}
+              {model3D && (
+                <p className={styles.interactionHint}>
+                  <span className={styles.hintFine}>{t.hintFine}</span>
+                  <span className={styles.hintCoarse}>{t.hintCoarse}</span>
+                </p>
+              )}
             </div>
 
             <div className={styles.itemBody}>

@@ -27,8 +27,6 @@ export type Equipment3DConfig = {
   };
   /** Intensidade da iluminação de estúdio (baseada em estudio.js). */
   environmentIntensity: number;
-  /** Legenda editorial discreta quando o GLB representa uma variante específica. */
-  modelCaption?: Record<Locale, string>;
   /**
    * Ajuste fino da coreografia: quando este modelo é o vizinho da DIREITA do
    * protagonista, ele é empurrado para FORA do quadro (direita) esta fração da
@@ -80,10 +78,6 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowUrl: "/models/equipamentos/apv-100/sombra-contato.png",
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.8,
-    modelCaption: {
-      pt: "Modelo 3D apresentado: Prensa APV 100",
-      en: "3D model shown: APV 100 Baler",
-    },
     displayName: {
       pt: "Prensa APV 100",
       en: "APV 100 Baler",
