@@ -22,10 +22,11 @@ export type EquipmentChoreographyStageProps = {
  * na Home e o Hero da página Almeida Equipamentos.
  *
  * - Um único canvas WebGL reutilizável para toda a sequência.
- * - Carrossel de 3 posições (anterior · destaque · próximo). Arrastar na
- *   horizontal gira o equipamento central; tocar num lateral o traz para o
- *   centro; setas do teclado navegam. A rolagem vertical segue livre
- *   (touch-action: pan-y).
+ * - Coreografia AUTOMÁTICA de 3 posições (anterior · destaque · próximo), na
+ *   mesma escala relativa dos modelos. Sem rotação manual, sem toque e sem
+ *   teclado: é uma apresentação visual, e a página rola livremente por cima
+ *   dela. A rotação interativa pertence ao catálogo técnico
+ *   (EquipmentModelStage), que é outro componente.
  * - Com prefers-reduced-motion: apresenta apenas o poster estático inicial,
  *   sem rotação e sem troca automática.
  */
@@ -43,7 +44,6 @@ export default function EquipmentChoreographyStage({
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [command, setCommand] = useState<{ seq: number; dir: -1 | 1 } | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -80,14 +80,6 @@ export default function EquipmentChoreographyStage({
   const handleError = useCallback(() => setHasError(true), []);
   const handleActiveChange = useCallback((index: number) => setActiveIndex(index), []);
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-      event.preventDefault();
-      const dir = event.key === "ArrowRight" ? 1 : -1;
-      setCommand((prev) => ({ seq: (prev?.seq ?? 0) + 1, dir }));
-    }
-  }, []);
-
   const current = configs[activeIndex] ?? configs[0];
   if (!current) return null;
 
@@ -99,12 +91,10 @@ export default function EquipmentChoreographyStage({
       className={`${styles.root} ${styles.rootChoreography} ${variant === "home" ? styles.rootHome : ""} ${className ?? ""}`}
       role="region"
       aria-label={
-        showStaticOnly
-          ? current.label[locale]
-          : `${current.label[locale]}. ${locale === "en" ? "Drag to rotate; left and right arrow keys switch equipment." : "Arraste para girar; setas esquerda e direita trocam o equipamento."}`
+        locale === "en"
+          ? `Equipment showcase: ${current.displayName[locale]}`
+          : `Apresentação dos equipamentos: ${current.displayName[locale]}`
       }
-      tabIndex={showStaticOnly ? undefined : 0}
-      onKeyDown={showStaticOnly ? undefined : handleKeyDown}
     >
       {/* Poster inicial e fallback estático para reduced-motion ou ausência de WebGL */}
       <div
@@ -127,7 +117,6 @@ export default function EquipmentChoreographyStage({
         <EquipmentChoreographyCanvas
           configs={configs}
           paddingMultiplier={paddingMultiplier}
-          command={command}
           onReady={handleReady}
           onError={handleError}
           onActiveChange={handleActiveChange}

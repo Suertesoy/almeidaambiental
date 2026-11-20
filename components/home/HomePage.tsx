@@ -86,7 +86,7 @@ const COPY = {
     equipamentosEntryBody:
       "Criada para aperfeiçoar os processos do Grupo Almeida, transforma décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.",
     equipamentosHeadline: "Engenharia para movimentar mais com menos",
-    equipamentosBody: "Conhecimento de campo conectado a tecnologias internacionais.",
+    equipamentosBody: "Tecnologia internacional.",
     equipamentosCta: "Conheça Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
     saturnoEntryHeadline: "Experiência regional. Força de grupo.",
@@ -124,7 +124,7 @@ const COPY = {
     equipamentosEntryBody:
       "Created to improve Grupo Almeida's processes, it turns decades of industry experience into technology applied to waste management.",
     equipamentosHeadline: "Engineering to move more with less",
-    equipamentosBody: "Field knowledge, paired with international technology.",
+    equipamentosBody: "International technology.",
     equipamentosCta: "See Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
     saturnoEntryHeadline: "Regional expertise. Backed by Grupo Almeida.",
@@ -200,30 +200,27 @@ export default function HomePage({ locale }: { locale: Locale }) {
                     {t.ambientalEntryHeadlinePrefix}
                     <span className={styles.gold}>{t.ambientalEntryHeadlineGold}</span>
                   </h2>
-                  <p className={styles.body}>{t.ambientalEntryBody}</p>
+                  <p className={`${styles.body} ${styles.bodyLeft}`}>{t.ambientalEntryBody}</p>
                 </Reveal>
               </div>
 
-              <Reveal className={styles.processHeader} style={{ transitionDelay: "120ms" }}>
-                <h3 className={styles.headlineSecondary}>{t.ambientalProcessHeadline}</h3>
+              {/* Vídeo da operação: full bleed no mobile (sem margens nem raio). */}
+              <Reveal className={`${styles.videoWide} ${styles.videoBleed}`} style={{ transitionDelay: "120ms" }}>
+                <AmbientVideo
+                  src="/videos/captacao-2026/visao-geral.mp4"
+                  poster="/images/captacao-2026/visao-geral-poster.webp"
+                  ariaLabel={
+                    locale === "en"
+                      ? "Overview of waste handling and sorting operations at Almeida Ambiental"
+                      : "Visão geral da operação de movimentação e triagem de resíduos na Almeida Ambiental"
+                  }
+                  style={{ objectPosition: "center 54%" }}
+                />
               </Reveal>
 
-              <Reveal className={`${styles.duo} ${styles.duoMediaRight}`} style={{ transitionDelay: "120ms" }}>
-                <div className={styles.duoContent}>
-                  <p className={styles.body}>{t.ambientalProcessBody}</p>
-                </div>
-                <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
-                  <AmbientVideo
-                    src="/videos/captacao-2026/visao-geral.mp4"
-                    poster="/images/captacao-2026/visao-geral-poster.webp"
-                    ariaLabel={
-                      locale === "en"
-                        ? "Overview of waste handling and sorting operations at Almeida Ambiental"
-                        : "Visão geral da operação de movimentação e triagem de resíduos na Almeida Ambiental"
-                    }
-                    style={{ objectPosition: "center 54%" }}
-                  />
-                </div>
+              <Reveal className={styles.processHeader} style={{ transitionDelay: "120ms" }}>
+                <h3 className={styles.headlineSecondary}>{t.ambientalProcessHeadline}</h3>
+                <p className={`${styles.body} ${styles.bodyLeft}`}>{t.ambientalProcessBody}</p>
               </Reveal>
 
               {/* Mesmo componente (e mesmo progresso por rolagem) da página
@@ -315,7 +312,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
               </div>
 
               <Reveal className={`${styles.duo} ${styles.duoMediaLeft} ${styles.duoMediaNarrow}`} style={{ transitionDelay: "120ms" }}>
-                <div className={`${styles.duoMedia} ${styles.duoMedia4x3}`}>
+                <div className={`${styles.duoMedia} ${styles.duoMedia4x3} ${styles.videoBleed}`}>
                   <AmbientVideo
                     src="/videos/captacao-2026/cada-etapa.mp4"
                     poster="/images/captacao-2026/cada-etapa-poster.webp"
@@ -327,7 +324,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
                     style={{ objectPosition: "56% 52%" }}
                   />
                 </div>
-                <div className={styles.duoContent}>
+                <div className={`${styles.duoContent} ${styles.saturnoContent}`}>
                   <h3 className={styles.headlineSecondary}>{t.saturnoHeadline}</h3>
                   <p className={styles.body}>{t.saturnoBody}</p>
                   <div className={styles.ctaRow}>

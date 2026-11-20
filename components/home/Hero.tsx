@@ -16,13 +16,15 @@ const COPY = {
     ariaLabel: "Grupo Almeida — 40 anos",
     headlinePrefix: "Transformando resíduo em ",
     headlineGold: "resultado",
-    cta: "Conheça nossa história",
+    ctaPrimary: "Conheça nossas empresas",
+    ctaSecondary: "Conheça nossa história",
   },
   en: {
     ariaLabel: "Grupo Almeida — 40 years",
     headlinePrefix: "Turning waste into ",
     headlineGold: "results",
-    cta: "See our story",
+    ctaPrimary: "See our companies",
+    ctaSecondary: "See our story",
   },
 } as const;
 
@@ -128,12 +130,23 @@ export default function Hero({ locale }: { locale: Locale }) {
           {t.headlinePrefix}
           <span className={styles.gold}>{t.headlineGold}</span>
         </h1>
-        {/* /historia é a experiência editorial de storytelling cronológico
-            (1985–2026) — navegação client-side via next/link, não mais uma
-            âncora dentro da própria Home. */}
-        <Link className={styles.heroCta} href={localizeHref("/historia", locale)}>
-          {t.cta}
-        </Link>
+        {/* Mesma estrutura dos heroes das empresas: primário amarelo em cima,
+            secundário discreto abaixo (empilhados no mobile). O primário é
+            uma âncora para a seção da Almeida Ambiental na própria Home
+            (rolagem suave via CSS, respeitando prefers-reduced-motion; o
+            deslocamento do header fixo vem de scroll-padding-top em
+            globals.css). O secundário segue para /historia. */}
+        <div className={styles.heroCtaRow}>
+          <a className={`${styles.btn} ${styles.btnSolidGold}`} href="#almeida-ambiental">
+            {t.ctaPrimary}
+          </a>
+          <Link
+            className={`${styles.btn} ${styles.btnOutlineOnDark} ${styles.btnHeroSecondary}`}
+            href={localizeHref("/historia", locale)}
+          >
+            {t.ctaSecondary}
+          </Link>
+        </div>
       </div>
     </section>
   );

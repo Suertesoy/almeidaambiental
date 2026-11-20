@@ -48,10 +48,12 @@ html:has([data-page="home"]) {
   position: relative;
 }
 
-/* A âncora do chevron do Hero (#almeida-ambiental) nunca deve ficar escondida
-   atrás do Header fixo. */
+/* Âncora do CTA "Conheça nossas empresas" do Hero (#almeida-ambiental). O
+   deslocamento do Header fixo já vem de `html { scroll-padding-top }`
+   (globals.css); somar scroll-margin aqui dobraria o recuo e deixaria um
+   trecho do Hero aparecendo acima da seção. */
 .ambientalEntrySection {
-  scroll-margin-top: var(--anchor-offset);
+  scroll-margin-top: 0;
 }
 
 /* Mesmo mecanismo de --role-* de components/shared/company-page.module.css
@@ -190,6 +192,15 @@ html:has([data-page="home"]) {
   margin-bottom: 0;
 }
 
+/* Parágrafos de leitura ficam alinhados à esquerda mesmo sob títulos
+   centralizados: o bloco mantém a medida confortável e centraliza como
+   caixa, não como texto. */
+.chapterIntro .bodyLeft,
+.bodyLeft {
+  width: 100%;
+  text-align: left;
+}
+
 @media (min-width: 768px) {
   .signatureLogo {
     width: clamp(180px, 16vw, 230px);
@@ -280,19 +291,73 @@ html:has([data-page="home"]) {
   margin-inline: auto;
 }
 
+/* Causa da largura divergente do CTA de Equipamentos: este rodapé é flex
+   column com align-items: center, então a linha do CTA encolhia ao conteúdo
+   e o botão (width: 100% no mobile) só alcançava a largura do texto. A linha
+   passa a ocupar o contêiner inteiro, como nos demais CTAs da Home. */
 .equipamentosFooter .ctaRow {
+  align-self: stretch;
   justify-content: center;
 }
 
-/* Cabeçalho centralizado da linha do processo (Ambiental) e CTA final. */
+/* Cabeçalho da linha do processo (Ambiental): título centralizado, texto
+   explicativo à esquerda numa medida de leitura confortável. */
 .processHeader {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-title-body);
 }
 
 .processHeader .headlineSecondary {
   max-width: 28ch;
-  margin-inline: auto;
-  margin-bottom: 0;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.processHeader .body {
+  max-width: 62ch;
+  margin: 0 auto;
+}
+
+/* Vídeo da operação (Ambiental) e vídeo da Saturno: mesmo tratamento
+   editorial full bleed da página Almeida Ambiental (ver .pillarBleed em
+   almeida-ambiental.module.css) — no mobile alcança as duas bordas do
+   viewport, sem raio. No desktop segue contido na grade. */
+.videoWide {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 16 / 9;
+}
+
+.videoWide video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .videoWide {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+@media (max-width: 767px) {
+  .videoBleed,
+  .videoBleed.duoMedia {
+    margin-inline: calc(-1 * clamp(20px, 6vw, 64px));
+    border-radius: 0;
+  }
+
+  /* Largura explícita: `width: 100%` do .videoWide ignoraria as margens
+     negativas e o vídeo só sangraria de um lado. */
+  .videoWide.videoBleed {
+    width: calc(100% + 2 * clamp(20px, 6vw, 64px));
+    border-radius: 0;
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .ctaRow.ctaRowCenter {
@@ -429,46 +494,53 @@ html:has([data-page="home"]) {
   text-wrap: balance;
 }
 
-.heroCta {
-  display: inline-flex;
-  align-items: center;
-  height: 52px;
+/* CTAs do Hero: mesma estrutura (.btn de editorial.module.css) dos demais
+   CTAs do site; a hierarquia é só visual — primário amarelo, secundário
+   contorno claro com leve blur sobre o vídeo. Mobile (<= 767px): empilhados,
+   primário em cima, ambos na largura útil inteira e com a mesma altura. */
+.heroCtaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 32px;
-  padding-inline: 26px;
-  border: 1px solid rgba(247, 246, 241, 0.55);
-  border-radius: 4px;
-  color: var(--color-background);
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  backdrop-filter: blur(2px);
-  transition:
-    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.heroCta:hover {
+.btnHeroSecondary {
+  border-color: rgba(247, 246, 241, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.btnHeroSecondary:hover {
   background: rgba(247, 246, 241, 0.12);
   border-color: rgba(247, 246, 241, 0.78);
 }
 
-.heroCta:active {
-  transform: translateY(1px);
+/* O anel verde padrão some sobre o vídeo escuro. */
+.heroCtaRow .btn:focus-visible {
+  outline-color: var(--color-background);
 }
 
-.heroCta:focus-visible {
-  outline: 3px solid var(--color-background);
-  outline-offset: 2px;
-}
-
-/* Botão como ação (Checkpoint B, Seção 47): ocupa a largura do
-   .heroContent que já envolve eyebrow/headline acima dele. */
 @media (max-width: 767px) {
-  .heroCta {
+  .heroCtaRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .heroCtaRow .btn {
     width: 100%;
-    justify-content: center;
+    height: auto;
+    min-height: 52px;
+    padding-block: 14px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Sem o indicador de rolagem, o hero não precisa do respiro inferior
+     largo: dois botões empilhados ocupam o espaço e o vídeo segue inteiro. */
+  .heroContent {
+    padding-bottom: calc(clamp(28px, 5vh, 48px) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -702,11 +774,38 @@ html:has([data-page="home"]) {
   font-size: 13px;
 }
 
+/* Saturno: título centralizado, parágrafo explicativo à esquerda, CTA no
+   mesmo eixo do título. */
+.saturnoContent .headlineSecondary {
+  max-width: none;
+  text-align: center;
+}
+
+.saturnoContent .body {
+  text-align: left;
+}
+
+.saturnoContent .ctaRow {
+  justify-content: center;
+}
+
 /* Manifesto: segunda linha do capítulo de fechamento. A composição segue o
    resto do site (imagem + texto à esquerda), não um bloco centralizado de
    outra página. */
 .manifesto .headlineSecondary {
   max-width: none;
+  text-align: center;
+}
+
+/* Título e subtítulo no mesmo eixo central; CTA acompanha o eixo. */
+.manifesto .body {
+  max-width: none;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.manifesto .ctaRow {
+  justify-content: center;
 }
 
 .manifesto {
@@ -716,12 +815,7 @@ html:has([data-page="home"]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroPoster,
-  .heroCta {
+  .heroPoster {
     transition: none;
-  }
-
-  .heroCta:active {
-    transform: none;
   }
 }

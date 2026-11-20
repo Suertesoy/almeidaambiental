@@ -17,6 +17,15 @@ import { PROCESS_STEP_ICONS } from "../icons";
  * Sem JS, ou com prefers-reduced-motion, o diagrama nasce inteiro aceso
  * (estado padrão do CSS), então o conteúdo é compreensível sem animação.
  *
+ * Reversibilidade: o estado visual é função PURA da posição atual de rolagem
+ * (P). Nada é marcado como "concluído" de forma permanente. Os elementos são
+ * consultados no DOM a cada frame — antes, a lista de nós era capturada uma
+ * vez, e como o componente Node era declarado dentro do render, qualquer
+ * re-render do pai (ex.: o contador de impacto da Home) remontava os <li>:
+ * o loop passava a atualizar nós órfãos e os novos ficavam presos em
+ * data-state="current" (amarelos) enquanto as linhas continuavam
+ * reversíveis.
+ *
  * Mobile: coluna vertical com bifurcação em duas colunas. Desktop (≥900px):
  * mesma sequência na horizontal, com a bifurcação em duas linhas.
  */
@@ -60,6 +69,17 @@ function Line({ win, dir, className = "" }: { win: Win; dir: "v" | "h" | "hc" | 
   );
 }
 
+/** Nó de etapa. Declarado no nível do módulo: identidade estável entre renders. */
+function Node({ label, index, at, className = "" }: { label: string; index: number; at: number; className?: string }) {
+  const Icon = PROCESS_STEP_ICONS[index];
+  return (
+    <li className={`${styles.node} ${className}`} data-at={at} data-state="current">
+      {Icon && <Icon className={styles.icon} />}
+      <span className={styles.name}>{label}</span>
+    </li>
+  );
+}
+
 export default function ProcessFlowDiagram({ steps, ariaLabel, description }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -68,8 +88,6 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description }: Pr
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const lines = Array.from(root.querySelectorAll<HTMLElement>("[data-from]"));
-    const nodes = Array.from(root.querySelectorAll<HTMLElement>("[data-at]"));
     root.dataset.live = "true";
 
     let frame = 0;
@@ -81,13 +99,21 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description }: Pr
       const span = rect.height + vh * 0.1;
       const P = Math.min(1, Math.max(0, (start - rect.top) / span));
 
+      const lines = root.querySelectorAll<HTMLElement>("[data-from]");
+      const nodes = Array.from(root.querySelectorAll<HTMLElement>("[data-at]"));
+
       for (const el of lines) {
         const a = Number(el.dataset.from);
         const b = Number(el.dataset.to);
         el.style.setProperty("--p", String(Math.min(1, Math.max(0, (P - a) / (b - a)))));
       }
       // Estado dos nós: "current" = último patamar aceso; anteriores = "done".
-      const lit = nodes.map((el) => P >= Number(el.dataset.at));
+      // Antes de o diagrama começar a entrar (P = 0) nenhuma etapa está acesa:
+      // o estado inicial é restaurado ao voltar ao topo.
+      const lit = nodes.map((el) => {
+        const at = Number(el.dataset.at);
+        return at === 0 ? P > 0 : P >= at;
+      });
       let lastLitAt = -1;
       nodes.forEach((el, i) => {
         if (lit[i]) lastLitAt = Math.max(lastLitAt, Number(el.dataset.at));
@@ -110,30 +136,20 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description }: Pr
     };
   }, []);
 
-  const Node = ({ index, at, className = "" }: { index: number; at: number; className?: string }) => {
-    const Icon = PROCESS_STEP_ICONS[index];
-    return (
-      <li className={`${styles.node} ${className}`} data-at={at} data-state="current">
-        {Icon && <Icon className={styles.icon} />}
-        <span className={styles.name}>{steps[index]}</span>
-      </li>
-    );
-  };
-
   return (
     <div ref={rootRef} className={styles.root} role="group" aria-label={ariaLabel}>
       <p className={styles.srOnly}>{description}</p>
       <div className={styles.flow} aria-hidden="false">
         <ol className={styles.main}>
-          <Node index={0} at={0} className={styles.nDiag} />
+          <Node label={steps[0]} index={0} at={0} className={styles.nDiag} />
           <li className={`${styles.link} ${styles.lDiag}`} aria-hidden="true">
             <Line win={T.line1} dir="v" />
           </li>
-          <Node index={1} at={T.coleta} className={styles.nColeta} />
+          <Node label={steps[1]} index={1} at={T.coleta} className={styles.nColeta} />
           <li className={`${styles.link} ${styles.lColeta}`} aria-hidden="true">
             <Line win={T.line2} dir="v" />
           </li>
-          <Node index={2} at={T.triagem} className={styles.nTriagem} />
+          <Node label={steps[2]} index={2} at={T.triagem} className={styles.nTriagem} />
 
           {/* Bifurcação: dois caminhos alternativos a partir da Triagem */}
           <li className={`${styles.link} ${styles.fork}`} aria-hidden="true">
@@ -142,15 +158,15 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description }: Pr
             <Line win={T.forkDrops} dir="v" className={styles.forkDropA} />
             <Line win={T.forkDrops} dir="v" className={styles.forkDropB} />
           </li>
-          <Node index={3} at={T.branches} className={styles.nTritura} />
-          <Node index={4} at={T.branches} className={styles.nDescar} />
+          <Node label={steps[3]} index={3} at={T.branches} className={styles.nTritura} />
+          <Node label={steps[4]} index={4} at={T.branches} className={styles.nDescar} />
           <li className={`${styles.link} ${styles.merge}`} aria-hidden="true">
             <Line win={T.mergeDrops} dir="v" className={styles.mergeDropA} />
             <Line win={T.mergeDrops} dir="v" className={styles.mergeDropB} />
             <Line win={T.mergeBar} dir="hc" className={styles.mergeBar} />
             <Line win={T.mergeTrunk} dir="v" className={styles.mergeTrunk} />
           </li>
-          <Node index={5} at={T.destino} className={styles.nDestino} />
+          <Node label={steps[5]} index={5} at={T.destino} className={styles.nDestino} />
         </ol>
       </div>
     </div>
