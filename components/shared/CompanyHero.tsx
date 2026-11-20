@@ -60,6 +60,11 @@ export type CompanyHeroProps = {
   meta?: string[];
   /** Metade de saída de uma fronteira de território ancorada neste Hero. */
   boundary?: { id: BrandBoundaryId; surface: BrandBoundarySurface };
+  /**
+   * Logotipo oficial que substitui visualmente eyebrow + tÃ­tulo. O H1 textual
+   * continua no HTML (visualmente oculto) para acessibilidade e SEO.
+   */
+  titleLogo?: { src: string };
   primaryCta: CompanyHeroCta;
   secondaryCta?: CompanyHeroCta;
 };
@@ -93,6 +98,7 @@ export default function CompanyHero({
   material,
   meta,
   boundary,
+  titleLogo,
   primaryCta,
   secondaryCta,
 }: CompanyHeroProps) {
@@ -167,9 +173,19 @@ export default function CompanyHero({
         </div>
       )}
 
-      <div className={`${styles.content} ${editorial ? styles.editorialContent : ""}`}>
-        <p className={styles.eyebrow}>{eyebrow}</p>
-        <h1 className={styles.title}>{title}</h1>
+      <div className={`${styles.content} ${editorial ? styles.editorialContent : ""} ${titleLogo ? styles.hasTitleLogo : ""}`}>
+        {titleLogo ? (
+          <>
+            <img src={titleLogo.src} alt="" aria-hidden="true" className={styles.titleLogo} />
+            <p className={`${styles.eyebrow} ${styles.srOnly}`}>{eyebrow}</p>
+            <h1 className={`${styles.title} ${styles.srOnly}`}>{title}</h1>
+          </>
+        ) : (
+          <>
+            <p className={styles.eyebrow}>{eyebrow}</p>
+            <h1 className={styles.title}>{title}</h1>
+          </>
+        )}
         <p className={styles.lede}>{lede}</p>
         {subcopy && <p className={styles.subcopy}>{subcopy}</p>}
 

@@ -65,7 +65,8 @@
   cursor: default;
 }
 
-/* Na coreografia compartilhada não há interação manual e não captura rolagem */
+/* Coreografia: arraste horizontal gira o equipamento central; touch-action
+   pan-y deixa a rolagem vertical da página passar normalmente. */
 .canvasChoreography {
   position: absolute;
   inset: 0;
@@ -74,8 +75,7 @@
   height: 100%;
   opacity: 0;
   transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-  touch-action: auto;
+  touch-action: pan-y;
   cursor: default;
 }
 

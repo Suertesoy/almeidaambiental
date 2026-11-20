@@ -404,6 +404,8 @@
   grid-area: media;
   position: relative;
   overflow: hidden;
+  /* Mesmo raio dos botões (4px): cantos discretos em fotos e vídeos internos. */
+  border-radius: 4px;
 }
 
 .duoMedia img,

@@ -55,3 +55,28 @@
   margin-top: clamp(44px, 7vw, 72px);
 }
 
+
+/* ---------------- Mobile: simplificação das seções de pilar ----------------
+   Os destaques (tags) de Coleta e Triagem saem do mobile (continuam no
+   desktop). Sem eles, o respiro vertical das seções encolhe para não deixar
+   vão entre o texto e a próxima imagem, e as imagens de Coleta e Trituração
+   ocupam a largura toda da tela (composição editorial). Triagem mantém a
+   imagem recuada para alternar o ritmo — não é full-bleed indiscriminado. */
+@media (max-width: 767px) {
+  .pillarHighlights {
+    display: none;
+  }
+
+  .materialTerritory .pillarSection {
+    padding-top: clamp(28px, 8vw, 40px);
+  }
+
+  .materialTerritory .pillarSection:not(:last-child) {
+    padding-bottom: clamp(20px, 6vw, 32px);
+  }
+
+  .pillarBleed {
+    margin-inline: calc(-1 * clamp(20px, 6vw, 64px));
+    border-radius: 0 !important;
+  }
+}

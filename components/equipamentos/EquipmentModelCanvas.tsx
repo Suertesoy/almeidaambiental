@@ -107,6 +107,10 @@ export default function EquipmentModelCanvas({
     const controls = new OrbitControls(camera, renderer.domElement);
     controlsRef.current = controls;
     controls.enabled = interactive;
+    // OrbitControls força `touch-action: none` no canvas, o que prende a rolagem
+    // vertical da página sob o dedo. `pan-y` devolve a rolagem e mantém o
+    // arraste horizontal para girar.
+    if (interactive) renderer.domElement.style.touchAction = "pan-y";
     controls.enableDamping = true;
     controls.dampingFactor = 0.065;
     controls.enablePan = false;

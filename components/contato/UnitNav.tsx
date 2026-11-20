@@ -27,7 +27,8 @@ type Props = {
  */
 export default function UnitNav({ items, ariaLabel, progressLabel, progressTemplate }: Props) {
   const navRef = useRef<HTMLElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  // `pos` = índice da unidade atual + fração já percorrida dentro dela (0–N).
+  // -1 = a primeira unidade ainda não alcançou a barra.
   const [pos, setPos] = useState(-1);
 
   const total = items.length;
@@ -38,23 +39,20 @@ export default function UnitNav({ items, ariaLabel, progressLabel, progressTempl
     const header = document.querySelector<HTMLElement>(".site-header");
     const anchorLine = (header?.getBoundingClientRect().bottom ?? 0) + nav.offsetHeight + 3;
 
-    const tops = items.map((item) => document.getElementById(item.id)?.getBoundingClientRect().top ?? Infinity);
+    const rects = items.map((item) => document.getElementById(item.id)?.getBoundingClientRect());
+    if (rects.some((r) => !r)) return;
 
-    let next: number;
-    if (tops[0] > anchorLine) {
-      next = -1;
-    } else {
+    let next = -1;
+    if (rects[0]!.top <= anchorLine) {
       let i = 0;
-      while (i < total - 1 && tops[i + 1] <= anchorLine) i += 1;
-      if (i >= total - 1) {
-        next = total - 1;
-      } else {
-        const span = tops[i + 1] - tops[i];
-        const t = span > 0 ? Math.min(1, Math.max(0, (anchorLine - tops[i]) / span)) : 0;
-        next = i + t;
-      }
+      while (i < total - 1 && rects[i + 1]!.top <= anchorLine) i += 1;
+      const r = rects[i]!;
+      // A última unidade "termina" quando seu fim encosta no rodapé da tela
+      // (ela não consegue rolar além disso), então o denominador é menor.
+      const denom = Math.max(1, i === total - 1 ? r.height - (window.innerHeight - anchorLine) : r.height);
+      next = i + Math.min(1, Math.max(0, (anchorLine - r.top) / denom));
     }
-    setPos((prev) => (Math.abs(prev - next) < 0.002 ? prev : next));
+    setPos((prev) => (Math.abs(prev - next) < 0.001 ? prev : next));
   }, [items, total]);
 
   useEffect(() => {
@@ -76,20 +74,9 @@ export default function UnitNav({ items, ariaLabel, progressLabel, progressTempl
     };
   }, [update]);
 
-  const activeIndex = pos < 0 ? 0 : Math.min(total - 1, Math.round(pos));
   const reached = pos >= 0;
-  const fill = reached ? Math.min(1, (pos + 1) / total) : 0;
-
-  // Mantém a unidade ativa visível quando a lista rola na horizontal (mobile).
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list || list.scrollWidth <= list.clientWidth) return;
-    const el = list.children[activeIndex] as HTMLElement | undefined;
-    if (!el) return;
-    const target = el.offsetLeft - (list.clientWidth - el.offsetWidth) / 2;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    list.scrollTo({ left: Math.max(0, target), behavior: reduce ? "auto" : "smooth" });
-  }, [activeIndex]);
+  const activeIndex = reached ? Math.min(total - 1, Math.floor(pos)) : 0;
+  const fill = reached ? Math.min(1, pos / total) : 0;
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     const target = document.getElementById(id);
@@ -104,7 +91,7 @@ export default function UnitNav({ items, ariaLabel, progressLabel, progressTempl
   return (
     <nav ref={navRef} className={styles.unitNav} aria-label={ariaLabel}>
       <div className={styles.unitNavInner}>
-        <ul ref={listRef} className={styles.unitNavList}>
+        <ul className={styles.unitNavList}>
           {items.map((item, index) => {
             const current = reached && index === activeIndex;
             return (
@@ -128,8 +115,8 @@ export default function UnitNav({ items, ariaLabel, progressLabel, progressTempl
         role="progressbar"
         aria-label={progressLabel}
         aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={reached ? activeIndex + 1 : 0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(fill * 100)}
         aria-valuetext={reached ? progressTemplate
             .replace("{index}", String(activeIndex + 1))
             .replace("{total}", String(total))

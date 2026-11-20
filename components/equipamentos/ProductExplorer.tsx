@@ -99,7 +99,6 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
                       locale={locale}
                       variant="catalog"
                       autoRotate
-                      interactive={false}
                     />
                   </div>
                 ) : (
@@ -156,7 +155,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
                 <div className={styles.itemCta}>
                   <button
                     type="button"
-                    className={`${shared.btn} ${shared.btnOutlineOnLight}`}
+                    className={`${shared.btn} ${shared.btnSolidGold}`}
                     aria-label={t.viewDetailsOf(product.name)}
                     onClick={(event) => openDetail(product, event.currentTarget)}
                   >

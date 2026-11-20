@@ -1,0 +1,301 @@
+/* ==========================================================
+   Diagrama de processo da Almeida Ambiental (ProcessFlowDiagram.tsx).
+   Superfície escura (território floresta). Amarelo institucional
+   (--color-gold-aged) = progresso/destaque. Estado padrão = tudo aceso
+   (sem JS / reduced-motion); o JS só liga data-live e escreve --p.
+   Mobile: coluna vertical. >=900px: horizontal, bifurcação em 2 linhas.
+   ========================================================== */
+
+.root {
+  --flow-line: rgba(247, 246, 241, 0.22);
+  --flow-gold: var(--color-gold-aged);
+  --link-h: 30px;
+  padding-top: clamp(20px, 2.6vw, 32px);
+  border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.main {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 340px;
+  display: grid;
+  /* 4 colunas para o centro cair em 50% e as duas ramificações em 25%/75% */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas:
+    ". diag diag ."
+    ". ldiag ldiag ."
+    ". coleta coleta ."
+    ". lcoleta lcoleta ."
+    ". triagem triagem ."
+    "fork fork fork fork"
+    "tritura tritura descar descar"
+    "merge merge merge merge"
+    ". destino destino .";
+  justify-items: stretch;
+}
+
+.nDiag { grid-area: diag; }
+.lDiag { grid-area: ldiag; }
+.nColeta { grid-area: coleta; }
+.lColeta { grid-area: lcoleta; }
+.nTriagem { grid-area: triagem; }
+.fork { grid-area: fork; }
+.nTritura { grid-area: tritura; margin-inline: 3px; }
+.nDescar { grid-area: descar; margin-inline: 3px; }
+.merge { grid-area: merge; }
+.nDestino { grid-area: destino; }
+
+/* ---------------- Nós ---------------- */
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px solid rgba(247, 246, 241, 0.26);
+  border-radius: 4px;
+  background: rgba(247, 246, 241, 0.05);
+  color: var(--text-on-dark-primary, #f7f6f1);
+  text-align: center;
+  transition:
+    border-color 320ms ease,
+    background-color 320ms ease,
+    box-shadow 320ms ease,
+    color 320ms ease;
+}
+
+.icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+  opacity: 0.88;
+  transition: color 320ms ease, opacity 320ms ease;
+}
+
+.name {
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+/* Ramificações lado a lado: ícone acima do nome, para caber "Descaracterização" em 320px */
+.nTritura,
+.nDescar {
+  flex-direction: column;
+  gap: 6px;
+  padding-inline: 6px;
+}
+
+.nTritura .name,
+.nDescar .name {
+  font-size: clamp(12.5px, 3.9vw, 14px);
+  letter-spacing: -0.01em;
+  max-width: 100%;
+}
+
+/* Estados (só quando o JS está ativo; sem JS todos ficam "current"/acesos) */
+.node[data-state="done"],
+.node[data-state="current"] {
+  border-color: var(--flow-gold);
+  color: var(--text-on-dark-primary, #f7f6f1);
+}
+
+.node[data-state="done"] .icon,
+.node[data-state="current"] .icon {
+  color: var(--flow-gold);
+  opacity: 1;
+}
+
+.node[data-state="done"] {
+  border-color: rgba(201, 162, 39, 0.6);
+  background: rgba(201, 162, 39, 0.07);
+}
+
+.node[data-state="current"] {
+  background: rgba(201, 162, 39, 0.16);
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.35), 0 6px 22px rgba(201, 162, 39, 0.14);
+}
+
+.node[data-state="idle"] {
+  color: var(--text-on-dark-muted, rgba(247, 246, 241, 0.6));
+}
+
+/* Sem JS (ou reduced-motion) data-live não existe: tudo no estado "aceso". */
+.root:not([data-live]) .node {
+  border-color: rgba(201, 162, 39, 0.6);
+}
+
+.root:not([data-live]) .icon {
+  color: var(--flow-gold);
+  opacity: 1;
+}
+
+/* ---------------- Conectores ---------------- */
+.link {
+  position: relative;
+  height: var(--link-h);
+  list-style: none;
+}
+
+.line {
+  position: absolute;
+  background: var(--flow-line);
+  --p: 1;
+}
+
+.root[data-live] .line {
+  --p: 0;
+}
+
+.lineFill {
+  position: absolute;
+  inset: 0;
+  background: var(--flow-gold);
+}
+
+.line_v {
+  width: 2px;
+  left: calc(50% - 1px);
+  top: 0;
+  bottom: 0;
+}
+
+.line_v .lineFill {
+  transform: scaleY(var(--p));
+  transform-origin: top center;
+}
+
+.line_hc {
+  height: 2px;
+  top: calc(50% - 1px);
+}
+
+.line_hc .lineFill {
+  transform: scaleX(var(--p));
+  transform-origin: center;
+}
+
+/* Bifurcação: tronco (metade superior) → barra → duas descidas (metade inferior) */
+.fork .forkTrunk { height: 50%; bottom: auto; }
+.fork .forkBar { left: 25%; right: 25%; }
+.fork .forkDropA,
+.fork .forkDropB { top: 50%; }
+.fork .forkDropA { left: calc(25% - 1px); }
+.fork .forkDropB { left: auto; right: calc(25% - 1px); }
+
+/* Convergência: duas subidas (metade superior) → barra → tronco (metade inferior) */
+.merge .mergeDropA,
+.merge .mergeDropB { height: 50%; bottom: auto; }
+.merge .mergeDropA { left: calc(25% - 1px); }
+.merge .mergeDropB { left: auto; right: calc(25% - 1px); }
+.merge .mergeBar { left: 25%; right: 25%; }
+.merge .mergeTrunk { top: 50%; }
+
+/* ---------------- Desktop: horizontal ---------------- */
+@media (min-width: 900px) {
+  .root {
+    --link-w: clamp(32px, 4vw, 64px);
+  }
+
+  .main {
+    max-width: none;
+    margin: 0;
+    grid-template-columns: auto var(--link-w) auto var(--link-w) auto var(--link-w) minmax(0, auto) var(--link-w) auto;
+    grid-template-areas:
+      "diag ldiag coleta lcoleta triagem fork tritura merge destino"
+      "diag ldiag coleta lcoleta triagem fork descar merge destino";
+    align-items: center;
+    justify-content: start;
+    row-gap: 14px;
+  }
+
+  /* Nós de linha única ocupam as duas linhas e centralizam na vertical */
+  .nDiag, .nColeta, .nTriagem, .nDestino,
+  .lDiag, .lColeta, .fork, .merge {
+    align-self: center;
+  }
+
+  .nTritura, .nDescar {
+    flex-direction: row;
+    margin: 0;
+    padding-inline: 14px;
+  }
+
+  .nTritura .name, .nDescar .name {
+    font-size: 15px;
+    letter-spacing: 0;
+  }
+
+  .link {
+    height: auto;
+    align-self: stretch;
+  }
+
+  .lDiag, .lColeta { height: 2px; align-self: center; }
+
+  .line_v {
+    width: auto;
+    height: 2px;
+    left: 0;
+    right: 0;
+    top: calc(50% - 1px);
+    bottom: auto;
+  }
+
+  .line_v .lineFill {
+    transform: scaleX(var(--p));
+    transform-origin: left center;
+  }
+
+  .line_hc {
+    height: auto;
+    width: 2px;
+    top: 25%;
+    bottom: 25%;
+    left: calc(50% - 1px);
+  }
+
+  .line_hc .lineFill {
+    transform: scaleY(var(--p));
+    transform-origin: center;
+  }
+
+  /* Fork horizontal: tronco (metade esquerda) → barra vertical → duas saídas (metade direita) */
+  .fork { align-self: stretch; }
+  .fork .forkTrunk { left: 0; right: 50%; top: calc(50% - 1px); bottom: auto; height: 2px; }
+  .fork .forkBar { left: calc(50% - 1px); right: auto; top: 25%; bottom: 25%; width: 2px; height: auto; }
+  .fork .forkDropA, .fork .forkDropB { left: 50%; right: 0; width: auto; height: 2px; bottom: auto; }
+  .fork .forkDropA { top: calc(25% - 1px); }
+  .fork .forkDropB { top: calc(75% - 1px); right: 0; }
+
+  .merge { align-self: stretch; }
+  .merge .mergeDropA, .merge .mergeDropB { left: 0; right: 50%; width: auto; height: 2px; bottom: auto; }
+  .merge .mergeDropA { top: calc(25% - 1px); }
+  .merge .mergeDropB { top: calc(75% - 1px); left: 0; right: 50%; }
+  .merge .mergeBar { left: calc(50% - 1px); right: auto; top: 25%; bottom: 25%; width: 2px; height: auto; }
+  .merge .mergeTrunk { left: 50%; right: 0; top: calc(50% - 1px); bottom: auto; height: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .icon {
+    transition: none;
+  }
+}

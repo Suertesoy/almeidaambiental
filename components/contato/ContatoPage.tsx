@@ -21,13 +21,13 @@ const COPY = {
   pt: {
     eyebrow: "Contato",
     heroTitle: "Encontre o canal certo para sua operação.",
-    heroLede: "Atendimento direto para São José, Araquari / Joinville e Blumenau.",
     directoryAriaLabel: "Diretório de unidades",
     progressLabel: "Progresso pelas unidades",
     progressTemplate: "Unidade {index} de {total}: {title}",
     channelsLabel: "Canais de contato",
     openInGoogleMaps: "Abrir no Google Maps",
     openInWaze: "Abrir no Waze",
+    newTab: "abre em nova aba",
     finalHeadline: "Três frentes. Um mesmo Grupo.",
     finalBody:
       "Almeida Ambiental, Almeida Equipamentos e Saturno Ambiental trabalham de forma complementar para conectar gestão de resíduos, tecnologia e presença regional.",
@@ -42,13 +42,13 @@ const COPY = {
   en: {
     eyebrow: "Contact",
     heroTitle: "Find the right channel for your operation.",
-    heroLede: "Direct service for São José, Araquari / Joinville and Blumenau.",
     directoryAriaLabel: "Unit directory",
     progressLabel: "Progress through units",
     progressTemplate: "Unit {index} of {total}: {title}",
     channelsLabel: "Contact channels",
     openInGoogleMaps: "Open in Google Maps",
     openInWaze: "Open in Waze",
+    newTab: "opens in a new tab",
     finalHeadline: "Three fronts. One Group.",
     finalBody:
       "Almeida Ambiental, Almeida Equipamentos and Saturno Ambiental work together, connecting waste management, technology and regional presence.",
@@ -118,7 +118,6 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
             <Reveal className={styles.heroCopy}>
               <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.eyebrow}</p>
               <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
-              <p className={`${shared.body} ${styles.heroLede}`}>{t.heroLede}</p>
             </Reveal>
 
             <Reveal className={styles.heroOfficeMedia} style={{ transitionDelay: "80ms" }}>
@@ -192,13 +191,15 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
 
                         <div className={styles.mapActions}>
                           {region.mapHref && (
-                            <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.mapHref} target="_blank" rel="noopener noreferrer">
-                              {t.openInGoogleMaps}
+                            <a className={styles.mapBtn} href={region.mapHref} target="_blank" rel="noopener noreferrer" aria-label={`${t.openInGoogleMaps} (${t.newTab})`}>
+                              <img src="/brand/external/google-maps.svg" alt="" width="18" height="26" className={styles.mapBtnIcon} />
+                              Google Maps
                             </a>
                           )}
                           {region.wazeHref && (
-                            <a className={`${shared.btnEditorial} ${styles.mapLink}`} href={region.wazeHref} target="_blank" rel="noopener noreferrer">
-                              {t.openInWaze}
+                            <a className={styles.mapBtn} href={region.wazeHref} target="_blank" rel="noopener noreferrer" aria-label={`${t.openInWaze} (${t.newTab})`}>
+                              <img src="/brand/external/waze.svg" alt="" width="24" height="24" className={styles.mapBtnIcon} />
+                              Waze
                             </a>
                           )}
                         </div>

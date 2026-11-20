@@ -622,6 +622,7 @@
    sem competir com o ano (o texto segue em 42ch). */
 .eventImageWrap {
   position: relative;
+  border-radius: 4px;
   margin-top: 16px;
   max-width: min(100%, 440px);
   aspect-ratio: 3 / 2;
@@ -1038,4 +1039,44 @@
 .nextArrow {
   font-family: var(--font-inter), var(--font-body);
   font-weight: 400;
+}
+
+/* ==========================================================
+   Alinhamento mobile (< 768px) — lógica única: rótulos e títulos curtos
+   (cabeçalho de capítulo, escala, epílogo, "onde a história continua") ficam
+   centralizados; textos corridos, marcos (ano + descrição, presos ao ponto da
+   régua à esquerda) e links de lista seguem à esquerda. A régua dourada, os
+   pontos e as pontes entre capítulos não mudam de posição, então a linha
+   continua contínua. Não altera escala tipográfica.
+   ========================================================== */
+@media (max-width: 767px) {
+  .chapterHead {
+    text-align: center;
+  }
+
+  .closingBlock .eyebrow,
+  .closingHeadline,
+  .epilogueEyebrow,
+  .epilogueHeadline,
+  .nextLabel {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .growthList {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .growthItem {
+    align-items: center;
+  }
+
+  .statsGrid {
+    justify-content: center;
+  }
+
+  .statItem {
+    text-align: center;
+  }
 }

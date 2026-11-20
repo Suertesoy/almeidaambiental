@@ -5,7 +5,7 @@ import CompanyHero from "../shared/CompanyHero";
 import MaterialCards from "../shared/MaterialCards";
 import MaterialSurface from "../shared/MaterialSurface";
 import EditorialCTA from "../shared/EditorialCTA";
-import ProcessSteps from "../shared/ProcessSteps";
+import ProcessFlowDiagram from "./ProcessFlowDiagram";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
@@ -16,6 +16,7 @@ import {
   FLOW_STEPS,
   FLOW_STEPS_EN,
 } from "../../lib/almeida-ambiental-data";
+import { BRANDS } from "../../lib/brands";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
@@ -39,6 +40,8 @@ const COPY = {
       "A operação evoluiu muito além do papel e papelão que marcaram o início da Almeida. Hoje, a estrutura atende diferentes categorias de resíduos e direciona cada uma conforme suas características.",
     processHeadline: "Do diagnóstico à destinação, uma só operação.",
     processAriaLabel: "Etapas da operação da Almeida Ambiental",
+    processDescription:
+      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue por Trituração ou por Descaracterização, caminhos alternativos que convergem na Destinação.",
     crossHeadline: "Equipamentos pensados a partir da operação diária.",
     crossBody:
       "A Almeida Equipamentos, empresa do Grupo, leva conhecimento de campo para a tecnologia de compactação, armazenagem e processamento.",
@@ -63,6 +66,8 @@ const COPY = {
       "The operation has grown well beyond the paper and cardboard that marked Almeida's beginnings. Today it handles different categories of waste and routes each one according to its characteristics.",
     processHeadline: "From assessment to disposal, in a single operation.",
     processAriaLabel: "Almeida Ambiental's operating steps",
+    processDescription:
+      "Assessment, Collection and Sorting. After Sorting, material goes through either Shredding or Destruction, alternative paths that converge on Disposal.",
     crossHeadline: "Equipment designed around daily operations.",
     crossBody:
       "Almeida Equipamentos, a Grupo Almeida company, brings field knowledge to compaction, storage and processing technology.",
@@ -100,7 +105,7 @@ const COPY = {
 export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
   const pillars = locale === "en" ? PILLARS_EN : PILLARS;
-  const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
+  const processSteps = locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS;
 
   return (
     <div className={styles.page} data-page="almeida-ambiental">
@@ -120,6 +125,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
         imagePosition="center 50%"
         mobileImagePosition="45% 52%"
         scrimTone="forest"
+        titleLogo={{ src: BRANDS["almeida-ambiental"].logos.branca }}
         primaryCta={{ label: t.heroPrimaryCta, href: "#servicos" }}
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.saoJose, locale) }}
       />
@@ -160,7 +166,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
 
               <Reveal style={{ transitionDelay: "120ms" }}>
                 <h3 className={shared.subheading}>{t.processHeadline}</h3>
-                <ProcessSteps steps={processSteps} ariaLabel={t.processAriaLabel} />
+                <ProcessFlowDiagram steps={[...processSteps]} ariaLabel={t.processAriaLabel} description={t.processDescription} />
               </Reveal>
             </div>
           </div>
@@ -173,12 +179,12 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
             return (
               <section
                 key={pillar.id}
-                className={`${isLast ? shared.chapterClose : shared.chapterMiddle} ${boundarySurface}`}
+                className={`${isLast ? shared.chapterClose : shared.chapterMiddle} ${boundarySurface} ${styles.pillarSection}`}
               >
                 {isLast && <BrandBoundaryMark boundary="ambiental-processo" half="leaving" surface="onDark" />}
                 <div className={shared.container}>
                   <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
-                    <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`} style={{ transitionDelay: "80ms" }}>
+                    <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape} ${index !== 1 ? styles.pillarBleed : ""}`} style={{ transitionDelay: "80ms" }}>
                       {index === 0 ? (
                         <AmbientVideo
                           src="/videos/captacao-2026/caminhao-coleta.mp4"
@@ -265,7 +271,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
             <h2 className={shared.headline}>{t.crossHeadline}</h2>
             <p className={shared.body}>{t.crossBody}</p>
             <div className={shared.ctaRow}>
-              <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
+              <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/almeida-equipamentos", locale)}>
                 {t.crossCta}
               </Link>
             </div>

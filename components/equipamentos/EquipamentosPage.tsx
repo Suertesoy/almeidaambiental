@@ -251,7 +251,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
             <h2 className={shared.headline}>{t.crossHeadline}</h2>
             <p className={shared.body}>{t.crossBody}</p>
             <div className={shared.ctaRow}>
-              <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-ambiental", locale)}>
+              <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/almeida-ambiental", locale)}>
                 {t.crossCta}
               </Link>
             </div>

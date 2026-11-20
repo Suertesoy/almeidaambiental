@@ -29,7 +29,7 @@ export default function EditorialCTA({ eyebrow, headline, body, cta, tone = "for
           <h2 className={styles.finalCtaHeadline}>{headline}</h2>
           <p className={styles.body}>{body}</p>
           <div className={styles.ctaRow}>
-            <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={cta.href}>
+            <Link className={`${styles.btn} ${styles.btnSolidGold}`} href={cta.href}>
               {cta.label}
             </Link>
           </div>
