@@ -123,16 +123,31 @@
   font-size: 13px;
 }
 
+/* Grade de duas colunas de largura igual, em todas as larguras (inclusive
+   320px). Centralizada e com teto de largura no desktop. */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: 12px;
-  margin-top: 16px;
+  max-width: 640px;
+  margin: 16px auto 0;
 }
 
-@media (max-width: 639px) {
-  .actions > * {
-    width: 100%;
+/* Mesma largura, altura mínima, tipografia, padding e raio nos dois botões
+   (vêm de .btn); aqui só se libera a largura para a célula da grade e se
+   reduz o padding lateral para o texto quebrar de forma equilibrada em
+   telas estreitas — sem reduzir a fonte. */
+.actions .actionBtn {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding-inline: 14px;
+}
+
+@media (min-width: 640px) {
+  .actions .actionBtn {
+    padding-inline: 24px;
   }
 }
 

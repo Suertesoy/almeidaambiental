@@ -94,6 +94,14 @@
   width: 100%;
 }
 
+/* No hero os botões acompanham o texto (esquerda) e não impõem largura mínima
+   — duas chamadas longas precisam caber lado a lado na coluna. */
+@media (min-width: 640px) {
+  .heroCtas > a {
+    min-width: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .heroCtas {
     flex-direction: row;
@@ -420,18 +428,10 @@
   letter-spacing: -0.01em;
 }
 
-/* O catálogo hospeda o guia sticky dos produtos. `.surface` (boundarySurface)
-   usa overflow: hidden, que vira o "scroll container" do sticky e o impede de
-   prender na janela; overflow: clip recorta do mesmo jeito sem criar scroll
-   container. Seletor composto (0-2-0) vence `.surface` em qualquer ordem. */
-.catalogSection.catalogSection {
-  overflow: clip;
-}
-
 /* Seletor de materiais: bloco próprio logo abaixo do título do catálogo, separado por régua. */
 .selectorBlock {
-  margin-top: clamp(24px, 4vw, 40px);
-  padding-bottom: clamp(40px, 6vw, 64px);
-  border-bottom: 1px solid rgba(21, 21, 15, 0.16);
-  margin-bottom: clamp(36px, 5vw, 56px);
+  /* Agora numa seção própria depois dos produtos: a régua separa do último
+     equipamento (e não mais do início do catálogo). */
+  padding-top: clamp(36px, 5vw, 56px);
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
 }

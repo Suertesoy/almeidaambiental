@@ -100,6 +100,7 @@
 .btnOutlineOnDark { composes: btnOutlineOnDark from "./editorial.module.css"; }
 .btnOutlineOnLight { composes: btnOutlineOnLight from "./editorial.module.css"; }
 .btnSolidGold { composes: btnSolidGold from "./editorial.module.css"; }
+.btnCompact { composes: btnCompact from "./editorial.module.css"; }
 .btnEditorial { composes: btnEditorial from "./editorial.module.css"; }
 
 .duo { composes: duo from "./editorial.module.css"; }

@@ -17,7 +17,7 @@ const COPY = {
     headline: "Encontre o equipamento para sua operação",
     guide: "Selecione os materiais que sua operação precisa processar.",
     groupLabel: "Materiais",
-    find: "Encontrar equipamentos compatíveis",
+    find: "Encontrar equipamentos",
     retry: "Tentar novamente",
     selectedCount: (n: number) => (n === 0 ? "Nenhum material selecionado" : n === 1 ? "1 material selecionado" : `${n} materiais selecionados`),
     resultsTitle: "Equipamentos potencialmente compatíveis",
@@ -38,7 +38,7 @@ const COPY = {
     headline: "Find the equipment for your operation",
     guide: "Select the materials your operation needs to process.",
     groupLabel: "Materials",
-    find: "Find compatible equipment",
+    find: "Find equipment",
     retry: "Try again",
     selectedCount: (n: number) => (n === 0 ? "No materials selected" : n === 1 ? "1 material selected" : `${n} materials selected`),
     resultsTitle: "Potentially compatible equipment",
@@ -130,18 +130,26 @@ export default function MaterialSelector({ locale }: { locale: Locale }) {
         {t.selectedCount(selected.length)}
       </p>
 
+      {/* Duas colunas iguais. A direita fica RESERVADA (div vazio, sem controle
+          acessível) até a primeira consulta; só então entra "Tentar novamente".
+          Ao tentar de novo a seleção e os resultados são limpos e a coluna
+          volta a ficar vazia — sem deslocar a composição. */}
       <div className={styles.actions}>
-        <button type="button" className={`${shared.btn} ${shared.btnSolidGold}`} disabled={selected.length === 0} onClick={find}>
-          {t.find}
-        </button>
         <button
           type="button"
-          className={`${shared.btn} ${shared.btnOutlineOnLight}`}
-          disabled={selected.length === 0 && shown === null}
-          onClick={reset}
+          className={`${shared.btn} ${shared.btnSolidGold} ${styles.actionBtn}`}
+          disabled={selected.length === 0}
+          onClick={find}
         >
-          {t.retry}
+          {t.find}
         </button>
+        {shown !== null ? (
+          <button type="button" className={`${shared.btn} ${shared.btnOutlineOnLight} ${styles.actionBtn}`} onClick={reset}>
+            {t.retry}
+          </button>
+        ) : (
+          <div aria-hidden="true" />
+        )}
       </div>
 
       <div ref={resultsRef} tabIndex={-1} className={styles.results} aria-live="polite">

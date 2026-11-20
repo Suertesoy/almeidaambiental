@@ -219,7 +219,7 @@ export default function ContatoPage({ locale }: { locale: Locale }) {
                                 <span className={styles.channelMeta}>{meta}</span>
                               </div>
                               <a
-                                className={`${shared.btn} ${shared.btnSolidGold}`}
+                                className={`${shared.btn} ${shared.btnCompact} ${shared.btnSolidGold}`}
                                 href={isWhatsApp ? withMessage(channel.href, region.whatsappMessage) : channel.href}
                                 target={isWhatsApp ? "_blank" : undefined}
                                 rel={isWhatsApp ? "noopener noreferrer" : undefined}

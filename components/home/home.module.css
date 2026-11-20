@@ -554,11 +554,6 @@ html:has([data-page="home"]) {
 
   .heroCtaRow .btn {
     width: 100%;
-    height: auto;
-    min-height: 52px;
-    padding-block: 14px;
-    white-space: normal;
-    text-align: center;
   }
 
   /* Sem o indicador de rolagem, o hero não precisa do respiro inferior

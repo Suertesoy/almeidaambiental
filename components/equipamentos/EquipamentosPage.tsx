@@ -7,6 +7,7 @@ import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark"
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductExplorer from "./ProductExplorer";
 import MaterialSelector from "./MaterialSelector";
+import AnchorLink from "./AnchorLink";
 import EquipmentChoreographyStage from "./EquipmentChoreographyStage";
 import { PRODUCTS, PRODUCTS_EN, PARTNERS } from "../../lib/equipamentos-data";
 import { BRANDS } from "../../lib/brands";
@@ -114,12 +115,14 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
                     materiais. A rolagem suave e o recuo do Header vêm de globals.css
                     (scroll-behavior sob prefers-reduced-motion: no-preference;
                     scroll-padding-top + scroll-margin-top dos alvos). */}
-                <a className={`${shared.btn} ${shared.btnSolidGold}`} href={`#${products[0].id}`}>
+                <AnchorLink className={`${shared.btn} ${shared.btnSolidGold}`} href={`#${products[0].id}`}>
                   {t.heroPrimaryCta}
-                </a>
-                <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="#seletor-de-materiais">
+                </AnchorLink>
+                {/* O seletor agora vem DEPOIS dos seis equipamentos: salto direto
+                    (sem animar por todas as seções no caminho). */}
+                <AnchorLink className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="#seletor-de-materiais" instant>
                   {t.heroSecondaryCta}
-                </a>
+                </AnchorLink>
               </div>
             </div>
           </div>
@@ -129,7 +132,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
       {/* ============ Catálogo técnico ============ */}
       <section
         id="produtos"
-        className={`${shared.chapterClose} ${shared.toneStone} ${boundarySurface} ${styles.catalogSection}`}
+        className={`${shared.chapterOpen} ${shared.toneStone} ${boundarySurface}`}
         aria-labelledby="produtos-heading"
       >
         <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />
@@ -140,11 +143,16 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
             </h2>
           </Reveal>
 
+          <ProductExplorer locale={locale} products={products} />
+        </div>
+      </section>
+
+      {/* ============ Seletor de materiais (ferramenta complementar, depois dos produtos) ============ */}
+      <section className={`${shared.chapterClose} ${shared.toneStone}`}>
+        <div className={shared.container}>
           <Reveal className={styles.selectorBlock}>
             <MaterialSelector locale={locale} />
           </Reveal>
-
-          <ProductExplorer locale={locale} products={products} />
         </div>
       </section>
 
@@ -183,7 +191,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
             <div className={styles.readBlock}>
               <p className={shared.body}>{t.crossBody}</p>
               <div className={shared.ctaRow}>
-                <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/almeida-ambiental", locale)}>
+                <Link className={`${shared.btn} ${shared.btnOutlineOnLight}`} href={localizeHref("/almeida-ambiental", locale)}>
                   {t.crossCta}
                 </Link>
               </div>

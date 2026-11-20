@@ -76,8 +76,12 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
 
   return (
     <div className={styles.explorer}>
-      <ProductNav items={products.map((p) => ({ id: p.id, label: p.name }))} ariaLabel={t.navLabel} />
-      <div className={styles.showcase}>
+      <ProductNav
+        items={products.map((p) => ({ id: p.id, label: p.name }))}
+        ariaLabel={t.navLabel}
+        scopeSelector="[data-product-showcase]"
+      />
+      <div className={styles.showcase} data-product-showcase>
       {products.map((product, index) => {
         const model3D = getEquipment3DConfig(product.id);
         const isReverse = index % 2 === 1;

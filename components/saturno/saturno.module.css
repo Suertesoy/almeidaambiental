@@ -233,10 +233,6 @@ p.splitCopy {
 }
 
 /* Botão secundário: área de toque confortável e foco visível sobre carvão. */
-.groupCopy .groupCta {
-  min-height: 52px;
-}
-
 .groupCopy .groupCta:focus-visible {
   outline-color: var(--color-background);
 }
