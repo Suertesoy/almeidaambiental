@@ -95,7 +95,8 @@ const COPY = {
       "Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação construída para unir eficiência operacional e responsabilidade ambiental.",
     saturnoTags: ["Gestão de Resíduos", "Cartonagem", "Consultoria"],
     saturnoCta: "Conheça Saturno Ambiental",
-    impactEyebrow: "Impacto Positivo · estimativa atualizada",
+    impactTitle: "Impacto positivo",
+    impactBadge: "Estimativa",
     impactNote:
       "Estimativa acumulada com base nos dados operacionais de janeiro a setembro de 2026, projetada pela média diária até a próxima atualização oficial.",
     impactHeadline: "Cada resíduo processado vira um número que a natureza reconhece.",
@@ -132,7 +133,8 @@ const COPY = {
       "Collection, sorting, shredding, cardboard packaging and environmental consulting come together in an operation built around efficiency and environmental responsibility.",
     saturnoTags: ["Waste Management", "Cardboard Packaging", "Consulting"],
     saturnoCta: "See Saturno Ambiental",
-    impactEyebrow: "Positive Impact · updated estimate",
+    impactTitle: "Positive impact",
+    impactBadge: "Estimate",
     impactNote:
       "Accumulated estimate based on operating data from January to September 2026, projected using the daily average until the next official update.",
     impactHeadline: "Waste processed. Impact measured.",
@@ -349,8 +351,11 @@ export default function HomePage({ locale }: { locale: Locale }) {
         <div className={styles.container}>
           <div ref={impactoRef}>
             <Reveal className={styles.impactHead}>
-              <p className={styles.eyebrow}>{t.impactEyebrow}</p>
-              <h2 className={styles.headline}>{t.impactHeadline}</h2>
+              <div className={styles.impactTitleRow}>
+                <h2 className={styles.headline}>{t.impactTitle}</h2>
+                <span className={styles.impactBadge}>{t.impactBadge}</span>
+              </div>
+              <p className={styles.impactLede}>{t.impactHeadline}</p>
             </Reveal>
 
             <Reveal>

@@ -56,7 +56,7 @@ export const PRODUCTS: Product[] = [
     headline: "Mais material por carga. Menos volume ocupando espaço.",
     copy: "Projetado para grandes volumes, o compactador de fuso utiliza uma rosca de alta força para fragmentar e compactar materiais continuamente. A solução é especialmente interessante quando papelão, plástico ou madeira passam a ocupar espaço demais antes da coleta.",
     idealFor: ["Papelão", "Plástico", "Madeira"],
-    benefits: ["Maior densidade de carga", "Redução de volume", "Alimentação de grandes materiais", "Ganho logístico"],
+    benefits: ["Maior densidade de carga", "Redução de volume", "Aceita materiais volumosos", "Ganho logístico"],
     confirmedSpecs: ["Motorização de 9 a 15 kW", "Relação de compactação de até 5:1"],
     image: img(
       "almeida-equipamentos",

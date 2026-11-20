@@ -663,7 +663,94 @@ html:has([data-page="home"]) {
 }
 
 .metricNumber {
+  display: inline-grid;
   white-space: nowrap;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.metricGhost,
+.metricLive {
+  grid-area: 1 / 1;
+}
+
+.metricGhost {
+  visibility: hidden;
+}
+
+/* Célula fixa por algarismo (ver StableNumber em ImpactMetricsGrid.tsx). */
+.digit {
+  display: inline-block;
+  width: 0.62em;
+  text-align: center;
+}
+
+.metricLive {
+  justify-self: end;
+}
+
+/* Título "Impacto positivo" + qualificação discreta "Estimativa". */
+.impactTitleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.impactBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid rgba(247, 246, 241, 0.32);
+  border-radius: 4px;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.impactLede {
+  margin: 14px 0 0;
+  max-width: 52ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: clamp(15px, 0.3vw + 14px, 18px);
+  line-height: 1.55;
+}
+
+/* Mobile: título, indicadores e legendas centralizados. */
+@media (max-width: 639px) {
+  .impactHead {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .impactTitleRow {
+    justify-content: center;
+  }
+
+  .impactLede {
+    margin-inline: auto;
+  }
+
+  .metricsGrid {
+    gap: 28px;
+  }
+
+  .metricItem {
+    align-items: center;
+    text-align: center;
+  }
+
+  .metricValue {
+    justify-content: center;
+  }
+
+  .metricsNote {
+    text-align: center;
+    margin-inline: auto;
+  }
 }
 
 .metricUnit {

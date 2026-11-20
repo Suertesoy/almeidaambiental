@@ -431,7 +431,7 @@ export default function EquipmentChoreographyCanvas({
         // Escala lateral normalizada pelo tamanho do protagonista: um equipamento
         // grande (hidráulico) e um pequeno (fuso) ficam com pegada visual parecida
         // e sempre subordinada ao centro.
-        const sideScale = THREE.MathUtils.clamp((SIDE_RADIUS_RATIO * rxzC) / m.rxz, 0.38, 0.78);
+        const sideScale = THREE.MathUtils.clamp((SIDE_RADIUS_RATIO * rxzC) / m.rxz, 0.5, 0.8);
         const s = THREE.MathUtils.lerp(1, sideScale, abs);
 
         // Distância do centro até a posição lateral: só uma fatia do vizinho

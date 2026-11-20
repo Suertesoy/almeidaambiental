@@ -138,8 +138,10 @@ export default function EquipmentChoreographyStage({
       )}
 
       {/* Legenda tipográfica discreta acompanhando o equipamento em destaque */}
+      {/* No hero a legenda visual é removida (apresentação limpa dos modelos);
+          o nome do equipamento em destaque segue disponível para leitores de tela. */}
       <div
-        className={`${styles.choreographyCaption} ${
+        className={`${styles.choreographyCaption} ${variant === "hero" ? styles.srOnly : ""} ${
           !showStaticOnly && !isReady ? styles.choreographyCaptionHidden : ""
         }`}
         aria-live="polite"

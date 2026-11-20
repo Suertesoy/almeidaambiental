@@ -17,6 +17,26 @@ const A11Y_NOTE: Record<Locale, string> = {
   en: "Accumulated estimate, automatically updated based on operating data from January to September 2026.",
 };
 
+/** Cada algarismo ocupa uma célula de largura fixa: o Playfair não aplica
+ *  algarismos tabulares, então os dígitos têm larguras diferentes e o número
+ *  "respirava" a cada atualização. Com células fixas a largura só depende da
+ *  QUANTIDADE de dígitos. Separadores (. ,) mantêm largura natural. */
+function StableNumber({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={className}>
+      {Array.from(text).map((char, i) =>
+        /\d/.test(char) ? (
+          <span key={i} className={styles.digit}>
+            {char}
+          </span>
+        ) : (
+          <span key={i}>{char}</span>
+        )
+      )}
+    </span>
+  );
+}
+
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
@@ -115,8 +135,13 @@ export default function ImpactMetricsGrid({ locale, active }: { locale: Locale; 
           <div key={metric.id} className={styles.metricItem}>
             {/* Número e unidade formam um conjunto só (mesma linha de base). */}
             <span className={styles.metricValue}>
+              {/* Reserva de largura: o número final (fantasma, invisível) define a
+                  largura do conjunto desde o primeiro quadro; o número animado
+                  fica sobreposto. Assim a unidade ("litros") nunca troca de
+                  linha durante a contagem. */}
               <span aria-hidden="true" className={styles.metricNumber}>
-                {formatImpactNumber(metric, value, locale)}
+                <StableNumber className={styles.metricGhost} text={formatImpactNumber(metric, projected, locale)} />
+                <StableNumber className={styles.metricLive} text={formatImpactNumber(metric, value, locale)} />
               </span>
               {unit && (
                 <span aria-hidden="true" className={styles.metricUnit}>

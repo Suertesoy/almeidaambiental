@@ -492,7 +492,7 @@ export const BENEFIT_ICONS: Record<string, (props: FunctionalIconProps) => React
   "Baixo requisito de espaço": BenefitShrinkIcon,
   "Formato vertical compacto": BenefitShrinkIcon,
   "Processo compacto e robusto": BenefitShrinkIcon,
-  "Alimentação de grandes materiais": BenefitFeedInIcon,
+  "Aceita materiais volumosos": BenefitFeedInIcon,
   "Ganho logístico": ProcessColetaIcon,
   "Menos manipulação antes do transporte": ProcessColetaIcon,
   "Operação prática": BenefitCheckIcon,

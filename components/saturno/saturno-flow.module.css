@@ -1,0 +1,176 @@
+/* Frentes de atuação da Saturno como percurso. Mobile: coluna vertical com
+   conector entre os ícones. >=1024px: quatro colunas, conector horizontal. */
+
+.flow {
+  list-style: none;
+  margin: clamp(36px, 6vw, 56px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: clamp(16px, 4vw, 24px);
+  min-width: 0;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tile {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  border-radius: 4px;
+  background: rgba(201, 162, 39, 0.1);
+  color: var(--color-gold-aged);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.connector {
+  flex: 1 1 auto;
+  width: 2px;
+  min-height: 28px;
+  margin-block: 6px;
+  background: rgba(247, 246, 241, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.connector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-gold-aged);
+  transform-origin: top center;
+}
+
+.body {
+  padding-bottom: clamp(28px, 5vw, 40px);
+  min-width: 0;
+}
+
+.step:last-child .body {
+  padding-bottom: 0;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 8px;
+  color: var(--role-accent, var(--text-accent));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.index {
+  opacity: 0.8;
+}
+
+.headline {
+  margin: 0 0 10px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(20px, 1vw + 15px, 24px);
+  line-height: 1.2;
+}
+
+.copy {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Desktop: sequência horizontal */
+@media (min-width: 1024px) {
+  .flow {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: clamp(20px, 2.4vw, 36px);
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    row-gap: 20px;
+  }
+
+  .rail {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .connector {
+    flex: 1 1 auto;
+    width: auto;
+    height: 2px;
+    min-height: 0;
+    margin: 0 0 0 12px;
+    /* a última coluna não tem conector; as demais vão até a próxima */
+  }
+
+  .connector::after {
+    transform-origin: left center;
+  }
+
+  .body {
+    padding-bottom: 0;
+  }
+}
+
+/* Revelação (só com JS ativo e sem reduced-motion): item aparece suave e o
+   conector avança até a etapa seguinte. Sem data-live tudo já está visível. */
+@media (prefers-reduced-motion: no-preference) {
+  .flow[data-live] .step .body,
+  .flow[data-live] .step .tile {
+    opacity: 0.32;
+    transform: translateY(10px);
+    transition: opacity 520ms ease, transform 520ms ease;
+  }
+
+  .flow[data-live] .step[data-in] .body,
+  .flow[data-live] .step[data-in] .tile {
+    opacity: 1;
+    transform: none;
+  }
+
+  .flow[data-live] .connector::after {
+    transform: scaleY(0);
+    transition: transform 700ms ease 200ms;
+  }
+
+  .flow[data-live] .step[data-in] .connector::after {
+    transform: scaleY(1);
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .flow[data-live] .connector::after {
+    transform: scaleX(0);
+  }
+
+  .flow[data-live] .step[data-in] .connector::after {
+    transform: scaleX(1);
+  }
+}

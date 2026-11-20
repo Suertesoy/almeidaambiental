@@ -8,6 +8,7 @@ import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductExplorer from "./ProductExplorer";
+import MaterialSelector from "./MaterialSelector";
 import EquipmentChoreographyStage from "./EquipmentChoreographyStage";
 import { MATERIAL_ICONS } from "../icons";
 import {
@@ -178,6 +179,10 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
               {t.catalogHeadline}
             </h2>
             <p className={shared.body}>{t.catalogBody}</p>
+          </Reveal>
+
+          <Reveal className={styles.selectorBlock}>
+            <MaterialSelector locale={locale} />
           </Reveal>
 
           <ProductExplorer locale={locale} products={products} />

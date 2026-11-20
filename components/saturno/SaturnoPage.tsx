@@ -8,10 +8,23 @@ import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark"
 import MaterialSurface from "../shared/MaterialSurface";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import Reveal from "../shared/Reveal";
+import SaturnoFlow from "./SaturnoFlow";
+import { BENEFIT_ICONS, PROCESS_STEP_ICONS } from "../icons";
 import { FRENTES, FRENTES_EN, type Frente } from "../../lib/saturno-data";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
+
+/** Ícones (já existentes no site) para os itens de escopo da Gestão Ambiental
+ *  que não são siglas; siglas curtas (PGRS, PGRSS, PAE) viram selos. A ordem
+ *  segue a dos itens em lib/saturno-data.ts. */
+const GESTAO_ICONS = [
+  BENEFIT_ICONS["Acabamento industrial resistente"], // condicionantes de licenças
+  BENEFIT_ICONS["Operação prática"], // planos e programas
+  PROCESS_STEP_ICONS[0], // palestras e treinamentos
+  BENEFIT_ICONS["Preparação para reciclagem"], // educação ambiental
+  PROCESS_STEP_ICONS[1], // orientações MTR
+];
 
 function pickFrentes(frentes: Frente[]) {
   return {
@@ -176,15 +189,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
               <h2 className={shared.headline}>{t.servicesHeadline}</h2>
             </Reveal>
             <Reveal style={{ transitionDelay: "80ms" }}>
-              <div className={styles.frentesCompactGrid}>
-                {compactFrentes.map((frente, index) => (
-                  <div key={frente.id} className={styles.frentesCompactItem}>
-                    <span className={styles.frentesCompactIndex}>{String(index + 1).padStart(2, "0")} · {frente.eyebrow}</span>
-                    <h3 className={styles.frentesCompactHeadline}>{frente.headline}</h3>
-                    <p className={styles.frentesCompactCopy}>{frente.copy}</p>
-                  </div>
-                ))}
-              </div>
+              <SaturnoFlow frentes={compactFrentes} />
             </Reveal>
           </div>
         </section>
@@ -210,7 +215,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
                   </ul>
                 )}
                 <div className={shared.ctaRow}>
-                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref(cartonagem.cta!.href, locale)}>
+                  <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref(cartonagem.cta!.href, locale)}>
                     {cartonagem.cta!.label}
                   </Link>
                 </div>
@@ -230,14 +235,33 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
               <Reveal className={styles.splitCopy} style={{ transitionDelay: "80ms" }}>
                 <p className={shared.body}>{gestaoAmbiental.copy}</p>
                 {gestaoAmbiental.tags && (
-                  <ul className={`${shared.technicalList} ${styles.gestaoTagsList} ${styles.gestaoTagsColumns}`}>
-                    {gestaoAmbiental.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
+                  <div className={styles.gestaoScope}>
+                    <ul className={styles.gestaoItems}>
+                      {gestaoAmbiental.tags
+                        .filter((tag) => tag.length > 5)
+                        .map((tag, i) => {
+                          const Icon = GESTAO_ICONS[i];
+                          return (
+                            <li key={tag} className={styles.gestaoItem}>
+                              {Icon && <Icon className={styles.gestaoIcon} />}
+                              <span>{tag}</span>
+                            </li>
+                          );
+                        })}
+                    </ul>
+                    <ul className={styles.gestaoSeals}>
+                      {gestaoAmbiental.tags
+                        .filter((tag) => tag.length <= 5)
+                        .map((tag) => (
+                          <li key={tag} className={styles.gestaoSeal}>
+                            {tag}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 )}
                 <div className={shared.ctaRow}>
-                  <Link className={`${shared.btn} ${shared.btnOutlineOnDark}`} href={localizeHref(gestaoAmbiental.cta!.href, locale)}>
+                  <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref(gestaoAmbiental.cta!.href, locale)}>
                     {gestaoAmbiental.cta!.label}
                   </Link>
                 </div>

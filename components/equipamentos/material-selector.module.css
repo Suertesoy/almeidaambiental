@@ -1,0 +1,277 @@
+/* ==========================================================
+   Seletor de materiais — só o estado interativo. A grade, os cards, os
+   ícones e os nomes vêm de MaterialCards.module.css (mesma linguagem visual
+   do Material Atlas da Almeida Ambiental, tema "ambiental").
+   Estado inicial discreto (contraste reduzido, ainda legível); selecionado =
+   amarelo institucional + indicador de seleção.
+   ========================================================== */
+
+.root {
+  max-width: 1100px;
+}
+
+.headline {
+  margin: 0 0 8px;
+}
+
+.guide {
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.grid {
+  /* herda grid de MaterialCards; só garante que botões ocupem a célula */
+}
+
+.cell {
+  display: flex;
+  min-width: 0;
+}
+
+.root .grid .tile {
+  position: relative;
+  width: 100%;
+  min-height: 88px;
+  cursor: pointer;
+  font: inherit;
+  color: rgba(21, 21, 15, 0.66);
+  background: rgba(21, 21, 15, 0.025);
+  border-color: rgba(21, 21, 15, 0.1);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.root .grid .tile:hover {
+  color: var(--color-foreground);
+  border-color: rgba(21, 21, 15, 0.3);
+}
+
+.root .grid .tile:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.root .grid .tileOn,
+.root .grid .tileOn:hover {
+  color: var(--color-forest-deep);
+  background: var(--color-gold-aged);
+  border-color: var(--color-gold-aged);
+  box-shadow: 0 0 0 2px var(--color-forest-deep) inset;
+}
+
+.root .grid .tileOn .check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Indicador de seleção (círculo com visto), canto superior direito. */
+.check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--color-forest-deep);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.check::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  width: 4px;
+  height: 7px;
+  border: solid var(--color-gold-aged);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.count {
+  margin: 14px 0 0;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (max-width: 639px) {
+  .actions > * {
+    width: 100%;
+  }
+}
+
+/* ---------------- Resultados ---------------- */
+.results {
+  outline: none;
+}
+
+.resultsInner {
+  margin-top: clamp(28px, 4vw, 40px);
+  padding-top: clamp(24px, 3vw, 32px);
+  border-top: 1px solid rgba(21, 21, 15, 0.16);
+}
+
+.resultsTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(20px, 1vw + 16px, 26px);
+}
+
+.resultsLead {
+  margin: 0 0 18px;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+}
+
+.resultList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 768px) {
+  .resultList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+.resultItem {
+  padding: 18px;
+  border: 1px solid rgba(21, 21, 15, 0.14);
+  border-radius: 4px;
+  background: rgba(251, 250, 247, 0.6);
+}
+
+.resultHead {
+  margin-bottom: 12px;
+}
+
+.resultName {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.resultMaker {
+  margin: 2px 0 0;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.resultLabel {
+  margin: 0 0 8px;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 6px;
+  border: 1px solid rgba(21, 21, 15, 0.18);
+  border-radius: 4px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.chipIcon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.basis {
+  margin: 12px 0 0;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.catalogLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 6px;
+  color: var(--color-foreground);
+  font-family: var(--font-inter), var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.catalogLink:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.unmatched {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px dashed rgba(21, 21, 15, 0.3);
+  border-radius: 4px;
+}
+
+.talk {
+  margin-top: 14px;
+}
+
+.disclaimer {
+  margin: 20px 0 0;
+  max-width: 70ch;
+  color: var(--role-muted, var(--text-muted));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root .grid .tile,
+  .check {
+    transition: none;
+  }
+}

@@ -211,3 +211,71 @@ p.splitCopy {
   padding-top: clamp(40px, 6vw, 64px);
   border-top: 1px solid rgba(247, 246, 241, 0.16);
 }
+
+/* ---------------- Gestão Ambiental: escopo com ícones + selos de sigla ----------------
+   Substitui a lista de oito bullets: os itens descritivos ganham ícone
+   (biblioteca existente) e as siglas (PGRS, PGRSS, PAE) viram selos. */
+.gestaoScope {
+  margin-block: var(--gap-body-support) clamp(20px, 3vw, 28px);
+  padding-top: 18px;
+  border-top: 1px solid rgba(247, 246, 241, 0.22);
+}
+
+.gestaoItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px 28px;
+}
+
+@media (min-width: 768px) {
+  .gestaoItems {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gestaoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.gestaoIcon {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  color: var(--color-gold-aged);
+}
+
+.gestaoSeals {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gestaoSeal {
+  padding: 6px 14px;
+  border: 1px solid rgba(201, 162, 39, 0.55);
+  border-radius: 4px;
+  color: var(--color-gold-aged);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Mais respiro entre capítulos de função diferente (Como atua → Cartonagem → Gestão). */
+@media (min-width: 768px) {
+  .saturnoTerritory > section + section {
+    margin-top: clamp(16px, 3vw, 48px);
+  }
+}
