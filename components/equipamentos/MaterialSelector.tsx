@@ -97,7 +97,7 @@ export default function MaterialSelector({ locale }: { locale: Locale }) {
   const nameOf = (id: string) => products.find((p) => p.id === id);
 
   return (
-    <div className={styles.root}>
+    <div id="seletor-de-materiais" className={styles.root}>
       <h3 ref={headingRef} tabIndex={-1} className={`${shared.subheading} ${styles.headline}`}>
         {t.headline}
       </h3>

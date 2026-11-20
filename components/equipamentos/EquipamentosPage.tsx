@@ -109,15 +109,17 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
             <div className={styles.heroCopy}>
               <p className={styles.heroLede}>{t.heroLede}</p>
               <div className={styles.heroCtas}>
-                <a className={`${shared.btn} ${shared.btnSolidGold}`} href="#produtos">
+                {/* Âncoras na própria página: o primário leva ao PRIMEIRO equipamento
+                    real do catálogo (id do produto), o secundário ao seletor de
+                    materiais. A rolagem suave e o recuo do Header vêm de globals.css
+                    (scroll-behavior sob prefers-reduced-motion: no-preference;
+                    scroll-padding-top + scroll-margin-top dos alvos). */}
+                <a className={`${shared.btn} ${shared.btnSolidGold}`} href={`#${products[0].id}`}>
                   {t.heroPrimaryCta}
                 </a>
-                <Link
-                  className={`${shared.btn} ${shared.btnOutlineOnLight}`}
-                  href={localizeHref(CONTACT_ANCHORS.saoJose, locale)}
-                >
+                <a className={`${shared.btn} ${shared.btnOutlineOnLight}`} href="#seletor-de-materiais">
                   {t.heroSecondaryCta}
-                </Link>
+                </a>
               </div>
             </div>
           </div>
@@ -127,7 +129,7 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
       {/* ============ Catálogo técnico ============ */}
       <section
         id="produtos"
-        className={`${shared.chapterClose} ${shared.toneStone} ${boundarySurface}`}
+        className={`${shared.chapterClose} ${shared.toneStone} ${boundarySurface} ${styles.catalogSection}`}
         aria-labelledby="produtos-heading"
       >
         <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />

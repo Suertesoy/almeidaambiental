@@ -9,6 +9,8 @@
 .root {
   max-width: 1100px;
   margin-inline: auto;
+  /* Âncora do CTA do hero: respiro sob o Header fixo (scroll-padding já o cobre). */
+  scroll-margin-top: 16px;
 }
 
 /* Título centralizado: uma linha quando há largura, quebra natural em duas
@@ -17,6 +19,16 @@
 .root .headline {
   margin: 0 0 8px;
   text-align: center;
+}
+
+/* Mobile: o título ganha largura útil (margens laterais de 12px em vez do
+   padding do container) para ocupar uma linha sempre que couber, SEM reduzir
+   a fonte. Onde uma linha não cabe fisicamente (< ~440px), text-wrap: balance
+   (primitiva .subheading) faz a quebra equilibrada em duas linhas. */
+@media (max-width: 767px) {
+  .root .headline {
+    margin-inline: calc(-1 * (clamp(20px, 6vw, 64px) - 12px));
+  }
 }
 
 .guide {

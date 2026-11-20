@@ -29,6 +29,13 @@ export type Equipment3DConfig = {
   environmentIntensity: number;
   /** Legenda editorial discreta quando o GLB representa uma variante específica. */
   modelCaption?: Record<Locale, string>;
+  /**
+   * Ajuste fino da coreografia: quando este modelo é o vizinho da DIREITA do
+   * protagonista, ele é empurrado para FORA do quadro (direita) esta fração da
+   * largura útil do palco — menos porção visível, mesma escala, sem salto
+   * (o deslocamento cresce junto com a aproximação do slot lateral).
+   */
+  choreographyRightNudge?: number;
   /** Nome editorial exibido na legenda discreta da coreografia. */
   displayName: Record<Locale, string>;
   camera: Equipment3DCameraConfig;
@@ -74,12 +81,12 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowSize: { width: 2.6, depth: 2.0 },
     environmentIntensity: 1.8,
     modelCaption: {
-      pt: "Modelo 3D apresentado: APV 100",
-      en: "3D model shown: APV 100",
+      pt: "Modelo 3D apresentado: Prensa APV 100",
+      en: "3D model shown: APV 100 Baler",
     },
     displayName: {
-      pt: "APV 100",
-      en: "APV 100",
+      pt: "Prensa APV 100",
+      en: "APV 100 Baler",
     },
     camera: {
       azimuthDeg: 34,
@@ -100,6 +107,7 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
   "compactador-hidraulico": {
     productId: "compactador-hidraulico",
     assetSlug: "compactador-hidraulico",
+    choreographyRightNudge: 0.05,
     glbUrl: "/models/equipamentos/compactador-hidraulico/modelo.glb",
     posterUrl: "/models/equipamentos/compactador-hidraulico/poster.webp",
     contactShadowUrl: "/models/equipamentos/compactador-hidraulico/sombra-contato.png",

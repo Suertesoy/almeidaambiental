@@ -113,6 +113,28 @@
   width: 100%;
 }
 
+/* ---------------- Mobile (< 768px) ----------------
+   Ordem visual: coreografia 3D → logotipo (centralizado) → texto → CTAs.
+   O DOM mantém logotipo/H1 antes do palco (leitura semântica); só a ordem
+   visual muda (`order`). O palco sangra até as bordas do viewport, como os
+   vídeos full bleed. Linhas: palco elástico · logotipo · texto + CTAs. */
+@media (max-width: 767px) {
+  .heroGrid {
+    grid-template-rows: minmax(clamp(220px, 38dvh, 320px), 1fr) auto auto;
+  }
+
+  .heroStage {
+    order: -1;
+    width: calc(100% + 2 * clamp(20px, 6vw, 64px));
+    margin-inline: calc(-1 * clamp(20px, 6vw, 64px));
+  }
+
+  .heroLogo {
+    margin-inline: auto;
+    max-width: 100%;
+  }
+}
+
 @media (min-width: 1024px) {
   .heroGrid {
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.2fr);
@@ -396,6 +418,14 @@
   font-size: clamp(28px, 2.4vw + 14px, 46px);
   line-height: 1.1;
   letter-spacing: -0.01em;
+}
+
+/* O catálogo hospeda o guia sticky dos produtos. `.surface` (boundarySurface)
+   usa overflow: hidden, que vira o "scroll container" do sticky e o impede de
+   prender na janela; overflow: clip recorta do mesmo jeito sem criar scroll
+   container. Seletor composto (0-2-0) vence `.surface` em qualquer ordem. */
+.catalogSection.catalogSection {
+  overflow: clip;
 }
 
 /* Seletor de materiais: bloco próprio logo abaixo do título do catálogo, separado por régua. */

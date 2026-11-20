@@ -246,6 +246,18 @@ html:has([data-page="home"]) {
   background: transparent;
 }
 
+/* Mobile: a coreografia usa a largura inteira do viewport (sangra as margens
+   laterais do container, como os vídeos .videoBleed) — os equipamentos
+   laterais espiam pelas bordas da tela. overflow-x já é cortado pela página,
+   e o palco recorta o próprio canvas (overflow hidden em .rootChoreography). */
+@media (max-width: 767px) {
+  .equipamentosStage {
+    max-width: none;
+    width: calc(100% + 2 * clamp(20px, 6vw, 64px));
+    margin-inline: calc(-1 * clamp(20px, 6vw, 64px));
+  }
+}
+
 @media (min-width: 1024px) {
   .equipamentosStage {
     width: 100vw;
@@ -482,6 +494,15 @@ html:has([data-page="home"]) {
     /* Mobile: presença ainda maior — ~55-70% da largura útil do Hero (ver
        Seção 6 do pedido da cliente), não só uma redução linear do desktop. */
     width: clamp(190px, 55vw, 320px);
+  }
+}
+
+/* Mobile: logomarca centralizada horizontalmente (desktop e tablet seguem
+   alinhados ao eixo do texto). */
+@media (max-width: 767px) {
+  .heroBrandMark {
+    margin-inline: auto;
+    max-width: 100%;
   }
 }
 

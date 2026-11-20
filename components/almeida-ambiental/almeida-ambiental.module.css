@@ -81,4 +81,11 @@
     margin-inline: calc(-1 * clamp(20px, 6vw, 64px));
     border-radius: 0 !important;
   }
+
+  /* Posicionamento ("Recolher não basta…"): no mobile o texto vem ANTES do
+     vídeo (o vídeo mantém as margens, conforme a decisão da rodada 5). Seletor duplicado
+     (0-2-0) vence a grade `.duo` independentemente da ordem dos módulos. */
+  .positioningDuo.positioningDuo {
+    grid-template-areas: "content" "media";
+  }
 }

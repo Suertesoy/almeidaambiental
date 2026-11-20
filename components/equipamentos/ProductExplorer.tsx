@@ -4,6 +4,7 @@ import cards from "../shared/MaterialCards.module.css";
 import shared from "../shared/company-page.module.css";
 import styles from "./product-explorer.module.css";
 import EquipmentModelStage from "./EquipmentModelStage";
+import ProductNav from "./ProductNav";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import { BENEFIT_ICONS, MATERIAL_ICONS, WhatsAppIcon, type FunctionalIconProps } from "../icons";
 import { getEquipment3DConfig } from "../../lib/equipamentos-3d";
@@ -14,6 +15,7 @@ import type { ReactElement } from "react";
 
 const COPY = {
   pt: {
+    navLabel: "Navegar entre os equipamentos do catálogo",
     description: "Descrição",
     applications: "Aplicações",
     benefits: "Benefícios",
@@ -26,6 +28,7 @@ const COPY = {
     modalities: ["Compra", "Locação", "Consignação"],
   },
   en: {
+    navLabel: "Browse the catalog equipment",
     description: "Description",
     applications: "Applications",
     benefits: "Benefits",
@@ -68,7 +71,9 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
   const t = COPY[locale];
 
   return (
-    <div className={styles.showcase}>
+    <div className={styles.explorer}>
+      <ProductNav items={products.map((p) => ({ id: p.id, label: p.name }))} ariaLabel={t.navLabel} />
+      <div className={styles.showcase}>
       {products.map((product, index) => {
         const model3D = getEquipment3DConfig(product.id);
         const isReverse = index % 2 === 1;
@@ -78,6 +83,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
           <article
             key={product.id}
             id={product.id}
+            tabIndex={-1}
             className={`${styles.showcaseItem} ${isReverse ? styles.showcaseItemReverse : ""}`}
           >
             <header className={styles.itemHeader}>
@@ -177,6 +183,7 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
           </article>
         );
       })}
+      </div>
     </div>
   );
 }

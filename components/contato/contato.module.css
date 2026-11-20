@@ -76,8 +76,18 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 55%;
+  /* Mobile: a fotografia mostrava teto demais; o enquadramento desce para
+     valorizar as pessoas/mesas (só object-position — mesmo asset, sem
+     distorção). Desktop mantém o enquadramento anterior (55%). */
+  object-position: center 84%;
   display: block;
+}
+
+@media (min-width: 768px) {
+  .heroOfficeMedia picture,
+  .heroOfficeMedia img {
+    object-position: center 55%;
+  }
 }
 
 .heroOfficeMedia::after {
@@ -250,7 +260,10 @@
     "cnpj"
     "location"
     "channels";
-  row-gap: clamp(24px, 4vw, 32px);
+  /* Informação da mesma unidade fica junta: identidade → CNPJ → endereço+mapa
+     → canais com 16–20px de respiro (antes 24–32px), o suficiente para ler
+     sem separar o mapa do bloco de localização. */
+  row-gap: clamp(16px, 3vw, 20px);
 }
 
 .unitGridNoLocation {
@@ -309,7 +322,7 @@
 /* Nome da unidade: rótulo de identificação, não manchete — usa a escala de
    subheading (≤28px), não a de headline (48px). */
 .unitTitle {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* Mobile/tablet (coluna única): rótulo e nome da unidade são identificação
@@ -332,7 +345,9 @@
   margin: 0;
   color: var(--text-muted);
   font-family: var(--font-inter), var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .unitNote {
@@ -360,11 +375,12 @@
 }
 
 .addressText {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: var(--role-secondary, var(--text-secondary));
   font-family: var(--font-inter), var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
 }
 
 .mapFrame {
@@ -435,7 +451,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 /* Botões de navegação externa (Google Maps / Waze): contorno + fundo sutil,
@@ -526,7 +542,7 @@
    separado abaixo do botão (Seção 3/11 da tarefa). */
 .channelGroupLabel {
   display: block;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   text-align: center;
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
@@ -577,13 +593,16 @@
   color: var(--role-secondary, var(--text-primary));
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .channelMeta {
   color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
   font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 /* Rodada 7 — desktop: botões de canal com largura uniforme (coluna de ações

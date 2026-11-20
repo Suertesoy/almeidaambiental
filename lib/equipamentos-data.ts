@@ -67,7 +67,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "apv-90-100",
-    name: "APV 90 e APV 100",
+    name: "Prensas APV 90 e APV 100",
     manufacturer: "Austropressen",
     headline: "Compactação vertical onde cada metro quadrado importa.",
     copy: "As prensas APV atendem operações que precisam organizar papel, papelão, têxteis ou plásticos sem dedicar uma grande área ao equipamento. O formato vertical reúne compactação e praticidade em uma solução adequada para operações comerciais e industriais.",
@@ -168,7 +168,7 @@ export const PRODUCTS_EN: Product[] = [
   },
   {
     id: "apv-90-100",
-    name: "APV 90 and APV 100",
+    name: "APV 90 and APV 100 Balers",
     manufacturer: "Austropressen",
     headline: "Vertical compaction where every square meter counts.",
     copy: "The APV balers are built for operations that need to keep paper, cardboard, textiles or plastic organized without giving up valuable floor space. Their vertical design combines compaction with practicality, well suited to commercial and industrial settings.",

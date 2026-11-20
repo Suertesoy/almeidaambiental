@@ -108,11 +108,19 @@
 }
 
 /* Graduação suave verde institucional sem escurecer excessivamente as pessoas */
+/* Uma única camada, na altura inteira da seção (.backdrop é inset: 0), com
+   degradê contínuo de ponta a ponta — sem trecho constante nem borda no meio
+   da tela. A base (~0.14 no topo) garante contraste mesmo em cenas claras;
+   o logotipo e os textos ficam na faixa de 0.3–0.5. pointer-events: none
+   vem de .scrim. */
 .scrimForest {
   background: linear-gradient(to top,
-      rgba(11, 28, 19, 0.78) 0%,
-      rgba(15, 39, 27, 0.34) 40%,
-      rgba(15, 39, 27, 0.08) 72%);
+      rgba(11, 28, 19, 0.8) 0%,
+      rgba(12, 31, 21, 0.62) 18%,
+      rgba(13, 34, 23, 0.44) 38%,
+      rgba(14, 37, 25, 0.3) 58%,
+      rgba(15, 39, 27, 0.2) 78%,
+      rgba(15, 39, 27, 0.14) 100%);
 }
 
 /* Graduação suave para o vídeo institucional na Saturno Ambiental */
@@ -275,6 +283,16 @@
   filter: drop-shadow(0 2px 14px rgba(8, 20, 14, 0.55)) drop-shadow(0 0 2px rgba(8, 20, 14, 0.35));
 }
 
+/* Mobile: logomarca centralizada (mesma largura proporcional de antes — 55vw,
+   190–320px — e max-width: 100%, então não estoura em 320px). O texto e os CTAs seguem a composição
+   existente. */
+@media (max-width: 767px) {
+  .titleLogo {
+    margin-inline: auto;
+    max-width: 100%;
+  }
+}
+
 @media (min-width: 1024px) {
   .titleLogo {
     width: clamp(190px, 16vw, 260px);
@@ -288,6 +306,13 @@
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(ellipse 70% 62% at 28% 56%, rgba(8, 20, 14, 0.5) 0%, rgba(8, 20, 14, 0.22) 55%, rgba(8, 20, 14, 0) 100%);
+}
+
+/* Variante sem halo localizado: o scrim da seção já dá o contraste, e a caixa
+   do halo (retangular, só na altura do conteúdo) criava um degrau de
+   luminosidade no meio da tela. */
+.noHalo.hasTitleLogo::before {
+  content: none;
 }
 
 .srOnly {

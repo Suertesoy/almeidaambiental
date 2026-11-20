@@ -371,10 +371,15 @@ export default function EquipmentChoreographyCanvas({
         // Além de |rel| = 1 o modelo continua deslizando para fora do quadro
         // (percurso proporcional à largura visível) antes de reaparecer do
         // lado oposto — a troca de lado acontece sempre fora de cena.
-        const x =
+        const baseX =
           abs <= 1
             ? rel * slot
             : dir * (slot + (abs - 1) * 2 * (halfW + extent));
+        // Ajuste fino por modelo: só como vizinho da direita (rel > 0), e
+        // crescendo de 0 (no centro) a 1 (no slot lateral) — contínuo, sem
+        // salto na transição. Fração da largura útil do palco (2 * halfW).
+        const nudge = (m.config.choreographyRightNudge ?? 0) * 2 * halfW;
+        const x = baseX + nudge * THREE.MathUtils.clamp(rel, 0, 1);
 
         m.group.visible = true;
         m.group.position.set(rightX * x, 0, rightZ * x);

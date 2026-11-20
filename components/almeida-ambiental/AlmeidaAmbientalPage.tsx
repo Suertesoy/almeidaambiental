@@ -146,7 +146,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
         <section className={`${shared.chapterOpen} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={shared.chapterRows}>
-              <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow}`}>
+              <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoMediaNarrow} ${styles.positioningDuo}`}>
                 <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
                   <AmbientVideo
                     src="/videos/captacao-2026/triagem2.mp4"

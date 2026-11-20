@@ -9,6 +9,107 @@
      visual protagonista e coluna de leitura confortável.
    ========================================================== */
 
+/* Wrapper do catálogo: guia sticky + lista. O guia só fica preso enquanto
+   este wrapper está na tela (position: sticky é limitado ao pai). */
+.explorer {
+  --product-nav-height: 60px;
+}
+
+.productNav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 5;
+  margin-top: clamp(20px, 3vw, 32px);
+}
+
+/* Fundo e régua de ponta a ponta da viewport (o container é mais estreito). */
+.productNav::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  background: var(--color-stone-warm);
+  border-bottom: 1px solid rgba(21, 21, 15, 0.14);
+}
+
+/* Lista horizontal rolável. Os pseudo-elementos com margin: auto centralizam
+   quando tudo cabe (desktop) e deixam rolar a partir da esquerda quando não
+   cabe (mobile), sem cortar o primeiro item. */
+.productNavList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--product-nav-height);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.productNavList::-webkit-scrollbar {
+  display: none;
+}
+
+.productNavList::before,
+.productNavList::after {
+  content: "";
+  margin: auto;
+}
+
+.productNavItem {
+  flex: 0 0 auto;
+}
+
+.productNavLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 4px 14px;
+  border: 1px solid rgba(21, 21, 15, 0.32);
+  border-radius: 4px;
+  color: var(--color-foreground);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.productNavLink:hover {
+  background: rgba(21, 21, 15, 0.06);
+  border-color: rgba(21, 21, 15, 0.56);
+}
+
+/* Equipamento atual: amarelo institucional, o mesmo dos CTAs e do guia das
+   unidades em /contato. */
+.productNavLink[data-active="true"] {
+  background: var(--color-gold-aged);
+  border-color: var(--color-gold-aged);
+  color: var(--color-forest-deep);
+}
+
+.productNavLink:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .productNavLink {
+    transition: none;
+  }
+}
+
 .showcase {
   margin-top: clamp(32px, 5vw, 56px);
   display: flex;
@@ -327,6 +428,10 @@
   }
 }
 
+/* html já tem scroll-padding-top: var(--header-height) (globals.css): aqui
+   entra só a altura do guia sticky + respiro, para o título do equipamento
+   nunca ficar sob o Header nem sob o guia. */
 .showcaseItem {
-  scroll-margin-top: calc(var(--header-height) + 16px);
+  scroll-margin-top: calc(var(--product-nav-height) + 16px);
+  outline: none;
 }
