@@ -60,8 +60,10 @@
    Os destaques (tags) de Coleta e Triagem saem do mobile (continuam no
    desktop). Sem eles, o respiro vertical das seções encolhe para não deixar
    vão entre o texto e a próxima imagem, e as imagens de Coleta e Trituração
-   ocupam a largura toda da tela (composição editorial). Triagem mantém a
-   imagem recuada para alternar o ritmo — não é full-bleed indiscriminado. */
+   ocupam a largura toda da tela (composição editorial). Triagem passou a
+   seguir o mesmo tratamento (rodada 5): era a única mídia de pilar contida
+   nas margens. O vídeo do posicionamento continua com margens — não é
+   full-bleed indiscriminado. */
 @media (max-width: 767px) {
   .pillarHighlights {
     display: none;

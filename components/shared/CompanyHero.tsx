@@ -61,7 +61,7 @@ export type CompanyHeroProps = {
   /** Metade de saída de uma fronteira de território ancorada neste Hero. */
   boundary?: { id: BrandBoundaryId; surface: BrandBoundarySurface };
   /**
-   * Logotipo oficial que substitui visualmente eyebrow + tÃ­tulo. O H1 textual
+   * Logotipo oficial que substitui visualmente eyebrow + título. O H1 textual
    * continua no HTML (visualmente oculto) para acessibilidade e SEO.
    */
   titleLogo?: { src: string };
@@ -72,15 +72,15 @@ export type CompanyHeroProps = {
 /**
  * Hero de página de empresa.
  *
- * Com fotografia: predominantemente visual (imagem editorial de
- * operação/produto), scrim neutro para leitura, eyebrow + H1 + lede + até
- * dois CTAs — mesmo tratamento do Hero da Home e do Hero de /historia.
+ * Composição de referência: o Hero da Home. Altura mínima de uma viewport
+ * (100dvh), conteúdo ancorado na base — logotipo à esquerda, texto
+ * institucional e CTAs empilhados no mobile — e o vídeo/fotografia ocupando
+ * o espaço restante. O Hero cresce com o conteúdo em telas baixas (min-height,
+ * nunca height), então nenhum CTA é cortado.
  *
  * Sem fotografia: superfície sólida, tipografia como protagonista e uma
  * faixa de metadados validados. Não é um estado degradado — é a decisão
- * para a Saturno Ambiental, que não tem captação prevista da instalação
- * atual e não pode ser representada nem por um prédio gerado nem pela
- * fotografia de outra unidade do Grupo.
+ * para empresas que não podem ser representadas por fotografia.
  */
 export default function CompanyHero({
   locale,
@@ -162,11 +162,7 @@ export default function CompanyHero({
           )}
           <div
             className={`${styles.scrim} ${
-              scrimTone === "forest"
-                ? styles.scrimForest
-                : scrimTone === "saturno"
-                  ? styles.scrimSaturno
-                  : ""
+              scrimTone === "forest" ? styles.scrimForest : scrimTone === "saturno" ? styles.scrimSaturno : ""
             }`}
             aria-hidden="true"
           />

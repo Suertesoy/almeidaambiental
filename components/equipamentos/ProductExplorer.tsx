@@ -21,6 +21,9 @@ const COPY = {
     specNote:
       "Especificações confirmadas em material oficial do fabricante. Dimensionamento e configuração final dependem do material, do volume e do espaço da sua operação.",
     talk: "Falar sobre este equipamento",
+    // Provisório: aplicado às seis máquinas até a confirmação comercial com a equipe.
+    modalitiesLabel: "Modalidades",
+    modalities: ["Compra", "Locação", "Consignação"],
   },
   en: {
     description: "Description",
@@ -30,6 +33,9 @@ const COPY = {
     specNote:
       "Specifications confirmed by the manufacturer. Final sizing and configuration depend on your material, volume and available space.",
     talk: "Ask about this equipment",
+    // Provisional: applied to all six machines until the sales team confirms.
+    modalitiesLabel: "Available as",
+    modalities: ["Purchase", "Rental", "Consignment"],
   },
 } as const;
 
@@ -52,7 +58,7 @@ const APPLICATION_ICON_FALLBACK: Record<string, IconFn | undefined> = {
  * Vitrine editorial do catálogo Almeida Equipamentos.
  *
  * Cada equipamento é um bloco autossuficiente, sem modal, accordion ou botão
- * "Ver detalhes": identificação → visual (3D interativo quando há GLB) →
+ * "Ver detalhes": marca → nome → modalidades → visual (3D interativo quando há GLB) →
  * descrição → aplicações (ícones do Material Atlas) → benefícios (ícones) →
  * especificações técnicas confirmadas → CTA de contato do próprio
  * equipamento. No desktop alterna a assimetria entre visual e coluna editorial.
@@ -75,15 +81,20 @@ export default function ProductExplorer({ locale, products }: { locale: Locale; 
             className={`${styles.showcaseItem} ${isReverse ? styles.showcaseItemReverse : ""}`}
           >
             <header className={styles.itemHeader}>
+              {/* Hierarquia: marca → nome do equipamento → modalidades. */}
               <div className={styles.itemMetaRow}>
+                <span className={styles.itemManufacturer}>{product.manufacturer}</span>
                 <span className={styles.itemIndex}>
                   {String(index + 1).padStart(2, "0")}
                   <span className={styles.itemIndexTotal}>/ {String(products.length).padStart(2, "0")}</span>
                 </span>
-                <span className={styles.itemManufacturer}>{product.manufacturer}</span>
               </div>
               <h3 className={styles.itemName}>{product.name}</h3>
-              <p className={styles.itemHeadline}>{product.headline}</p>
+              <ul className={styles.itemModalities} aria-label={t.modalitiesLabel}>
+                {t.modalities.map((modality) => (
+                  <li key={modality}>{modality}</li>
+                ))}
+              </ul>
             </header>
 
             <div className={styles.itemMediaWrap}>

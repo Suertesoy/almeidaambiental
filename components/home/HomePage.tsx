@@ -8,7 +8,7 @@ import SectionMedia from "../shared/SectionMedia";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import BrandMark from "../shared/BrandMark";
-import ProcessSteps from "../shared/ProcessSteps";
+import ProcessFlowDiagram from "../almeida-ambiental/ProcessFlowDiagram";
 import IllustrativeBadge from "../shared/IllustrativeBadge";
 import MaterialSurface from "../shared/MaterialSurface";
 import EquipmentChoreographyStage from "../equipamentos/EquipmentChoreographyStage";
@@ -80,12 +80,13 @@ const COPY = {
     ambientalFrotaAlt:
       "Imagem ilustrativa de um pátio industrial de reciclagem com fardos de papelão organizados e empilhadeira",
     ambientalProcessAriaLabel: "Etapas da operação da Almeida Ambiental",
+    ambientalProcessDescription:
+      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue por Trituração ou por Descaracterização, caminhos alternativos que convergem na Destinação.",
     equipamentosEntryHeadline: "Tecnologia que nasceu da própria operação",
     equipamentosEntryBody:
       "Criada para aperfeiçoar os processos do Grupo Almeida, transforma décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.",
     equipamentosHeadline: "Engenharia para movimentar mais com menos",
     equipamentosBody: "Conhecimento de campo conectado a tecnologias internacionais.",
-    equipamentosTags: ["Compactadores", "Prensas", "Trituradores", "Containers"],
     equipamentosCta: "Conheça Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
     saturnoEntryHeadline: "Experiência regional. Força de grupo.",
@@ -93,7 +94,6 @@ const COPY = {
     saturnoHeadline: "Gestão ambiental que vai além da coleta",
     saturnoBody:
       "Coleta, triagem, trituração, cartonagem e consultoria ambiental fazem parte de uma atuação construída para unir eficiência operacional e responsabilidade ambiental.",
-    saturnoTags: ["Gestão de Resíduos", "Cartonagem", "Consultoria"],
     saturnoCta: "Conheça Saturno Ambiental",
     impactTitle: "Impacto positivo",
     impactBadge: "Estimativa",
@@ -118,12 +118,13 @@ const COPY = {
     ambientalFrotaAlt:
       "Illustrative image of an industrial recycling yard with organized cardboard bales and a forklift",
     ambientalProcessAriaLabel: "Almeida Ambiental's operating steps",
+    ambientalProcessDescription:
+      "Assessment, Collection and Sorting. After Sorting, material goes through either Shredding or Destruction, alternative paths that converge on Disposal.",
     equipamentosEntryHeadline: "Technology born from the operation",
     equipamentosEntryBody:
       "Created to improve Grupo Almeida's processes, it turns decades of industry experience into technology applied to waste management.",
     equipamentosHeadline: "Engineering to move more with less",
     equipamentosBody: "Field knowledge, paired with international technology.",
-    equipamentosTags: ["Compactors", "Balers", "Shredders", "Containers"],
     equipamentosCta: "See Almeida Equipamentos",
     saturnoLocationLine: "Blumenau · Vale do Itajaí",
     saturnoEntryHeadline: "Regional expertise. Backed by Grupo Almeida.",
@@ -131,7 +132,6 @@ const COPY = {
     saturnoHeadline: "Environmental management that goes beyond collection",
     saturnoBody:
       "Collection, sorting, shredding, cardboard packaging and environmental consulting come together in an operation built around efficiency and environmental responsibility.",
-    saturnoTags: ["Waste Management", "Cardboard Packaging", "Consulting"],
     saturnoCta: "See Saturno Ambiental",
     impactTitle: "Positive impact",
     impactBadge: "Estimate",
@@ -165,7 +165,7 @@ const COPY = {
  */
 export default function HomePage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const processSteps = (locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS).map((name) => ({ name }));
+  const processSteps = locale === "en" ? FLOW_STEPS_EN : FLOW_STEPS;
   const impactoRef = useRef<HTMLDivElement>(null);
   const impactoActive = useEnterOnce([impactoRef]);
 
@@ -204,15 +204,13 @@ export default function HomePage({ locale }: { locale: Locale }) {
                 </Reveal>
               </div>
 
+              <Reveal className={styles.processHeader} style={{ transitionDelay: "120ms" }}>
+                <h3 className={styles.headlineSecondary}>{t.ambientalProcessHeadline}</h3>
+              </Reveal>
+
               <Reveal className={`${styles.duo} ${styles.duoMediaRight}`} style={{ transitionDelay: "120ms" }}>
                 <div className={styles.duoContent}>
-                  <h3 className={styles.headlineSecondary}>{t.ambientalProcessHeadline}</h3>
                   <p className={styles.body}>{t.ambientalProcessBody}</p>
-                  <div className={styles.ctaRow}>
-                    <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/almeida-ambiental", locale)}>
-                      {t.ambientalProcessCta}
-                    </Link>
-                  </div>
                 </div>
                 <div className={`${styles.duoMedia} ${styles.duoMediaLandscape}`}>
                   <AmbientVideo
@@ -228,7 +226,22 @@ export default function HomePage({ locale }: { locale: Locale }) {
                 </div>
               </Reveal>
 
-              <ProcessSteps steps={processSteps} ariaLabel={t.ambientalProcessAriaLabel} />
+              {/* Mesmo componente (e mesmo progresso por rolagem) da página
+                  Almeida Ambiental — não é uma segunda implementação. */}
+              <Reveal>
+                <ProcessFlowDiagram
+                  steps={[...processSteps]}
+                  ariaLabel={t.ambientalProcessAriaLabel}
+                  description={t.ambientalProcessDescription}
+                />
+              </Reveal>
+
+              {/* CTA da empresa: último elemento da seção, amarelo institucional. */}
+              <div className={`${styles.ctaRow} ${styles.ctaRowCenter}`}>
+                <Link className={`${styles.btn} ${styles.btnSolidGold}`} href={localizeHref("/almeida-ambiental", locale)}>
+                  {t.ambientalProcessCta}
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -264,21 +277,12 @@ export default function HomePage({ locale }: { locale: Locale }) {
             </Reveal>
 
             <Reveal className={styles.equipamentosFooter} style={{ transitionDelay: "160ms" }}>
-              <div className={styles.equipamentosFooterCopy}>
-                <h3 className={styles.headlineSecondary}>{t.equipamentosHeadline}</h3>
-                <p className={styles.body}>{t.equipamentosBody}</p>
-              </div>
-              <div className={styles.equipamentosFooterMeta}>
-                <ul className={styles.tagRow}>
-                  {t.equipamentosTags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-                <div className={styles.ctaRow}>
-                  <Link className={`${styles.btn} ${styles.btnOutlineOnLight}`} href={localizeHref("/almeida-equipamentos", locale)}>
-                    {t.equipamentosCta}
-                  </Link>
-                </div>
+              <h3 className={styles.headlineSecondary}>{t.equipamentosHeadline}</h3>
+              <p className={styles.body}>{t.equipamentosBody}</p>
+              <div className={styles.ctaRow}>
+                <Link className={`${styles.btn} ${styles.btnSolidGold}`} href={localizeHref("/almeida-equipamentos", locale)}>
+                  {t.equipamentosCta}
+                </Link>
               </div>
             </Reveal>
           </div>
@@ -326,13 +330,8 @@ export default function HomePage({ locale }: { locale: Locale }) {
                 <div className={styles.duoContent}>
                   <h3 className={styles.headlineSecondary}>{t.saturnoHeadline}</h3>
                   <p className={styles.body}>{t.saturnoBody}</p>
-                  <ul className={styles.tagRow}>
-                    {t.saturnoTags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
                   <div className={styles.ctaRow}>
-                    <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/saturno-ambiental", locale)}>
+                    <Link className={`${styles.btn} ${styles.btnSolidGold}`} href={localizeHref("/saturno-ambiental", locale)}>
                       {t.saturnoCta}
                     </Link>
                   </div>
@@ -381,7 +380,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
               <h2 className={styles.headlineSecondary}>{t.manifestoHeadline}</h2>
               <p className={styles.body}>{t.manifestoBody}</p>
               <div className={styles.ctaRow}>
-                <Link className={`${styles.btn} ${styles.btnOutlineOnDark}`} href={localizeHref("/contato", locale)}>
+                <Link className={`${styles.btn} ${styles.btnSolidGold}`} href={localizeHref("/contato", locale)}>
                   {t.manifestoCta}
                 </Link>
               </div>

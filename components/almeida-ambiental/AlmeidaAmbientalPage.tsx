@@ -184,7 +184,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
                 {isLast && <BrandBoundaryMark boundary="ambiental-processo" half="leaving" surface="onDark" />}
                 <div className={shared.container}>
                   <div className={`${shared.duo} ${PILLAR_SIDE[index]}`}>
-                    <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape} ${index !== 1 ? styles.pillarBleed : ""}`} style={{ transitionDelay: "80ms" }}>
+                    <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape} ${styles.pillarBleed}`} style={{ transitionDelay: "80ms" }}>
                       {index === 0 ? (
                         <AmbientVideo
                           src="/videos/captacao-2026/caminhao-coleta.mp4"

@@ -212,6 +212,35 @@ p.splitCopy {
   border-top: 1px solid rgba(247, 246, 241, 0.16);
 }
 
+/* Eyebrow + título centralizados. Seletores compostos (0-2-0) vencem as
+   primitivas editoriais independentemente da ordem de injeção dos módulos. */
+.groupHead {
+  text-align: center;
+}
+
+.groupHead h2 {
+  margin-inline: auto;
+}
+
+/* Parágrafo à esquerda, em bloco de leitura centralizado. */
+.groupCopy {
+  max-width: 64ch;
+  margin-inline: auto;
+}
+
+.groupCopy p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Botão secundário: área de toque confortável e foco visível sobre carvão. */
+.groupCopy .groupCta {
+  min-height: 52px;
+}
+
+.groupCopy .groupCta:focus-visible {
+  outline-color: var(--color-background);
+}
+
 /* ---------------- Gestão Ambiental: escopo com ícones + selos de sigla ----------------
    Substitui a lista de oito bullets: os itens descritivos ganham ícone
    (biblioteca existente) e as siglas (PGRS, PGRSS, PAE) viram selos. */

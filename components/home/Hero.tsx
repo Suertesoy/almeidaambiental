@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./home.module.css";
 import { HERO_POSTER_DATA_URI } from "../../lib/hero-poster";
-import { ChevronDownIcon } from "../icons";
 import BrandMark from "../shared/BrandMark";
 import { BRANDS } from "../../lib/brands";
 import { localizeHref } from "../../lib/i18n/routes";
@@ -18,14 +17,12 @@ const COPY = {
     headlinePrefix: "Transformando resíduo em ",
     headlineGold: "resultado",
     cta: "Conheça nossa história",
-    scrollHint: "Role para baixo",
   },
   en: {
     ariaLabel: "Grupo Almeida — 40 years",
     headlinePrefix: "Turning waste into ",
     headlineGold: "results",
     cta: "See our story",
-    scrollHint: "Scroll down",
   },
 } as const;
 
@@ -138,11 +135,6 @@ export default function Hero({ locale }: { locale: Locale }) {
           {t.cta}
         </Link>
       </div>
-
-      <a className={styles.heroScrollHint} href="#almeida-ambiental">
-        <span>{t.scrollHint}</span>
-        <ChevronDownIcon />
-      </a>
     </section>
   );
 }

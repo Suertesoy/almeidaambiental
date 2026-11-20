@@ -256,10 +256,13 @@ html:has([data-page="home"]) {
   display: block;
 }
 
+/* Fecho do capítulo Equipamentos: título e frase de apoio centralizados (bloco
+   curto de destaque), CTA primário amarelo como último elemento. */
 .equipamentosFooter {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   max-width: 1040px;
   width: 100%;
   margin-inline: auto;
@@ -267,82 +270,42 @@ html:has([data-page="home"]) {
   border-top: 1px solid rgba(21, 21, 15, 0.12);
 }
 
-.equipamentosFooterCopy .headlineSecondary {
+.equipamentosFooter .headlineSecondary {
   max-width: 24ch;
+  margin-inline: auto;
 }
 
-.equipamentosFooterCopy .body {
+.equipamentosFooter .body {
+  max-width: 48ch;
+  margin-inline: auto;
+}
+
+.equipamentosFooter .ctaRow {
+  justify-content: center;
+}
+
+/* Cabeçalho centralizado da linha do processo (Ambiental) e CTA final. */
+.processHeader {
+  text-align: center;
+}
+
+.processHeader .headlineSecondary {
+  max-width: 28ch;
+  margin-inline: auto;
   margin-bottom: 0;
 }
 
-.equipamentosFooterMeta {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
-  width: 100%;
-  min-width: 0;
-}
-
-.equipamentosFooterMeta .tagRow {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.equipamentosFooterMeta .tagRow::-webkit-scrollbar {
-  display: none;
-}
-
-.equipamentosFooterMeta .tagRow li {
-  font-size: clamp(11px, 3vw, 13px);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.equipamentosFooterMeta .ctaRow {
+.ctaRow.ctaRowCenter {
+  justify-content: center;
   margin-top: 0;
-  width: 100%;
 }
 
-.equipamentosFooterMeta .ctaRow .btn {
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .equipamentosFooter {
-    grid-template-columns: 7fr 5fr;
-    gap: clamp(32px, 5vw, 64px);
-    align-items: start;
-  }
-
-  .equipamentosFooterMeta {
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .equipamentosFooterMeta .tagRow {
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    width: auto;
-    gap: 10px 18px;
-    overflow-x: visible;
-  }
-
-  .equipamentosFooterMeta .tagRow li {
-    font-size: 13px;
-  }
-
-  .equipamentosFooterMeta .ctaRow,
-  .equipamentosFooterMeta .ctaRow .btn {
-    width: auto;
-  }
+/* Foco do botão amarelo sobre superfícies escuras: o anel verde padrão
+   (--color-primary) some contra o verde floresta. */
+.toneForest .btnSolidGold:focus-visible,
+.toneStone .btnSolidGold:focus-visible,
+.toneCarvao .btnSolidGold:focus-visible {
+  outline-color: var(--color-background);
 }
 
 /* ---------------- CTAs ---------------- */
@@ -359,8 +322,10 @@ html:has([data-page="home"]) {
 .hero {
   position: relative;
   width: 100%;
-  height: 100svh;
-  height: 100dvh;
+  /* min-height (não height): em telas baixas o Hero cresce com o conteúdo em
+     vez de cortar o CTA. Mesma lógica do Hero das páginas de empresa. */
+  min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -424,7 +389,7 @@ html:has([data-page="home"]) {
   width: 100%;
   padding-inline: clamp(20px, 6vw, 64px);
   padding-top: calc(var(--header-height) + 24px);
-  padding-bottom: clamp(56px, 9vh, 104px);
+  padding-bottom: calc(clamp(56px, 9vh, 104px) + env(safe-area-inset-bottom, 0px));
   color: var(--color-background);
 }
 
@@ -500,53 +465,11 @@ html:has([data-page="home"]) {
 
 /* Botão como ação (Checkpoint B, Seção 47): ocupa a largura do
    .heroContent que já envolve eyebrow/headline acima dele. */
-@media (max-width: 639px) {
+@media (max-width: 767px) {
   .heroCta {
     width: 100%;
     justify-content: center;
   }
-}
-
-.heroScrollHint {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  bottom: clamp(20px, 3.4vh, 32px);
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  color: var(--color-background);
-  text-decoration: none;
-  font-family: var(--font-inter), var(--font-body);
-  opacity: 0.88;
-  transition: opacity 200ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.heroScrollHint:hover {
-  opacity: 1;
-  transform: translateX(-50%) translateY(2px);
-}
-
-.heroScrollHint span {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-
-.heroScrollHint svg {
-  width: 16px;
-  height: 11px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
-}
-
-.heroScrollHint:focus-visible {
-  outline: 3px solid var(--color-background);
-  outline-offset: 4px;
-  border-radius: 8px;
 }
 
 @media (min-width: 1024px) {
@@ -794,16 +717,11 @@ html:has([data-page="home"]) {
 
 @media (prefers-reduced-motion: reduce) {
   .heroPoster,
-  .heroCta,
-  .heroScrollHint {
+  .heroCta {
     transition: none;
   }
 
   .heroCta:active {
     transform: none;
-  }
-
-  .heroScrollHint:hover {
-    transform: translateX(-50%);
   }
 }

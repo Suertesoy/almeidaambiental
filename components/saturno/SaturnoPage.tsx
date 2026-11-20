@@ -11,6 +11,7 @@ import Reveal from "../shared/Reveal";
 import SaturnoFlow from "./SaturnoFlow";
 import { BENEFIT_ICONS, PROCESS_STEP_ICONS } from "../icons";
 import { FRENTES, FRENTES_EN, type Frente } from "../../lib/saturno-data";
+import { BRANDS } from "../../lib/brands";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
@@ -148,6 +149,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
         imagePosition="50% 48%"
         mobileImagePosition="52% 48%"
         scrimTone="saturno"
+        titleLogo={{ src: BRANDS["saturno-ambiental"].logos.branca }}
         boundary={{ id: "saturno-territorio", surface: "onDark" }}
         primaryCta={{ label: t.heroPrimaryCta, href: "#frentes" }}
         secondaryCta={{ label: t.heroSecondaryCta, href: localizeHref(CONTACT_ANCHORS.blumenau, locale) }}
@@ -285,20 +287,21 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           </Reveal>
 
           <div className={styles.groupBlock}>
-            <div className={styles.splitGrid}>
-              <Reveal>
-                <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.groupEyebrow}</p>
-                <h2 className={shared.headline}>{t.groupHeadline}</h2>
-              </Reveal>
-              <Reveal className={styles.splitCopy} style={{ transitionDelay: "80ms" }}>
-                <p className={shared.body}>{t.groupBody}</p>
-                <div className={shared.ctaRow}>
-                  <Link className={shared.btnEditorial} href={localizeHref("/historia", locale)}>
-                    {t.groupCta}
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
+            {/* Título e eyebrow centralizados; o parágrafo segue à esquerda,
+                num bloco de leitura centralizado na largura. */}
+            <Reveal className={styles.groupHead}>
+              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.groupEyebrow}</p>
+              <h2 className={shared.headline}>{t.groupHeadline}</h2>
+            </Reveal>
+            <Reveal className={styles.groupCopy} style={{ transitionDelay: "80ms" }}>
+              <p className={shared.body}>{t.groupBody}</p>
+              {/* Botão secundário real (contorno), não mais um link de texto. */}
+              <div className={shared.ctaRow}>
+                <Link className={`${shared.btn} ${shared.btnOutlineOnDark} ${styles.groupCta}`} href={localizeHref("/historia", locale)}>
+                  {t.groupCta}
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>

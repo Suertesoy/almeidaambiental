@@ -2,37 +2,25 @@ import Link from "next/link";
 import shared from "../shared/company-page.module.css";
 import styles from "./equipamentos.module.css";
 import EditorialCTA from "../shared/EditorialCTA";
-import IllustrativeBadge from "../shared/IllustrativeBadge";
-import EditorialPicture from "../shared/EditorialPicture";
 import Reveal from "../shared/Reveal";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import LogisticsEfficiency from "./LogisticsEfficiency";
 import ProductExplorer from "./ProductExplorer";
 import MaterialSelector from "./MaterialSelector";
 import EquipmentChoreographyStage from "./EquipmentChoreographyStage";
-import { MATERIAL_ICONS } from "../icons";
-import {
-  FEIRA_IMAGE,
-  FEIRA_IMAGE_EN,
-  PRODUCTS,
-  PRODUCTS_EN,
-  MATERIAL_ASSOCIATIONS,
-  MATERIAL_ASSOCIATIONS_EN,
-  PARTNERS,
-} from "../../lib/equipamentos-data";
+import { PRODUCTS, PRODUCTS_EN, PARTNERS } from "../../lib/equipamentos-data";
+import { BRANDS } from "../../lib/brands";
 import { CONTACT_ANCHORS } from "../../lib/contact-data";
 import { localizeHref } from "../../lib/i18n/routes";
 import type { Locale } from "../../lib/i18n/locale";
 
-const MODALITIES = { pt: ["Compra", "Locação", "Consignação"], en: ["Purchase", "Rental", "Consignment"] } as const;
-
 /*
- * Distribuição das mensagens (rodada de refino de Equipamentos): cada bloco
- * diz uma coisa que o anterior não disse.
- *   Hero         → o que a tecnologia entrega (volume, eficiência)
- *   Posicionamento → como a empresa avalia (a única vez que "operação" é tese)
- *   Catálogo     → o que existe
- *   Como escolher → por que compactar importa (transporte) e por onde começar (material)
+ * Distribuição das mensagens (rodada 5): cada bloco diz uma coisa que o
+ * anterior não disse, sem repetir explicações que o seletor e o catálogo já
+ * dão.
+ *   Hero         → marca + o que a tecnologia entrega
+ *   Catálogo     → seletor por material + os seis equipamentos
+ *   Como escolher → por que compactar importa (transporte)
  *   Parcerias    → de onde vem a tecnologia
  *   Grupo        → prova de uso (a mesma tecnologia trabalha na Ambiental)
  *   Fechamento   → ação: material, volume e espaço
@@ -44,22 +32,14 @@ const COPY = {
     heroLede: "Tecnologia aplicada à movimentação e compactação de resíduos.",
     heroPrimaryCta: "Conheça as tecnologias",
     heroSecondaryCta: "Encontre a solução para sua operação",
-    positioningHeadline: "Escolher um equipamento é avaliar o que ele muda na operação.",
-    positioningBody:
-      "A Almeida Equipamentos nasceu da proximidade entre tecnologia e gestão de resíduos. Por isso a conversa vai além da máquina: considera espaço, transporte, produtividade e a rotina de quem opera.",
-    catalogEyebrow: "Catálogo técnico",
-    catalogHeadline: "Seis tecnologias. Cada uma resolve um tipo de problema.",
-    catalogBody:
-      "Escolha um equipamento para ver galeria, aplicação, benefícios e as especificações confirmadas pelo fabricante.",
+    catalogTitle: "Catálogo técnico",
     densityEyebrow: "Como escolher",
-    matrixHeadline: "A escolha começa pelo material, não pela máquina.",
-    matrixBody:
-      "Volume, densidade, umidade, espaço disponível e frequência de coleta mudam a solução. Veja por onde começar para cada material.",
     partnersEyebrow: "Parcerias internacionais",
-    partnersHeadline: "Tecnologia internacional aplicada à experiência brasileira.",
+    partnersHeadline: "Tecnologia internacional aplicada à experiência brasileira",
     partnersBody:
       "A presença histórica do Grupo Almeida em contato com tecnologias europeias — incluindo a feira IFAT, em Munique, referência mundial em soluções ambientais — é parte relevante do posicionamento da Almeida Equipamentos.",
-    crossHeadline: "A mesma tecnologia do catálogo já trabalha dentro do Grupo.",
+    partnersListLabel: "Fabricantes parceiros",
+    crossHeadline: "A mesma tecnologia do catálogo já trabalha dentro do grupo",
     crossBody:
       "Na Almeida Ambiental, coleta, triagem e trituração em escala real mostram como cada equipamento se comporta no dia a dia. Esse uso orienta o que a Almeida Equipamentos recomenda.",
     crossCta: "Conheça a Almeida Ambiental",
@@ -74,21 +54,14 @@ const COPY = {
     heroLede: "Technology applied to waste handling and compaction.",
     heroPrimaryCta: "See the technologies",
     heroSecondaryCta: "Find the solution for your operation",
-    positioningHeadline: "Choosing equipment means weighing its impact on your operation.",
-    positioningBody:
-      "Almeida Equipamentos grew out of the close relationship between technology and waste management. That is why the conversation goes beyond the machine: space, transport, productivity and the daily routine of the people who run it.",
-    catalogEyebrow: "Technical catalog",
-    catalogHeadline: "Six technologies. Each solves a different kind of problem.",
-    catalogBody: "Choose a piece of equipment to see its gallery, application, benefits and manufacturer-confirmed specs.",
+    catalogTitle: "Technical catalog",
     densityEyebrow: "How to choose",
-    matrixHeadline: "The choice starts with the material, not the machine.",
-    matrixBody:
-      "Volume, density, moisture, available space and collection frequency all shape the solution. See where to start for each material.",
     partnersEyebrow: "International partnerships",
-    partnersHeadline: "International technology, shaped by Brazilian operational experience.",
+    partnersHeadline: "International technology, shaped by Brazilian operational experience",
     partnersBody:
       "Grupo Almeida has a long history of engagement with European technologies, including through IFAT in Munich, an internationally recognized trade fair for environmental solutions. This international exposure is an important part of Almeida Equipamentos' positioning.",
-    crossHeadline: "The same technology in this catalog already works inside the Group.",
+    partnersListLabel: "Partner manufacturers",
+    crossHeadline: "The same technology in this catalog already works inside the Group",
     crossBody:
       "At Almeida Ambiental, collection, sorting and shredding at full scale show how each piece of equipment performs day to day. That experience shapes what Almeida Equipamentos recommends.",
     crossCta: "See Almeida Ambiental",
@@ -104,32 +77,36 @@ const COPY = {
  * virtual: sem preço, sem carrinho, sem quantidade, sem favorito, sem
  * badge promocional.
  *
- * Três capítulos entre o Hero e o fechamento (capítulo é a unidade
- * perceptiva, não o <section> — ver editorial.module.css):
+ * Hero (mesma composição do Hero da Home: logotipo à esquerda, coreografia
+ * 3D protagonista, texto e CTAs empilhados na base) → catálogo técnico
+ * (seletor de materiais + seis equipamentos) → eficiência no transporte →
+ * parcerias internacionais → prova de uso no Grupo → fechamento.
  *
- *   A. O que oferecemos   (pedra)      posicionamento + catálogo explorável
- *   B. Como escolher      (pedra alt.) eficiência de transporte + material → tecnologia
- *   C. De onde vem        (pedra)      parcerias internacionais + prova de uso no Grupo
- *
- * Dentro de cada capítulo o respiro é metade (chapterOpen/chapterClose) e a
- * superfície não muda; o tom só troca quando o capítulo troca. O catálogo
- * (ProductExplorer) é descoberta primeiro, profundidade sob demanda.
+ * Capítulo é a unidade perceptiva, não o <section> (ver editorial.module.css).
  */
 export default function EquipamentosPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const feiraImage = locale === "en" ? FEIRA_IMAGE_EN : FEIRA_IMAGE;
   const products = locale === "en" ? PRODUCTS_EN : PRODUCTS;
-  const materialAssociations = locale === "en" ? MATERIAL_ASSOCIATIONS_EN : MATERIAL_ASSOCIATIONS;
-  const modalities = MODALITIES[locale];
+  const logo = BRANDS["almeida-equipamentos"].logos.preta;
 
   return (
     <div className={styles.page} data-page="almeida-equipamentos">
       <section className={`${styles.hero} ${shared.toneStone}`} aria-label={t.heroEyebrow}>
-        <div className={shared.container}>
+        <div className={`${shared.container} ${styles.heroInner}`}>
           <div className={styles.heroGrid}>
+            {/* O logotipo oficial substitui visualmente o título; o H1 textual
+                segue no HTML, oculto só visualmente. */}
+            <div className={styles.heroBrand}>
+              <img src={logo} alt="" aria-hidden="true" className={styles.heroLogo} />
+              <p className={styles.srOnly}>{t.heroEyebrow}</p>
+              <h1 className={styles.srOnly}>{t.heroTitle}</h1>
+            </div>
+
+            <div className={styles.heroStage}>
+              <EquipmentChoreographyStage locale={locale} variant="hero" paddingMultiplier={1.04} />
+            </div>
+
             <div className={styles.heroCopy}>
-              <p className={styles.heroEyebrow}>{t.heroEyebrow}</p>
-              <h1 className={styles.heroTitle}>{t.heroTitle}</h1>
               <p className={styles.heroLede}>{t.heroLede}</p>
               <div className={styles.heroCtas}>
                 <a className={`${shared.btn} ${shared.btnSolidGold}`} href="#produtos">
@@ -143,42 +120,22 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
                 </Link>
               </div>
             </div>
-
-            <div className={styles.heroStage}>
-              <EquipmentChoreographyStage
-                locale={locale}
-                variant="hero"
-                paddingMultiplier={1.04}
-              />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ============ Capítulo A — O que oferecemos ============ */}
-      <section className={`${shared.chapterOpen} ${shared.toneStone} ${boundarySurface}`}>
+      {/* ============ Catálogo técnico ============ */}
+      <section
+        id="produtos"
+        className={`${shared.chapterClose} ${shared.toneStone} ${boundarySurface}`}
+        aria-labelledby="produtos-heading"
+      >
         <BrandBoundaryMark boundary="equipamentos-abertura" half="entering" surface="onLight" />
         <div className={shared.container}>
-          <Reveal className={styles.positioningBlock}>
-            <h2 className={shared.headline}>{t.positioningHeadline}</h2>
-            <p className={shared.body}>{t.positioningBody}</p>
-            <ul className={styles.modalityTags}>
-              {modalities.map((modality) => (
-                <li key={modality}>{modality}</li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
-
-      <section id="produtos" className={`${shared.chapterClose} ${shared.toneStone}`} aria-labelledby="produtos-heading">
-        <div className={shared.container}>
-          <Reveal>
-            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.catalogEyebrow}</p>
-            <h2 id="produtos-heading" className={shared.headline}>
-              {t.catalogHeadline}
+          <Reveal className={styles.centerHead}>
+            <h2 id="produtos-heading" className={`${shared.headline} ${styles.catalogTitle}`}>
+              {t.catalogTitle}
             </h2>
-            <p className={shared.body}>{t.catalogBody}</p>
           </Reveal>
 
           <Reveal className={styles.selectorBlock}>
@@ -189,76 +146,45 @@ export default function EquipamentosPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* ============ Capítulo B — Como escolher ============ */}
+      {/* ============ Como escolher: eficiência no transporte ============ */}
       <LogisticsEfficiency locale={locale} eyebrow={t.densityEyebrow} />
 
-      {/* Material → tecnologia. Responde "para que serve" (por material); o
-          catálogo acima responde "o que existe". Sem CTA próprio: o único
-          convite à conversa fica no fechamento da página. */}
-      <section className={`${shared.chapterClose} ${shared.toneStoneAlt}`}>
-        <div className={shared.container}>
-          <Reveal>
-            <h2 className={shared.headline}>{t.matrixHeadline}</h2>
-            <p className={shared.body}>{t.matrixBody}</p>
-          </Reveal>
-          <Reveal style={{ transitionDelay: "80ms" }}>
-            <div className={styles.matrixGrid}>
-              {materialAssociations.map((assoc) => {
-                const MaterialIcon = MATERIAL_ICONS[assoc.material];
-                return (
-                  <div key={assoc.material} className={styles.matrixItem}>
-                    <div className={styles.matrixHead}>
-                      {MaterialIcon && <MaterialIcon className={styles.matrixIcon} />}
-                      <p className={styles.matrixMaterial}>{assoc.material}</p>
-                    </div>
-                    <p className={styles.matrixProducts}>
-                      {assoc.products
-                        .map((id) => products.find((product) => product.id === id)?.name)
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============ Capítulo C — De onde vem a tecnologia ============ */}
+      {/* ============ Parcerias internacionais ============ */}
       <section className={`${shared.chapterOpen} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <div className={`${shared.duo} ${shared.duoMediaRight} ${shared.duoMediaNarrow}`}>
-            <Reveal className={shared.duoContent}>
-              <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.partnersEyebrow}</p>
-              <h2 className={shared.headline}>{t.partnersHeadline}</h2>
-              <p className={shared.body}>{t.partnersBody}</p>
-              <div className={styles.partnersList}>
-                {PARTNERS.map((partner) => (
-                  <span key={partner} className={styles.partnerName}>
-                    {partner}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-            {/* Imagem ilustrativa de feira: aguarda acervo real da IFAT. */}
-            <Reveal className={`${shared.duoMedia} ${styles.partnersMedia}`} style={{ transitionDelay: "90ms" }}>
-              <EditorialPicture image={feiraImage} />
-              <IllustrativeBadge locale={locale} />
-            </Reveal>
-          </div>
+          <Reveal className={styles.centerHead}>
+            <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{t.partnersEyebrow}</p>
+            <h2 className={shared.headline}>{t.partnersHeadline}</h2>
+          </Reveal>
+          <Reveal className={styles.readBlock} style={{ transitionDelay: "70ms" }}>
+            <p className={shared.body}>{t.partnersBody}</p>
+          </Reveal>
+          <Reveal style={{ transitionDelay: "120ms" }}>
+            <ul className={styles.partnersList} aria-label={t.partnersListLabel}>
+              {PARTNERS.map((partner) => (
+                <li key={partner} className={styles.partnerName}>
+                  {partner}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </section>
 
+      {/* ============ Tecnologia dentro do Grupo ============ */}
       <section className={`${shared.chapterClose} ${shared.toneStone}`}>
         <div className={shared.container}>
           <Reveal>
-            <h2 className={shared.headline}>{t.crossHeadline}</h2>
-            <p className={shared.body}>{t.crossBody}</p>
-            <div className={shared.ctaRow}>
-              <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/almeida-ambiental", locale)}>
-                {t.crossCta}
-              </Link>
+            <div className={styles.centerHead}>
+              <h2 className={shared.headline}>{t.crossHeadline}</h2>
+            </div>
+            <div className={styles.readBlock}>
+              <p className={shared.body}>{t.crossBody}</p>
+              <div className={shared.ctaRow}>
+                <Link className={`${shared.btn} ${shared.btnSolidGold}`} href={localizeHref("/almeida-ambiental", locale)}>
+                  {t.crossCta}
+                </Link>
+              </div>
             </div>
           </Reveal>
         </div>

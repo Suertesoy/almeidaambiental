@@ -10,55 +10,70 @@
   overflow-x: clip;
 }
 
-/* ---------------- Hero com coreografia 3D protagonista ---------------- */
+/* ---------------- Hero com coreografia 3D protagonista ----------------
+   Mesma composição do Hero da Home e dos heroes de empresa: logotipo à
+   esquerda no topo, o palco 3D ocupando o espaço flexível do meio e o texto
+   institucional + CTAs ancorados na base. A seção tem altura mínima de uma
+   viewport (min-height, nunca height): em telas baixas ela cresce com o
+   conteúdo e os CTAs continuam acessíveis; em telas altas o palco absorve a
+   sobra, então não há faixa vazia abaixo dos botões. O Header é fixo e
+   sobrepõe o topo, por isso o padding-top soma --header-height. */
 
 .hero {
-  padding-top: calc(var(--header-height) + clamp(14px, 3vw, 48px));
-  padding-bottom: clamp(28px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: calc(var(--header-height) + 24px);
+  padding-bottom: calc(clamp(40px, 7vh, 88px) + env(safe-area-inset-bottom, 0px));
+}
+
+.heroInner {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .heroGrid {
+  flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(16px, 3vw, 48px);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  /* logotipo · palco (elástico) · texto + CTAs */
+  grid-template-rows: auto minmax(clamp(200px, 34dvh, 280px), 1fr) auto;
+  row-gap: clamp(12px, 2.4vh, 24px);
 }
 
-@media (min-width: 1024px) {
-  .heroGrid {
-    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.2fr);
-    gap: clamp(32px, 4vw, 56px);
-  }
+.heroBrand {
+  min-width: 0;
+}
+
+/* Mesma escala do logotipo do Grupo no Hero da Home (home.module.css
+   .heroBrandMark) — os logos têm a mesma caixa 322×127. */
+.heroLogo {
+  display: block;
+  width: clamp(190px, 55vw, 320px);
+  height: auto;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .heroCopy {
   min-width: 0;
 }
 
-.heroEyebrow {
-  margin: 0;
-  color: var(--color-gold-aged);
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.heroTitle {
-  margin: 10px 0 0;
-  max-width: 11.5ch;
-  color: inherit;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(32px, 8.2vw, 58px);
-  line-height: 1.06;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-
 .heroLede {
-  margin: 12px 0 0;
+  margin: 0;
   max-width: 42ch;
   color: var(--role-body, var(--text-body));
   font-family: var(--font-inter), var(--font-body);
@@ -67,6 +82,7 @@
   text-wrap: pretty;
 }
 
+/* Mobile: CTAs sempre empilhados, largura útil inteira. */
 .heroCtas {
   display: flex;
   flex-direction: column;
@@ -78,7 +94,7 @@
   width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .heroCtas {
     flex-direction: row;
     flex-wrap: wrap;
@@ -91,45 +107,71 @@
 }
 
 .heroStage {
-  order: -1;
   position: relative;
+  min-width: 0;
+  min-height: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  min-height: 260px;
 }
 
 @media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.2fr);
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "brand stage"
+      "copy stage";
+    column-gap: clamp(32px, 4vw, 56px);
+    row-gap: clamp(20px, 3vh, 32px);
+  }
+
+  .heroBrand {
+    grid-area: brand;
+    align-self: end;
+  }
+
   .heroStage {
-    order: 0;
-    aspect-ratio: 16 / 11;
+    grid-area: stage;
     min-height: 430px;
   }
 
-  .heroTitle {
-    max-width: 12.5ch;
+  .heroCopy {
+    grid-area: copy;
+    align-self: start;
+  }
+
+  .heroLogo {
+    width: clamp(190px, 16vw, 260px);
   }
 }
 
-.positioningBlock {
+/* ---------------- Alinhamento (regra de UX do projeto) ----------------
+   Títulos institucionais centralizados; texto corrido sempre à esquerda,
+   num bloco de leitura centralizado na largura. Seletores compostos
+   (0-1-1+) vencem as primitivas editoriais independentemente da ordem de
+   injeção dos módulos CSS. */
+.centerHead {
+  text-align: center;
+}
+
+.centerHead h2,
+.centerHead p {
+  margin-inline: auto;
+}
+
+.centerHead .catalogTitle {
+  margin-bottom: 0;
+  max-width: none;
+}
+
+.readBlock {
   max-width: 68ch;
+  margin-inline: auto;
+  text-align: left;
 }
 
-.modalityTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  list-style: none;
-  margin: 24px 0 0;
-  padding: 0;
-}
-
-.modalityTags li {
-  padding: 8px 16px;
-  border: 1px solid rgba(21, 21, 15, 0.24);
-  border-radius: 999px;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 13px;
+/* Bloco de leitura: o último parágrafo não empurra o CTA nem o fim da seção. */
+.readBlock p:last-child {
+  margin-bottom: 0;
 }
 
 /* A navegação sticky dos seis produtos (.productNav*) e o capítulo de
@@ -308,119 +350,42 @@
   }
 }
 
-/* ---------------- Qual tecnologia para qual material ---------------- */
-
-.matrixGrid {
-  margin-top: clamp(32px, 5vw, 48px);
+/* ---------------- Parcerias internacionais ----------------
+   Fabricantes centralizados, ocupando a largura. Não há arquivos oficiais de
+   logotipo dos parceiros no projeto (e não se adicionam imagens externas):
+   os nomes são composição tipográfica, cada um na sua proporção natural —
+   sem forçar caixas idênticas. Mobile: uma coluna, centralizados. */
+.partnersList {
+  list-style: none;
+  margin: clamp(28px, 4vw, 44px) 0 0;
+  padding: clamp(24px, 4vw, 40px) 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0;
-}
-
-@media (min-width: 560px) {
-  .matrixGrid {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: clamp(24px, 4vw, 48px);
-  }
-}
-
-@media (min-width: 1100px) {
-  .matrixGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.matrixItem {
-  padding: 16px 0 18px;
-  border-top: 1px solid rgba(21, 21, 15, 0.16);
-}
-
-/* Checkpoint D (Seção 18): ícone reconhecível antes do nome. Consolidação
-   de territórios: a seção deixou de ser toneForest (escura) e passou a
-   ser toneStoneAlt (clara) — --role-secondary já resolve para a variante
-   certa por herança do tom que envolve a seção; o fallback só precisava
-   parar de assumir escuro (Seção 33: nem todo ícone é accent). */
-.matrixHead {
-  display: flex;
+  gap: clamp(20px, 5vw, 28px);
+  justify-items: center;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  border-block: 1px solid rgba(21, 21, 15, 0.16);
 }
 
-.matrixIcon {
-  flex: none;
-  width: 24px;
-  height: 24px;
-  color: var(--role-secondary, var(--text-secondary));
-}
-
-@media (min-width: 1024px) {
-  .matrixIcon {
-    width: 28px;
-    height: 28px;
+@media (min-width: 640px) {
+  .partnersList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 4vw, 56px);
   }
-}
-
-.matrixMaterial {
-  margin: 0;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.matrixProducts {
-  margin: 0;
-  color: var(--role-secondary, var(--text-secondary));
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-/* ---------------- Parcerias internacionais ---------------- */
-
-/* A imagem de feira é coadjuvante (ilustrativa, aguarda acervo real): paisagem
-   curta no mobile, 4:3 na coluna estreita do tablet/desktop. */
-.partnersMedia {
-  aspect-ratio: 16 / 10;
-}
-
-@media (min-width: 768px) {
-  .partnersMedia {
-    aspect-ratio: 4 / 3;
-  }
-}
-
-/* Posicionamento: paisagem no mobile (a mídia vem primeiro e não pode empurrar
-   o texto), quadrada nas colunas de tablet/desktop. */
-.positioningMedia {
-  aspect-ratio: 16 / 10;
-}
-
-@media (min-width: 768px) {
-  .positioningMedia {
-    aspect-ratio: 1 / 1;
-  }
-}
-
-.partnersList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px clamp(20px, 3vw, 40px);
-  align-items: baseline;
-  margin-top: 28px;
 }
 
 .partnerName {
+  text-align: center;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(20px, 1.2vw + 14px, 28px);
+  font-size: clamp(28px, 2.4vw + 14px, 46px);
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
-
-/* Seletor de materiais: bloco próprio acima do catálogo, separado por régua. */
+/* Seletor de materiais: bloco próprio logo abaixo do título do catálogo, separado por régua. */
 .selectorBlock {
-  margin-top: clamp(40px, 6vw, 64px);
+  margin-top: clamp(24px, 4vw, 40px);
   padding-bottom: clamp(40px, 6vw, 64px);
   border-bottom: 1px solid rgba(21, 21, 15, 0.16);
   margin-bottom: clamp(36px, 5vw, 56px);

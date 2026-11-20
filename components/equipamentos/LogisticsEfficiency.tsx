@@ -32,9 +32,9 @@ const COPY = {
  * biblioteca) — ver DENSITY_STAGES em lib/equipamentos-data.ts para o
  * porquê de não haver kg nas barras.
  *
- * Abre o capítulo "Como escolher" (junto da matriz material → tecnologia):
- * superfície clara própria do capítulo, respiro de entrada cheio e de saída
- * pela metade. O eyebrow é o contexto do capítulo, recebido da página.
+ * Capítulo "Como escolher" (a matriz material → tecnologia foi removida na
+ * rodada 5; o seletor interativo a substitui): superfície clara própria,
+ * respiro cheio de entrada e de saída. O eyebrow é o contexto do capítulo, recebido da página.
  */
 export default function LogisticsEfficiency({ locale, eyebrow }: { locale: Locale; eyebrow: string }) {
   const t = COPY[locale];
@@ -60,7 +60,7 @@ export default function LogisticsEfficiency({ locale, eyebrow }: { locale: Local
 
   return (
     <section
-      className={`${shared.chapterOpen} ${shared.toneStoneAlt}`}
+      className={`${shared.chapter} ${shared.toneStoneAlt}`}
       aria-labelledby="densidade-heading"
     >
       <div className={shared.container}>

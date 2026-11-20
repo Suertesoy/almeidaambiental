@@ -94,6 +94,7 @@
 }
 
 .itemIndex {
+  margin-left: auto;
   display: inline-flex;
   align-items: baseline;
   gap: 4px;
@@ -127,14 +128,27 @@
   letter-spacing: -0.01em;
 }
 
-.itemHeadline {
-  margin: 10px 0 0;
-  max-width: 44ch;
-  color: var(--role-primary, var(--text-primary));
+/* Modalidades comerciais (provisórias): etiquetas discretas, sem peso de
+   botão — contorno fino, texto pequeno, sem cor de ação. */
+.itemModalities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.itemModalities li {
+  padding: 4px 10px;
+  border: 1px solid rgba(21, 21, 15, 0.22);
+  border-radius: 4px;
+  color: var(--role-muted, var(--text-muted));
   font-family: var(--font-inter), var(--font-body);
-  font-size: clamp(16px, 0.35vw + 15px, 19px);
-  font-weight: 500;
-  line-height: 1.45;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
 }
 
 /* ---------------- Apresentação visual protagonista ---------------- */

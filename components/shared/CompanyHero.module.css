@@ -6,8 +6,11 @@
 .hero {
   position: relative;
   width: 100%;
-  min-height: calc(100svh - var(--header-height));
-  min-height: calc(100dvh - var(--header-height));
+  /* Mesma altura base do Hero da Home (uma viewport inteira; o Header é fixo e
+     sobrepõe o topo). min-height — nunca height — para que, em telas baixas,
+     a seção cresça com o conteúdo em vez de cortar os CTAs. */
+  min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -43,6 +46,7 @@
    mesmo arquivo com a mesma especificidade, então empate resolveria a favor
    dela pela ordem de origem. 0-2-0 vence independentemente da ordem. */
 .heroEditorial .editorialContent {
+  padding-top: 0;
   padding-bottom: 0;
 }
 
@@ -89,6 +93,7 @@
 }
 
 @media (min-width: 768px) {
+
   .media,
   .poster {
     object-position: var(--hero-pos-desktop, center);
@@ -104,22 +109,17 @@
 
 /* Graduação suave verde institucional sem escurecer excessivamente as pessoas */
 .scrimForest {
-  background: linear-gradient(
-    to top,
-    rgba(11, 28, 19, 0.78) 0%,
-    rgba(15, 39, 27, 0.34) 40%,
-    rgba(15, 39, 27, 0.08) 72%
-  );
+  background: linear-gradient(to top,
+      rgba(11, 28, 19, 0.78) 0%,
+      rgba(15, 39, 27, 0.34) 40%,
+      rgba(15, 39, 27, 0.08) 72%);
 }
 
 /* Graduação suave para o vídeo institucional na Saturno Ambiental */
 .scrimSaturno {
-  background: linear-gradient(
-    to top,
-    rgba(10, 18, 15, 0.84) 0%,
-    rgba(16, 28, 24, 0.44) 48%,
-    rgba(16, 28, 24, 0.14) 80%
-  );
+  background: linear-gradient(to top,
+      rgba(16, 28, 24, 0.44) 48%,
+      rgba(16, 28, 24, 0.14) 80%);
 }
 
 .content {
@@ -127,8 +127,17 @@
   z-index: 2;
   width: 100%;
   padding-inline: clamp(20px, 6vw, 64px);
-  padding-bottom: clamp(56px, 9vh, 104px);
+  /* Header fixo + respiro: o logotipo nunca encosta no Header, mesmo quando o
+     Hero cresce em telas baixas. Base com a área segura do aparelho. */
+  padding-top: calc(var(--header-height) + 24px);
+  padding-bottom: calc(clamp(56px, 9vh, 104px) + env(safe-area-inset-bottom, 0px));
   color: var(--color-background);
+}
+
+@media (min-width: 1024px) {
+  .content {
+    padding-bottom: clamp(88px, 11vh, 140px);
+  }
 }
 
 /* Único eyebrow do site com o accent dourado como padrão (não seletivo):
@@ -202,16 +211,6 @@
   text-decoration: none;
 }
 
-@media (max-width: 639px) {
-  .ctaRow {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-
 .btnPrimary {
   border: 1px solid var(--color-gold-aged);
   background: var(--color-gold-aged);
@@ -232,10 +231,10 @@
   background: rgba(247, 246, 241, 0.12);
 }
 
-/* Botões como ação (Checkpoint B, Seção 12): no Hero mobile, os dois CTAs
-   (quando ambos existem) empilham com a mesma largura, ocupando o
-   .content que já envolve eyebrow/título/lede. */
-@media (max-width: 639px) {
+/* Mobile: os CTAs ficam SEMPRE empilhados (primário em cima, secundário
+   abaixo), cada um com a largura útil inteira do conteúdo — nunca lado a
+   lado. */
+@media (max-width: 767px) {
   .ctaRow {
     flex-direction: column;
     align-items: stretch;
@@ -264,10 +263,19 @@
    manter contraste mesmo quando passam caminhões ou superfícies claras. */
 .titleLogo {
   display: block;
-  width: clamp(240px, 74vw, 560px);
+  /* Mesma escala do logotipo do Grupo no Hero da Home (home.module.css
+     .heroBrandMark): os quatro logos têm a mesma caixa (322×127), então a
+     mesma largura entrega peso visual equivalente. */
+  width: clamp(190px, 55vw, 320px);
   height: auto;
   margin: 0;
   filter: drop-shadow(0 2px 14px rgba(8, 20, 14, 0.55)) drop-shadow(0 0 2px rgba(8, 20, 14, 0.35));
+}
+
+@media (min-width: 1024px) {
+  .titleLogo {
+    width: clamp(190px, 16vw, 260px);
+  }
 }
 
 .hasTitleLogo::before {
