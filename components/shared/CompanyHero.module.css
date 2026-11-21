@@ -209,39 +209,19 @@
   margin-top: var(--gap-support-cta);
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* Mesma estrutura dimensional dos CTAs editoriais (editorial.module.css). */
-  min-height: 56px;
-  padding: 14px 32px;
-  border-radius: 4px;
-  line-height: 1.25;
-  text-align: center;
-  font-family: var(--font-inter), var(--font-body);
-  font-weight: 600;
-  font-size: 16px;
-  text-decoration: none;
-}
+/* Fonte ÚNICA da estrutura dimensional: o botão do hero compõe o .btn
+   editorial (altura, padding, fonte, raio, largura) em vez de repetir os
+   valores — foi a duplicação que deixou o hero divergir do padrão. */
+.btn { composes: btn from "./editorial.module.css"; }
+.btnPrimary { composes: btnSolidGold from "./editorial.module.css"; }
+.btnSecondary { composes: btnOutlineOnDark from "./editorial.module.css"; }
 
-.btnPrimary {
-  border: 1px solid var(--color-gold-aged);
-  background: var(--color-gold-aged);
-  color: var(--color-forest-deep);
-}
-
-.btnPrimary:hover {
-  opacity: 0.9;
-}
-
-.btnSecondary {
-  border: 1px solid rgba(247, 246, 241, 0.55);
-  color: var(--color-background);
+.ctaRow .btnSecondary {
+  border-color: rgba(247, 246, 241, 0.55);
   backdrop-filter: blur(2px);
 }
 
-.btnSecondary:hover {
+.ctaRow .btnSecondary:hover {
   background: rgba(247, 246, 241, 0.12);
 }
 
@@ -249,22 +229,21 @@
    abaixo), cada um com a largura útil inteira do conteúdo — nunca lado a
    lado. */
 @media (max-width: 767px) {
+  /* Linhas de mesma altura: um rótulo que quebra não desiguala o par. */
   .ctaRow {
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 1fr;
   }
 
-  .btn {
-    width: 100%;
-    justify-content: center;
-    white-space: normal;
-    text-align: center;
-  }
 }
 
-.btn:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
+/* Largura total do contêiner só no mobile de fato (< 640px). De 640 a 767px o
+   hero segue empilhado, mas com a largura padrão dos CTAs (--cta-width). */
+@media (max-width: 639px) {
+  .ctaRow .btn {
+    width: 100%;
+  }
 }
 
 /* ---------------- Hero com logotipo como título visual ----------------

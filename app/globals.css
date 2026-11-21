@@ -99,6 +99,11 @@
      cima deste valor no próprio módulo. */
   --anchor-offset: calc(var(--header-height) + 16px);
 
+  /* Largura ÚNICA dos CTAs editoriais no desktop/tablet (>= 640px). Não
+     depende do texto: todo botão primário/secundário, sozinho ou em grupo,
+     mede o mesmo. No mobile o botão ocupa a largura útil do contêiner. */
+  --cta-width: min(100%, 420px);
+
   /* ---- Papéis semânticos de texto (Checkpoint A, refinamento 2026-08) ----
      Substituem o padrão anterior de "color: inherit + opacity" para criar
      hierarquia — que achatava tudo à mesma cor-base com transparência

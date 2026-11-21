@@ -84,8 +84,9 @@
 
 /* Mobile: CTAs sempre empilhados, largura útil inteira. */
 .heroCtas {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: 1fr;
   gap: 10px;
   margin-top: 20px;
 }
@@ -94,23 +95,31 @@
   width: 100%;
 }
 
-/* No hero os botões acompanham o texto (esquerda) e não impõem largura mínima
-   — duas chamadas longas precisam caber lado a lado na coluna. */
+/* 640–767px: ainda empilhado, mas com a largura padrão e centralizado. */
 @media (min-width: 640px) {
+  .heroCtas {
+    justify-items: center;
+  }
+
   .heroCtas > a {
-    min-width: 0;
+    width: var(--cta-width);
   }
 }
 
+/* Desktop/tablet: grupo CENTRALIZADO na coluna de conteúdo; os dois botões
+   têm a mesma largura (token --cta-width) e, se a coluna não comporta os dois
+   lado a lado, empilham — sempre iguais e centralizados. */
 @media (min-width: 768px) {
   .heroCtas {
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
   }
 
   .heroCtas > a {
-    width: auto;
+    width: var(--cta-width);
   }
 }
 

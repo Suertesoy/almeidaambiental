@@ -610,7 +610,8 @@
 @media (min-width: 1280px) {
   .channelRow > a {
     flex: none;
-    width: 240px;
+    width: 264px;
+    white-space: nowrap;
     justify-content: center;
   }
 }

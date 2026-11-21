@@ -499,9 +499,7 @@
 
 @media (min-width: 640px) {
   .itemCta a {
-    width: min(100%, 400px);
-    min-width: 0;
-    max-width: none;
+    width: var(--cta-width);
   }
 }
 

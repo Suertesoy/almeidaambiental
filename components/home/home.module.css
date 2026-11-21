@@ -544,16 +544,23 @@ html:has([data-page="home"]) {
   outline-color: var(--color-background);
 }
 
-@media (max-width: 767px) {
-  .heroCtaRow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    margin-top: 28px;
-  }
-
+/* Largura total só no mobile de fato (< 640px); acima, a largura padrão dos
+   CTAs (--cta-width) vinda do .btn editorial. */
+@media (max-width: 639px) {
   .heroCtaRow .btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Grade de uma coluna com linhas de MESMA altura (1fr): se um rótulo
+     quebra em duas linhas, o outro botão do grupo acompanha. */
+  .heroCtaRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 12px;
+    margin-top: 28px;
   }
 
   /* Sem o indicador de rolagem, o hero não precisa do respiro inferior

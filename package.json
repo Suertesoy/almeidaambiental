@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test lib/impact-projection.test.ts"
+    "test": "node --test lib/impact-projection.test.ts lib/cta-system.test.ts"
   },
   "dependencies": {
     "next": "^16.3.0",
