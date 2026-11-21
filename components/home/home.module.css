@@ -525,6 +525,8 @@ html:has([data-page="home"]) {
 .heroCtaRow {
   display: flex;
   flex-wrap: wrap;
+  /* Grupo centralizado no contêiner (texto e logo seguem à esquerda). */
+  justify-content: center;
   gap: 12px;
   margin-top: 32px;
 }
@@ -559,6 +561,7 @@ html:has([data-page="home"]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: 1fr;
+    justify-items: center;
     gap: 12px;
     margin-top: 28px;
   }

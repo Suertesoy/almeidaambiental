@@ -97,3 +97,11 @@ test("todo CTA com variante (primário/secundário) também usa a base .btn", ()
     }
   }
 });
+
+test("grupos de CTA dos heroes são centralizados no contêiner", () => {
+  const hero = read("components/shared/CompanyHero.module.css");
+  assert.match(ruleBody(hero, ".ctaRow"), /justify-content:\s*center/);
+  const home = read("components/home/home.module.css");
+  assert.match(ruleBody(home, ".heroCtaRow"), /justify-content:\s*center/);
+  assert.match(ruleBody(editorial, ".ctaRow"), /justify-content:\s*center/);
+});

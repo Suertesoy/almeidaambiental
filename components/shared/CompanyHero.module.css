@@ -205,6 +205,9 @@
 .ctaRow {
   display: flex;
   flex-wrap: wrap;
+  /* Grupo centralizado no contêiner de conteúdo (texto e logo seguem à
+     esquerda); no mobile (< 640px) os botões ocupam a largura inteira. */
+  justify-content: center;
   gap: 12px;
   margin-top: var(--gap-support-cta);
 }
@@ -234,8 +237,8 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: 1fr;
+    justify-items: center;
   }
-
 }
 
 /* Largura total do contêiner só no mobile de fato (< 640px). De 640 a 767px o
