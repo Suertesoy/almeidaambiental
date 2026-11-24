@@ -899,19 +899,10 @@ html:has([data-page="home"]) {
 }
 
 /* ---------------- Eixo central comum no desktop (>= 1024px) ----------------
-   Hero, cabeçalho do processo (Ambiental) e texto da Saturno compartilham o
-   eixo do grupo de CTAs e do fluxograma. Mobile e tablet (< 1024px) não são
-   afetados: nenhuma regra abaixo existe fora deste breakpoint. */
+   Cabeçalho do processo (Ambiental) e texto da Saturno compartilham o eixo
+   central. O Hero da Home permanece ancorado à esquerda no desktop.
+   Mobile e tablet (< 1024px) não são afetados. */
 @media (min-width: 1024px) {
-  .heroContent {
-    text-align: center;
-  }
-
-  .heroBrandMark,
-  .heroHeadline {
-    margin-inline: auto;
-  }
-
   .processHeader .bodyLeft {
     text-align: center;
   }

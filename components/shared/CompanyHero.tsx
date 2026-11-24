@@ -169,7 +169,7 @@ export default function CompanyHero({
         </div>
       )}
 
-      <div className={`${styles.content} ${editorial ? styles.editorialContent : ""} ${titleLogo ? styles.hasTitleLogo : ""} ${scrimTone === "forest" ? styles.noHalo : ""}`}>
+      <div className={`${styles.content} ${editorial ? styles.editorialContent : ""} ${titleLogo ? styles.hasTitleLogo : ""} ${scrimTone === "forest" || scrimTone === "saturno" ? styles.noHalo : ""}`}>
         {titleLogo ? (
           <>
             <img src={titleLogo.src} alt="" aria-hidden="true" className={styles.titleLogo} />

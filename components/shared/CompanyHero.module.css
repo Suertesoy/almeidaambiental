@@ -123,11 +123,22 @@
       rgba(15, 39, 27, 0.14) 100%);
 }
 
-/* Graduação suave para o vídeo institucional na Saturno Ambiental */
+/* Graduação contínua de superfície inteira para o vídeo da Saturno Ambiental */
 .scrimSaturno {
-  background: linear-gradient(to top,
-      rgba(16, 28, 24, 0.44) 48%,
-      rgba(16, 28, 24, 0.14) 80%);
+  background:
+    radial-gradient(
+      ellipse 85% 75% at 18% 82%,
+      rgba(10, 22, 17, 0.56) 0%,
+      rgba(10, 22, 17, 0.28) 48%,
+      rgba(10, 22, 17, 0) 82%
+    ),
+    linear-gradient(
+      to top,
+      rgba(10, 22, 17, 0.72) 0%,
+      rgba(10, 22, 17, 0.46) 28%,
+      rgba(10, 22, 17, 0.24) 56%,
+      rgba(10, 22, 17, 0.14) 100%
+    );
 }
 
 .content {
