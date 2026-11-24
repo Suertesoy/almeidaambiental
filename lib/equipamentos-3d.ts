@@ -26,6 +26,29 @@ export type Equipment3DCameraConfig = {
   elevationRangeDeg?: { below: number; above: number };
 };
 
+/**
+ * Apresentação própria na coreografia, para equipamentos cuja proporção foge das
+ * demais. Ausente = regra padrão (escala nativa, câmera do modelo, giro comum).
+ */
+export type EquipmentChoreographyConfig = {
+  /** Escala visual UNIFORME (não deforma): só na coreografia, nunca no catálogo. */
+  scale: number;
+  azimuthDeg: number;
+  elevationDeg: number;
+  /** Orientação do modelo no palco e amplitude da oscilação (graus). */
+  yawDeg: number;
+  swayDeg: number;
+  /** Pivô no piso, em metros nativos, relativo ao centro do bounding box. */
+  pivot: { x: number; z: number };
+  targetYOffsetRatio: number;
+  /** Fração da largura/altura do palco que o equipamento em destaque pode ocupar. */
+  fillWidth: number;
+  fillHeight: number;
+  /** Como vizinho: fração máxima visível e recuo em profundidade (metros de cena). */
+  sideVisibleFrac: number;
+  sideDepth: number;
+};
+
 export type Equipment3DConfig = {
   /** ID correspondente ao catálogo em lib/equipamentos-data.ts. */
   productId: string;
@@ -47,6 +70,7 @@ export type Equipment3DConfig = {
    * (o deslocamento cresce junto com a aproximação do slot lateral).
    */
   choreographyRightNudge?: number;
+  choreography?: EquipmentChoreographyConfig;
   /** Nome editorial exibido na legenda discreta da coreografia. */
   displayName: Record<Locale, string>;
   camera: Equipment3DCameraConfig;
@@ -152,8 +176,8 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     contactShadowSize: { width: 15, depth: 12 },
     environmentIntensity: 1.75,
     displayName: {
-      pt: "Prensa Horizontal",
-      en: "Horizontal Baler",
+      pt: "Prensa Horizontal Austropressen",
+      en: "Austropressen Horizontal Baler",
     },
     camera: {
       azimuthDeg: -36,
@@ -164,6 +188,23 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
       pivot: { x: 0, z: -1.8 },
       fitToGeometry: true,
       elevationRangeDeg: { below: 14, above: 8 },
+    },
+    // A câmera da coreografia fica do mesmo lado dos demais (az ~36–40); o giro de
+    // 74° do modelo mostra a vista do catálogo (-36°): canal, corpo e curva da esteira.
+    // A 0,46 ela fica da altura do compactador hidráulico, em vez de 12 m ao lado
+    // de máquinas de 1,6 m.
+    choreography: {
+      scale: 0.46,
+      azimuthDeg: 38,
+      elevationDeg: 18,
+      yawDeg: 74,
+      swayDeg: 10,
+      pivot: { x: -0.25, z: -1.98 },
+      targetYOffsetRatio: -0.142,
+      fillWidth: 0.87,
+      fillHeight: 0.86,
+      sideVisibleFrac: 0.42,
+      sideDepth: 4.2,
     },
     label: {
       pt: "Modelo 3D interativo da Prensa Horizontal Austropressen com esteira de alimentação",
@@ -183,13 +224,12 @@ export function getEquipment3DConfig(productId: string): Equipment3DConfig | nul
 /**
  * Ordem da coreografia compartilhada (Home e Hero de Almeida Equipamentos).
  * Novos equipamentos aprovados entram nesta sequência apenas por configuração.
- * "prensas-horizontais" já está em EQUIPMENT_3D_MODELS, mas fica fora da sequência
- * até a avaliação das proporções no catálogo; para ativar, basta incluir o id aqui.
  */
 export const CHOREOGRAPHY_SEQUENCE: string[] = [
   "compactador-fuso",
   "apv-90-100",
   "compactador-hidraulico",
+  "prensas-horizontais",
 ];
 
 export function getChoreographyConfigs(): Equipment3DConfig[] {

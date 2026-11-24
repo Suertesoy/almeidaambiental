@@ -5,8 +5,10 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { Equipment3DConfig } from "../../lib/equipamentos-3d";
 import {
+  collectExtremePoints,
   computeFraming,
   createStudioEnvironment,
+  computeYawFraming,
   disposeObjectTree,
   positionStudioLights,
 } from "../../lib/three-studio";
@@ -28,9 +30,17 @@ type PreparedModel = {
   boxSize: THREE.Vector3;
   /** Raio da pegada em planta (metade da diagonal X/Z) na escala nativa do GLB. */
   rxz: number;
+  /** Pontos extremos na escala da cena, só para modelos com `choreography`. */
+  points: THREE.Vector3[] | null;
+  /** 0 → 1: entrada pela lateral quando o modelo termina de carregar. */
+  entry: number;
 };
 
-const HOLD_MS = 3600;
+const HOLD_MS = 3000;
+const ENTRY_MS = 900;
+/** Quantos equipamentos à frente do destaque ficam preparados. */
+const PRELOAD_AHEAD = 2;
+const MAX_LOAD_ATTEMPTS = 2;
 const MOVE_MS = 1100;
 /**
  * Posição mínima da borda interna do vizinho, como fração do raio do
@@ -45,6 +55,8 @@ const NEIGHBOR_INNER_RATIO = 0.9;
  * proporção do palco: telas estreitas mostram só uma lasca do lateral, telas
  * largas mostram uma parcela maior. Nunca depende de um tamanho de aparelho.
  */
+/** Folga do vizinho quando o protagonista tem silhueta real medida (sem cantos vazios). */
+const SILHOUETTE_INNER_RATIO = 1.05;
 const VISIBLE_FRAC_NARROW = 0.3;
 const VISIBLE_FRAC_WIDE = 0.6;
 const ASPECT_NARROW = 1.3;
@@ -68,10 +80,17 @@ async function loadPreparedModel(
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
 
-  root.position.set(-center.x, -box.min.y, -center.z);
+  const choreo = config.choreography;
+  const pivot = choreo?.pivot ?? { x: 0, z: 0 };
+  const scale = choreo?.scale ?? 1;
+  root.position.set(-center.x - pivot.x, -box.min.y, -center.z - pivot.z);
 
   const group = new THREE.Group();
   group.add(root);
+  const points = choreo
+    ? collectExtremePoints(root).map((p) => p.multiplyScalar(scale))
+    : null;
+  group.scale.setScalar(scale);
 
   try {
     const shadowTex = await texLoader.loadAsync(config.contactShadowUrl);
@@ -89,7 +108,7 @@ async function loadPreparedModel(
     });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.y = 0.001;
+    shadowMesh.position.set(-pivot.x, 0.001, -pivot.z);
     shadowMesh.renderOrder = -1;
     shadowMesh.userData.isShadow = true;
     group.add(shadowMesh);
@@ -101,8 +120,10 @@ async function loadPreparedModel(
     index,
     config,
     group,
-    boxSize: size,
+    boxSize: size.multiplyScalar(scale),
     rxz: Math.hypot(size.x / 2, size.z / 2),
+    points,
+    entry: 0,
   };
 }
 
@@ -111,7 +132,8 @@ async function loadPreparedModel(
  * (centro) e próximo (direita, espiando). Todos os modelos vivem na MESMA cena
  * e na MESMA escala (a nativa do GLB, em metros): um equipamento grande
  * continua grande ao lado de um pequeno, em vez de ser normalizado para caber
- * num espaço. A posição vem de uma coordenada contínua `c` (índice fracionário
+ * num espaço. Exceção por configuração (`choreography`): uma instalação completa
+ * pode ter escala uniforme, orientação e enquadramento próprios. A posição vem de uma coordenada contínua `c` (índice fracionário
  * do item em destaque): rel = índice − c, em anel. O antigo protagonista
  * desliza para a esquerda (nunca some) e o que sai pela esquerda reaparece
  * pela direita, fora do quadro, sem cortes bruscos.
@@ -119,6 +141,9 @@ async function loadPreparedModel(
  * Os modelos são dispostos ao longo do eixo LATERAL da câmera (e não do eixo X
  * do mundo): assim ficam todos à mesma distância dela, a escala em tela é a
  * relativa real e a separação visual é exatamente a separação no espaço.
+ *
+ * Carregamento sob demanda: só o destaque e os próximos (PRELOAD_AHEAD), um por
+ * vez; cada modelo tem shaders e texturas preparados antes de entrar em cena.
  *
  * Não há interação manual (arrastar, tocar, teclado): é uma apresentação
  * visual. A rotação interativa do catálogo técnico é outro componente
@@ -211,43 +236,101 @@ export default function EquipmentChoreographyCanvas({
     };
 
     const framingFor = (model: PreparedModel, aspect: number) => {
-      const framing = computeFraming(model.boxSize, aspect, model.config.camera, paddingMultiplier);
       const fovRad = THREE.MathUtils.degToRad(model.config.camera.fov);
+      const choreo = model.config.choreography;
+      if (choreo && model.points) {
+        const fit = computeYawFraming(model.points, model.boxSize.y, aspect, model.config.camera.fov, choreo);
+        // Afastamento extra do palco (hero), mantendo a direção da câmera.
+        const distance = fit.distance * paddingMultiplier;
+        const position = fit.target.clone().addScaledVector(fit.direction, distance);
+        const halfW = distance * Math.tan(fovRad / 2) * aspect;
+        return { position, target: fit.target, distance, halfW, innerHalf: fit.halfWidth * (SILHOUETTE_INNER_RATIO / NEIGHBOR_INNER_RATIO) };
+      }
+      const framing = computeFraming(model.boxSize, aspect, model.config.camera, paddingMultiplier);
       const halfW = framing.distance * Math.tan(fovRad / 2) * aspect;
-      return { ...framing, halfW };
+      return { ...framing, halfW, innerHalf: model.rxz };
     };
 
     const step = (dir: -1 | 1) => {
       if (moving) return;
-      const loadedAll = models.every(Boolean);
-      const target = Math.round(c) + dir;
-      if (!loadedAll && !models[wrap(target)]) return;
+      let target = Math.round(c) + dir;
+      // Um modelo que falhou em definitivo é pulado; um que ainda carrega é esperado.
+      for (let k = 1; k < n && attempts[wrap(target)] >= MAX_LOAD_ATTEMPTS && !models[wrap(target)]; k++) {
+        target += dir;
+      }
+      if (!models[wrap(target)]) {
+        pumpLoads();
+        return;
+      }
+      if (wrap(target) === wrap(Math.round(c))) return;
       moveFrom = c;
-      moveTo = Math.round(c) + dir;
+      moveTo = target;
       moveElapsed = 0;
       moving = true;
+      pumpLoads();
     };
 
-    models.forEach((_, i) => {
+    // Fila de carregamento: um GLB por vez, só o destaque e os próximos.
+    const attempts: number[] = new Array(n).fill(0);
+    let loadingIndex = -1;
+    let pendingGroup: THREE.Group | null = null;
+    const pumpLoads = () => {
+      if (disposed || loadingIndex !== -1) return;
+      const current = moving ? moveTo : Math.round(c);
+      let next = -1;
+      for (let k = 0; k <= PRELOAD_AHEAD && next === -1; k++) {
+        const i = wrap(current + k);
+        if (!models[i] && attempts[i] < MAX_LOAD_ATTEMPTS) next = i;
+      }
+      if (next === -1) return;
+      const i = next;
+      loadingIndex = i;
+      attempts[i] += 1;
       loadPreparedModel(loader, texLoader, configs[i], i)
-        .then((prepared) => {
+        .then(async (prepared) => {
           if (disposed) {
             disposeObjectTree(prepared.group);
             return;
           }
+          // Prepara shaders e texturas antes de entrar em cena, para a primeira
+          // aparição não travar a animação.
+          pendingGroup = prepared.group;
+          try {
+            prepared.group.traverse((obj) => {
+              if (!(obj instanceof THREE.Mesh)) return;
+              const mats: THREE.Material[] = Array.isArray(obj.material) ? obj.material : [obj.material];
+              for (const mat of mats) {
+                for (const value of Object.values(mat)) {
+                  if (value instanceof THREE.Texture) renderer.initTexture(value);
+                }
+              }
+            });
+            await renderer.compileAsync(prepared.group, camera, scene);
+          } catch {
+            // Preparação é só otimização: o modelo entra mesmo sem ela.
+          }
+          if (disposed) return; // já liberado na limpeza (pendingGroup)
+          pendingGroup = null;
+          if (i === 0) prepared.entry = 1;
           models[i] = prepared;
           prepared.group.visible = false;
           scene.add(prepared.group);
           if (i === 0 && !readySignaled) {
             readySignaled = true;
+            lastFrameTime = performance.now();
             callbacksRef.current.onActiveChange(0);
             callbacksRef.current.onReady();
           }
         })
         .catch(() => {
-          if (i === 0 && !disposed) callbacksRef.current.onError();
+          if (i === 0 && !disposed && attempts[0] >= MAX_LOAD_ATTEMPTS) callbacksRef.current.onError();
+        })
+        .finally(() => {
+          loadingIndex = -1;
+          pumpLoads();
         });
-    });
+    };
+    pumpLoads();
 
     const resizeObserver = new ResizeObserver(() => {
       if (disposed) return;
@@ -304,9 +387,9 @@ export default function EquipmentChoreographyCanvas({
       }
 
       // --- câmera: interpola entre o enquadramento dos dois itens vizinhos de c ---
-      const i0 = wrap(Math.floor(c));
-      const i1 = wrap(i0 + 1);
-      const t = c - Math.floor(c);
+      const i0 = wrap(moving ? Math.round(moveFrom) : Math.round(c));
+      const i1 = moving ? wrap(moveTo) : i0;
+      const t = moving ? (c - moveFrom) / (moveTo - moveFrom) : 0;
       const m0 = models[i0] ?? models[nearest] ?? models.find(Boolean)!;
       const m1 = models[i1] ?? m0;
       const f0 = framingFor(m0, aspect);
@@ -316,7 +399,7 @@ export default function EquipmentChoreographyCanvas({
       const fov = THREE.MathUtils.lerp(m0.config.camera.fov, m1.config.camera.fov, t);
       const env = THREE.MathUtils.lerp(m0.config.environmentIntensity, m1.config.environmentIntensity, t);
       const halfW = THREE.MathUtils.lerp(f0.halfW, f1.halfW, t);
-      const rxzC = THREE.MathUtils.lerp(m0.rxz, m1.rxz, t);
+      const rxzC = THREE.MathUtils.lerp(f0.innerHalf, f1.innerHalf, t);
 
       camera.fov = fov;
       camera.aspect = aspect;
@@ -351,23 +434,43 @@ export default function EquipmentChoreographyCanvas({
 
         // Giro: só o protagonista oscila suavemente; laterais ficam quietos.
         const centerWeight = Math.max(0, 1 - abs);
-        const sway = Math.sin(swayClock / 2400) * SWAY_RAD * centerWeight;
-        const yaw = BASE_YAW + sway;
+        const choreo = m.config.choreography;
+        const swayRad = choreo ? THREE.MathUtils.degToRad(choreo.swayDeg) : SWAY_RAD;
+        const baseYaw = choreo ? THREE.MathUtils.degToRad(choreo.yawDeg) : BASE_YAW;
+        const sway = Math.sin(swayClock / 2400) * swayRad * centerWeight;
+        const yaw = baseYaw + sway;
 
         // Meia-largura REAL do modelo projetada no eixo lateral (caixa girada
         // pelo yaw atual), não o raio da pegada: o raio superestima máquinas
         // compridas (o contêiner) e faria a lasca visível desaparecer.
         const cosY = Math.cos(yaw);
         const sinY = Math.sin(yaw);
-        const extent =
-          (m.boxSize.x / 2) * Math.abs(cosY * rightX - sinY * rightZ) +
-          (m.boxSize.z / 2) * Math.abs(sinY * rightX + cosY * rightZ);
+        const latX = cosY * rightX - sinY * rightZ;
+        const latZ = sinY * rightX + cosY * rightZ;
+        let low: number;
+        let high: number;
+        if (m.points) {
+          // Silhueta real: num equipamento em "T" a caixa projetada é quase toda
+          // vazio e o pivô não fica no meio dela.
+          low = Infinity;
+          high = -Infinity;
+          for (const p of m.points) {
+            const lateral = p.x * latX + p.z * latZ;
+            if (lateral < low) low = lateral;
+            if (lateral > high) high = lateral;
+          }
+        } else {
+          high = (m.boxSize.x / 2) * Math.abs(latX) + (m.boxSize.z / 2) * Math.abs(latZ);
+          low = -high;
+        }
+        const extent = (high - low) / 2;
 
         // Borda interna do vizinho: deixa visível `visibleFrac` da largura dele,
         // sem nunca invadir o protagonista. Escala do modelo = 1 sempre.
-        const innerEdge = Math.max(minInner, halfW - visibleFrac * 2 * extent);
-        const slot = innerEdge + extent;
+        const frac = choreo ? Math.min(visibleFrac, choreo.sideVisibleFrac) : visibleFrac;
+        const innerEdge = Math.max(minInner, halfW - frac * 2 * extent);
         const dir = rel < 0 ? -1 : 1;
+        const slot = dir > 0 ? innerEdge - low : innerEdge + high;
         // Além de |rel| = 1 o modelo continua deslizando para fora do quadro
         // (percurso proporcional à largura visível) antes de reaparecer do
         // lado oposto — a troca de lado acontece sempre fora de cena.
@@ -379,11 +482,21 @@ export default function EquipmentChoreographyCanvas({
         // crescendo de 0 (no centro) a 1 (no slot lateral) — contínuo, sem
         // salto na transição. Fração da largura útil do palco (2 * halfW).
         const nudge = (m.config.choreographyRightNudge ?? 0) * 2 * halfW;
-        const x = baseX + nudge * THREE.MathUtils.clamp(rel, 0, 1);
+        // Recém-carregado: entra deslizando de fora do quadro, sem surgir pronto.
+        m.entry = Math.min(1, m.entry + dt / ENTRY_MS);
+        const entering = (1 - easeInOutCubic(m.entry)) * Math.min(abs, 1) * dir * (halfW + 2 * extent);
+        // Recuo em profundidade como vizinho (0 no destaque). O lateral é
+        // compensado para a borda interna continuar no mesmo lugar em tela.
+        const depth = (choreo?.sideDepth ?? 0) * Math.min(abs, 1);
+        const x =
+          (baseX + nudge * THREE.MathUtils.clamp(rel, 0, 1) + entering) * (1 + depth / backLen);
 
-        m.group.visible = true;
-        m.group.position.set(rightX * x, 0, rightZ * x);
-        m.group.scale.setScalar(1);
+        m.group.visible = abs < 1.95;
+        m.group.position.set(
+          rightX * x - (backX / backLen) * depth,
+          0,
+          rightZ * x - (backZ / backLen) * depth
+        );
         m.group.rotation.y = yaw;
       }
 
@@ -397,6 +510,7 @@ export default function EquipmentChoreographyCanvas({
       window.cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
+      if (pendingGroup) disposeObjectTree(pendingGroup);
       for (const m of models) {
         if (m) {
           scene.remove(m.group);

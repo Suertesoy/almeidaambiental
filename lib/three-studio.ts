@@ -267,3 +267,60 @@ export function computeFitFraming(
   const position = target.clone().addScaledVector(startDir, distance);
   return { position, target, distance };
 }
+
+/**
+ * Enquadramento da coreografia para modelos com apresentação própria: menor
+ * distância em que os pontos cabem em fillWidth × fillHeight ao longo da
+ * oscilação (yaw ± sway), com perspectiva exata. Não varre 360°, porque na
+ * coreografia o modelo não dá a volta.
+ */
+export function computeYawFraming(
+  points: THREE.Vector3[],
+  height: number,
+  aspect: number,
+  fovDeg: number,
+  choreo: {
+    azimuthDeg: number;
+    elevationDeg: number;
+    yawDeg: number;
+    swayDeg: number;
+    targetYOffsetRatio: number;
+    fillWidth: number;
+    fillHeight: number;
+  }
+) {
+  const az = THREE.MathUtils.degToRad(choreo.azimuthDeg);
+  const el = THREE.MathUtils.degToRad(choreo.elevationDeg);
+  const tanV = Math.tan(THREE.MathUtils.degToRad(fovDeg) / 2);
+  const tanH = tanV * Math.max(aspect, 0.4);
+  const direction = new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
+  const right = new THREE.Vector3(Math.cos(az), 0, -Math.sin(az));
+  const up = new THREE.Vector3().crossVectors(direction, right);
+  const target = new THREE.Vector3(0, height * (0.5 + choreo.targetYOffsetRatio), 0);
+
+  const q = new THREE.Vector3();
+  const axis = new THREE.Vector3(0, 1, 0);
+  const projected: { x: number; along: number }[] = [];
+  let distance = 0;
+  for (const sway of [-choreo.swayDeg, 0, choreo.swayDeg]) {
+    const yaw = THREE.MathUtils.degToRad(choreo.yawDeg + sway);
+    for (const p of points) {
+      q.copy(p).applyAxisAngle(axis, yaw).sub(target);
+      const along = q.dot(direction);
+      const x = Math.abs(q.dot(right));
+      const y = Math.abs(q.dot(up));
+      distance = Math.max(
+        distance,
+        along + x / (choreo.fillWidth * tanH),
+        along + y / (choreo.fillHeight * tanV)
+      );
+      projected.push({ x, along });
+    }
+  }
+  // Meia-largura aparente no plano do alvo (partes próximas pesam mais).
+  let halfWidth = 0;
+  for (const { x, along } of projected) {
+    halfWidth = Math.max(halfWidth, (x * distance) / (distance - along));
+  }
+  return { direction, target, distance, halfWidth };
+}
