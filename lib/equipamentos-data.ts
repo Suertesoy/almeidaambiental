@@ -66,18 +66,62 @@ export const PRODUCTS: Product[] = [
     ),
   },
   {
-    id: "apv-90-100",
-    name: "Prensas APV 90 e APV 100",
+    id: "apv-90",
+    name: "Prensa APV 90",
     manufacturer: "Austropressen",
-    headline: "Compactação vertical onde cada metro quadrado importa.",
-    copy: "As prensas APV atendem operações que precisam organizar papel, papelão, têxteis ou plásticos sem dedicar uma grande área ao equipamento. O formato vertical reúne compactação e praticidade em uma solução adequada para operações comerciais e industriais.",
+    headline: "Duas câmaras verticais com cabeçote móvel sobre trilhos.",
+    copy: "A APV 90 é uma prensa vertical de duas câmaras com cabeçote hidráulico deslizante sobre trilhos, permitindo alternar o carregamento entre os dois compartimentos sem interromper a preparação dos fardos. Indicada para operações com papel, papelão, têxteis e plásticos em espaço reduzido.",
     idealFor: ["Papel", "Papelão", "Têxteis", "Plásticos"],
-    benefits: ["Baixo requisito de espaço", "Operação prática", "Formato vertical compacto"],
+    benefits: ["Operação prática", "Formato vertical compacto", "Baixo requisito de espaço"],
+    confirmedSpecs: [
+      "Sistema vertical de duas câmaras",
+      "Cabeçote móvel sobre trilhos",
+      "Portas frontais independentes com guias de amarração",
+    ],
     image: img(
       "almeida-equipamentos",
-      "produto-apv",
-      "/almeida-equipamentos/produtos/apv-90-100.webp",
-      "Prensa vertical compacta isolada em fundo neutro, visualização ilustrativa de produto"
+      "produto-apv-90",
+      "/models/equipamentos/apv-90/poster.webp",
+      "Prensa vertical Austropressen APV 90 de duas câmaras com cabeçote móvel sobre trilhos"
+    ),
+  },
+  {
+    id: "apv-100",
+    name: "Prensa APV 100",
+    manufacturer: "Austropressen",
+    headline: "Compactação vertical de câmara única onde cada metro quadrado importa.",
+    copy: "A APV 100 atende operações que precisam organizar papel, papelão, têxteis ou plásticos sem dedicar uma grande área ao equipamento. O formato vertical de câmara única com porta superior basculante reúne compactação e praticidade para rotinas comerciais e industriais.",
+    idealFor: ["Papel", "Papelão", "Têxteis", "Plásticos"],
+    benefits: ["Baixo requisito de espaço", "Operação prática", "Formato vertical compacto"],
+    confirmedSpecs: [
+      "Prensa vertical de câmara única",
+      "Porta superior basculante de carregamento",
+    ],
+    image: img(
+      "almeida-equipamentos",
+      "produto-apv-100",
+      "/models/equipamentos/apv-100/poster.webp",
+      "Prensa vertical Austropressen APV 100 de câmara única"
+    ),
+  },
+  {
+    id: "k70",
+    name: "Prensa K70",
+    manufacturer: "Austropressen",
+    headline: "Duas câmaras em corpo galvanizado com cabeçote superior móvel.",
+    copy: "A K70 é uma prensa vertical de duas câmaras com estrutura robusta em aço galvanizado, portas nervuradas com travamento por alavancas e cabeçote superior azul móvel sobre trilhos. Diferencia-se da APV 90 pela construção galvanizada e pelo conjunto superior exposto, voltada a rotinas contínuas de enfardamento de papel, papelão e plásticos.",
+    idealFor: ["Papel", "Papelão", "Plásticos"],
+    benefits: ["Operação prática", "Formato vertical compacto", "Baixo requisito de espaço"],
+    confirmedSpecs: [
+      "Duas câmaras com cabeçote superior azul móvel",
+      "Corpo estrutural em aço galvanizado",
+      "Travamento mecânico frontal por alavancas",
+    ],
+    image: img(
+      "almeida-equipamentos",
+      "produto-k70",
+      "/models/equipamentos/k70/poster.webp",
+      "Prensa vertical Austropressen K70 de duas câmaras em corpo galvanizado e cabeçote azul"
     ),
   },
   {
@@ -93,21 +137,6 @@ export const PRODUCTS: Product[] = [
       "produto-compactador-hidraulico",
       "/almeida-equipamentos/produtos/compactador-hidraulico.webp",
       "Compactador hidráulico fechado isolado em fundo neutro, visualização ilustrativa de produto"
-    ),
-  },
-  {
-    id: "conteineres-almeida",
-    name: "Contêineres Almeida",
-    manufacturer: "Produção própria",
-    headline: "Estrutura desenvolvida para trabalhar junto com a operação.",
-    copy: "Os contêineres produzidos pela Almeida complementam sistemas de coleta e compactação com uma estrutura pensada para resistência, movimentação e descarga de materiais.",
-    idealFor: ["Coleta roll-on/roll-off", "Operações de grande volume"],
-    benefits: ["Produção própria do Grupo Almeida", "Geometria pensada para descarregamento", "Acabamento industrial resistente"],
-    image: img(
-      "almeida-equipamentos",
-      "produto-conteineres",
-      "/almeida-equipamentos/produtos/conteineres-almeida.webp",
-      "Contêiner industrial roll-on/roll-off isolado em fundo neutro, visualização ilustrativa de produto"
     ),
   },
   {
@@ -140,6 +169,21 @@ export const PRODUCTS: Product[] = [
       "Equipamento industrial de desidratação isolado em fundo neutro, visualização ilustrativa de produto"
     ),
   },
+  {
+    id: "conteineres-almeida",
+    name: "Contêineres Almeida",
+    manufacturer: "Produção própria",
+    headline: "Estrutura desenvolvida para trabalhar junto com a operação.",
+    copy: "Os contêineres produzidos pela Almeida complementam sistemas de coleta e compactação com uma estrutura pensada para resistência, movimentação e descarga de materiais.",
+    idealFor: ["Coleta roll-on/roll-off", "Operações de grande volume"],
+    benefits: ["Produção própria do Grupo Almeida", "Geometria pensada para descarregamento", "Acabamento industrial resistente"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-conteineres",
+      "/almeida-equipamentos/produtos/conteineres-almeida.webp",
+      "Contêiner industrial roll-on/roll-off isolado em fundo neutro, visualização ilustrativa de produto"
+    ),
+  },
 ];
 
 /* ==========================================================
@@ -167,18 +211,62 @@ export const PRODUCTS_EN: Product[] = [
     ),
   },
   {
-    id: "apv-90-100",
-    name: "APV 90 and APV 100 Balers",
+    id: "apv-90",
+    name: "APV 90 Baler",
     manufacturer: "Austropressen",
-    headline: "Vertical compaction where every square meter counts.",
-    copy: "The APV balers are built for operations that need to keep paper, cardboard, textiles or plastic organized without giving up valuable floor space. Their vertical design combines compaction with practicality, well suited to commercial and industrial settings.",
+    headline: "Dual vertical chambers with a rail-mounted sliding press head.",
+    copy: "The APV 90 is a dual-chamber vertical baler with a hydraulic press head that slides along rails between compartments, allowing continuous loading while bales are prepared. Suited to paper, cardboard, textiles and plastics in compact floor spaces.",
     idealFor: ["Paper", "Cardboard", "Textiles", "Plastics"],
-    benefits: ["Low space requirement", "Practical operation", "Compact vertical format"],
+    benefits: ["Practical operation", "Compact vertical format", "Low space requirement"],
+    confirmedSpecs: [
+      "Dual-chamber vertical system",
+      "Rail-mounted sliding press head",
+      "Independent front doors with strapping guides",
+    ],
     image: img(
       "almeida-equipamentos",
-      "produto-apv",
-      "/almeida-equipamentos/produtos/apv-90-100.webp",
-      "Compact vertical baler isolated on a neutral background, illustrative product visualization"
+      "produto-apv-90",
+      "/models/equipamentos/apv-90/poster.webp",
+      "Austropressen APV 90 dual-chamber vertical baler with rail-mounted sliding press head"
+    ),
+  },
+  {
+    id: "apv-100",
+    name: "APV 100 Baler",
+    manufacturer: "Austropressen",
+    headline: "Single-chamber vertical compaction where every square meter counts.",
+    copy: "The APV 100 serves operations that need to keep paper, cardboard, textiles or plastic organized without dedicating a large floor area. Its single-chamber vertical format with a top-hinged loading door combines compaction and practicality.",
+    idealFor: ["Paper", "Cardboard", "Textiles", "Plastics"],
+    benefits: ["Low space requirement", "Practical operation", "Compact vertical format"],
+    confirmedSpecs: [
+      "Single-chamber vertical baler",
+      "Top-hinged loading door",
+    ],
+    image: img(
+      "almeida-equipamentos",
+      "produto-apv-100",
+      "/models/equipamentos/apv-100/poster.webp",
+      "Austropressen APV 100 single-chamber vertical baler"
+    ),
+  },
+  {
+    id: "k70",
+    name: "K70 Baler",
+    manufacturer: "Austropressen",
+    headline: "Dual chambers in a galvanized body with a movable upper press head.",
+    copy: "The K70 is a dual-chamber vertical baler built with a galvanized steel body, ribbed front doors with mechanical lever locks and a movable blue upper press head on rails. It stands apart from the APV 90 through its galvanized construction and exposed upper drive assembly for continuous paper, cardboard and plastic baling.",
+    idealFor: ["Paper", "Cardboard", "Plastics"],
+    benefits: ["Practical operation", "Compact vertical format", "Low space requirement"],
+    confirmedSpecs: [
+      "Dual chambers with movable blue upper press head",
+      "Galvanized steel body construction",
+      "Front mechanical lever locking",
+    ],
+    image: img(
+      "almeida-equipamentos",
+      "produto-k70",
+      "/models/equipamentos/k70/poster.webp",
+      "Austropressen K70 dual-chamber vertical baler with galvanized body and blue upper press head"
     ),
   },
   {
@@ -194,21 +282,6 @@ export const PRODUCTS_EN: Product[] = [
       "produto-compactador-hidraulico",
       "/almeida-equipamentos/produtos/compactador-hidraulico.webp",
       "Enclosed hydraulic compactor isolated on a neutral background, illustrative product visualization"
-    ),
-  },
-  {
-    id: "conteineres-almeida",
-    name: "Almeida Containers",
-    manufacturer: "In-house production",
-    headline: "Built for day-to-day operations.",
-    copy: "Almeida's in-house containers complement collection and compaction systems, built for durability, easy handling and efficient unloading.",
-    idealFor: ["Roll-on/roll-off collection", "Large-volume operations"],
-    benefits: ["In-house production by Grupo Almeida", "Geometry designed for unloading", "Durable industrial finish"],
-    image: img(
-      "almeida-equipamentos",
-      "produto-conteineres",
-      "/almeida-equipamentos/produtos/conteineres-almeida.webp",
-      "Industrial roll-on/roll-off container isolated on a neutral background, illustrative product visualization"
     ),
   },
   {
@@ -241,6 +314,21 @@ export const PRODUCTS_EN: Product[] = [
       "Industrial dewatering equipment isolated on a neutral background, illustrative product visualization"
     ),
   },
+  {
+    id: "conteineres-almeida",
+    name: "Almeida Containers",
+    manufacturer: "In-house production",
+    headline: "Built for day-to-day operations.",
+    copy: "Almeida's in-house containers complement collection and compaction systems, built for durability, easy handling and efficient unloading.",
+    idealFor: ["Roll-on/roll-off collection", "Large-volume operations"],
+    benefits: ["In-house production by Grupo Almeida", "Geometry designed for unloading", "Durable industrial finish"],
+    image: img(
+      "almeida-equipamentos",
+      "produto-conteineres",
+      "/almeida-equipamentos/produtos/conteineres-almeida.webp",
+      "Industrial roll-on/roll-off container isolated on a neutral background, illustrative product visualization"
+    ),
+  },
 ];
 
 export type MaterialAssociation = {
@@ -252,8 +340,8 @@ export type MaterialAssociation = {
  *  sustenta a ligação — nunca prometendo que todo equipamento processa
  *  todo material (Seção 46 da tarefa). */
 export const MATERIAL_ASSOCIATIONS: MaterialAssociation[] = [
-  { material: "Papelão", products: ["compactador-fuso", "apv-90-100"] },
-  { material: "Plástico", products: ["compactador-fuso", "apv-90-100", "crocodile"] },
+  { material: "Papelão", products: ["compactador-fuso", "apv-90", "apv-100", "k70"] },
+  { material: "Plástico", products: ["compactador-fuso", "apv-90", "apv-100", "k70", "crocodile"] },
   { material: "Madeira", products: ["compactador-fuso"] },
   { material: "Resíduos úmidos", products: ["compactador-hidraulico", "crocodile"] },
   { material: "Documentos sigilosos", products: ["compactador-hidraulico"] },
@@ -261,8 +349,8 @@ export const MATERIAL_ASSOCIATIONS: MaterialAssociation[] = [
 ];
 
 export const MATERIAL_ASSOCIATIONS_EN: MaterialAssociation[] = [
-  { material: "Cardboard", products: ["compactador-fuso", "apv-90-100"] },
-  { material: "Plastic", products: ["compactador-fuso", "apv-90-100", "crocodile"] },
+  { material: "Cardboard", products: ["compactador-fuso", "apv-90", "apv-100", "k70"] },
+  { material: "Plastic", products: ["compactador-fuso", "apv-90", "apv-100", "k70", "crocodile"] },
   { material: "Wood", products: ["compactador-fuso"] },
   { material: "Wet waste", products: ["compactador-hidraulico", "crocodile"] },
   { material: "Confidential documents", products: ["compactador-hidraulico"] },

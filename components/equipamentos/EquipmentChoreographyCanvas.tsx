@@ -36,12 +36,12 @@ type PreparedModel = {
   entry: number;
 };
 
-const HOLD_MS = 3000;
+const HOLD_MS = 2400;
 const ENTRY_MS = 900;
 /** Quantos equipamentos à frente do destaque ficam preparados. */
 const PRELOAD_AHEAD = 2;
 const MAX_LOAD_ATTEMPTS = 2;
-const MOVE_MS = 1100;
+const MOVE_MS = 1000;
 /**
  * Posição mínima da borda interna do vizinho, como fração do raio do
  * protagonista. A caixa envolvente de uma máquina girada termina num CANTO

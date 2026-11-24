@@ -55,7 +55,14 @@ export type Equipment3DConfig = {
   /** ID correspondente ao catálogo em lib/equipamentos-data.ts. */
   productId: string;
   /** Pasta estável em public/models/equipamentos/. */
-  assetSlug: "apv-100" | "compactador-fuso" | "compactador-hidraulico" | "prensa-horizontal" | "heger-crocodile";
+  assetSlug:
+    | "apv-90"
+    | "apv-100"
+    | "k70"
+    | "compactador-fuso"
+    | "compactador-hidraulico"
+    | "prensa-horizontal"
+    | "heger-crocodile";
   glbUrl: string;
   posterUrl: string;
   contactShadowUrl: string;
@@ -109,8 +116,54 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
       en: "Screw Compactor in three-quarter perspective showing the open hopper and mechanical assembly",
     },
   },
-  "apv-90-100": {
-    productId: "apv-90-100",
+  // Prensa vertical Austropressen de duas câmaras com cabeçote móvel sobre trilhos.
+  // Escala estimada na modelagem (não divulgar medidas).
+  "apv-90": {
+    productId: "apv-90",
+    assetSlug: "apv-90",
+    glbUrl: "/models/equipamentos/apv-90/modelo.glb",
+    posterUrl: "/models/equipamentos/apv-90/poster.webp",
+    contactShadowUrl: "/models/equipamentos/apv-90/sombra-contato.png",
+    contactShadowSize: { width: 3.2, depth: 2.2 },
+    environmentIntensity: 1.78,
+    displayName: {
+      pt: "Prensa APV 90",
+      en: "APV 90 Baler",
+    },
+    camera: {
+      azimuthDeg: 32,
+      elevationDeg: 14,
+      fov: 24,
+      padding: 1.32,
+      targetYOffsetRatio: 0.02,
+      fitToGeometry: true,
+      elevationRangeDeg: { below: 10, above: 16 },
+      mobile: { azimuthDeg: 34, fill: 0.9 },
+    },
+    choreography: {
+      scale: 0.85,
+      azimuthDeg: 36,
+      elevationDeg: 14,
+      yawDeg: 0,
+      swayDeg: 12,
+      pivot: { x: 0, z: 0 },
+      targetYOffsetRatio: 0.02,
+      fillWidth: 0.86,
+      fillHeight: 0.88,
+      sideVisibleFrac: 0.42,
+      sideDepth: 1.0,
+    },
+    label: {
+      pt: "Modelo 3D interativo da Prensa Vertical APV 90 de duas câmaras",
+      en: "Interactive 3D model of the APV 90 dual-chamber vertical baler",
+    },
+    posterAlt: {
+      pt: "Prensa Vertical Austropressen APV 90 em perspectiva de três quartos, com duas câmaras e cabeçote móvel sobre trilhos",
+      en: "Austropressen APV 90 vertical baler in three-quarter perspective, with dual chambers and rail-mounted sliding press head",
+    },
+  },
+  "apv-100": {
+    productId: "apv-100",
     assetSlug: "apv-100",
     glbUrl: "/models/equipamentos/apv-100/modelo.glb",
     posterUrl: "/models/equipamentos/apv-100/poster.webp",
@@ -135,6 +188,52 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
     posterAlt: {
       pt: "Prensa Vertical APV 100 em perspectiva de três quartos",
       en: "APV 100 Vertical Baler in three-quarter perspective",
+    },
+  },
+  // Prensa vertical Austropressen de duas câmaras, corpo galvanizado e cabeçote azul.
+  // Escala estimada na modelagem (não divulgar medidas).
+  k70: {
+    productId: "k70",
+    assetSlug: "k70",
+    glbUrl: "/models/equipamentos/k70/modelo.glb",
+    posterUrl: "/models/equipamentos/k70/poster.webp",
+    contactShadowUrl: "/models/equipamentos/k70/sombra-contato.png",
+    contactShadowSize: { width: 3.4, depth: 2.4 },
+    environmentIntensity: 1.75,
+    displayName: {
+      pt: "Prensa K70",
+      en: "K70 Baler",
+    },
+    camera: {
+      azimuthDeg: -36,
+      elevationDeg: 14,
+      fov: 24,
+      padding: 1.32,
+      targetYOffsetRatio: 0.02,
+      fitToGeometry: true,
+      elevationRangeDeg: { below: 10, above: 16 },
+      mobile: { azimuthDeg: -34, fill: 0.9 },
+    },
+    choreography: {
+      scale: 0.92,
+      azimuthDeg: 36,
+      elevationDeg: 14,
+      yawDeg: -72,
+      swayDeg: 12,
+      pivot: { x: 0, z: 0 },
+      targetYOffsetRatio: 0.02,
+      fillWidth: 0.86,
+      fillHeight: 0.88,
+      sideVisibleFrac: 0.42,
+      sideDepth: 1.0,
+    },
+    label: {
+      pt: "Modelo 3D interativo da Prensa Vertical K70 galvanizada",
+      en: "Interactive 3D model of the galvanized K70 vertical baler",
+    },
+    posterAlt: {
+      pt: "Prensa Vertical Austropressen K70 em perspectiva de três quartos, com corpo galvanizado, duas câmaras e cabeçote azul móvel",
+      en: "Austropressen K70 vertical baler in three-quarter perspective, with galvanized body, dual chambers and movable blue press head",
     },
   },
   "compactador-hidraulico": {
@@ -279,7 +378,9 @@ export function getEquipment3DConfig(productId: string): Equipment3DConfig | nul
  */
 export const CHOREOGRAPHY_SEQUENCE: string[] = [
   "compactador-fuso",
-  "apv-90-100",
+  "apv-90",
+  "apv-100",
+  "k70",
   "compactador-hidraulico",
   "prensas-horizontais",
   "crocodile",

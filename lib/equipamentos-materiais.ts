@@ -28,11 +28,15 @@ export type MaterialMatch = {
 export const MATERIAL_MATCHES: Partial<Record<CoreMaterial, MaterialMatch[]>> = {
   "Papelão": [
     { productId: "compactador-fuso", evidence: { pt: "Papelão", en: "Cardboard" } },
-    { productId: "apv-90-100", evidence: { pt: "Papelão", en: "Cardboard" } },
+    { productId: "apv-90", evidence: { pt: "Papelão", en: "Cardboard" } },
+    { productId: "apv-100", evidence: { pt: "Papelão", en: "Cardboard" } },
+    { productId: "k70", evidence: { pt: "Papelão", en: "Cardboard" } },
   ],
   "Plástico": [
     { productId: "compactador-fuso", evidence: { pt: "Plástico", en: "Plastic" } },
-    { productId: "apv-90-100", evidence: { pt: "Plásticos", en: "Plastics" } },
+    { productId: "apv-90", evidence: { pt: "Plásticos", en: "Plastics" } },
+    { productId: "apv-100", evidence: { pt: "Plásticos", en: "Plastics" } },
+    { productId: "k70", evidence: { pt: "Plásticos", en: "Plastics" } },
     { productId: "crocodile", evidence: { pt: "Copos plásticos, Garrafas PET", en: "Plastic cups, PET bottles" } },
   ],
   "Madeira": [{ productId: "compactador-fuso", evidence: { pt: "Madeira", en: "Wood" } }],
