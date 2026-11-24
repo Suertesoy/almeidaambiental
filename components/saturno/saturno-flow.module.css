@@ -1,14 +1,8 @@
 .flowRoot {
-  --flow-gap: clamp(32px, 5vw, 88px);
-  --flow-axis: calc(25% - var(--flow-gap) / 4);
-  --gold-line: rgba(182, 138, 56, 0.56);
-  --gold-dashed: rgba(182, 138, 56, 0.48);
-  --gold-glow: rgba(182, 138, 56, 0.16);
+  --gold-line: rgba(182, 138, 56, 0.62);
+  --gold-dashed: rgba(182, 138, 56, 0.52);
   position: relative;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
 }
 
 .srOnly {
@@ -24,60 +18,85 @@
 }
 
 /* ==========================================================================
-   NÍVEIS 1 e 3 (Desktop: 2 colunas + conector horizontal; Mobile: vertical)
+   MOBILE E TABLET (< 1024px):
+   Coluna vertical contínua à esquerda (01 → 02 → 03 → 04), com o bloco
+   02.1 como ramificação tracejada secundária entre Triagem e Enfardamento.
    ========================================================================== */
-.levelRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--flow-gap) minmax(0, 1fr);
-  align-items: stretch;
+.diagram {
   position: relative;
-  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 24px;
+}
+
+/* Linha vertical contínua do fluxo principal */
+.diagram::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 24px;
+  bottom: 24px;
+  width: 1.5px;
+  background: var(--gold-line);
 }
 
 .stageCard {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: clamp(20px, 2.2vw, 30px);
-  border-radius: 14px;
-  background: rgba(8, 30, 22, 0.72);
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: 12px;
+  background: rgba(8, 30, 22, 0.68);
   border: 1px solid rgba(182, 138, 56, 0.24);
-  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.55);
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(14px);
   transition:
-    opacity 0.65s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
-    transform 0.65s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
-    border-color 0.3s ease;
+    opacity 0.6s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 0.6s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
+    border-color 0.28s ease;
+}
+
+/* Marcador circular na trilha vertical no mobile */
+.stageCard::before {
+  content: "";
+  position: absolute;
+  left: -21px;
+  top: 24px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-gold-aged, #b68a38);
+  box-shadow: 0 0 0 3px var(--color-saturno-deep, #132a1c);
 }
 
 .stageCard:hover {
-  border-color: rgba(182, 138, 56, 0.48);
+  border-color: rgba(182, 138, 56, 0.46);
 }
 
 .revealed .stageCard,
-.revealed .returnZone {
+.revealed .optionalBranch {
   opacity: 1;
   transform: translateY(0);
 }
 
-.delay0 { transition-delay: 0.04s; }
-.delay1 { transition-delay: 0.12s; }
-.delay2 { transition-delay: 0.20s; }
-.delay3 { transition-delay: 0.28s; }
-.delay4 { transition-delay: 0.36s; }
+.stage1 { transition-delay: 0.04s; }
+.stage2 { transition-delay: 0.1s; }
+.optionalBranch { transition-delay: 0.16s; }
+.stage3 { transition-delay: 0.22s; }
+.stage4 { transition-delay: 0.28s; }
 
 .stageHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .stageNumber {
   font-family: var(--font-display, serif);
-  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.04em;
@@ -88,32 +107,32 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   background: rgba(182, 138, 56, 0.1);
   border: 1px solid rgba(182, 138, 56, 0.26);
   color: var(--color-gold-aged, #b68a38);
 }
 
 .iconSvg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .stageEyebrow {
   margin: 0 0 6px;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: rgba(182, 138, 56, 0.9);
+  color: rgba(228, 199, 136, 0.9);
 }
 
 .stageTitle {
   margin: 0 0 10px;
   font-family: var(--font-display, serif);
-  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  font-size: clamp(1.08rem, 1.25vw, 1.26rem);
   font-weight: 500;
   line-height: 1.24;
   color: #f4f2eb;
@@ -121,236 +140,80 @@
 
 .stageCopy {
   margin: 0;
-  font-size: 0.94rem;
-  line-height: 1.62;
+  font-size: 0.9rem;
+  line-height: 1.58;
   color: rgba(244, 242, 235, 0.78);
 }
 
-/* Conector horizontal Esquerda -> Direita (Nível 1 e Nível 3) */
-.hConnectorRight {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding-inline: 6px;
-  color: var(--color-gold-aged, #b68a38);
-}
-
-.hLine {
-  width: 100%;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    rgba(182, 138, 56, 0.35),
-    var(--gold-line)
-  );
-}
-
-.arrowRight {
-  flex-shrink: 0;
-  margin-left: -4px;
-}
-
-/* ==========================================================================
-   NÍVEL 2: Retorno Serpentina (Direita -> Esquerda) + Bifurcação Opcional
-   ========================================================================== */
-.returnZone {
-  position: relative;
-  padding-block: 38px 34px;
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.65s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
-    transform 0.65s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1));
-}
-
-.serpentineRails {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Haste vertical direita: desce da base da 02 Triagem */
-.stemRight {
-  position: absolute;
-  top: 0;
-  right: var(--flow-axis);
-  width: 1.5px;
-  height: 54%;
-  transform: translateX(50%);
-  background: linear-gradient(
-    180deg,
-    var(--gold-line) 0%,
-    var(--gold-line) 65%,
-    transparent 100%
-  );
-}
-
-/* Linha contínua direta: Direita -> Esquerda */
-.directTrack {
-  position: absolute;
-  top: 26px;
-  left: var(--flow-axis);
-  right: var(--flow-axis);
-  height: 16px;
-  display: flex;
-  align-items: center;
-  color: var(--color-gold-aged, #b68a38);
-}
-
-.directLine {
-  order: 2;
-  width: 100%;
-  height: 1.5px;
-  background: var(--gold-line);
-}
-
-.arrowLeft {
-  order: 1;
-  flex-shrink: 0;
-  margin-right: -4px;
-}
-
-/* Haste vertical esquerda: converge direto + opcional e entra na 03 Enfardamento */
-.stemLeft {
-  position: absolute;
-  top: 34px;
-  bottom: 0;
-  left: var(--flow-axis);
-  width: 1.5px;
-  transform: translateX(-50%);
-  background: var(--gold-line);
-  color: var(--color-gold-aged, #b68a38);
-}
-
-.arrowDown {
-  position: absolute;
-  bottom: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Rótulo Caminho Direto centralizado sobre a linha direta */
-.directBadgeRow {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  margin-top: -20px;
-  margin-bottom: 24px;
-}
-
-.directMobileRail {
+.conn {
   display: none;
 }
 
-.directBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  border-radius: 999px;
-  background: #0a241b;
-  border: 1px solid rgba(182, 138, 56, 0.45);
-  box-shadow: 0 0 0 4px rgba(10, 36, 27, 0.9);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #e4c788;
+/* Ramificação opcional no mobile: sai da trilha contínua em tracejado e retorna antes de 03 */
+.optionalBranch {
+  position: relative;
+  margin-left: 14px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.6s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform 0.6s var(--ease-out-expo, cubic-bezier(0.22, 1, 0.36, 1));
 }
 
-/* Ramo paralelo tracejado + card de tratamento opcional */
-.optionalRow {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns:
-    calc(var(--flow-axis) - 1px)
-    minmax(0, 1fr)
-    calc(var(--flow-axis) - 1px);
-  align-items: center;
+.branchLegIn,
+.branchLegOut {
+  position: absolute;
+  left: -30px;
+  width: 30px;
+  height: 18px;
+  pointer-events: none;
 }
 
-/* Ordem visual no desktop: conector esquerdo (saída) | card | conector direito (entrada) */
-.branchConnectorLeft {
-  order: 1;
-  height: 76px;
-  position: relative;
+.branchLegIn {
+  top: 14px;
+  border-left: 1.5px dashed var(--gold-dashed);
+  border-bottom: 1.5px dashed var(--gold-dashed);
+  border-bottom-left-radius: 10px;
+}
+
+.branchLegOut {
+  bottom: 14px;
+  border-left: 1.5px dashed var(--gold-dashed);
+  border-top: 1.5px dashed var(--gold-dashed);
+  border-top-left-radius: 10px;
 }
 
 .optionalCard {
-  order: 2;
-  position: relative;
-  padding: clamp(18px, 2vw, 24px) clamp(20px, 2.4vw, 28px);
-  border-radius: 14px;
-  background: rgba(13, 42, 32, 0.85);
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: rgba(11, 36, 27, 0.78);
   border: 1.5px dashed var(--gold-dashed);
-  box-shadow:
-    inset 0 0 0 1px rgba(182, 138, 56, 0.08),
-    0 16px 36px -24px rgba(0, 0, 0, 0.6);
-}
-
-.branchConnectorRight {
-  order: 3;
-  height: 76px;
-  position: relative;
-}
-
-/* Curvas tracejadas saindo da haste direita e convergindo na haste esquerda */
-.dashedElbowRight {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 50%;
-  border-right: 1.5px dashed var(--gold-dashed);
-  border-bottom: 1.5px dashed var(--gold-dashed);
-  border-bottom-right-radius: 18px;
-}
-
-.dashedElbowLeft {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  border-left: 1.5px dashed var(--gold-dashed);
-  border-bottom: 1.5px dashed var(--gold-dashed);
-  border-bottom-left-radius: 18px;
 }
 
 .optionalHeader {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 8px 10px;
+  margin-bottom: 8px;
 }
 
 .optionalIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
-  background: rgba(182, 138, 56, 0.12);
+  background: rgba(182, 138, 56, 0.1);
   border: 1px dashed rgba(182, 138, 56, 0.42);
   color: var(--color-gold-aged, #b68a38);
 }
 
-.optionalBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(182, 138, 56, 0.14);
-  border: 1px solid rgba(182, 138, 56, 0.34);
-  font-size: 0.68rem;
+.optionalTag {
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #e4c788;
 }
@@ -358,125 +221,133 @@
 .optionalTitle {
   margin: 0 0 6px;
   font-family: var(--font-display, serif);
-  font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
   font-weight: 500;
   line-height: 1.25;
   color: #f4f2eb;
 }
 
-.optionalHeadline {
-  margin: 0 0 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.4;
-  color: rgba(228, 199, 136, 0.92);
-}
-
 .optionalCopy {
   margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.58;
-  color: rgba(244, 242, 235, 0.76);
+  font-size: 0.86rem;
+  line-height: 1.54;
+  color: rgba(244, 242, 235, 0.74);
 }
 
 /* ==========================================================================
-   MOBILE (< 768px): Coluna única vertical sem cruzamentos
+   DESKTOP (>= 1024px):
+   Fluxo horizontal contínuo em 4 etapas (01 → 02 → 03 → 04), com a
+   ramificação tracejada 02.1 conectada abaixo do trecho entre 02 e 03.
    ========================================================================== */
-@media (max-width: 767px) {
-  .levelRow {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+@media (min-width: 1024px) {
+  .diagram {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      clamp(22px, 2.6vw, 44px)
+      minmax(0, 1fr)
+      clamp(34px, 3.8vw, 64px)
+      minmax(0, 1fr)
+      clamp(22px, 2.6vw, 44px)
+      minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: stretch;
+    row-gap: 28px;
+    column-gap: 0;
+    padding-left: 0;
   }
 
-  .hConnectorRight {
-    height: 44px;
-    padding-inline: 0;
-    flex-direction: column;
-  }
-
-  .hLine {
-    width: 1.5px;
-    height: 100%;
-    background: linear-gradient(
-      180deg,
-      rgba(182, 138, 56, 0.4),
-      var(--gold-line)
-    );
-  }
-
-  .arrowRight {
-    margin-left: 0;
-    margin-top: -5px;
-    transform: rotate(90deg);
-  }
-
-  .returnZone {
-    padding-block: 16px;
-  }
-
-  .serpentineRails {
+  .diagram::before,
+  .stageCard::before {
     display: none;
   }
 
-  .directBadgeRow {
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    margin-top: 0;
-    margin-bottom: 14px;
-  }
+  .stage1 { grid-column: 1; grid-row: 1; }
+  .conn1  { grid-column: 2; grid-row: 1; }
+  .stage2 { grid-column: 3; grid-row: 1; }
+  .conn2  { grid-column: 4; grid-row: 1; }
+  .stage3 { grid-column: 5; grid-row: 1; }
+  .conn3  { grid-column: 6; grid-row: 1; }
+  .stage4 { grid-column: 7; grid-row: 1; }
 
-  .directMobileRail {
+  .conn {
     display: block;
-    width: 1.5px;
-    height: 22px;
-    background: var(--gold-line);
-    margin-bottom: 6px;
+    position: relative;
+    align-self: center;
+    height: 14px;
+    color: var(--color-gold-aged, #b68a38);
   }
 
-  .optionalRow {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
-
-  .branchConnectorRight,
-  .branchConnectorLeft {
-    order: initial;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .dashedElbowRight,
-  .dashedElbowLeft {
-    position: static;
-    width: 1.5px;
-    height: 100%;
-    border: 0;
-    border-left: 1.5px dashed var(--gold-dashed);
-    border-radius: 0;
-  }
-
-  .optionalCard {
-    order: initial;
-  }
-
-  .branchConnectorLeft::after {
+  .conn::before {
     content: "";
     position: absolute;
-    bottom: -1px;
-    left: 50%;
+    left: 0;
+    right: 2px;
+    top: 50%;
+    height: 1.5px;
+    background: var(--gold-line);
+    transform: translateY(-50%);
+  }
+
+  .conn::after {
+    content: "";
+    position: absolute;
+    right: 2px;
+    top: 50%;
     width: 7px;
     height: 7px;
+    border-top: 1.5px solid var(--color-gold-aged, #b68a38);
     border-right: 1.5px solid var(--color-gold-aged, #b68a38);
-    border-bottom: 1.5px solid var(--color-gold-aged, #b68a38);
-    transform: translateX(-50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  /* Ramificação tracejada 02.1 posicionada abaixo do trecho entre 02 e 03 */
+  .optionalBranch {
+    grid-column: 3 / 6;
+    grid-row: 2;
+    margin-left: 0;
+    justify-self: center;
+    width: min(100%, 460px);
+    padding-top: 2px;
+  }
+
+  /* Hastes tracejadas subindo para o fluxo entre 02 Triagem e 03 Enfardamento */
+  .branchLegIn,
+  .branchLegOut {
+    top: -30px;
+    bottom: auto;
+    width: 1px;
+    height: 30px;
+    border: 0;
+    border-radius: 0;
+    border-left: 1.5px dashed var(--gold-dashed);
+  }
+
+  .branchLegIn {
+    left: 24%;
+  }
+
+  .branchLegOut {
+    left: auto;
+    right: 24%;
+  }
+
+  .branchLegOut::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -4.2px;
+    width: 7px;
+    height: 7px;
+    border-top: 1.5px solid var(--color-gold-aged, #b68a38);
+    border-left: 1.5px solid var(--color-gold-aged, #b68a38);
+    transform: rotate(45deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .stageCard,
-  .returnZone {
+  .optionalBranch {
     opacity: 1;
     transform: none;
     transition: none;

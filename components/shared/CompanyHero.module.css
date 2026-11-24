@@ -314,18 +314,22 @@
   margin-top: clamp(20px, 3vw, 28px);
 }
 
-/* ---------------- Eixo central comum no desktop (>= 1024px) ----------------
-   Hero com logotipo como título: logotipo, descrição e grupo de CTAs
-   compartilham o eixo central do contêiner. Abaixo de 1024px (tablet e
-   mobile) a composição permanece exatamente como estava. */
+/* ---------------- Alinhamento à esquerda no desktop (>= 1024px) ----------------
+   No desktop, o conjunto textual e os CTAs ficam ancorados à esquerda do
+   contêiner editorial. Abaixo de 1024px (tablet e mobile), a composição
+   permanece exatamente como estava. */
 @media (min-width: 1024px) {
+  .ctaRow {
+    justify-content: flex-start;
+  }
+
   .hasTitleLogo {
-    text-align: center;
+    text-align: left;
   }
 
   .hasTitleLogo .titleLogo,
   .hasTitleLogo .lede,
   .hasTitleLogo .subcopy {
-    margin-inline: auto;
+    margin-inline: 0;
   }
 }

@@ -1,13 +1,16 @@
 /* ==========================================================
    Diagrama de processo da Almeida Ambiental (ProcessFlowDiagram.tsx).
-   Diagnóstico → Coleta → Triagem → [Caminho direto | Opcional: Trituração ou Descaracterização] → Enfardamento → Destinação.
-   Mobile: coluna vertical. >=960px: horizontal com bifurcação e convergência.
+   Diagnóstico → Coleta → Triagem ───────────────────▶ Enfardamento → Destinação
+                             └── [Tratamento opcional] ──┘
+                                 Trituração ou Descaracterização
+   Mobile: coluna vertical contínua com ramificação tracejada à direita.
+   Desktop (>=960px): linha horizontal contínua com ramificação abaixo.
    ========================================================== */
 
 .root {
   --flow-line: rgba(247, 246, 241, 0.22);
   --flow-gold: var(--color-gold-aged);
-  --link-h: 28px;
+  --link-h: 24px;
   padding-top: clamp(20px, 2.6vw, 32px);
   border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 }
@@ -29,21 +32,19 @@
   list-style: none;
   margin: 0 auto;
   padding: 0;
-  max-width: 360px;
+  max-width: 380px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 28px minmax(0, 1fr);
   grid-template-areas:
-    ". diag diag ."
-    ". ldiag ldiag ."
-    ". coleta coleta ."
-    ". lcoleta lcoleta ."
-    ". triagem triagem ."
-    "fork fork fork fork"
-    "direto direto opcional opcional"
-    "merge merge merge merge"
-    ". enfarda enfarda ."
-    ". lend lend ."
-    ". destino destino .";
+    "diag diag"
+    "ldiag ."
+    "coleta coleta"
+    "lcoleta ."
+    "triagem triagem"
+    "lmain opcional"
+    "enfarda enfarda"
+    "lend ."
+    "destino destino";
   justify-items: stretch;
   align-items: stretch;
 }
@@ -53,10 +54,8 @@
 .nColeta { grid-area: coleta; }
 .lColeta { grid-area: lcoleta; }
 .nTriagem { grid-area: triagem; }
-.fork { grid-area: fork; }
-.nDireto { grid-area: direto; margin-inline: 4px; }
-.nOpcional { grid-area: opcional; margin-inline: 4px; }
-.merge { grid-area: merge; }
+.lMain { grid-area: lmain; min-height: 76px; }
+.nOpcional { grid-area: opcional; }
 .nEnfarda { grid-area: enfarda; }
 .lEnd { grid-area: lend; }
 .nDestino { grid-area: destino; }
@@ -67,8 +66,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 50px;
-  padding: 8px 12px;
+  min-height: 48px;
+  padding: 8px 14px;
   border: 1px solid rgba(247, 246, 241, 0.26);
   border-radius: 4px;
   background: rgba(247, 246, 241, 0.05);
@@ -97,41 +96,58 @@
   line-height: 1.2;
 }
 
-/* Caminho direto e tratamento opcional no mobile */
-.nDireto {
-  flex-direction: column;
-  padding: 10px 8px;
-}
-
-.directTag {
-  font-family: var(--font-inter), var(--font-body);
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--flow-gold);
-}
-
+/* Ramificação opcional entre Triagem e Enfardamento no mobile */
 .nOpcional {
+  position: relative;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 8px;
+  gap: 5px;
+  margin-block: 10px;
+  margin-left: 12px;
+  padding: 10px 12px;
   border-style: dashed;
+  background: rgba(247, 246, 241, 0.03);
+}
+
+.nOpcional::before,
+.nOpcional::after {
+  content: "";
+  position: absolute;
+  left: -26px;
+  width: 26px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.nOpcional::before {
+  top: 10px;
+  border-left: 1.5px dashed color-mix(in srgb, var(--flow-gold) 65%, transparent);
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--flow-gold) 65%, transparent);
+  border-bottom-left-radius: 8px;
+}
+
+.nOpcional::after {
+  bottom: 10px;
+  border-left: 1.5px dashed color-mix(in srgb, var(--flow-gold) 65%, transparent);
+  border-top: 1.5px dashed color-mix(in srgb, var(--flow-gold) 65%, transparent);
+  border-top-left-radius: 8px;
 }
 
 .optionalTag {
   font-family: var(--font-inter), var(--font-body);
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  opacity: 0.78;
+  color: var(--flow-gold);
+  opacity: 0.92;
 }
 
 .optionalRow {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 4px 8px;
 }
 
 .optionalItem {
@@ -202,6 +218,10 @@
   list-style: none;
 }
 
+.lMain {
+  height: auto;
+}
+
 .line {
   position: absolute;
   background: var(--flow-line);
@@ -230,34 +250,10 @@
   transform-origin: top center;
 }
 
-.line_hc {
-  height: 2px;
-  top: calc(50% - 1px);
-}
-
-.line_hc .lineFill {
-  transform: scaleX(var(--p));
-  transform-origin: center;
-}
-
-.fork .forkTrunk { height: 50%; bottom: auto; }
-.fork .forkBar { left: 25%; right: 25%; }
-.fork .forkDropA,
-.fork .forkDropB { top: 50%; }
-.fork .forkDropA { left: calc(25% - 1px); }
-.fork .forkDropB { left: auto; right: calc(25% - 1px); }
-
-.merge .mergeDropA,
-.merge .mergeDropB { height: 50%; bottom: auto; }
-.merge .mergeDropA { left: calc(25% - 1px); }
-.merge .mergeDropB { left: auto; right: calc(25% - 1px); }
-.merge .mergeBar { left: 25%; right: 25%; }
-.merge .mergeTrunk { top: 50%; }
-
-/* ---------------- Desktop (>= 960px): horizontal ---------------- */
+/* ---------------- Desktop (>= 960px): horizontal contínuo ---------------- */
 @media (min-width: 960px) {
   .root {
-    --link-w: clamp(20px, 2.4vw, 44px);
+    --link-w: clamp(22px, 2.6vw, 48px);
   }
 
   .main {
@@ -266,48 +262,30 @@
     grid-template-columns:
       auto minmax(var(--link-w), 1fr)
       auto minmax(var(--link-w), 1fr)
-      auto minmax(var(--link-w), 0.9fr)
-      minmax(210px, 1.8fr)
-      minmax(var(--link-w), 0.9fr)
+      auto minmax(220px, 2.2fr)
       auto minmax(var(--link-w), 1fr)
       auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
-      "diag ldiag coleta lcoleta triagem fork direto merge enfarda lend destino"
-      "diag ldiag coleta lcoleta triagem fork opcional merge enfarda lend destino";
+      "diag ldiag coleta lcoleta triagem lmain enfarda lend destino"
+      ". . . . . opcional . . .";
     align-items: center;
     justify-content: stretch;
-    row-gap: 12px;
+    row-gap: 18px;
   }
 
   .nDiag, .nColeta, .nTriagem, .nEnfarda, .nDestino,
-  .lDiag, .lColeta, .fork, .merge, .lEnd {
+  .lDiag, .lColeta, .lMain, .lEnd {
     align-self: center;
-  }
-
-  .nDireto, .nOpcional {
-    margin: 0;
-    padding: 8px 14px;
-  }
-
-  .optionalRow {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px 10px;
-  }
-
-  .optionalItem {
-    font-size: 13px;
   }
 
   .link {
-    height: auto;
-    align-self: stretch;
+    height: 2px;
+    min-height: 0;
   }
 
-  .lDiag, .lColeta, .lEnd {
-    height: 2px;
-    align-self: center;
+  .lMain {
+    margin-inline: 0;
   }
 
   .line_v {
@@ -324,32 +302,39 @@
     transform-origin: left center;
   }
 
-  .line_hc {
-    height: auto;
-    width: 2px;
-    top: 25%;
-    bottom: 25%;
-    left: calc(50% - 1px);
+  .nOpcional {
+    margin-block: 0;
+    margin-inline: clamp(10px, 1.4vw, 22px);
+    padding: 9px 14px;
   }
 
-  .line_hc .lineFill {
-    transform: scaleY(var(--p));
-    transform-origin: center;
+  .nOpcional::before,
+  .nOpcional::after {
+    top: -40px;
+    bottom: auto;
+    width: 1px;
+    height: 39px;
+    border: 0;
+    border-radius: 0;
+    border-left: 1.5px dashed color-mix(in srgb, var(--flow-gold) 65%, transparent);
   }
 
-  .fork { align-self: stretch; }
-  .fork .forkTrunk { left: 0; right: 50%; top: calc(50% - 1px); bottom: auto; height: 2px; }
-  .fork .forkBar { left: calc(50% - 1px); right: auto; top: 25%; bottom: 25%; width: 2px; height: auto; }
-  .fork .forkDropA, .fork .forkDropB { left: 50%; right: 0; width: auto; height: 2px; bottom: auto; }
-  .fork .forkDropA { top: calc(25% - 1px); }
-  .fork .forkDropB { top: calc(75% - 1px); right: 0; }
+  .nOpcional::before {
+    left: 18px;
+  }
 
-  .merge { align-self: stretch; }
-  .merge .mergeDropA, .merge .mergeDropB { left: 0; right: 50%; width: auto; height: 2px; bottom: auto; }
-  .merge .mergeDropA { top: calc(25% - 1px); }
-  .merge .mergeDropB { top: calc(75% - 1px); left: 0; right: 50%; }
-  .merge .mergeBar { left: calc(50% - 1px); right: auto; top: 25%; bottom: 25%; width: 2px; height: auto; }
-  .merge .mergeTrunk { left: 50%; right: 0; top: calc(50% - 1px); bottom: auto; height: 2px; }
+  .nOpcional::after {
+    left: auto;
+    right: 18px;
+  }
+
+  .optionalRow {
+    gap: 6px 10px;
+  }
+
+  .optionalItem {
+    font-size: 13px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,44 +2,68 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./ProcessSteps.module.css";
-import { PROCESS_STEP_ICONS } from "../icons";
+import {
+  ProcessColetaIcon,
+  ProcessDescaracterizacaoIcon,
+  ProcessDestinacaoIcon,
+  ProcessDiagnosticoIcon,
+  ProcessEnfardamentoIcon,
+  ProcessTriagemIcon,
+  ProcessTrituracaoIcon,
+} from "../icons";
+import type { Locale } from "../../lib/i18n/locale";
 
 export type ProcessStep = {
   name: string;
 };
 
-/** "ssr": render determinístico, tudo visível (sem JS ou reduced-motion).
- *  "idle": montado, aguardando entrar no viewport (etapas ocultas).
- *  "entered": revelado uma única vez, em sequência. */
 type Phase = "ssr" | "idle" | "entered";
 
+const COPY = {
+  pt: {
+    diagnostico: "Diagnóstico",
+    coleta: "Coleta",
+    triagem: "Triagem",
+    optionalTag: "Tratamento opcional",
+    trituracao: "Trituração",
+    or: "ou",
+    descaracterizacao: "Descaracterização",
+    enfardamento: "Enfardamento",
+    destinacao: "Destinação",
+    ariaSummary:
+      "Fluxo operacional: Diagnóstico, Coleta e Triagem. A partir da Triagem, o material segue continuamente para Enfardamento ou passa pelo tratamento opcional de Trituração ou Descaracterização antes do Enfardamento, seguindo para Destinação.",
+  },
+  en: {
+    diagnostico: "Assessment",
+    coleta: "Collection",
+    triagem: "Sorting",
+    optionalTag: "Optional treatment",
+    trituracao: "Shredding",
+    or: "or",
+    descaracterizacao: "Destruction",
+    enfardamento: "Baling",
+    destinacao: "Disposal",
+    ariaSummary:
+      "Operational flow: Assessment, Collection and Sorting. From Sorting, material flows continuously to Baling or undergoes optional Shredding or Destruction before returning to Baling, then proceeds to Disposal.",
+  },
+} as const;
+
 /**
- * PROCESS FLOW — o processo como sequência finita.
+ * PROCESS FLOW — diagrama operacional editorial com ramificação opcional.
  *
- * Diagnóstico → Coleta → Triagem → Trituração → Descaracterização →
- * Destinação. FIM: não existe Destinação → Diagnóstico, então não há loop,
- * duplicação da sequência nem conector depois da última etapa.
- *
- * Papel visual: FECHAMENTO do capítulo (uma régua fina no topo e uma linha
- * compacta de ícone + nome), não uma experiência própria.
- *
- * Movimento: uma única entrada ao chegar no viewport — as etapas aparecem em
- * sequência (esquerda → direita) e cada conector "desenha" até a próxima.
- * Não é carrossel nem marquee: nada se move depois da entrada e não há
- * interação. Com prefers-reduced-motion (ou sem JS) a sequência já nasce
- * inteira e legível.
- *
- * Layout: >= 1100px uma linha com conectores; abaixo, grade de 2 (mobile) ou
- * 3 (tablet) colunas em ordem de leitura, cada célula com régua superior —
- * sem scroll horizontal e sem conectores soltos no fim de uma linha.
+ * Diagnóstico → Coleta → Triagem ───────────────────▶ Enfardamento → Destinação
+ *                           └── [Tratamento opcional] ──┘
+ *                               Trituração ou Descaracterização
  */
 export default function ProcessSteps({
-  steps,
-  ariaLabel = "Etapas da operação",
+  locale = "pt",
+  ariaLabel,
 }: {
-  steps: ProcessStep[];
+  steps?: ProcessStep[];
+  locale?: Locale;
   ariaLabel?: string;
 }) {
+  const t = COPY[locale];
   const [phase, setPhase] = useState<Phase>("ssr");
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -55,33 +79,82 @@ export default function ProcessSteps({
           observer.disconnect();
         }
       },
-      { threshold: 0.35 }
+      { threshold: 0.25 }
     );
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={rootRef} className={styles.root} data-phase={phase} role="group" aria-label={ariaLabel}>
-      <ol className={styles.sequence}>
-        {steps.map((step, index) => {
-          const StepIcon = PROCESS_STEP_ICONS[index];
-          const isLast = index === steps.length - 1;
-          return (
-            <li
-              key={step.name}
-              className={`${styles.step}${isLast ? ` ${styles.stepLast}` : ""}`}
-              style={{ "--step-index": index } as React.CSSProperties}
-            >
-              <span className={styles.stepBody}>
-                {StepIcon && <StepIcon className={styles.icon} />}
-                <span className={styles.name}>{step.name}</span>
+    <div
+      ref={rootRef}
+      className={styles.root}
+      data-phase={phase}
+      role="group"
+      aria-label={ariaLabel ?? t.ariaSummary}
+    >
+      <p className={styles.srOnly}>{t.ariaSummary}</p>
+
+      <div className={styles.diagram}>
+        {/* Etapa 1: Diagnóstico */}
+        <div className={`${styles.node} ${styles.node1}`}>
+          <ProcessDiagnosticoIcon className={styles.icon} />
+          <span className={styles.name}>{t.diagnostico}</span>
+        </div>
+
+        <span className={`${styles.conn} ${styles.conn1}`} aria-hidden="true" />
+
+        {/* Etapa 2: Coleta */}
+        <div className={`${styles.node} ${styles.node2}`}>
+          <ProcessColetaIcon className={styles.icon} />
+          <span className={styles.name}>{t.coleta}</span>
+        </div>
+
+        <span className={`${styles.conn} ${styles.conn2}`} aria-hidden="true" />
+
+        {/* Etapa 3: Triagem (ponto de bifurcação) */}
+        <div className={`${styles.node} ${styles.node3}`}>
+          <ProcessTriagemIcon className={styles.icon} />
+          <span className={styles.name}>{t.triagem}</span>
+        </div>
+
+        {/* Ligação contínua e ramificação opcional entre Triagem e Enfardamento */}
+        <div className={styles.fork}>
+          <div className={styles.directLane} aria-hidden="true">
+            <span className={styles.directLine} />
+            <span className={styles.directArrow} />
+          </div>
+
+          <div className={styles.optionalLane}>
+            <span className={styles.optionalLabel}>{t.optionalTag}</span>
+            <div className={styles.optionalChoices}>
+              <span className={styles.optionalItem}>
+                <ProcessTrituracaoIcon className={styles.optionalIcon} />
+                <span>{t.trituracao}</span>
               </span>
-              {!isLast && <span className={styles.connector} aria-hidden="true" />}
-            </li>
-          );
-        })}
-      </ol>
+              <span className={styles.optionalOr}>{t.or}</span>
+              <span className={styles.optionalItem}>
+                <ProcessDescaracterizacaoIcon className={styles.optionalIcon} />
+                <span>{t.descaracterizacao}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Etapa 4: Enfardamento (ponto de convergência) */}
+        <div className={`${styles.node} ${styles.node4}`}>
+          <ProcessEnfardamentoIcon className={styles.icon} />
+          <span className={styles.name}>{t.enfardamento}</span>
+        </div>
+
+        <span className={`${styles.conn} ${styles.conn4}`} aria-hidden="true" />
+
+        {/* Etapa 5: Destinação */}
+        <div className={`${styles.node} ${styles.node5}`}>
+          <ProcessDestinacaoIcon className={styles.icon} />
+          <span className={styles.name}>{t.destinacao}</span>
+        </div>
+      </div>
     </div>
   );
 }

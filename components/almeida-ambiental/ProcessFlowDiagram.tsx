@@ -13,10 +13,9 @@ import {
 } from "../icons";
 
 /**
- * Diagnóstico → Coleta → Triagem
- *   ├── Caminho direto ──────────────────────────┐
- *   └── Opcional (conforme necessidade):         ├──▶ Enfardamento → Destinação
- *       Trituração ou Descaracterização ─────────┘
+ * Diagnóstico → Coleta → Triagem ──────────────────▶ Enfardamento → Destinação
+ *                           └── Tratamento opcional ──┘
+ *                               Trituração ou Descaracterização
  *
  * Scroll-linked progress (P de 0 a 1) sem re-renders por frame.
  * Sem JS ou com prefers-reduced-motion, o diagrama nasce inteiro aceso.
@@ -36,34 +35,27 @@ const T = {
   coleta: 0.18,
   line2: [0.22, 0.36],
   triagem: 0.36,
-  forkTrunk: [0.4, 0.48],
-  forkBar: [0.48, 0.55],
-  forkDrops: [0.55, 0.62],
-  branches: 0.62,
-  mergeDrops: [0.64, 0.71],
-  mergeBar: [0.71, 0.77],
-  mergeTrunk: [0.77, 0.82],
-  enfarda: 0.82,
-  lineEnd: [0.85, 0.94],
+  lineMain: [0.4, 0.78],
+  optional: 0.56,
+  enfarda: 0.78,
+  lineEnd: [0.82, 0.94],
   destino: 0.94,
 } as const;
 
 const LABELS = {
   pt: {
-    direct: "Caminho direto",
-    optional: "Opcional · conforme necessidade",
+    optional: "Tratamento opcional",
     or: "ou",
   },
   en: {
-    direct: "Direct path",
-    optional: "Optional · as needed",
+    optional: "Optional treatment",
     or: "or",
   },
 } as const;
 
 type Win = readonly [number, number];
 
-function Line({ win, dir, className = "" }: { win: Win; dir: "v" | "h" | "hc" | "vc"; className?: string }) {
+function Line({ win, dir, className = "" }: { win: Win; dir: "v" | "h"; className?: string }) {
   return (
     <span
       className={`${styles.line} ${styles[`line_${dir}`]} ${className}`}
@@ -168,19 +160,13 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description, loca
 
           <Node label={steps[2]} index={2} at={T.triagem} className={styles.nTriagem} />
 
-          {/* Bifurcação após Triagem: caminho direto ou tratamento opcional */}
-          <li className={`${styles.link} ${styles.fork}`} aria-hidden="true">
-            <Line win={T.forkTrunk} dir="v" className={styles.forkTrunk} />
-            <Line win={T.forkBar} dir="hc" className={styles.forkBar} />
-            <Line win={T.forkDrops} dir="v" className={styles.forkDropA} />
-            <Line win={T.forkDrops} dir="v" className={styles.forkDropB} />
+          {/* Ligação contínua principal entre Triagem e Enfardamento */}
+          <li className={`${styles.link} ${styles.lMain}`} aria-hidden="true">
+            <Line win={T.lineMain} dir="v" />
           </li>
 
-          <li className={`${styles.node} ${styles.nDireto}`} data-at={T.branches} data-state="current">
-            <span className={styles.directTag}>{labels.direct}</span>
-          </li>
-
-          <li className={`${styles.node} ${styles.nOpcional}`} data-at={T.branches} data-state="current">
+          {/* Ramificação tracejada opcional entre Triagem e Enfardamento */}
+          <li className={`${styles.node} ${styles.nOpcional}`} data-at={T.optional} data-state="current">
             <span className={styles.optionalTag}>{labels.optional}</span>
             <span className={styles.optionalRow}>
               <span className={styles.optionalItem}>
@@ -193,14 +179,6 @@ export default function ProcessFlowDiagram({ steps, ariaLabel, description, loca
                 <span>{steps[4]}</span>
               </span>
             </span>
-          </li>
-
-          {/* Convergência em Enfardamento */}
-          <li className={`${styles.link} ${styles.merge}`} aria-hidden="true">
-            <Line win={T.mergeDrops} dir="v" className={styles.mergeDropA} />
-            <Line win={T.mergeDrops} dir="v" className={styles.mergeDropB} />
-            <Line win={T.mergeBar} dir="hc" className={styles.mergeBar} />
-            <Line win={T.mergeTrunk} dir="v" className={styles.mergeTrunk} />
           </li>
 
           <Node label={steps[5]} index={5} at={T.enfarda} className={styles.nEnfarda} />

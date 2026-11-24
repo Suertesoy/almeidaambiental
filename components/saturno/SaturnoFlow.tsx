@@ -25,25 +25,23 @@ const COPY = {
   pt: {
     ariaLabel: "Fluxo operacional em quatro etapas com tratamento opcional",
     srSummary:
-      "Fluxo operacional da Saturno Ambiental: 01 Coleta de resíduos segue para 02 Triagem e classificação. Da triagem, o material segue pelo caminho direto para 03 Enfardamento ou passa pelo tratamento opcional de trituração ou descaracterização antes do enfardamento, seguindo então para 04 Destinação.",
+      "Fluxo operacional da Saturno Ambiental: 01 Coleta de resíduos segue para 02 Triagem e classificação. Da triagem, o material segue continuamente para 03 Enfardamento ou, quando necessário, passa pela ramificação opcional 02.1 Trituração ou descaracterização antes do enfardamento, seguindo então para 04 Destinação.",
     step01: "01",
     step02: "02",
     step03: "03",
     step04: "04",
-    directPath: "Caminho direto",
-    optionalBadge: "Tratamento opcional",
+    optionalTag: "02.1 · Tratamento opcional",
     optionalTitle: "Trituração ou descaracterização",
   },
   en: {
     ariaLabel: "Four-stage operational flow with optional treatment",
     srSummary:
-      "Saturno Ambiental operational flow: 01 Waste collection moves to 02 Sorting and classification. From sorting, material follows the direct path to 03 Baling or goes through optional shredding or destruction treatment before baling, then continues to 04 Final destination.",
+      "Saturno Ambiental operational flow: 01 Waste collection moves to 02 Sorting and classification. From sorting, material flows continuously to 03 Baling or, when needed, takes the optional branch 02.1 Shredding or destruction before returning to baling, then continues to 04 Final destination.",
     step01: "01",
     step02: "02",
     step03: "03",
     step04: "04",
-    directPath: "Direct path",
-    optionalBadge: "Optional treatment",
+    optionalTag: "02.1 · Optional treatment",
     optionalTitle: "Shredding or destruction",
   },
 } as const;
@@ -91,9 +89,9 @@ export function SaturnoFlow({
     >
       <p className={styles.srOnly}>{t.srSummary}</p>
 
-      {/* NÍVEL 1: Esquerda -> Direita (01 Coleta -> 02 Triagem) */}
-      <div className={styles.levelRow}>
-        <article className={`${styles.stageCard} ${styles.delay0}`}>
+      <div className={styles.diagram}>
+        {/* 01 Coleta */}
+        <article className={`${styles.stageCard} ${styles.stage1}`}>
           <div className={styles.stageHeader}>
             <span className={styles.stageNumber}>{t.step01}</span>
             <span className={styles.stageIcon} aria-hidden="true">
@@ -105,26 +103,10 @@ export function SaturnoFlow({
           <p className={styles.stageCopy}>{coleta.copy}</p>
         </article>
 
-        <div className={styles.hConnectorRight} aria-hidden="true">
-          <span className={styles.hLine} />
-          <svg
-            className={styles.arrowRight}
-            viewBox="0 0 12 12"
-            width="12"
-            height="12"
-            fill="none"
-          >
-            <path
-              d="M2.5 2L9.5 6L2.5 10"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        <span className={`${styles.conn} ${styles.conn1}`} aria-hidden="true" />
 
-        <article className={`${styles.stageCard} ${styles.delay1}`}>
+        {/* 02 Triagem */}
+        <article className={`${styles.stageCard} ${styles.stage2}`}>
           <div className={styles.stageHeader}>
             <span className={styles.stageNumber}>{t.step02}</span>
             <span className={styles.stageIcon} aria-hidden="true">
@@ -135,86 +117,28 @@ export function SaturnoFlow({
           <h3 className={styles.stageTitle}>{triagem.headline}</h3>
           <p className={styles.stageCopy}>{triagem.copy}</p>
         </article>
-      </div>
 
-      {/* NÍVEL 2: Retorno Direita -> Esquerda com bifurcação (Caminho direto + Tratamento opcional) */}
-      <div className={`${styles.returnZone} ${styles.delay2}`}>
-        {/* Trilhos da serpentina no desktop */}
-        <div className={styles.serpentineRails} aria-hidden="true">
-          {/* Haste vertical descendo da 02 Triagem (direita) */}
-          <span className={styles.stemRight} />
-          {/* Caminho direto contínuo (Direita -> Esquerda) */}
-          <div className={styles.directTrack}>
-            <span className={styles.directLine} />
-            <svg
-              className={styles.arrowLeft}
-              viewBox="0 0 12 12"
-              width="12"
-              height="12"
-              fill="none"
-            >
-              <path
-                d="M9.5 2L2.5 6L9.5 10"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          {/* Haste vertical descendo para 03 Enfardamento (esquerda) */}
-          <span className={styles.stemLeft}>
-            <svg
-              className={styles.arrowDown}
-              viewBox="0 0 12 12"
-              width="12"
-              height="12"
-              fill="none"
-            >
-              <path
-                d="M2 2.5L6 9.5L10 2.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        </div>
+        {/* Ligação contínua principal entre 02 Triagem e 03 Enfardamento */}
+        <span className={`${styles.conn} ${styles.conn2}`} aria-hidden="true" />
 
-        {/* Rótulo do caminho direto */}
-        <div className={styles.directBadgeRow}>
-          <span className={styles.directMobileRail} aria-hidden="true" />
-          <span className={styles.directBadge}>{t.directPath}</span>
-        </div>
-
-        {/* Ramo paralelo tracejado: Tratamento Opcional */}
-        <div className={styles.optionalRow}>
-          <div className={styles.branchConnectorRight} aria-hidden="true">
-            <span className={styles.dashedElbowRight} />
-          </div>
-
+        {/* 02.1 Ramificação tracejada opcional entre Triagem e Enfardamento */}
+        <div className={styles.optionalBranch}>
+          <span className={styles.branchLegIn} aria-hidden="true" />
           <article className={styles.optionalCard}>
             <div className={styles.optionalHeader}>
               <span className={styles.optionalIcon} aria-hidden="true">
                 <ProcessTrituracaoIcon className={styles.iconSvg} />
               </span>
-              <span className={styles.optionalBadge}>{t.optionalBadge}</span>
+              <span className={styles.optionalTag}>{t.optionalTag}</span>
             </div>
             <h3 className={styles.optionalTitle}>{t.optionalTitle}</h3>
-            <p className={styles.optionalHeadline}>{trituracao.headline}</p>
             <p className={styles.optionalCopy}>{trituracao.copy}</p>
           </article>
-
-          <div className={styles.branchConnectorLeft} aria-hidden="true">
-            <span className={styles.dashedElbowLeft} />
-          </div>
+          <span className={styles.branchLegOut} aria-hidden="true" />
         </div>
-      </div>
 
-      {/* NÍVEL 3: Esquerda -> Direita (03 Enfardamento -> 04 Destinação) */}
-      <div className={styles.levelRow}>
-        <article className={`${styles.stageCard} ${styles.delay3}`}>
+        {/* 03 Enfardamento */}
+        <article className={`${styles.stageCard} ${styles.stage3}`}>
           <div className={styles.stageHeader}>
             <span className={styles.stageNumber}>{t.step03}</span>
             <span className={styles.stageIcon} aria-hidden="true">
@@ -226,26 +150,10 @@ export function SaturnoFlow({
           <p className={styles.stageCopy}>{enfardamento.copy}</p>
         </article>
 
-        <div className={styles.hConnectorRight} aria-hidden="true">
-          <span className={styles.hLine} />
-          <svg
-            className={styles.arrowRight}
-            viewBox="0 0 12 12"
-            width="12"
-            height="12"
-            fill="none"
-          >
-            <path
-              d="M2.5 2L9.5 6L2.5 10"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        <span className={`${styles.conn} ${styles.conn3}`} aria-hidden="true" />
 
-        <article className={`${styles.stageCard} ${styles.delay4}`}>
+        {/* 04 Destinação */}
+        <article className={`${styles.stageCard} ${styles.stage4}`}>
           <div className={styles.stageHeader}>
             <span className={styles.stageNumber}>{t.step04}</span>
             <span className={styles.stageIcon} aria-hidden="true">

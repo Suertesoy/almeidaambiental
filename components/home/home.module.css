@@ -211,6 +211,51 @@ html:has([data-page="home"]) {
   }
 }
 
+/* Desktop (>= 1024px): composição assimétrica em duas colunas (~40% assinatura
+   à esquerda, ~60% conteúdo textual à direita). Mobile e tablet (< 1024px)
+   permanecem inalterados. */
+@media (min-width: 1024px) {
+  .chapterHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: center;
+    column-gap: clamp(36px, 5vw, 72px);
+    text-align: left;
+  }
+
+  .chapterSignature {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .signatureLogo {
+    width: clamp(210px, 21vw, 300px);
+  }
+
+  .signatureLogoEquipamentos {
+    width: clamp(230px, 23vw, 330px);
+  }
+
+  .chapterIntro {
+    align-items: flex-start;
+    max-width: none;
+  }
+
+  .chapterIntro .headline,
+  .chapterIntro .body {
+    margin-inline: 0;
+    text-align: left;
+  }
+
+  .brandStatement {
+    max-width: none;
+  }
+
+  .brandStatement .locationLine {
+    text-align: left;
+  }
+}
+
 /* ---------------- Declaração de marca (Saturno) ---------------- */
 .brandStatement {
   max-width: min(100%, 72ch);
@@ -576,6 +621,10 @@ html:has([data-page="home"]) {
 @media (min-width: 1024px) {
   .heroContent {
     padding-bottom: clamp(88px, 11vh, 140px);
+  }
+
+  .heroCtaRow {
+    justify-content: flex-start;
   }
 }
 
