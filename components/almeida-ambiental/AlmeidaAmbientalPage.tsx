@@ -252,7 +252,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
       <section className={`${shared.chapter} ${shared.toneStoneAlt} ${boundarySurface}`}>
         <BrandBoundaryMark boundary="ambiental-processo" half="entering" surface="onLight" />
         <div className={shared.container}>
-          <Reveal>
+          <Reveal className={styles.centerIntro}>
             <h2 className={shared.headline}>{t.materialsHeadline}</h2>
             <p className={shared.body}>{t.materialsBody}</p>
           </Reveal>
@@ -267,7 +267,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
       {/* ---------------- Relação com o Grupo: Almeida Equipamentos ---------------- */}
       <section className={`${shared.chapter} ${shared.toneStone}`}>
         <div className={shared.container}>
-          <Reveal>
+          <Reveal className={styles.centerIntro}>
             <h2 className={shared.headline}>{t.crossHeadline}</h2>
             <p className={shared.body}>{t.crossBody}</p>
             <div className={shared.ctaRow}>

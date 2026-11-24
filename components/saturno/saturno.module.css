@@ -304,3 +304,15 @@ p.splitCopy {
     margin-top: clamp(16px, 3vw, 48px);
   }
 }
+
+/* ---------------- Título de Materiais centralizado (desktop) ----------------
+   No eixo central do grid de cards. Só >= 1024px. */
+@media (min-width: 1024px) {
+  .centerIntro {
+    text-align: center;
+  }
+
+  .centerIntro > h2 {
+    margin-inline: auto;
+  }
+}

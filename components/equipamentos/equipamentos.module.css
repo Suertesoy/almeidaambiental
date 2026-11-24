@@ -444,3 +444,28 @@
   padding-top: clamp(36px, 5vw, 56px);
   border-top: 1px solid rgba(21, 21, 15, 0.16);
 }
+
+/* ---------------- Eixo central comum no desktop (>= 1024px) ----------------
+   Hero: a composição em duas colunas (texto à esquerda, palco 3D à direita)
+   é preservada; logotipo, descrição e CTAs passam a compartilhar o eixo
+   central da coluna de texto. Cabeçalho de "Como escolher": eyebrow, título
+   e descrição no eixo central do gráfico. */
+@media (min-width: 1024px) {
+  .heroBrand {
+    text-align: center;
+  }
+
+  .heroLogo,
+  .heroLede {
+    margin-inline: auto;
+  }
+
+  .heroCopy {
+    text-align: center;
+  }
+
+  .densityHead {
+    margin-inline: auto;
+    text-align: center;
+  }
+}

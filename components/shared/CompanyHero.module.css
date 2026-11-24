@@ -313,3 +313,19 @@
 .titleLogo ~ .lede {
   margin-top: clamp(20px, 3vw, 28px);
 }
+
+/* ---------------- Eixo central comum no desktop (>= 1024px) ----------------
+   Hero com logotipo como título: logotipo, descrição e grupo de CTAs
+   compartilham o eixo central do contêiner. Abaixo de 1024px (tablet e
+   mobile) a composição permanece exatamente como estava. */
+@media (min-width: 1024px) {
+  .hasTitleLogo {
+    text-align: center;
+  }
+
+  .hasTitleLogo .titleLogo,
+  .hasTitleLogo .lede,
+  .hasTitleLogo .subcopy {
+    margin-inline: auto;
+  }
+}

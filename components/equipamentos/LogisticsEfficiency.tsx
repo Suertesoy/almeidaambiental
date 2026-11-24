@@ -64,11 +64,11 @@ export default function LogisticsEfficiency({ locale, eyebrow }: { locale: Local
       aria-labelledby="densidade-heading"
     >
       <div className={shared.container}>
-        <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{eyebrow}</p>
-        <h2 id="densidade-heading" className={shared.headline}>
+        <p className={`${shared.eyebrow} ${shared.eyebrowAccent} ${styles.densityHead}`}>{eyebrow}</p>
+        <h2 id="densidade-heading" className={`${shared.headline} ${styles.densityHead}`}>
           {t.headline}
         </h2>
-        <p className={shared.body}>{t.body}</p>
+        <p className={`${shared.body} ${styles.densityHead}`}>{t.body}</p>
 
         <div
           ref={chartRef}

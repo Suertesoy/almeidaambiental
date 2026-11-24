@@ -89,3 +89,17 @@
     grid-template-areas: "content" "media";
   }
 }
+
+/* ---------------- Cabeçalhos de seção centralizados (desktop) ----------------
+   Materiais e Equipamentos: título e descrição no eixo central do grid/CTA.
+   Só >= 1024px; tablet e mobile seguem alinhados à esquerda. */
+@media (min-width: 1024px) {
+  .centerIntro {
+    text-align: center;
+  }
+
+  .centerIntro > h2,
+  .centerIntro > p {
+    margin-inline: auto;
+  }
+}

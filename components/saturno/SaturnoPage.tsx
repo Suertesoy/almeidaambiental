@@ -279,7 +279,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           visual, só um filete e o respiro interno. */}
       <section className={`${shared.chapter} ${shared.toneCarvao} ${boundarySurface}`}>
         <div className={shared.container}>
-          <Reveal>
+          <Reveal className={styles.centerIntro}>
             <h2 className={shared.headline}>{t.materialsHeadline}</h2>
           </Reveal>
           <Reveal className={styles.materialsBlock} style={{ transitionDelay: "80ms" }}>
