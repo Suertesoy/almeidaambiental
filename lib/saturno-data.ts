@@ -61,7 +61,7 @@ export const HERO_META = [
 ];
 
 export type Frente = {
-  id: "coleta" | "triagem" | "trituracao" | "destinacao" | "cartonagem" | "gestao-ambiental";
+  id: "coleta" | "triagem" | "trituracao" | "enfardamento" | "destinacao" | "cartonagem" | "gestao-ambiental";
   eyebrow: string;
   headline: string;
   copy: string;
@@ -86,14 +86,20 @@ export const FRENTES: Frente[] = [
   {
     id: "trituracao",
     eyebrow: "Trituração e Descaracterização",
-    headline: "Segurança e descaracterização quando o material exige.",
-    copy: "Materiais sigilosos e determinados resíduos podem exigir descaracterização antes da destinação. A Saturno dispõe de soluções de processamento para preparar esses materiais de maneira mais segura e eficiente.",
+    headline: "Tratamento opcional quando o material exige.",
+    copy: "Quando necessário — como em documentos sigilosos ou resíduos que precisam deixar de ser reconhecíveis —, o material passa por trituração ou descaracterização antes de seguir para o enfardamento.",
+  },
+  {
+    id: "enfardamento",
+    eyebrow: "Enfardamento",
+    headline: "Compactação em fardos para transporte e destino.",
+    copy: "Os materiais triados — ou tratados quando necessário — são compactados em fardos padronizados, otimizando o armazenamento e o transporte até a destinação final.",
   },
   {
     id: "destinacao",
     eyebrow: "Destinação",
     headline: "O ciclo se completa com o encaminhamento correto.",
-    copy: "Depois de classificado e processado, cada material segue para a destinação adequada, de acordo com sua composição — fechando a cadeia iniciada na coleta.",
+    copy: "Após o enfardamento, cada material segue para a destinação adequada à sua composição — fechando o ciclo iniciado na coleta.",
   },
   {
     id: "cartonagem",
@@ -162,14 +168,20 @@ export const FRENTES_EN: Frente[] = [
   {
     id: "trituracao",
     eyebrow: "Shredding and Destruction",
-    headline: "Secure destruction when the material requires it.",
-    copy: "Confidential materials and certain types of waste can require destruction before disposal. Saturno has processing solutions to prepare that material more securely and efficiently.",
+    headline: "Optional treatment when the material requires it.",
+    copy: "When needed — such as for confidential documents or waste that must be rendered unrecognizable — materials undergo shredding or destruction before moving on to baling.",
+  },
+  {
+    id: "enfardamento",
+    eyebrow: "Baling",
+    headline: "Compacted into bales for transport and disposal.",
+    copy: "Sorted materials — or those treated when necessary — are compacted into standardized bales, optimizing storage and transport to final disposal.",
   },
   {
     id: "destinacao",
     eyebrow: "Disposal",
     headline: "Every material ends up where it should.",
-    copy: "Once sorted and processed, each material moves on to the proper disposal channel based on its composition — closing the chain that starts with collection.",
+    copy: "After baling, each material moves on to the proper disposal channel suited to its composition — closing the chain that starts with collection.",
   },
   {
     id: "cartonagem",

@@ -1,14 +1,37 @@
-/* Frentes de atuação da Saturno como percurso. Mobile: coluna vertical com
-   conector entre os ícones. >=1024px: quatro colunas, conector horizontal. */
+/* ==========================================================
+   Frentes de atuação da Saturno Ambiental com bifurcação e convergência.
+   Mobile (< 1024px): leitura vertical com caminho direto e ramo opcional.
+   Desktop (>= 1024px): 4 colunas principais (Coleta → Triagem → Enfardamento
+   → Destinação) + ramificação opcional abaixo do vão Triagem ↔ Enfardamento.
+   ========================================================== */
+
+.flowWrap {
+  margin-top: clamp(36px, 6vw, 56px);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 
 .flow {
   list-style: none;
-  margin: clamp(36px, 6vw, 56px) 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
 }
+
+/* ---------------- Etapas principais ---------------- */
 
 .step {
   display: grid;
@@ -28,8 +51,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
   border: 1px solid rgba(201, 162, 39, 0.5);
   border-radius: 4px;
   background: rgba(201, 162, 39, 0.1);
@@ -37,8 +60,8 @@
 }
 
 .icon {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
@@ -49,7 +72,7 @@
   margin-block: 6px;
   background: rgba(247, 246, 241, 0.2);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .connector::after {
@@ -60,12 +83,31 @@
   transform-origin: top center;
 }
 
+.directBadge {
+  display: inline-block;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-saturno-deep, #1c2d27);
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  color: var(--color-gold-aged);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .body {
-  padding-bottom: clamp(28px, 5vw, 40px);
+  padding-bottom: clamp(24px, 4.5vw, 36px);
   min-width: 0;
 }
 
-.step:last-child .body {
+.step4 .body {
   padding-bottom: 0;
 }
 
@@ -103,11 +145,150 @@
   line-height: 1.6;
 }
 
-/* Desktop: sequência horizontal */
+/* ---------------- Ramificação opcional (Trituração / Descaracterização) ---------------- */
+
+.optionalBranch {
+  position: relative;
+  margin: 0 0 24px;
+  padding-left: calc(58px + clamp(16px, 4vw, 24px));
+  min-width: 0;
+}
+
+.optionalBranch::before {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: -6px;
+  bottom: -6px;
+  width: 2px;
+  border-left: 2px dashed rgba(201, 162, 39, 0.45);
+}
+
+.optionalCard {
+  position: relative;
+  padding: 16px 18px;
+  border: 1px dashed rgba(201, 162, 39, 0.48);
+  border-radius: 4px;
+  background: rgba(201, 162, 39, 0.06);
+}
+
+.optionalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.optionalTile {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px dashed rgba(201, 162, 39, 0.55);
+  border-radius: 4px;
+  background: rgba(201, 162, 39, 0.08);
+  color: var(--color-gold-aged);
+}
+
+.optionalIcon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.optionalTag {
+  margin: 0 0 2px;
+  color: var(--color-gold-aged);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.optionalEyebrow {
+  margin: 0;
+  color: var(--role-primary, #f7f6f1);
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.88;
+}
+
+.optionalHeadline {
+  margin: 0 0 8px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.24;
+}
+
+.optionalCopy {
+  margin: 0;
+  color: var(--role-secondary, var(--text-secondary));
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+/* Ordem visual no mobile: 01 Coleta → 02 Triagem → [Opcional] → 03 Enfardamento → 04 Destinação */
+.step1 { order: 1; }
+.step2 { order: 2; }
+.optionalBranch { order: 3; }
+.step3 { order: 4; }
+.step4 { order: 5; }
+
+/* ---------------- Desktop (>= 1024px): 4 colunas + desvio opcional ---------------- */
+
 @media (min-width: 1024px) {
   .flow {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     column-gap: clamp(20px, 2.4vw, 36px);
+    row-gap: 28px;
+  }
+
+  .step1 { order: 0; grid-column: 1; grid-row: 1; }
+  .step2 { order: 0; grid-column: 2; grid-row: 1; }
+  .step3 { order: 0; grid-column: 3; grid-row: 1; }
+  .step4 { order: 0; grid-column: 4; grid-row: 1; }
+
+  .optionalBranch {
+    order: 0;
+    grid-column: 2 / 4;
+    grid-row: 2;
+    margin: 0;
+    padding: 18px 0 0;
+  }
+
+  .optionalBranch::before {
+    display: none;
+  }
+
+  /* Hastes tracejadas ligando Triagem (col 2) e Enfardamento (col 3) ao bloco opcional */
+  .optionalCard {
+    padding: 20px 24px;
+  }
+
+  .optionalCard::before,
+  .optionalCard::after {
+    content: "";
+    position: absolute;
+    top: -29px;
+    width: 2px;
+    height: 28px;
+    border-left: 2px dashed rgba(201, 162, 39, 0.5);
+  }
+
+  .optionalCard::before {
+    left: 28px;
+  }
+
+  .optionalCard::after {
+    left: calc(50% + clamp(10px, 1.2vw, 18px) + 28px);
   }
 
   .step {
@@ -127,11 +308,24 @@
     height: 2px;
     min-height: 0;
     margin: 0 0 0 12px;
-    /* a última coluna não tem conector; as demais vão até a próxima */
   }
 
   .connector::after {
     transform-origin: left center;
+  }
+
+  .connectorDirect {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .directBadge {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    z-index: 1;
   }
 
   .body {
@@ -139,18 +333,20 @@
   }
 }
 
-/* Revelação (só com JS ativo e sem reduced-motion): item aparece suave e o
-   conector avança até a etapa seguinte. Sem data-live tudo já está visível. */
+/* ---------------- Revelação progressiva ---------------- */
+
 @media (prefers-reduced-motion: no-preference) {
   .flow[data-live] .step .body,
-  .flow[data-live] .step .tile {
+  .flow[data-live] .step .tile,
+  .flow[data-live] .optionalCard {
     opacity: 0.32;
     transform: translateY(10px);
     transition: opacity 520ms ease, transform 520ms ease;
   }
 
   .flow[data-live] .step[data-in] .body,
-  .flow[data-live] .step[data-in] .tile {
+  .flow[data-live] .step[data-in] .tile,
+  .flow[data-live] .optionalBranch[data-in] .optionalCard {
     opacity: 1;
     transform: none;
   }

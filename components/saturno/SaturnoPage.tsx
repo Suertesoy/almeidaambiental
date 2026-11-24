@@ -28,7 +28,11 @@ const GESTAO_ICONS = [
 
 function pickFrentes(frentes: Frente[]) {
   return {
-    compact: frentes.filter((f) => f.id === "coleta" || f.id === "triagem" || f.id === "trituracao" || f.id === "destinacao"),
+    coleta: frentes.find((f) => f.id === "coleta")!,
+    triagem: frentes.find((f) => f.id === "triagem")!,
+    trituracao: frentes.find((f) => f.id === "trituracao")!,
+    enfardamento: frentes.find((f) => f.id === "enfardamento")!,
+    destinacao: frentes.find((f) => f.id === "destinacao")!,
     cartonagem: frentes.find((f) => f.id === "cartonagem")!,
     gestaoAmbiental: frentes.find((f) => f.id === "gestao-ambiental")!,
   };
@@ -46,7 +50,7 @@ const COPY = {
     positioningBody:
       "Coleta, classificação, processamento, cartonagem e serviços técnicos ambientais na mesma empresa, com a proximidade de quem conhece a rotina das operações da região.",
     servicesEyebrow: "Como atua",
-    servicesHeadline: "Da coleta à destinação, uma operação em sequência.",
+    servicesHeadline: "Da coleta à destinação, o caminho certo para cada material.",
     materialsHeadline: "Materiais que fazem parte da operação.",
     groupEyebrow: "Estrutura compartilhada",
     groupHeadline: "No Grupo Almeida desde 2022, com identidade própria.",
@@ -68,7 +72,7 @@ const COPY = {
     positioningBody:
       "Collection, classification, processing, cardboard packaging and technical environmental services under one roof, with the closeness of a team that knows how local operations run.",
     servicesEyebrow: "How it works",
-    servicesHeadline: "From collection to disposal, one operation in sequence.",
+    servicesHeadline: "From collection to disposal, the right path for each material.",
     materialsHeadline: "Materials handled in the operation.",
     groupEyebrow: "Shared structure",
     groupHeadline: "In Grupo Almeida since 2022, with its own identity.",
@@ -128,7 +132,9 @@ const COPY = {
  */
 export default function SaturnoPage({ locale }: { locale: Locale }) {
   const t = COPY[locale];
-  const { compact: compactFrentes, cartonagem, gestaoAmbiental } = pickFrentes(locale === "en" ? FRENTES_EN : FRENTES);
+  const { coleta, triagem, trituracao, enfardamento, destinacao, cartonagem, gestaoAmbiental } = pickFrentes(
+    locale === "en" ? FRENTES_EN : FRENTES
+  );
 
   return (
     <div className={styles.page} data-page="saturno-ambiental">
@@ -182,7 +188,7 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* Como atua: Coleta → Triagem → Trituração → Destinação, em régua. */}
+        {/* Como atua: Coleta → Triagem → [Direto | Opcional: Trituração/Descaracterização] → Enfardamento → Destinação */}
         <section id="frentes" className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
             <Reveal>
@@ -190,7 +196,14 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
               <h2 className={shared.headline}>{t.servicesHeadline}</h2>
             </Reveal>
             <Reveal style={{ transitionDelay: "80ms" }}>
-              <SaturnoFlow frentes={compactFrentes} />
+              <SaturnoFlow
+                locale={locale}
+                coleta={coleta}
+                triagem={triagem}
+                trituracao={trituracao}
+                enfardamento={enfardamento}
+                destinacao={destinacao}
+              />
             </Reveal>
           </div>
         </section>
