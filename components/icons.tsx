@@ -175,6 +175,16 @@ export function ProcessConnectorIcon({ className }: FunctionalIconProps) {
  *  Triagem, Trituração, Descaracterização, Destinação) — reaproveitada por
  *  posição, não por texto do label, porque Home e Almeida Ambiental podem
  *  usar labels ligeiramente diferentes para a mesma etapa conceitual. */
+export function ProcessEnfardamentoIcon({ className }: FunctionalIconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="6.5" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M9 6.5v11M15 6.5v11" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M4 12h16" stroke="currentColor" strokeWidth="1.2" opacity="0.55" />
+    </svg>
+  );
+}
+
 export const PROCESS_STEP_ICONS = [
   ProcessDiagnosticoIcon,
   ProcessColetaIcon,

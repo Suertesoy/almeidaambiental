@@ -94,7 +94,7 @@ export const PILLARS: Pillar[] = [
 
 export const MATERIALS = [...CORE_MATERIALS];
 
-export const FLOW_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Destinação"];
+export const FLOW_STEPS = ["Diagnóstico", "Coleta", "Triagem", "Trituração", "Descaracterização", "Enfardamento", "Destinação"];
 
 export const PRESENCE_LOCATIONS = ["São José", "Chapecó", "Araquari", "Joinville"];
 
@@ -164,4 +164,4 @@ export const PILLARS_EN: Pillar[] = [
   },
 ];
 
-export const FLOW_STEPS_EN = ["Assessment", "Collection", "Sorting", "Shredding", "Destruction", "Disposal"];
+export const FLOW_STEPS_EN = ["Assessment", "Collection", "Sorting", "Shredding", "Destruction", "Baling", "Disposal"];

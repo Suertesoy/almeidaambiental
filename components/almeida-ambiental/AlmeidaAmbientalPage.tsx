@@ -41,7 +41,7 @@ const COPY = {
     processHeadline: "Do diagnóstico à destinação, uma só operação.",
     processAriaLabel: "Etapas da operação da Almeida Ambiental",
     processDescription:
-      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue por Trituração ou por Descaracterização, caminhos alternativos que convergem na Destinação.",
+      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue diretamente para Enfardamento ou passa por Trituração ou Descaracterização conforme necessidade antes do Enfardamento, convergindo na Destinação.",
     crossHeadline: "Equipamentos pensados a partir da operação diária.",
     crossBody:
       "A Almeida Equipamentos, empresa do Grupo, leva conhecimento de campo para a tecnologia de compactação, armazenagem e processamento.",
@@ -67,7 +67,7 @@ const COPY = {
     processHeadline: "From assessment to disposal, in a single operation.",
     processAriaLabel: "Almeida Ambiental's operating steps",
     processDescription:
-      "Assessment, Collection and Sorting. After Sorting, material goes through either Shredding or Destruction, alternative paths that converge on Disposal.",
+      "Assessment, Collection and Sorting. After Sorting, material either moves directly to Baling or undergoes Shredding or Destruction as needed before Baling, converging on Disposal.",
     crossHeadline: "Equipment designed around daily operations.",
     crossBody:
       "Almeida Equipamentos, a Grupo Almeida company, brings field knowledge to compaction, storage and processing technology.",
@@ -166,7 +166,7 @@ export default function AlmeidaAmbientalPage({ locale }: { locale: Locale }) {
 
               <Reveal style={{ transitionDelay: "120ms" }}>
                 <h3 className={shared.subheading}>{t.processHeadline}</h3>
-                <ProcessFlowDiagram steps={[...processSteps]} ariaLabel={t.processAriaLabel} description={t.processDescription} />
+                <ProcessFlowDiagram steps={[...processSteps]} ariaLabel={t.processAriaLabel} description={t.processDescription} locale={locale} />
               </Reveal>
             </div>
           </div>

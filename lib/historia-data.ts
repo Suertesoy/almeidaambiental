@@ -41,7 +41,9 @@ export type HistoriaImage = {
   alt: string;
   sourceType: ImageSourceType;
   /** Orientação nativa do arquivo, usada para escolher o recorte/aspect-ratio do slot. */
-  orientation: "landscape" | "portrait";
+  orientation: "landscape" | "portrait" | "4:3";
+  /** Enquadramento específico (CSS object-position) quando necessário. */
+  objectPosition?: string;
 };
 
 export type Chapter = "origem" | "evolucao" | "expansao" | "novo-ciclo";
@@ -101,15 +103,17 @@ export const CHAPTER_META: Record<
   },
 };
 
-const img = (
+const archiveImg = (
   src: string,
   alt: string,
-  orientation: HistoriaImage["orientation"] = "landscape"
+  orientation: HistoriaImage["orientation"] = "landscape",
+  objectPosition?: string
 ): HistoriaImage => ({
   src,
   alt,
-  sourceType: "illustrative",
+  sourceType: "archive",
   orientation,
+  objectPosition,
 });
 
 export const TIMELINE_EVENTS: TimelineEvent[] = [
@@ -134,7 +138,12 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Aquisição do primeiro caminhão Mercedes Benz 608 e instalação da segunda prensa vertical.",
     highlights: ["Mercedes Benz 608", "segunda prensa vertical"],
-    image: img("/historia/expansao-logistica-1988.webp", "Reconstituição ilustrativa de caminhão de carga do final dos anos 1980, representando a ampliação da frota da Almeida"),
+    image: archiveImg(
+      "/historia/reais/1986-caminhao-mercedes.webp",
+      "Registro histórico de caminhão Mercedes com contêiner da Almeida estacionado no galpão",
+      "landscape",
+      "center"
+    ),
     side: "left",
   },
   {
@@ -151,6 +160,12 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "origem",
     description: "Ampliação da unidade de São José para 500 m².",
     highlights: ["500 m²"],
+    image: archiveImg(
+      "/historia/reais/1990-ampliacao-sao-jose.webp",
+      "Equipe da Almeida reunida na unidade de São José após a ampliação de 1990",
+      "landscape",
+      "center 35%"
+    ),
     location: "São José",
     areaSqm: 500,
     growthMilestone: true,
@@ -172,7 +187,12 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação da primeira prensa horizontal, permitindo a produção de fardos de 400 kg.",
     highlights: ["primeira prensa horizontal", "400 kg"],
-    image: img("/historia/prensa-fardos-1993.webp", "Reconstituição ilustrativa de prensa horizontal industrial e fardos de papelão compactado, anos 1990", "portrait"),
+    image: archiveImg(
+      "/historia/reais/1993-primeira-prensa-horizontal.webp",
+      "Registro histórico da primeira prensa horizontal instalada pela Almeida em 1993",
+      "portrait",
+      "center 20%"
+    ),
     side: "right",
   },
 
@@ -191,7 +211,6 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Instalação do primeiro triturador, aumentando a capacidade de processamento dos materiais.",
     highlights: ["primeiro triturador"],
-    image: img("/historia/triturador-2000.webp", "Reconstituição ilustrativa de triturador industrial e esteiras de processamento de recicláveis"),
     side: "right",
   },
   {
@@ -200,6 +219,12 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Construção de um novo galpão com 2.500 m².",
     highlights: ["2.500 m²"],
+    image: archiveImg(
+      "/historia/reais/1999-novo-galpao.webp",
+      "Construção do novo galpão industrial da Almeida com 2.500 m² em 1999",
+      "landscape",
+      "center 45%"
+    ),
     areaSqm: 2500,
     growthMilestone: true,
     side: "left",
@@ -238,11 +263,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação de uma nova prensa importada, permitindo a produção de fardos de 1.100 kg.",
     highlights: ["1.100 kg"],
-    /* Materialidade, não documento: macro de um fardo prensado com cintas de
-       aço, sem prédio, pessoas ou modelo de prensa identificável. */
-    image: img(
-      "/historia/prensa-fardo-1100-2009.webp",
-      "Representação ilustrativa de um grande fardo de papelão prensado, preso por cintas de aço, evocando o marco tecnológico da prensa importada de 1.100 kg"
+    image: archiveImg(
+      "/historia/reais/2009-prensa-importada.webp",
+      "Registro histórico da prensa horizontal importada instalada em 2009 produzindo fardos de 1.100 kg",
+      "landscape",
+      "center"
     ),
     side: "left",
   },
@@ -263,7 +288,6 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     description:
       "Instalação do primeiro compactador de resíduos por rosca sem fim importado. Esse acontecimento também marca o início da parceria com a Pöttinger.",
     highlights: ["compactador de resíduos por rosca sem fim importado", "Pöttinger"],
-    image: img("/historia/tecnologia-2013.webp", "Reconstituição ilustrativa de compactador industrial importado, representando a modernização tecnológica do início dos anos 2010"),
     side: "left",
   },
   {
@@ -320,13 +344,11 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     chapter: "expansao",
     description: "Aquisição da empresa Saturno, em Blumenau, fortalecendo a presença regional.",
     highlights: ["Saturno", "Blumenau"],
-    /* A imagem é a MATERIALIDADE da Saturno (papel e papelão comprimidos),
-       reaproveitada de lib/material-surfaces.ts — nunca a instalação de
-       Blumenau, que seguia sendo o caso mais grave de "prédio gerado" (ver
-       cabeçalho). Pausa visual, não documento do evento. */
-    image: img(
-      "/materialidade/saturno-fluxo.webp",
-      "Imagem ilustrativa da materialidade da Saturno Ambiental: camadas de papelão ondulado e papel fragmentado em close, sem relação com uma instalação específica"
+    image: archiveImg(
+      "/historia/reais/2022-aquisicao-saturno.webp",
+      "Equipe da Saturno Ambiental reunida entre caminhões e contêineres após a aquisição em 2022",
+      "4:3",
+      "center 38%"
     ),
     location: "Blumenau",
     side: "left",
@@ -418,7 +440,12 @@ export const MAP_LOCATIONS: Array<{ name: string; year: number; x: number; y: nu
  * que saiu foi a palavra que transformava uma reconstituição em registro
  * histórico (Seção 22 da rodada de materialidade).
  */
-export const HERO_IMAGE = img("/historia/hero-1985.webp", "Reconstituição ilustrativa de um pequeno galpão industrial no Sul do Brasil nos anos 1980, com prensa vertical e veículo utilitário estacionado ao lado, em preto e branco");
+export const HERO_IMAGE = archiveImg(
+  "/historia/reais/1985-hero.webp",
+  "Registro histórico de caminhão Mercedes do início da trajetória do Grupo Almeida",
+  "landscape",
+  "center 45%"
+);
 
 /* Só os números que a escala de m² (GROWTH_SCALE) ainda não mostra: os
    5.500 m² da sede e os 3.000 m² de Araquari já aparecem na escala e no
@@ -485,9 +512,11 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "origem",
     description: "Almeida adds its first Mercedes-Benz 608 truck and installs a second vertical press.",
     highlights: ["Mercedes-Benz 608", "second vertical press"],
-    image: img(
-      "/historia/expansao-logistica-1988.webp",
-      "Illustrative reconstruction of a late-1980s cargo truck, representing the expansion of Almeida's fleet"
+    image: archiveImg(
+      "/historia/reais/1986-caminhao-mercedes.webp",
+      "Historical photograph of a Mercedes truck with an Almeida container parked inside the warehouse",
+      "landscape",
+      "center"
     ),
     side: "left",
   },
@@ -505,6 +534,12 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "origem",
     description: "The São José unit grows to 500 m².",
     highlights: ["500 m²"],
+    image: archiveImg(
+      "/historia/reais/1990-ampliacao-sao-jose.webp",
+      "Almeida team gathered at the São José unit following the 1990 expansion",
+      "landscape",
+      "center 35%"
+    ),
     location: "São José",
     areaSqm: 500,
     growthMilestone: true,
@@ -525,10 +560,11 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "origem",
     description: "Almeida installs its first horizontal baler, producing 400 kg bales.",
     highlights: ["first horizontal baler", "400 kg"],
-    image: img(
-      "/historia/prensa-fardos-1993.webp",
-      "Illustrative reconstruction of an industrial horizontal baler and compacted cardboard bales, 1990s",
-      "portrait"
+    image: archiveImg(
+      "/historia/reais/1993-primeira-prensa-horizontal.webp",
+      "Historical photograph of the first horizontal baler installed by Almeida in 1993",
+      "portrait",
+      "center 20%"
     ),
     side: "right",
   },
@@ -547,10 +583,6 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Almeida installs its first shredder, increasing material processing capacity.",
     highlights: ["first shredder"],
-    image: img(
-      "/historia/triturador-2000.webp",
-      "Illustrative reconstruction of an industrial shredder and recyclable-material processing lines"
-    ),
     side: "right",
   },
   {
@@ -559,6 +591,12 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Almeida builds a new 2,500 m² warehouse.",
     highlights: ["2,500 m²"],
+    image: archiveImg(
+      "/historia/reais/1999-novo-galpao.webp",
+      "Construction of Almeida's new 2,500 m² industrial warehouse in 1999",
+      "landscape",
+      "center 45%"
+    ),
     areaSqm: 2500,
     growthMilestone: true,
     side: "left",
@@ -595,9 +633,11 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "evolucao",
     description: "Almeida installs a new imported baler, producing 1,100 kg bales.",
     highlights: ["1,100 kg"],
-    image: img(
-      "/historia/prensa-fardo-1100-2009.webp",
-      "Illustrative representation of a large pressed cardboard bale held by steel straps, evoking the technological milestone of the imported 1,100 kg baler"
+    image: archiveImg(
+      "/historia/reais/2009-prensa-importada.webp",
+      "Historical photograph of the imported horizontal baler installed in 2009 producing 1,100 kg bales",
+      "landscape",
+      "center"
     ),
     side: "left",
   },
@@ -618,10 +658,6 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     description:
       "Almeida installs its first imported screw-type waste compactor, marking the start of its partnership with Pöttinger.",
     highlights: ["imported screw-type waste compactor", "Pöttinger"],
-    image: img(
-      "/historia/tecnologia-2013.webp",
-      "Illustrative reconstruction of an imported industrial compactor, representing the technological modernization of the early 2010s"
-    ),
     side: "left",
   },
   {
@@ -676,9 +712,11 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
     chapter: "expansao",
     description: "Almeida acquires Saturno, in Blumenau, strengthening the group's regional presence.",
     highlights: ["Saturno", "Blumenau"],
-    image: img(
-      "/materialidade/saturno-fluxo.webp",
-      "Illustrative image of Saturno Ambiental's materiality: close-up layers of corrugated cardboard and shredded paper, unrelated to any specific facility"
+    image: archiveImg(
+      "/historia/reais/2022-aquisicao-saturno.webp",
+      "Saturno Ambiental team gathered among trucks and containers following the 2022 acquisition",
+      "4:3",
+      "center 38%"
     ),
     location: "Blumenau",
     side: "left",
@@ -733,9 +771,11 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
   },
 ];
 
-export const HERO_IMAGE_EN = img(
-  "/historia/hero-1985.webp",
-  "Illustrative reconstruction of a small industrial warehouse in southern Brazil in the 1980s, with a vertical press and a utility vehicle parked alongside, in black and white"
+export const HERO_IMAGE_EN = archiveImg(
+  "/historia/reais/1985-hero.webp",
+  "Historical photograph of a Mercedes truck from the early years of Grupo Almeida",
+  "landscape",
+  "center 45%"
 );
 
 export const EPILOGUE_STATS_EN = [

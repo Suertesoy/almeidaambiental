@@ -36,12 +36,15 @@ import { CONTACT_ANCHORS } from "./contact-data";
  * (caixas de papelão em tamanhos diferentes), não uma instalação, uma
  * equipe ou um endereço. É material, e material a Saturno tem.
  */
-export const CARTONAGEM_IMAGE = img(
-  "saturno-ambiental",
-  "cartonagem",
-  "/saturno-ambiental/cartonagem-caixas.webp",
-  "Imagem ilustrativa de caixas de papelão novas e usadas organizadas em diferentes tamanhos dentro de galpão"
-);
+export const CARTONAGEM_IMAGE = {
+  ...img(
+    "saturno-ambiental",
+    "cartonagem",
+    "/saturno-ambiental/cartonagem2-desktop.webp",
+    "Operação de cartonagem da Saturno Ambiental com colaboradora organizando pilhas de caixas de papelão sobre paletes"
+  ),
+  sourceType: "archive" as const,
+};
 
 /**
  * Faixa de metadados do Hero tipográfico. Só o que já está validado em
@@ -127,12 +130,15 @@ export const MATERIALS = [...CORE_MATERIALS];
    Ver lib/i18n/locale.ts.
    ========================================================== */
 
-export const CARTONAGEM_IMAGE_EN = img(
-  "saturno-ambiental",
-  "cartonagem",
-  "/saturno-ambiental/cartonagem-caixas.webp",
-  "Illustrative image of new and used cardboard boxes organized in different sizes inside a warehouse"
-);
+export const CARTONAGEM_IMAGE_EN = {
+  ...img(
+    "saturno-ambiental",
+    "cartonagem",
+    "/saturno-ambiental/cartonagem2-desktop.webp",
+    "Saturno Ambiental cardboard packaging operation with a team member organizing stacked corrugated boxes on pallets"
+  ),
+  sourceType: "archive" as const,
+};
 
 export const HERO_META_EN = [
   "Blumenau · Vale do Itajaí region",

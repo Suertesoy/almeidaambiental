@@ -1,15 +1,13 @@
 /* ==========================================================
    Diagrama de processo da Almeida Ambiental (ProcessFlowDiagram.tsx).
-   Superfície escura (território floresta). Amarelo institucional
-   (--color-gold-aged) = progresso/destaque. Estado padrão = tudo aceso
-   (sem JS / reduced-motion); o JS só liga data-live e escreve --p.
-   Mobile: coluna vertical. >=900px: horizontal, bifurcação em 2 linhas.
+   Diagnóstico → Coleta → Triagem → [Caminho direto | Opcional: Trituração ou Descaracterização] → Enfardamento → Destinação.
+   Mobile: coluna vertical. >=960px: horizontal com bifurcação e convergência.
    ========================================================== */
 
 .root {
   --flow-line: rgba(247, 246, 241, 0.22);
   --flow-gold: var(--color-gold-aged);
-  --link-h: 30px;
+  --link-h: 28px;
   padding-top: clamp(20px, 2.6vw, 32px);
   border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 }
@@ -31,9 +29,8 @@
   list-style: none;
   margin: 0 auto;
   padding: 0;
-  max-width: 340px;
+  max-width: 360px;
   display: grid;
-  /* 4 colunas para o centro cair em 50% e as duas ramificações em 25%/75% */
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-areas:
     ". diag diag ."
@@ -42,10 +39,13 @@
     ". lcoleta lcoleta ."
     ". triagem triagem ."
     "fork fork fork fork"
-    "tritura tritura descar descar"
+    "direto direto opcional opcional"
     "merge merge merge merge"
+    ". enfarda enfarda ."
+    ". lend lend ."
     ". destino destino .";
   justify-items: stretch;
+  align-items: stretch;
 }
 
 .nDiag { grid-area: diag; }
@@ -54,9 +54,11 @@
 .lColeta { grid-area: lcoleta; }
 .nTriagem { grid-area: triagem; }
 .fork { grid-area: fork; }
-.nTritura { grid-area: tritura; margin-inline: 3px; }
-.nDescar { grid-area: descar; margin-inline: 3px; }
+.nDireto { grid-area: direto; margin-inline: 4px; }
+.nOpcional { grid-area: opcional; margin-inline: 4px; }
 .merge { grid-area: merge; }
+.nEnfarda { grid-area: enfarda; }
+.lEnd { grid-area: lend; }
 .nDestino { grid-area: destino; }
 
 /* ---------------- Nós ---------------- */
@@ -65,7 +67,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 52px;
+  min-height: 50px;
   padding: 8px 12px;
   border: 1px solid rgba(247, 246, 241, 0.26);
   border-radius: 4px;
@@ -81,8 +83,8 @@
 
 .icon {
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   color: currentColor;
   opacity: 0.88;
   transition: color 320ms ease, opacity 320ms ease;
@@ -91,26 +93,73 @@
 .name {
   font-family: var(--font-inter), var(--font-body);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.2;
 }
 
-/* Ramificações lado a lado: ícone acima do nome, para caber "Descaracterização" em 320px */
-.nTritura,
-.nDescar {
+/* Caminho direto e tratamento opcional no mobile */
+.nDireto {
+  flex-direction: column;
+  padding: 10px 8px;
+}
+
+.directTag {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--flow-gold);
+}
+
+.nOpcional {
   flex-direction: column;
   gap: 6px;
-  padding-inline: 6px;
+  padding: 10px 8px;
+  border-style: dashed;
 }
 
-.nTritura .name,
-.nDescar .name {
-  font-size: clamp(12.5px, 3.9vw, 14px);
-  letter-spacing: -0.01em;
-  max-width: 100%;
+.optionalTag {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.78;
 }
 
-/* Estados (só quando o JS está ativo; sem JS todos ficam "current"/acesos) */
+.optionalRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.optionalItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.optionalIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--flow-gold);
+}
+
+.optionalOr {
+  font-family: var(--font-inter), var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+/* Estados */
 .node[data-state="done"],
 .node[data-state="current"] {
   border-color: var(--flow-gold);
@@ -137,7 +186,6 @@
   color: var(--text-on-dark-muted, rgba(247, 246, 241, 0.6));
 }
 
-/* Sem JS (ou reduced-motion) data-live não existe: tudo no estado "aceso". */
 .root:not([data-live]) .node {
   border-color: rgba(201, 162, 39, 0.6);
 }
@@ -192,7 +240,6 @@
   transform-origin: center;
 }
 
-/* Bifurcação: tronco (metade superior) → barra → duas descidas (metade inferior) */
 .fork .forkTrunk { height: 50%; bottom: auto; }
 .fork .forkBar { left: 25%; right: 25%; }
 .fork .forkDropA,
@@ -200,7 +247,6 @@
 .fork .forkDropA { left: calc(25% - 1px); }
 .fork .forkDropB { left: auto; right: calc(25% - 1px); }
 
-/* Convergência: duas subidas (metade superior) → barra → tronco (metade inferior) */
 .merge .mergeDropA,
 .merge .mergeDropB { height: 50%; bottom: auto; }
 .merge .mergeDropA { left: calc(25% - 1px); }
@@ -208,41 +254,50 @@
 .merge .mergeBar { left: 25%; right: 25%; }
 .merge .mergeTrunk { top: 50%; }
 
-/* ---------------- Desktop: horizontal ---------------- */
-@media (min-width: 900px) {
+/* ---------------- Desktop (>= 960px): horizontal ---------------- */
+@media (min-width: 960px) {
   .root {
-    --link-w: clamp(32px, 4vw, 64px);
+    --link-w: clamp(20px, 2.4vw, 44px);
   }
 
   .main {
     max-width: none;
     margin: 0;
-    /* Rodada 7: os conectores são elásticos (1fr, piso --link-w) — o diagrama
-       ocupa toda a largura do container em vez de ficar encostado à esquerda. */
-    grid-template-columns: auto minmax(var(--link-w), 1fr) auto minmax(var(--link-w), 1fr) auto minmax(var(--link-w), 1fr) minmax(0, auto) minmax(var(--link-w), 1fr) auto;
+    grid-template-columns:
+      auto minmax(var(--link-w), 1fr)
+      auto minmax(var(--link-w), 1fr)
+      auto minmax(var(--link-w), 0.9fr)
+      minmax(210px, 1.8fr)
+      minmax(var(--link-w), 0.9fr)
+      auto minmax(var(--link-w), 1fr)
+      auto;
     grid-template-areas:
-      "diag ldiag coleta lcoleta triagem fork tritura merge destino"
-      "diag ldiag coleta lcoleta triagem fork descar merge destino";
+      "diag ldiag coleta lcoleta triagem fork direto merge enfarda lend destino"
+      "diag ldiag coleta lcoleta triagem fork opcional merge enfarda lend destino";
     align-items: center;
     justify-content: stretch;
-    row-gap: 14px;
+    row-gap: 12px;
   }
 
-  /* Nós de linha única ocupam as duas linhas e centralizam na vertical */
-  .nDiag, .nColeta, .nTriagem, .nDestino,
-  .lDiag, .lColeta, .fork, .merge {
+  .nDiag, .nColeta, .nTriagem, .nEnfarda, .nDestino,
+  .lDiag, .lColeta, .fork, .merge, .lEnd {
     align-self: center;
   }
 
-  .nTritura, .nDescar {
-    flex-direction: row;
+  .nDireto, .nOpcional {
     margin: 0;
-    padding-inline: 14px;
+    padding: 8px 14px;
   }
 
-  .nTritura .name, .nDescar .name {
-    font-size: 15px;
-    letter-spacing: 0;
+  .optionalRow {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 10px;
+  }
+
+  .optionalItem {
+    font-size: 13px;
   }
 
   .link {
@@ -250,7 +305,10 @@
     align-self: stretch;
   }
 
-  .lDiag, .lColeta { height: 2px; align-self: center; }
+  .lDiag, .lColeta, .lEnd {
+    height: 2px;
+    align-self: center;
+  }
 
   .line_v {
     width: auto;
@@ -279,7 +337,6 @@
     transform-origin: center;
   }
 
-  /* Fork horizontal: tronco (metade esquerda) → barra vertical → duas saídas (metade direita) */
   .fork { align-self: stretch; }
   .fork .forkTrunk { left: 0; right: 50%; top: calc(50% - 1px); bottom: auto; height: 2px; }
   .fork .forkBar { left: calc(50% - 1px); right: auto; top: 25%; bottom: 25%; width: 2px; height: auto; }

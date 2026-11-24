@@ -6,7 +6,6 @@ import MaterialCards from "../shared/MaterialCards";
 import EditorialCTA from "../shared/EditorialCTA";
 import BrandBoundaryMark, { boundarySurface } from "../shared/BrandBoundaryMark";
 import MaterialSurface from "../shared/MaterialSurface";
-import IllustrativeBadge from "../shared/IllustrativeBadge";
 import Reveal from "../shared/Reveal";
 import SaturnoFlow from "./SaturnoFlow";
 import { BENEFIT_ICONS, PROCESS_STEP_ICONS } from "../icons";
@@ -196,14 +195,24 @@ export default function SaturnoPage({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        {/* Cartonagem: a única fotografia da página (material, não sede).
-            A imagem é ilustrativa e leva o badge. */}
+        {/* Cartonagem: fotografia real da operação da Saturno Ambiental. */}
         <section className={`${shared.chapterMiddle} ${boundarySurface}`}>
           <div className={shared.container}>
             <div className={`${shared.duo} ${shared.duoMediaLeft} ${shared.duoEven}`}>
-              <Reveal className={`${shared.duoMedia} ${shared.duoMediaLandscape}`}>
-                <img src={cartonagem.image!.src} alt={cartonagem.image!.alt} loading="lazy" decoding="async" />
-                <IllustrativeBadge position="bottom-right" locale={locale} />
+              <Reveal className={`${shared.duoMedia} ${shared.duoMediaSquare}`}>
+                <picture>
+                  <source
+                    media="(max-width: 767px)"
+                    srcSet="/saturno-ambiental/cartonagem2-mobile.webp"
+                  />
+                  <img
+                    src={cartonagem.image!.src}
+                    alt={cartonagem.image!.alt}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: "center 35%" }}
+                  />
+                </picture>
               </Reveal>
               <Reveal className={shared.duoContent} style={{ transitionDelay: "80ms" }}>
                 <p className={`${shared.eyebrow} ${shared.eyebrowAccent}`}>{cartonagem.eyebrow}</p>

@@ -60,7 +60,9 @@ export default function HeroDecades({ locale }: { locale: Locale }) {
         <ChevronDownIcon />
       </div>
 
-      <IllustrativeBadge position="top-right" locale={locale} />
+      {heroImage.sourceType === "illustrative" && (
+        <IllustrativeBadge position="top-right" locale={locale} />
+      )}
     </section>
   );
 }

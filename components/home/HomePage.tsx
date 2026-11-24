@@ -81,7 +81,7 @@ const COPY = {
       "Imagem ilustrativa de um pátio industrial de reciclagem com fardos de papelão organizados e empilhadeira",
     ambientalProcessAriaLabel: "Etapas da operação da Almeida Ambiental",
     ambientalProcessDescription:
-      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue por Trituração ou por Descaracterização, caminhos alternativos que convergem na Destinação.",
+      "Diagnóstico, Coleta e Triagem. Depois da Triagem, o material segue diretamente para Enfardamento ou passa por Trituração ou Descaracterização conforme necessidade antes do Enfardamento, convergindo na Destinação.",
     equipamentosEntryHeadline: "Tecnologia que nasceu da própria operação",
     equipamentosEntryBody:
       "Criada para aperfeiçoar os processos do Grupo Almeida, transforma décadas de experiência no setor em tecnologia aplicada à gestão de resíduos.",
@@ -119,7 +119,7 @@ const COPY = {
       "Illustrative image of an industrial recycling yard with organized cardboard bales and a forklift",
     ambientalProcessAriaLabel: "Almeida Ambiental's operating steps",
     ambientalProcessDescription:
-      "Assessment, Collection and Sorting. After Sorting, material goes through either Shredding or Destruction, alternative paths that converge on Disposal.",
+      "Assessment, Collection and Sorting. After Sorting, material either moves directly to Baling or undergoes Shredding or Destruction as needed before Baling, converging on Disposal.",
     equipamentosEntryHeadline: "Technology born from the operation",
     equipamentosEntryBody:
       "Created to improve Grupo Almeida's processes, it turns decades of industry experience into technology applied to waste management.",
@@ -230,6 +230,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
                   steps={[...processSteps]}
                   ariaLabel={t.ambientalProcessAriaLabel}
                   description={t.ambientalProcessDescription}
+                  locale={locale}
                 />
               </Reveal>
 

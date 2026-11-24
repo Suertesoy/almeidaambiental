@@ -115,15 +115,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 42%;
+  object-position: center 45%;
 }
 
-/* Mobile retrato: o recorte central de uma foto 3:2 corta o jipe e deixa só
-   a porta do galpão. 55% mantém a prensa (âncora da cena) e a frente do
-   veículo dentro do quadro. */
 @media (max-width: 767px) {
   .heroImage {
-    object-position: 55% 42%;
+    object-position: 46% 42%;
   }
 }
 
@@ -643,7 +640,11 @@
 
 .eventImagePortrait {
   max-width: min(100%, 300px);
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 2 / 3;
+}
+
+.eventImage4x3 {
+  aspect-ratio: 4 / 3;
 }
 
 @media (min-width: 768px) {
