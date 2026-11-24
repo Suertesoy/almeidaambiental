@@ -140,8 +140,11 @@ export default function EquipmentModelCanvas({
       const w = Math.max(container.clientWidth, 1);
       const h = Math.max(container.clientHeight, 1);
       const base = config.camera.elevationDeg;
-      return computeFitFraming(size, w / h, config.camera, {
-        fill: w < MOBILE_STAGE_MAX_WIDTH ? FIT_FILL_MOBILE : FIT_FILL_DESKTOP,
+      const isNarrow = w < MOBILE_STAGE_MAX_WIDTH;
+      const mobile = isNarrow ? config.camera.mobile : undefined;
+      const cameraConfig = mobile ? { ...config.camera, azimuthDeg: mobile.azimuthDeg } : config.camera;
+      return computeFitFraming(size, w / h, cameraConfig, {
+        fill: mobile?.fill ?? (isNarrow ? FIT_FILL_MOBILE : FIT_FILL_DESKTOP),
         elevationsDeg: [
           Math.max(2, base - elevationBelow),
           base,

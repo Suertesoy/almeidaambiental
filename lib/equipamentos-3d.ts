@@ -24,6 +24,8 @@ export type Equipment3DCameraConfig = {
   fitToGeometry?: boolean;
   /** Catálogo: faixa de elevação permitida em torno da inicial (graus). */
   elevationRangeDeg?: { below: number; above: number };
+  /** Catálogo em palco estreito: vista inicial e fração do quadro próprias. */
+  mobile?: { azimuthDeg: number; fill: number };
 };
 
 /**
@@ -53,7 +55,7 @@ export type Equipment3DConfig = {
   /** ID correspondente ao catálogo em lib/equipamentos-data.ts. */
   productId: string;
   /** Pasta estável em public/models/equipamentos/. */
-  assetSlug: "apv-100" | "compactador-fuso" | "compactador-hidraulico" | "prensa-horizontal";
+  assetSlug: "apv-100" | "compactador-fuso" | "compactador-hidraulico" | "prensa-horizontal" | "heger-crocodile";
   glbUrl: string;
   posterUrl: string;
   contactShadowUrl: string;
@@ -215,6 +217,56 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
       en: "Austropressen Horizontal Baler in three-quarter perspective, with inclined feed conveyor and bale output channel",
     },
   },
+  // Reconstruída a partir da máquina real fotografada na Almeida. A variante do
+  // fabricante não foi comprovada e a escala é estimada: não citar modelo nem medidas.
+  // Painel à esquerda e conjunto vermelho à direita: só azimutes positivos moderados
+  // mostram os dois sem que um encubra o outro ou a tremonha esconda o painel.
+  crocodile: {
+    productId: "crocodile",
+    assetSlug: "heger-crocodile",
+    glbUrl: "/models/equipamentos/heger-crocodile/modelo.glb",
+    posterUrl: "/models/equipamentos/heger-crocodile/poster.webp",
+    contactShadowUrl: "/models/equipamentos/heger-crocodile/sombra-contato.png",
+    contactShadowSize: { width: 5.4, depth: 3.0 },
+    environmentIntensity: 1.65,
+    displayName: {
+      pt: "Heger Crocodile",
+      en: "Heger Crocodile",
+    },
+    camera: {
+      azimuthDeg: 26,
+      elevationDeg: 13,
+      fov: 26,
+      padding: 1.3,
+      targetYOffsetRatio: -0.01,
+      fitToGeometry: true,
+      elevationRangeDeg: { below: 8, above: 14 },
+      mobile: { azimuthDeg: 32, fill: 0.94 },
+    },
+    // Câmera do mesmo lado dos demais; o giro de 12° ± 12° deixa a vista entre 14° e
+    // 38° da frente do modelo: abre a tremonha e o conjunto vermelho, painel sempre livre.
+    choreography: {
+      scale: 1,
+      azimuthDeg: 38,
+      elevationDeg: 13,
+      yawDeg: 12,
+      swayDeg: 12,
+      pivot: { x: 0, z: 0 },
+      targetYOffsetRatio: 0,
+      fillWidth: 0.84,
+      fillHeight: 0.86,
+      sideVisibleFrac: 0.42,
+      sideDepth: 1.2,
+    },
+    label: {
+      pt: "Modelo 3D interativo da Heger Crocodile",
+      en: "Interactive 3D model of the Heger Crocodile",
+    },
+    posterAlt: {
+      pt: "Heger Crocodile em perspectiva de três quartos, com tremonha, painel elétrico lateral, canal horizontal e conjunto mecânico vermelho",
+      en: "Heger Crocodile in three-quarter perspective, with hopper, side electrical cabinet, horizontal channel and red mechanical assembly",
+    },
+  },
 };
 
 export function getEquipment3DConfig(productId: string): Equipment3DConfig | null {
@@ -230,6 +282,7 @@ export const CHOREOGRAPHY_SEQUENCE: string[] = [
   "apv-90-100",
   "compactador-hidraulico",
   "prensas-horizontais",
+  "crocodile",
 ];
 
 export function getChoreographyConfigs(): Equipment3DConfig[] {
