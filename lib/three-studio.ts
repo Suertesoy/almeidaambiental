@@ -156,6 +156,40 @@ export function disposeObjectTree(root: THREE.Object3D) {
 }
 
 /**
+ * Pontos extremos da geometria (coordenadas de mundo) em direções distribuídas
+ * pela esfera: aproxima a casca convexa do modelo para o enquadramento justo.
+ */
+export function collectExtremePoints(root: THREE.Object3D, directionCount = 160): THREE.Vector3[] {
+  root.updateWorldMatrix(true, true);
+  const dirs: THREE.Vector3[] = [];
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < directionCount; i++) {
+    const y = 1 - (2 * (i + 0.5)) / directionCount;
+    const r = Math.sqrt(1 - y * y);
+    dirs.push(new THREE.Vector3(Math.cos(i * golden) * r, y, Math.sin(i * golden) * r));
+  }
+  const best = dirs.map(() => -Infinity);
+  const points = dirs.map(() => new THREE.Vector3());
+  const v = new THREE.Vector3();
+  root.traverse((obj) => {
+    if (!(obj instanceof THREE.Mesh)) return;
+    const position = obj.geometry.getAttribute("position");
+    if (!position) return;
+    for (let i = 0; i < position.count; i++) {
+      v.fromBufferAttribute(position, i).applyMatrix4(obj.matrixWorld);
+      for (let d = 0; d < dirs.length; d++) {
+        const dot = v.dot(dirs[d]);
+        if (dot > best[d]) {
+          best[d] = dot;
+          points[d].copy(v);
+        }
+      }
+    }
+  });
+  return points.filter((_, d) => best[d] > -Infinity);
+}
+
+/**
  * Enquadramento justo para o visualizador INTERATIVO do catálogo.
  *
  * Diferente de `computeFraming` (usado pela coreografia, que continua
@@ -171,7 +205,14 @@ export function computeFitFraming(
   boxSize: THREE.Vector3,
   aspect: number,
   cameraConfig: Equipment3DConfig["camera"],
-  opts: { fill: number; elevationsDeg: number[]; extraPoints?: THREE.Vector3[]; azimuthStepDeg?: number }
+  opts: {
+    fill: number;
+    elevationsDeg: number[];
+    extraPoints?: THREE.Vector3[];
+    /** Substitui os 8 cantos da caixa (coordenadas do grupo do modelo). */
+    fitPoints?: THREE.Vector3[];
+    azimuthStepDeg?: number;
+  }
 ) {
   const fovRad = THREE.MathUtils.degToRad(cameraConfig.fov);
   const tanV = Math.tan(fovRad / 2);
@@ -179,10 +220,14 @@ export function computeFitFraming(
   const target = new THREE.Vector3(0, boxSize.y * (0.5 + (cameraConfig.targetYOffsetRatio ?? 0)), 0);
 
   const points: THREE.Vector3[] = [];
-  for (const sx of [-1, 1]) {
-    for (const sz of [-1, 1]) {
-      for (const y of [0, boxSize.y]) {
-        points.push(new THREE.Vector3((sx * boxSize.x) / 2, y, (sz * boxSize.z) / 2));
+  if (opts.fitPoints && opts.fitPoints.length > 0) {
+    points.push(...opts.fitPoints);
+  } else {
+    for (const sx of [-1, 1]) {
+      for (const sz of [-1, 1]) {
+        for (const y of [0, boxSize.y]) {
+          points.push(new THREE.Vector3((sx * boxSize.x) / 2, y, (sz * boxSize.z) / 2));
+        }
       }
     }
   }

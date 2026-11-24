@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import type { Equipment3DConfig } from "../../lib/equipamentos-3d";
 import {
+  collectExtremePoints,
   computeFitFraming,
   createStudioEnvironment,
   disposeObjectTree,
@@ -84,6 +85,9 @@ export default function EquipmentModelCanvas({
     let rafId = 0;
     let isVisible = true;
     let boxSize: THREE.Vector3 | null = null;
+    let fitPoints: THREE.Vector3[] | undefined;
+    const elevationBelow = config.camera.elevationRangeDeg?.below ?? ELEVATION_BELOW_DEG;
+    const elevationAbove = config.camera.elevationRangeDeg?.above ?? ELEVATION_ABOVE_DEG;
 
     const prefersReducedMotion =
       typeof window !== "undefined" &&
@@ -139,10 +143,11 @@ export default function EquipmentModelCanvas({
       return computeFitFraming(size, w / h, config.camera, {
         fill: w < MOBILE_STAGE_MAX_WIDTH ? FIT_FILL_MOBILE : FIT_FILL_DESKTOP,
         elevationsDeg: [
-          Math.max(2, base - ELEVATION_BELOW_DEG),
+          Math.max(2, base - elevationBelow),
           base,
-          Math.min(60, base + ELEVATION_ABOVE_DEG),
+          Math.min(60, base + elevationAbove),
         ],
+        fitPoints,
       });
     };
 
@@ -159,8 +164,8 @@ export default function EquipmentModelCanvas({
     controls.enableZoom = false;
     controls.rotateSpeed = 0.72;
     const baseElevation = config.camera.elevationDeg;
-    const elevationLow = Math.max(2, baseElevation - ELEVATION_BELOW_DEG);
-    const elevationHigh = Math.min(60, baseElevation + ELEVATION_ABOVE_DEG);
+    const elevationLow = Math.max(2, baseElevation - elevationBelow);
+    const elevationHigh = Math.min(60, baseElevation + elevationAbove);
     controls.minPolarAngle = THREE.MathUtils.degToRad(90 - elevationHigh);
     controls.maxPolarAngle = THREE.MathUtils.degToRad(90 - elevationLow);
     controls.autoRotate = Boolean(autoRotate && !prefersReducedMotion && !userInteractedRef.current);
@@ -265,10 +270,18 @@ export default function EquipmentModelCanvas({
         const size = box.getSize(new THREE.Vector3());
         boxSize = size;
 
-        root.position.set(-center.x, -box.min.y, -center.z);
+        const pivot = config.camera.pivot ?? { x: 0, z: 0 };
+        root.position.set(-center.x - pivot.x, -box.min.y, -center.z - pivot.z);
         modelGroup.add(root);
+        if (config.camera.fitToGeometry) fitPoints = collectExtremePoints(root);
 
         const framing = frameFor(size);
+        if (config.camera.fitToGeometry) {
+          // Modelo grande = câmera distante: aproxima o plano near para manter a
+          // precisão de profundidade (evita cintilação em chapas sobrepostas).
+          camera.near = Math.max(camera.near, framing.distance * 0.04);
+          camera.updateProjectionMatrix();
+        }
         camera.position.copy(framing.position);
         controls.target.copy(framing.target);
         controls.minDistance = framing.distance * 0.7;
@@ -304,7 +317,7 @@ export default function EquipmentModelCanvas({
             });
             const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
             shadowMesh.rotation.x = -Math.PI / 2;
-            shadowMesh.position.y = 0.001;
+            shadowMesh.position.set(-pivot.x, 0.001, -pivot.z);
             shadowMesh.renderOrder = -1;
             modelGroup.add(shadowMesh);
             needsRender = true;

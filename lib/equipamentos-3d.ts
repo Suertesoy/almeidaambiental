@@ -11,13 +11,26 @@ export type Equipment3DCameraConfig = {
   padding: number;
   /** Deslocamento vertical relativo do alvo em relação ao centro do bounding box. */
   targetYOffsetRatio?: number;
+  /**
+   * Catálogo: pivô da rotação no piso (metros), relativo ao centro do bounding
+   * box. Só para equipamentos muito assimétricos, cujo centro geométrico cai no
+   * vazio. Ausente = centro do bounding box.
+   */
+  pivot?: { x: number; z: number };
+  /**
+   * Catálogo: enquadra pelos pontos extremos da geometria em vez dos cantos do
+   * bounding box (que num equipamento em "T" são espaço vazio e o afastariam).
+   */
+  fitToGeometry?: boolean;
+  /** Catálogo: faixa de elevação permitida em torno da inicial (graus). */
+  elevationRangeDeg?: { below: number; above: number };
 };
 
 export type Equipment3DConfig = {
   /** ID correspondente ao catálogo em lib/equipamentos-data.ts. */
   productId: string;
   /** Pasta estável em public/models/equipamentos/. */
-  assetSlug: "apv-100" | "compactador-fuso" | "compactador-hidraulico";
+  assetSlug: "apv-100" | "compactador-fuso" | "compactador-hidraulico" | "prensa-horizontal";
   glbUrl: string;
   posterUrl: string;
   contactShadowUrl: string;
@@ -127,6 +140,40 @@ export const EQUIPMENT_3D_MODELS: Record<string, Equipment3DConfig> = {
       en: "Hydraulic Compactor in three-quarter perspective",
     },
   },
+  // Instalação completa (prensa + esteira), bem maior que as demais: pivô próprio
+  // no eixo da prensa e enquadramento pela geometria. A variante do fabricante
+  // não foi comprovada: não citar modelo nem medidas.
+  "prensas-horizontais": {
+    productId: "prensas-horizontais",
+    assetSlug: "prensa-horizontal",
+    glbUrl: "/models/equipamentos/prensa-horizontal/modelo.glb",
+    posterUrl: "/models/equipamentos/prensa-horizontal/poster.webp",
+    contactShadowUrl: "/models/equipamentos/prensa-horizontal/sombra-contato.png",
+    contactShadowSize: { width: 15, depth: 12 },
+    environmentIntensity: 1.75,
+    displayName: {
+      pt: "Prensa Horizontal",
+      en: "Horizontal Baler",
+    },
+    camera: {
+      azimuthDeg: -36,
+      elevationDeg: 26,
+      fov: 26,
+      padding: 1.3,
+      targetYOffsetRatio: -0.11,
+      pivot: { x: 0, z: -1.8 },
+      fitToGeometry: true,
+      elevationRangeDeg: { below: 14, above: 8 },
+    },
+    label: {
+      pt: "Modelo 3D interativo da Prensa Horizontal Austropressen com esteira de alimentação",
+      en: "Interactive 3D model of the Austropressen Horizontal Baler with feed conveyor",
+    },
+    posterAlt: {
+      pt: "Prensa Horizontal Austropressen em perspectiva de três quartos, com esteira de alimentação inclinada e canal de saída dos fardos",
+      en: "Austropressen Horizontal Baler in three-quarter perspective, with inclined feed conveyor and bale output channel",
+    },
+  },
 };
 
 export function getEquipment3DConfig(productId: string): Equipment3DConfig | null {
@@ -136,6 +183,8 @@ export function getEquipment3DConfig(productId: string): Equipment3DConfig | nul
 /**
  * Ordem da coreografia compartilhada (Home e Hero de Almeida Equipamentos).
  * Novos equipamentos aprovados entram nesta sequência apenas por configuração.
+ * "prensas-horizontais" já está em EQUIPMENT_3D_MODELS, mas fica fora da sequência
+ * até a avaliação das proporções no catálogo; para ativar, basta incluir o id aqui.
  */
 export const CHOREOGRAPHY_SEQUENCE: string[] = [
   "compactador-fuso",
