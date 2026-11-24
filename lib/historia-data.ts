@@ -441,8 +441,8 @@ export const MAP_LOCATIONS: Array<{ name: string; year: number; x: number; y: nu
  * histórico (Seção 22 da rodada de materialidade).
  */
 export const HERO_IMAGE = archiveImg(
-  "/historia/reais/1985-hero.webp",
-  "Registro histórico de caminhão Mercedes do início da trajetória do Grupo Almeida",
+  "/historia/reais/1985-hero-v2.webp",
+  "Registro histórico restaurado de caminhão Mercedes do início da trajetória do Grupo Almeida",
   "landscape",
   "center 45%"
 );
@@ -772,8 +772,8 @@ export const TIMELINE_EVENTS_EN: TimelineEvent[] = [
 ];
 
 export const HERO_IMAGE_EN = archiveImg(
-  "/historia/reais/1985-hero.webp",
-  "Historical photograph of a Mercedes truck from the early years of Grupo Almeida",
+  "/historia/reais/1985-hero-v2.webp",
+  "Restored historical photograph of a Mercedes truck from the early years of Grupo Almeida",
   "landscape",
   "center 45%"
 );
