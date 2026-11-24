@@ -18,13 +18,16 @@ export default function TimelineEventRow({
   event,
   locale,
   side,
+  staggered = false,
 }: {
   event: TimelineEvent;
   locale: Locale;
   side: "left" | "right";
+  staggered?: boolean;
 }) {
   const { ref, active } = useReveal<HTMLElement>(0.25);
   const sideClass = side === "left" ? styles.sideLeft : styles.sideRight;
+  const staggerClass = staggered ? styles.eventStaggered : "";
   const monumentalClass = event.monumental ? styles.eventMonumental : "";
   /* A cidade só aparece como rótulo quando o texto ainda não a cita. */
   const showLocation = event.location && !event.description.includes(event.location);
@@ -32,7 +35,7 @@ export default function TimelineEventRow({
   return (
     <article
       ref={ref}
-      className={`${styles.eventRow} ${sideClass} ${active ? styles.eventRowActive : ""} ${monumentalClass}`}
+      className={`${styles.eventRow} ${sideClass} ${staggerClass} ${active ? styles.eventRowActive : ""} ${monumentalClass}`}
     >
       <span className={styles.eventDot} aria-hidden="true" />
 

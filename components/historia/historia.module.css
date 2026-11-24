@@ -484,6 +484,9 @@
 
   .sideRight {
     grid-column: 3;
+  }
+
+  .eventStaggered {
     margin-top: var(--stagger);
   }
 

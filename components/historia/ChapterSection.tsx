@@ -41,9 +41,20 @@ function toPairs(events: TimelineEvent[]) {
  */
 export default function ChapterSection({ chapter, locale }: { chapter: Chapter; locale: Locale }) {
   const meta = (locale === "en" ? CHAPTER_META_EN : CHAPTER_META)[chapter];
-  const events = (locale === "en" ? TIMELINE_EVENTS_EN : TIMELINE_EVENTS).filter((event) => event.chapter === chapter);
+  const allEvents = locale === "en" ? TIMELINE_EVENTS_EN : TIMELINE_EVENTS;
+  const events = allEvents.filter((event) => event.chapter === chapter);
   const [lead, ...rest] = events;
   const railRef = useLineProgress<HTMLDivElement>();
+
+  // Alternância global de fotografias (esquerda → direita → esquerda...) sem reiniciar por capítulo
+  let photoIndex = 0;
+  const photoSideById = new Map<string, "left" | "right">();
+  for (const ev of allEvents) {
+    if (ev.image) {
+      photoSideById.set(ev.id, photoIndex % 2 === 0 ? "left" : "right");
+      photoIndex += 1;
+    }
+  }
 
   return (
     <section className={`${styles.chapter} ${TONE_CLASS[meta.tone]}`} aria-labelledby={`chapter-${chapter}`}>
@@ -71,12 +82,23 @@ export default function ChapterSection({ chapter, locale }: { chapter: Chapter; 
             {lead && <TimelineEventRow event={lead} locale={locale} side="right" />}
           </div>
 
-          {toPairs(rest).map((pair) => (
-            <div key={pair[0].id} className={styles.pair}>
-              <TimelineEventRow event={pair[0]} locale={locale} side="left" />
-              {pair[1] && <TimelineEventRow event={pair[1]} locale={locale} side="right" />}
-            </div>
-          ))}
+          {toPairs(rest).map((pair) => {
+            const first = pair[0];
+            const second = pair[1];
+            const firstSide =
+              photoSideById.get(first.id) ??
+              (second && photoSideById.get(second.id) === "left" ? "right" : "left");
+            const secondSide = firstSide === "left" ? "right" : "left";
+
+            return (
+              <div key={first.id} className={styles.pair}>
+                <TimelineEventRow event={first} locale={locale} side={firstSide} />
+                {second && (
+                  <TimelineEventRow event={second} locale={locale} side={secondSide} staggered />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className={styles.bridge} aria-hidden="true">
